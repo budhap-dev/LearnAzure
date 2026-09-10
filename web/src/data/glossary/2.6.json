@@ -1,0 +1,90 @@
+[
+  {
+    "term": "Kubernetes",
+    "aliases": ["K8s"],
+    "definition": "An open-source system for running containers across a cluster of machines by declaring the desired state and letting a control loop keep reality matching it. It gives you scheduling, self-healing, rolling updates and service discovery. It also gives you a platform to run, which is why it is a poor default for small estates.",
+    "example": "You declare six replicas of the API; a node dies, and Kubernetes reschedules the lost pods elsewhere.",
+    "icon": "aks",
+    "lessons": ["2.6"],
+    "related": ["Pod", "Node", "Kubernetes control plane", "Azure Container Apps"]
+  },
+  {
+    "term": "Pod",
+    "definition": "The smallest thing Kubernetes schedules: usually one container, occasionally a small group that must share a network namespace and disk, such as an app plus a sidecar. Pods are disposable and get a new IP each time, so nothing should depend on a particular pod existing. You almost never create one directly - a Deployment creates them for you.",
+    "example": "Six API pods spread across three nodes, each replaceable without anyone noticing.",
+    "icon": "cubes",
+    "lessons": ["2.6"],
+    "related": ["Node", "Kubernetes", "Kubernetes namespace"]
+  },
+  {
+    "term": "Node",
+    "aliases": ["Kubernetes node", "worker node"],
+    "definition": "A virtual machine that belongs to a Kubernetes cluster and hosts pods. In AKS a node is an ordinary Azure VM in a scale set, billed by the hour whether or not any pod is scheduled on it. Its OS image needs patching on a schedule - that part is yours, not Microsoft's.",
+    "example": "A D4s v5 node with 4 vCPU cannot host six pods that each request 1 vCPU.",
+    "icon": "virtual-machine",
+    "lessons": ["2.6"],
+    "related": ["Node pool", "Pod", "Cluster autoscaler", "Virtual machine"]
+  },
+  {
+    "term": "Node pool",
+    "aliases": ["system node pool", "user node pool"],
+    "definition": "A group of identical nodes in an AKS cluster, backed by a virtual machine scale set and upgraded and scaled as a unit. Every cluster has a system pool for CoreDNS and add-ons plus one or more user pools for your workloads. Spot node pools cut the price of interruptible work, at the risk of eviction at two minutes' notice.",
+    "example": "A user pool of three D4s v5 nodes for the APIs, and a spot pool for the nightly batch.",
+    "icon": "vm-scale-sets",
+    "lessons": ["2.6"],
+    "related": ["Node", "Cluster autoscaler", "Virtual machine scale set", "Spot virtual machine"]
+  },
+  {
+    "term": "Kubernetes control plane",
+    "aliases": ["K8s control plane", "API server"],
+    "definition": "The API server, scheduler, controller manager and etcd store that run the control loop keeping a cluster at its declared state. In AKS, Microsoft runs and patches it - free on the standard tier, with a paid Uptime SLA tier adding a financially backed SLA. Do not confuse it with the Azure Resource Manager control plane; in a mixed conversation, always say which one you mean.",
+    "example": "kubectl talks to the Kubernetes control plane; the Azure portal talks to the ARM control plane.",
+    "icon": "aks",
+    "lessons": ["2.6"],
+    "related": ["Kubernetes", "Control plane", "kubectl", "Node pool"]
+  },
+  {
+    "term": "kubectl",
+    "aliases": ["kube control"],
+    "definition": "The command-line client that sends declarative manifests and queries to the Kubernetes API server. It is how humans apply, inspect and debug workloads - apply, get, describe, logs. Applying manifests by hand from a laptop is fine for learning and a bad idea in production, where a pipeline or GitOps agent should own the cluster's state.",
+    "example": "kubectl describe pod tells you why a pod is stuck Pending - usually no node has room for it.",
+    "icon": "cloud-shell",
+    "lessons": ["2.6"],
+    "related": ["Kubernetes control plane", "Helm", "Kubernetes"]
+  },
+  {
+    "term": "Helm",
+    "aliases": ["Helm chart"],
+    "definition": "The de facto package manager for Kubernetes: a chart bundles the manifests for an application and a values file supplies the per-environment differences. Think npm plus a templating engine. Charts are also how most third-party components arrive, which is how a cluster quietly acquires software nobody on the team maintains.",
+    "example": "One chart for the API, with values-dev.yaml and values-prod.yaml changing replicas and resource limits.",
+    "icon": "cubes",
+    "lessons": ["2.6"],
+    "related": ["kubectl", "Kubernetes", "Ingress controller"]
+  },
+  {
+    "term": "Cluster autoscaler",
+    "definition": "The AKS component that adds nodes to a node pool when pods cannot be scheduled and removes nodes that stay under-used. It scales machines, not pods - the Horizontal Pod Autoscaler does that - and you normally need both. It cannot reach zero nodes for a cluster that must stay reachable, which is why AKS always has a floor cost.",
+    "example": "A traffic spike leaves pods Pending; the autoscaler adds two nodes, then removes them an hour later.",
+    "icon": "autoscale",
+    "lessons": ["2.6"],
+    "related": ["Node pool", "Node", "Autoscale", "Scalability"]
+  },
+  {
+    "term": "Kubernetes namespace",
+    "aliases": ["namespace"],
+    "definition": "A logical partition inside a single cluster, used to separate teams, environments or tenants and to attach quotas and access rules. It is a soft boundary: namespaces share the nodes, the control plane and the cluster version. For a hard boundary you need separate clusters, or at least separate node pools with policy enforced.",
+    "example": "Namespaces team-orders and team-stock share one cluster with a CPU quota each.",
+    "icon": "resource-group",
+    "lessons": ["2.6"],
+    "related": ["Kubernetes", "Pod", "Role-based access control"]
+  },
+  {
+    "term": "Ingress controller",
+    "aliases": ["Kubernetes ingress"],
+    "definition": "The reverse proxy running inside a cluster that turns public hostnames and paths into traffic for the right service - NGINX and Application Gateway for Containers are the common choices on AKS. It also terminates TLS, so certificate issuance and renewal become your job. Container Apps gives you the same outcome as a built-in feature with a free managed certificate.",
+    "example": "shop.example.com/api routes to the api service; /admin routes to a different one.",
+    "icon": "application-gateway",
+    "lessons": ["2.6"],
+    "related": ["Kubernetes", "Ingress", "Helm", "Pod"]
+  }
+]

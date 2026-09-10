@@ -60,7 +60,7 @@ export function Layout() {
             ))}
           </nav>
           <div className="header-right">
-            <SearchBox />
+            <SearchBox shortcut />
             {days > 0 && (
               <span className="streak" title={`${days}-day learning streak`}>
                 🔥 {days}

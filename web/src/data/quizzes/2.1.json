@@ -1,0 +1,111 @@
+[
+  {
+    "id": "2.1-q1",
+    "topic": "size names",
+    "stem": "Reading the size name Standard_D4s_v5, what do the four parts after \"Standard\" tell you?",
+    "options": [
+      "General purpose family, 4 vCPUs, premium-storage capable, fifth generation",
+      "General purpose family, 4 GB of memory, shared tenancy, five availability zones",
+      "Dedicated host family, 4 data disks, spot eligible, five-year reservation",
+      "Memory optimised family, 4 vCPUs, SSD-only, version 5 of the operating system"
+    ],
+    "answer": 0,
+    "explanation": "The letter is the family (D is general purpose), the number is the vCPU count, a trailing s means the size supports premium storage, and v5 is the hardware generation. The tempting misread is treating the number as memory - Azure sizes always count vCPUs, and memory follows from the family's ratio."
+  },
+  {
+    "id": "2.1-q2",
+    "topic": "size families",
+    "scenario": "Tom wants to move a SQL Server instance onto a VM. It uses 12 GB of RAM steadily but rarely exceeds 20% CPU.",
+    "stem": "Which VM family fits that shape best?",
+    "options": [
+      "B, because the CPU is mostly idle and burst credits will cover the peaks",
+      "F, because database engines benefit from the highest clock speed available",
+      "E, because it is memory optimised and gives roughly 8 GB of RAM per vCPU",
+      "L, because storage optimised sizes are designed for anything that writes to disk"
+    ],
+    "answer": 2,
+    "explanation": "The workload wants memory far more than cores, which is exactly what the memory optimised E family is priced and configured for - you reach 12 GB without paying for cores you will not use. B looks appealing because the CPU is idle, but burstable sizes are for small dev and internal boxes and their credit model punishes a sustained production database."
+  },
+  {
+    "id": "2.1-q3",
+    "topic": "disks",
+    "scenario": "A production VM feels slow on disk. It is a D2s_v5 with a Premium SSD data disk, and the team proposes upgrading the disk to Ultra.",
+    "stem": "What should you tell them first?",
+    "options": [
+      "Ultra Disk is the right fix, since it is the only tier with sub-millisecond latency",
+      "Disk throughput is capped by the VM size as well as the disk tier, so check the VM's own I/O limit before buying a faster disk",
+      "Move the data onto the temporary disk, which is local to the host and much faster",
+      "Premium SSD cannot be used for data disks, only for OS disks, which is the real problem"
+    ],
+    "answer": 1,
+    "explanation": "Every VM size has its own IOPS and throughput ceiling, and a small size will throttle long before a Premium or Ultra disk does - so the money goes on a faster disk that the VM cannot use. The temp disk is genuinely fast but is wiped whenever the VM moves hosts, which makes it unusable for anything you need to keep."
+  },
+  {
+    "id": "2.1-q4",
+    "topic": "billing",
+    "scenario": "To save money over the Christmas shutdown, Dev remote-desktops into a Windows VM and shuts it down from the Start menu. In January the bill is unchanged.",
+    "stem": "Why did the shutdown not reduce the cost?",
+    "options": [
+      "Windows VMs are billed monthly in advance, so savings only appear in the following billing period",
+      "Compute billing is annual once a VM has run for more than 90 days",
+      "The VM had a reservation attached, which bills whether or not the VM exists",
+      "Shutting down inside the OS leaves the VM allocated; only deallocating it through Azure releases the hardware and stops compute charges"
+    ],
+    "answer": 3,
+    "explanation": "Azure charges for compute while hardware is allocated to the VM, and an OS-level shutdown never tells Azure to release it - the deallocate action in the portal, CLI or an auto-shutdown schedule does. Reservations are a plausible distractor but they are a discount on usage, not the reason an idle machine still bills; disks and public IPs do keep billing even after deallocation."
+  },
+  {
+    "id": "2.1-q5",
+    "topic": "availability",
+    "stem": "What is the practical difference between an availability set and availability zones?",
+    "options": [
+      "An availability set spreads VMs across fault and update domains inside one data centre; zones spread them across physically separate data centres in the region",
+      "An availability set spreads VMs across regions; zones spread them across racks in one region",
+      "An availability set replicates disks synchronously; zones only replicate them nightly",
+      "An availability set is for Windows VMs and zones are for Linux VMs"
+    ],
+    "answer": 0,
+    "explanation": "Fault domains and update domains protect you from a rack losing power and from Azure patching hosts, but they are all inside one building - zones survive losing the whole building, which is why the SLA rises from roughly 99.95% to roughly 99.99%. Neither construct crosses regions; that is a separate multi-region design covered later."
+  },
+  {
+    "id": "2.1-q6",
+    "topic": "scale sets",
+    "scenario": "A stateless internal reporting site runs on two hand-built VMs. Traffic triples at month end and someone manually adds a third VM each time.",
+    "stem": "What is the better design?",
+    "options": [
+      "Resize both VMs to a larger size permanently so the peak is always covered",
+      "Put the site in a VM Scale Set built from a gallery image, zone-spread, with an autoscale rule on CPU or a month-end schedule",
+      "Add an availability set around the two existing VMs so Azure creates the extra instance automatically",
+      "Move the site onto ephemeral OS disks so new instances boot faster when created by hand"
+    ],
+    "answer": 1,
+    "explanation": "A scale set is exactly this pattern: identical instances from one image, spread across zones, added and removed by rules rather than by a person. An availability set is a common wrong answer because it sounds like it manages instances, but it only influences where VMs are placed - it never creates or removes them."
+  },
+  {
+    "id": "2.1-q7",
+    "topic": "images",
+    "stem": "What does an Azure Compute Gallery add over simply keeping a custom VM image in one resource group?",
+    "options": [
+      "It patches the operating system inside the image automatically each month",
+      "It converts the image into a container image so it can also run on AKS",
+      "It versions the image and replicates it across regions and subscriptions so every team builds from the same base",
+      "It removes the need for VM extensions, because all configuration is baked into the gallery"
+    ],
+    "answer": 2,
+    "explanation": "The gallery is the versioning, sharing and regional replication layer for golden images, which is what makes one base image usable by many teams and many regions. Extensions are still needed for the last mile - installing agents, joining a domain, running a custom script - and nothing in the gallery patches the image for you."
+  },
+  {
+    "id": "2.1-q8",
+    "topic": "when a VM is wrong",
+    "scenario": "A team proposes running its new Node API on two Ubuntu VMs behind a load balancer, because \"we know Linux and we want full control\".",
+    "stem": "What is the strongest argument against that design?",
+    "options": [
+      "Node is not supported on Azure virtual machines without an extension",
+      "It buys control they do not need while handing back OS patching, hardening, backup and monitoring that App Service would do for them",
+      "Two VMs behind a load balancer have no SLA, so the design cannot be approved",
+      "Virtual machines cannot autoscale, so the API will not survive a traffic spike"
+    ],
+    "answer": 1,
+    "explanation": "A plain web API is precisely the workload PaaS exists for, and choosing IaaS means owning the whole operating system lifecycle for as long as the service lives - a real, permanent cost that never appears on the invoice. The SLA claim is wrong (two VMs in an availability set or zones carry a good SLA) and VMs can autoscale via scale sets; the argument is about operational burden, not capability."
+  }
+]

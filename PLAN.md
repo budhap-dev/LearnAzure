@@ -29,7 +29,7 @@ lesson quizzes, timed, graded). A **final learning test** draws from the whole c
 | # | Module | Lessons | Theme |
 |---|--------|---------|-------|
 | 1 | Cloud and Azure foundations ✅ | 8 | What cloud is, how Azure is organised, cost, SLAs |
-| 2 | Compute and hosting | 7 | VMs, App Service, Static Web Apps, Functions, containers, AKS |
+| 2 | Compute and hosting ✅ | 7 | VMs, App Service, Static Web Apps, Functions, containers, AKS |
 | 3 | Storage and data | 7 | Storage accounts, Azure SQL, Cosmos DB, Redis, choosing a store |
 | 4 | Networking, identity and security | 8 | VNets, load balancing, private endpoints, Entra ID, RBAC, Key Vault, Defender |
 | 5 | Integration and messaging | 6 | Service Bus, Event Grid, Event Hubs, API Management, Logic Apps |
@@ -56,6 +56,21 @@ next starts.
 
 Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
 at random from the lesson quizzes, over 25 minutes. 97 glossary terms.
+
+### Module 2 — Compute and hosting — **shipped**
+
+| Id | Lesson |
+|----|--------|
+| 2.1 | Virtual machines and scale sets |
+| 2.2 | App Service - the PaaS home for web apps and APIs |
+| 2.3 | Static Web Apps for React and React Native web |
+| 2.4 | Azure Functions and serverless thinking |
+| 2.5 | Containers - Registry, Container Instances and Container Apps |
+| 2.6 | Azure Kubernetes Service - when you really need it |
+| 2.7 | Choosing compute - a decision guide |
+
+Every way Azure runs code, each lesson naming what the service is for, what it costs, how it
+scales and what it cannot do. The module ends with a decision guide for design reviews.
 
 ## App architecture
 

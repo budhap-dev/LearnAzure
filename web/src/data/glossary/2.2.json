@@ -1,0 +1,91 @@
+[
+  {
+    "term": "Scale up",
+    "aliases": ["vertical scaling", "scaling up"],
+    "definition": "Making each instance bigger by moving the App Service plan to a higher tier or size - more CPU, more memory, and often new features such as slots or zone redundancy. Use it when one request needs more resource than an instance has. Adding instances instead will not help that case.",
+    "example": "Moving plan-shop-prod from B1 to P1v3 to get slots, zone redundancy and more memory per instance.",
+    "icon": "app-service-plan",
+    "lessons": ["2.2"],
+    "related": ["Scale out", "App Service plan", "Autoscale"]
+  },
+  {
+    "term": "Scale out",
+    "aliases": ["horizontal scaling", "scaling out"],
+    "definition": "Adding more instances of the same size to an App Service plan, manually or through autoscale rules. It is the answer to more concurrent traffic, and it is set on the plan, never on the app. Billing is per instance, so going from two instances to six triples that part of the bill.",
+    "example": "An autoscale rule that takes the plan from 2 to 6 instances when average CPU passes 70%.",
+    "icon": "autoscale",
+    "lessons": ["2.2"],
+    "related": ["Scale up", "Autoscale", "App Service plan"]
+  },
+  {
+    "term": "App setting",
+    "aliases": ["application setting", "app settings"],
+    "definition": "A name-value pair configured on an App Service app and injected into the process as an environment variable - the platform's replacement for a .env file. Values can be Key Vault references rather than literal secrets. Anyone with Reader on the app can read plain settings, and they move with the code during a slot swap unless marked sticky.",
+    "example": "ORDERS_DB set to @Microsoft.KeyVault(SecretUri=...) so the secret never sits in the app's configuration.",
+    "icon": "app-service",
+    "lessons": ["2.2"],
+    "related": ["Slot setting", "Key Vault", "Connection string"]
+  },
+  {
+    "term": "Slot setting",
+    "aliases": ["sticky setting", "deployment slot setting"],
+    "definition": "An app setting or connection string marked to stay with its deployment slot rather than travel with the code during a swap. Anything environment-specific - database connection strings, feature flags, external endpoints - must be marked sticky. Forgetting is the classic cause of production writing to the staging database after a swap.",
+    "example": "ORDERS_DB is a slot setting, so after the swap production keeps the production database.",
+    "icon": "web-slots",
+    "lessons": ["2.2"],
+    "related": ["App setting", "Deployment slot", "App Service"]
+  },
+  {
+    "term": "Always On",
+    "definition": "An App Service setting that keeps the app's process loaded instead of letting the platform unload it after roughly twenty minutes of no traffic. Without it, the first request after an idle period pays the full cold start. It is off by default and unavailable on Free and Shared tiers.",
+    "example": "Turning Always On on removed the eight-second first request the internal API showed every morning.",
+    "icon": "app-service",
+    "lessons": ["2.2"],
+    "related": ["App Service plan", "Health check", "App Service"]
+  },
+  {
+    "term": "Health check",
+    "aliases": ["health check path", "health probe"],
+    "definition": "A path on the app that App Service polls on every instance; an instance that keeps failing is taken out of the load-balancer rotation and eventually replaced. It turns one sick instance into a smaller capacity problem rather than intermittent errors for users. Make the path check dependencies, not just return 200.",
+    "example": "/healthz verifies the database connection, so an instance that loses SQL stops receiving traffic.",
+    "icon": "heart",
+    "lessons": ["2.2"],
+    "related": ["Scale out", "Always On", "App Service plan"]
+  },
+  {
+    "term": "Kudu",
+    "aliases": ["SCM site", "Advanced Tools"],
+    "definition": "The management and debugging site that sits beside every App Service app at <app>.scm.azurewebsites.net: file browser, log stream, console, process explorer and deployment history. It is where you look when a deployment or start-up fails. It carries the same access as the app, so restrict who can reach it.",
+    "example": "Streaming Node's stdout from Kudu showed the app crashing on a missing app setting.",
+    "icon": "toolbox",
+    "lessons": ["2.2"],
+    "related": ["App setting", "App Service", "Deployment slot"]
+  },
+  {
+    "term": "VNet integration",
+    "aliases": ["virtual network integration", "regional VNet integration"],
+    "definition": "An App Service feature that routes the app's outbound traffic through a subnet in your virtual network, so it can reach private databases, internal APIs and on-premises systems. It handles outbound only - making the app itself private needs a private endpoint. Available from Standard upwards, and the subnet must be delegated to App Service.",
+    "example": "The API reaches Azure SQL over a private endpoint because the app is integrated with snet-app-prod.",
+    "icon": "virtual-network",
+    "lessons": ["2.2"],
+    "related": ["App Service Environment", "App Service plan", "App Service"]
+  },
+  {
+    "term": "App Service Environment",
+    "aliases": ["ASE", "Isolated v2"],
+    "definition": "A single-tenant deployment of App Service inside your own virtual network, sold as the Isolated v2 tier. It gives full network isolation, very high scale limits and dedicated hardware. It also costs many times a Premium v3 plan, so it should be justified by a compliance or isolation requirement, not by instinct.",
+    "example": "A regulator required no shared compute, so the payments API moved to an Isolated v2 plan in an ASE.",
+    "icon": "app-service-environment",
+    "lessons": ["2.2"],
+    "related": ["VNet integration", "App Service plan", "App Service"]
+  },
+  {
+    "term": "WebJob",
+    "aliases": ["WebJobs"],
+    "definition": "A background process - continuous or scheduled - that runs alongside a web app on the same App Service plan. Useful for a small worker or a cron-style task you want deployed with the app. It competes with your requests for the plan's CPU and memory, and for anything substantial a Function or a queue worker is a better home.",
+    "example": "A nightly WebJob that trims old sessions, later moved to a timer-triggered Function.",
+    "icon": "web-jobs",
+    "lessons": ["2.2"],
+    "related": ["App Service plan", "Azure Functions", "Health check"]
+  }
+]

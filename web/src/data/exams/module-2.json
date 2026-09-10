@@ -1,0 +1,203 @@
+{
+  "module": 2,
+  "minutes": 25,
+  "poolFromLessons": 10,
+  "questions": [
+    {
+      "id": "m2-q1",
+      "topic": "compute for a front end",
+      "scenario": "Ana's team builds a React single-page app with Vite. The output is a folder of HTML, JavaScript and images; every API call goes to a separate Node service. They want previews for pull requests and a custom domain with HTTPS.",
+      "stem": "Where should the front end be hosted?",
+      "options": [
+        "Static Web Apps, which serves the build output from a global edge with a free managed certificate and per-pull-request preview environments",
+        "An App Service plan running a small Node server that serves the build folder, so the front end and API share one plan",
+        "A virtual machine running Nginx, so the team controls caching headers and TLS configuration",
+        "Azure Container Apps, with the build output copied into an image behind an Nginx container"
+      ],
+      "answer": 0,
+      "explanation": "A React build is files, not a process, so the cheapest correct home is a CDN with a build pipeline attached - which is exactly what Static Web Apps is, including free certificates and preview environments per pull request. Serving the same files from App Service, a container or a VM means paying for a running process, and in the container and VM cases for image hygiene and OS patching too."
+    },
+    {
+      "id": "m2-q2",
+      "topic": "event-driven compute",
+      "scenario": "Every time a courier posts a delivery update, the shop must write a row and possibly send an email. Updates arrive in bursts of a few thousand within ten minutes, several times a day, and nothing in between. Each update takes about 200 milliseconds to process.",
+      "stem": "Which compute choice fits the workload shape best?",
+      "options": [
+        "An App Service plan sized for the burst, so capacity is always available",
+        "Azure Functions with an HTTP or queue trigger, billed per execution and scaling out with the burst",
+        "A virtual machine scale set with an autoscale rule on CPU",
+        "An AKS deployment with a horizontal pod autoscaler"
+      ],
+      "answer": 1,
+      "explanation": "Short, independent, bursty units of work with long idle periods are the textbook case for per-execution billing and event-driven scale-out, and the platform adds instances far faster than a CPU-based autoscale rule reacts. A plan or a scale set sized for the burst bills all day for capacity used minutes at a time, and a cluster adds nodes and upgrades to a job that needs neither."
+    },
+    {
+      "id": "m2-q3",
+      "topic": "App Service plan",
+      "scenario": "A team deploys a second API into an existing App Service plan and is surprised that the monthly bill barely changes. They then create a third plan for a small internal tool and are surprised when it does.",
+      "stem": "What is the rule that explains both surprises?",
+      "options": [
+        "Apps are billed per request, so the second API only costs money once traffic reaches it",
+        "Azure gives every subscription two free App Service apps, and the third one starts billing",
+        "The plan is the sized, billed compute; apps and their slots are tenants that share it, so a new plan is a new bill and a new app on an existing plan is not",
+        "Billing follows the resource group, so resources added to an existing group are already covered"
+      ],
+      "answer": 2,
+      "explanation": "You buy the plan - a tier and an instance count that bills by the hour whether or not traffic arrives - and apps, slots and their scaling rules all live on it. Believing the app is the unit of billing leads teams to size the wrong thing and to scatter small plans that each bill in full while sitting mostly idle."
+    },
+    {
+      "id": "m2-q4",
+      "topic": "deallocate versus stop",
+      "scenario": "Dev shuts a Windows VM down from inside the operating system before the Christmas break to save money. In January the invoice shows the full fortnight of compute.",
+      "stem": "What went wrong, and what should he have done?",
+      "options": [
+        "Nothing went wrong: Azure bills virtual machines for a full month regardless of running time",
+        "Shutting down inside the OS leaves the VM allocated, so compute keeps billing; he should have deallocated it through Azure, accepting that the disks still bill",
+        "He should have deleted the VM and recreated it in January, since deallocation is not supported on Windows",
+        "He needed to detach the data disks first, because attached disks keep the compute allocated"
+      ],
+      "answer": 1,
+      "explanation": "A guest-OS shutdown stops the operating system but keeps the hardware reserved, so the compute meter runs; deallocating through Azure releases that reservation and stops the compute charge. Storage is separate - managed disks bill whether the VM is deallocated or not - so the saving is real but not total."
+    },
+    {
+      "id": "m2-q5",
+      "topic": "slot swap",
+      "scenario": "The team deploys to the staging slot, smoke-tests it against a staging database, and swaps. Production immediately starts writing orders into the staging database.",
+      "stem": "What is the most likely cause?",
+      "options": [
+        "The staging connection string was not marked as a slot setting, so it swapped into production along with the code",
+        "The swap copied the staging database over the production one, which is what a swap does to data",
+        "The staging slot was running on a different App Service plan, so it kept its own configuration",
+        "Slot swaps always require a restart, and production came back with the previous release's settings"
+      ],
+      "answer": 0,
+      "explanation": "App settings and connection strings move with the app during a swap unless they are marked as slot settings, which pins them to the slot they belong to. This is the classic swap failure: the code was fine, the configuration followed it into production, and the first sign is data appearing in the wrong place."
+    },
+    {
+      "id": "m2-q6",
+      "topic": "client-side routing",
+      "scenario": "The React app works when users navigate from the home page, but pasting the URL for /orders/1234 directly into the browser returns a 404 from the host.",
+      "stem": "What is happening and how do you fix it?",
+      "options": [
+        "The API route is missing, so the front end should call a different endpoint for order detail",
+        "The build output is missing an orders folder; the build must be configured to pre-render every route",
+        "The host looks for a file at that path and finds none; add a navigation fallback in staticwebapp.config.json so unknown paths serve index.html and the router takes over",
+        "The custom domain is missing a wildcard DNS record, so subpaths do not resolve"
+      ],
+      "answer": 2,
+      "explanation": "Client-side routing means the router only exists once index.html has loaded, so a deep link asks the host for a file that was never built. The navigation fallback rewrite tells the host to serve index.html for unmatched paths, which is why the same link works from inside the app but not from a cold browser."
+    },
+    {
+      "id": "m2-q7",
+      "topic": "Functions hosting plan",
+      "scenario": "A document-processing function must start responding within a few hundred milliseconds of a request arriving - no cold start is acceptable - and a single run can take up to twenty minutes.",
+      "stem": "Which hosting choice meets both requirements?",
+      "options": [
+        "The Consumption plan, with the timeout raised to twenty minutes in host.json",
+        "The Consumption plan, with a timer trigger pinging the function every five minutes to keep it warm",
+        "The Functions Premium plan, which keeps always-ready instances so there is no cold start and allows a timeout well beyond ten minutes",
+        "The Consumption plan, with the work split into two-minute chunks chained by queue messages"
+      ],
+      "answer": 2,
+      "explanation": "Two requirements must both be satisfied: pre-warmed instances remove the cold start, and the plan must permit a run far longer than Consumption's ten-minute ceiling, which Premium (or Flex Consumption with always-ready instances) provides. Raising the timeout in host.json cannot exceed the plan's hard limit, and keep-warm pings are a workaround that still leaves scale-out instances starting cold."
+    },
+    {
+      "id": "m2-q8",
+      "topic": "cost crossover",
+      "scenario": "A serverless API launched at a few thousand calls a day and cost pennies. Two years on it serves a steady tens of millions of executions a month, and the consumption bill has passed what a Premium v3 App Service plan would cost.",
+      "stem": "What is the right conclusion?",
+      "options": [
+        "The workload has moved from bursty to steady state, so the fixed-plan billing shape is now cheaper and the decision should be revisited",
+        "Serverless is a mistake for production APIs and should not have been chosen in the first place",
+        "The functions need optimising; per-execution billing is always cheaper than a plan when code is efficient",
+        "The API should move to AKS, because per-node billing is the cheapest shape at high volume"
+      ],
+      "answer": 0,
+      "explanation": "Consumption billing is near-free when idle and expensive at sustained high volume, while a fixed plan is the reverse, so the crossover is a signal about workload shape rather than a verdict on the original decision. Optimising helps at the margin but does not change the shape of the curve, and moving to a cluster adds nodes and operations to a problem that a plan solves."
+    },
+    {
+      "id": "m2-q9",
+      "topic": "image tags",
+      "scenario": "Production deploys reference myapi:latest in the container registry. After an unrelated scaling event, two replicas start running a build nobody meant to release, and rolling back proves impossible.",
+      "stem": "What is the underlying problem?",
+      "options": [
+        "The registry should have been geo-replicated so all replicas pull the same copy",
+        "A mutable tag like :latest points at whatever was pushed most recently, so any new instance can pull a different image; tag with the commit SHA and deploy by digest",
+        "The container registry deleted the older image automatically, which is why rollback failed",
+        "Replicas should always be scaled manually in production so that image pulls are predictable"
+      ],
+      "answer": 1,
+      "explanation": "A tag is a movable pointer, so :latest means \"whatever was pushed last\" and the running version becomes a function of timing rather than of a release decision. Tagging with the commit SHA and deploying by digest makes the artefact reproducible, which is also what makes rollback a one-line change."
+    },
+    {
+      "id": "m2-q10",
+      "topic": "Container Apps versus AKS",
+      "scenario": "A five-person team has three containerised services with HTTPS ingress, needs blue-green releases and scaling on queue depth, and has nobody who wants to own cluster upgrades.",
+      "stem": "Which platform should they choose?",
+      "options": [
+        "AKS, because revisions and traffic splitting require Kubernetes primitives",
+        "Container Instances, one per service, with a load balancer in front",
+        "Azure Container Apps, which gives revisions, traffic splitting, ingress and KEDA-based scaling without a cluster to own",
+        "App Service for Containers, because it is the only option that supports blue-green releases"
+      ],
+      "answer": 2,
+      "explanation": "Container Apps runs on Kubernetes underneath but hands you the outcomes - revisions with traffic splitting, managed ingress, event-driven scaling and scale to zero - without node pools, upgrades or YAML. AKS delivers the same features but only in exchange for a permanent operational owner, which is exactly what this team does not have; Container Instances has no built-in ingress, revisions or autoscaling story."
+    },
+    {
+      "id": "m2-q11",
+      "topic": "what AKS manages",
+      "scenario": "In a design review someone says \"AKS is managed Kubernetes, so Microsoft looks after it for us\".",
+      "stem": "What is the accurate correction?",
+      "options": [
+        "Microsoft manages the Kubernetes control plane; the nodes, their upgrades, their sizing and their bill remain yours",
+        "Microsoft manages the nodes and their patching; you are responsible only for the control plane configuration",
+        "Microsoft manages everything except the container images, which is why AKS costs more than Container Apps",
+        "Nothing is managed: AKS is a template that deploys Kubernetes onto virtual machines you own"
+      ],
+      "answer": 0,
+      "explanation": "AKS runs and patches the API server, scheduler and etcd for you, which is genuinely valuable, but node pools, node image and Kubernetes version upgrades, capacity and cost stay on your side of the line. Assuming otherwise is how clusters drift out of support and how the bill becomes a surprise."
+    },
+    {
+      "id": "m2-q12",
+      "topic": "cluster cost",
+      "scenario": "An AKS cluster runs three D-series nodes. The pods on it average about 8% CPU, and the monthly cost has not moved since the workloads shrank.",
+      "stem": "What explains the bill, and what is the first thing to change?",
+      "options": [
+        "The control plane fee dominates the bill; move to the Free control plane tier",
+        "Nodes bill for their size and hours regardless of how much the pods use, so right-size the pod resource requests and enable the cluster autoscaler to remove empty nodes",
+        "AKS bills per pod, so the fix is to reduce the number of pod replicas",
+        "Node cost scales with network traffic, so the fix is to reduce egress between services"
+      ],
+      "answer": 1,
+      "explanation": "A cluster charges for its nodes whether or not the pods on them do any work, so idle capacity is the single biggest source of waste in AKS. Inflated CPU and memory requests keep the scheduler spreading pods across nodes the autoscaler then cannot remove, which is why right-sizing requests comes before anything else; the control plane fee is small by comparison."
+    },
+    {
+      "id": "m2-q13",
+      "topic": "when a VM is right",
+      "scenario": "A fifteen-year-old ERP ships only as a Windows installer, needs a kernel-level licensing agent, and its licence is tied to the machine name.",
+      "stem": "What is the correct compute decision?",
+      "options": [
+        "A virtual machine, because installer-only software, machine-bound licences and kernel agents are requirements no managed platform accepts",
+        "App Service on Windows, since it runs .NET applications and supports custom startup commands",
+        "Azure Container Apps, after building a Windows container image around the installer",
+        "Azure Functions, with the ERP's operations wrapped as HTTP-triggered functions"
+      ],
+      "answer": 0,
+      "explanation": "This is the hard requirement that short-circuits the rest of the decision tree: no PaaS will run an arbitrary installer, a kernel-level agent or a licence bound to a machine identity. Choosing a VM here is correct, and the honest cost is the patching, hardening, backup and monitoring the team takes on for as long as the machine exists."
+    },
+    {
+      "id": "m2-q14",
+      "topic": "revisiting the decision",
+      "scenario": "The original design document says the notification service will move off Consumption if its monthly cost passes a stated figure. Cost Management shows it crossed that figure two months ago and has stayed there.",
+      "stem": "What should happen now?",
+      "options": [
+        "Nothing, because compute decisions are architectural and changing one implies the first choice was wrong",
+        "Reopen the compute decision as planned, compare the current shape against a fixed plan, and record the new trigger and threshold",
+        "Raise the budget alert threshold, since the workload is clearly more successful than expected",
+        "Move the service to AKS so that future growth is absorbed by the existing cluster"
+      ],
+      "answer": 1,
+      "explanation": "Compute choices are reversible at a cost, and the point of writing a threshold into the design is to turn revisiting into a scheduled review rather than an argument about who was right. Raising the alert hides the signal, and jumping to a cluster swaps one billing shape for a heavier one without testing whether a plan is simply cheaper."
+    }
+  ]
+}

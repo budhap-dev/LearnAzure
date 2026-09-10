@@ -118,6 +118,26 @@ for (const l of readyLessons) {
       if (!ids.has(e.from) || !ids.has(e.to)) fail(`${path}: diagram edge ${e.from} -> ${e.to} references an unknown node`);
     }
     for (const g of spec.groups ?? []) for (const id of g.nodes ?? []) if (!ids.has(id)) fail(`${path}: diagram group "${g.label}" references unknown node "${id}"`);
+
+    // A group is drawn as one rectangle around its members, so any non-member sitting inside
+    // that rectangle looks like it belongs to the group. Catch it here rather than by eye.
+    const at = new Map((spec.nodes ?? []).map((n) => [`${n.x},${n.y}`, n]));
+    for (const g of spec.groups ?? []) {
+      const members = (g.nodes ?? []).map((id) => (spec.nodes ?? []).find((n) => n.id === id)).filter(Boolean);
+      if (members.length === 0) continue;
+      const x0 = Math.min(...members.map((n) => n.x));
+      const x1 = Math.max(...members.map((n) => n.x));
+      const y0 = Math.min(...members.map((n) => n.y));
+      const y1 = Math.max(...members.map((n) => n.y));
+      for (let x = x0; x <= x1; x++) {
+        for (let y = y0; y <= y1; y++) {
+          const n = at.get(`${x},${y}`);
+          if (n && !g.nodes.includes(n.id)) {
+            fail(`${path}: diagram node "${n.id}" sits inside the box of group "${g.label}" but is not in it - move it outside the group's rows and columns`);
+          }
+        }
+      }
+    }
   }
 }
 

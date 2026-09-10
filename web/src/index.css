@@ -360,6 +360,8 @@ main { flex: 1; width: 100%; max-width: var(--max); margin: 0 auto; padding: 1.4
 .header-search { position: relative; }
 .header-search input { width: 220px; max-width: 40vw; padding: 0.45rem 0.8rem; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); transition: width 0.25s, box-shadow 0.2s; }
 .header-search input:focus { outline: none; width: 300px; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); }
+.header-search .kbd-hint { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; font: 600 0.7rem var(--mono); color: var(--muted); border: 1px solid var(--border); border-radius: 5px; padding: 0 0.3rem; background: var(--surface); }
+.header-search input:focus + .kbd-hint, .header-search input:not(:placeholder-shown) + .kbd-hint { display: none; }
 .search-suggest { position: absolute; top: calc(100% + 6px); right: 0; width: min(420px, 90vw); list-style: none; margin: 0; padding: 0.3rem; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow-lift); z-index: 60; animation: pop-in 0.15s ease; }
 .search-suggest li button { width: 100%; text-align: left; display: flex; gap: 0.6rem; align-items: baseline; padding: 0.5rem 0.7rem; border: 0; background: none; color: var(--text); border-radius: 8px; cursor: pointer; }
 .search-suggest li button.active, .search-suggest li button:hover { background: var(--surface-2); }
@@ -571,11 +573,16 @@ p.callout { padding: 0.8rem 1rem; }
 .dg-edge-label { font-size: 10.5px; fill: var(--dg-text); font-weight: 600; }
 .dg-edge-label-bg { fill: var(--surface-2); stroke: var(--border); }
 .dg-group rect { fill: color-mix(in srgb, var(--accent) 7%, transparent); stroke: color-mix(in srgb, var(--accent) 45%, transparent); stroke-width: 1.5; stroke-dasharray: 6 4; }
-.dg-group text { font-size: 11.5px; font-weight: 700; fill: var(--accent); }
-.dg-group.tone-green rect { fill: color-mix(in srgb, var(--good) 8%, transparent); stroke: color-mix(in srgb, var(--good) 50%, transparent); } .dg-group.tone-green text { fill: var(--good); }
-.dg-group.tone-amber rect { fill: color-mix(in srgb, var(--warn) 8%, transparent); stroke: color-mix(in srgb, var(--warn) 50%, transparent); } .dg-group.tone-amber text { fill: var(--warn); }
-.dg-group.tone-purple rect { fill: color-mix(in srgb, var(--purple) 8%, transparent); stroke: color-mix(in srgb, var(--purple) 50%, transparent); } .dg-group.tone-purple text { fill: var(--purple); }
-.dg-group.tone-grey rect { fill: color-mix(in srgb, var(--muted) 8%, transparent); stroke: color-mix(in srgb, var(--muted) 50%, transparent); } .dg-group.tone-grey text { fill: var(--muted); }
+.dg-group-label rect { fill: var(--surface); stroke: none; }
+.dg-group-label text { font-size: 11.5px; font-weight: 700; fill: var(--accent); }
+.dg-group-label.tone-green text { fill: var(--good); }
+.dg-group-label.tone-amber text { fill: var(--warn); }
+.dg-group-label.tone-purple text { fill: var(--purple); }
+.dg-group-label.tone-grey text { fill: var(--muted); }
+.dg-group.tone-green rect { fill: color-mix(in srgb, var(--good) 8%, transparent); stroke: color-mix(in srgb, var(--good) 50%, transparent); }
+.dg-group.tone-amber rect { fill: color-mix(in srgb, var(--warn) 8%, transparent); stroke: color-mix(in srgb, var(--warn) 50%, transparent); }
+.dg-group.tone-purple rect { fill: color-mix(in srgb, var(--purple) 8%, transparent); stroke: color-mix(in srgb, var(--purple) 50%, transparent); }
+.dg-group.tone-grey rect { fill: color-mix(in srgb, var(--muted) 8%, transparent); stroke: color-mix(in srgb, var(--muted) 50%, transparent); }
 
 /* ---------- Quiz / exam ---------- */
 .quiz { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.2rem 1.3rem; box-shadow: var(--shadow); animation: page-in 0.3s ease both; }

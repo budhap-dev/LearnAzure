@@ -1,0 +1,112 @@
+[
+  {
+    "id": "2.5-q1",
+    "topic": "responsibility shift",
+    "stem": "Compared with running the same Node API on App Service, what does moving it into a container change about who is responsible for what?",
+    "options": [
+      "Microsoft takes over more of the stack, because the container runtime is fully managed",
+      "You take back the base image and the runtime version, so patching their vulnerabilities becomes your job",
+      "Nothing changes; the responsibility line is identical because both are PaaS",
+      "You take back the host operating system as well, which is why containers need patching"
+    ],
+    "answer": 1,
+    "explanation": "App Service patches the OS and the runtime for you; the moment you ship an image, the base image and the Node version inside it are yours, CVEs included. The tempting answer is that containers are 'more managed' - they are more portable, but on this specific line they move responsibility towards you, not away, and the host OS stays Microsoft's in both cases."
+  },
+  {
+    "id": "2.5-q2",
+    "topic": "tags and digests",
+    "scenario": "A pipeline builds the API and pushes it as myregistry.azurecr.io/api:latest, and production pulls that tag on every restart.",
+    "stem": "Why is this a bug rather than a convenience?",
+    "options": [
+      "The :latest tag is reserved by Azure Container Registry and cannot be pulled by Container Apps",
+      "Pulling by tag is slower than pulling by digest, so restarts take longer",
+      "The tag is mutable, so what runs in production is whatever was pushed most recently, and there is no earlier version to roll back to",
+      "Images tagged :latest are excluded from vulnerability scanning"
+    ],
+    "answer": 2,
+    "explanation": "A tag is a movable label, so two restarts an hour apart can start different bytes and nobody can say which build is live or restore the previous one. Pull speed is a red herring - the real cost is losing reproducibility and your rollback target, which is why you tag with the commit SHA and deploy by digest."
+  },
+  {
+    "id": "2.5-q3",
+    "topic": "choosing a host",
+    "scenario": "The team needs a nightly reconciliation job that runs for about four minutes, plus a customer-facing API that must stay available all day.",
+    "stem": "Which pairing fits best?",
+    "options": [
+      "Container Instances for the nightly job, Container Apps for the API",
+      "Container Apps for the nightly job, Container Instances for the API",
+      "Container Instances for both, since both are single containers",
+      "App Service for Containers for the nightly job, Container Instances for the API"
+    ],
+    "answer": 0,
+    "explanation": "ACI bills per second with no orchestration, which is exactly right for a job that starts, works and stops - but it has no load balancing or rolling deployment, so it is the wrong home for an API that must stay up. Container Apps gives the API ingress, revisions and health-driven replicas, and would also happily run the job, but ACI is the cheaper and simpler fit for a short scheduled task."
+  },
+  {
+    "id": "2.5-q4",
+    "topic": "revisions",
+    "scenario": "Ana wants to release a rewritten checkout endpoint to a small slice of shoppers first and watch the error rate before committing.",
+    "stem": "How do Container Apps revisions support that?",
+    "options": [
+      "The new revision replaces the old one, and the platform automatically rolls back if error rates rise",
+      "Both revisions run at once and you set the traffic percentage each receives, shifting to 100% or back to 0%",
+      "A revision is a copy of the environment, so you point a second custom domain at it for the pilot users",
+      "Revisions run sequentially, so the old one drains before the new one starts taking requests"
+    ],
+    "answer": 1,
+    "explanation": "Revisions are immutable snapshots that coexist, and the traffic split is a percentage you control, so 10% to the new revision and back to 0% is the rollback. Automatic rollback on error rate sounds attractive but nothing decides that for you - you watch the telemetry and move the slider yourself."
+  },
+  {
+    "id": "2.5-q5",
+    "topic": "registry authentication",
+    "scenario": "The build pipeline authenticates to Azure Container Registry with the admin username and password, stored as a pipeline secret.",
+    "stem": "What should you change, and why?",
+    "options": [
+      "Rotate the admin password every 30 days, which is the supported way to secure the registry",
+      "Move the registry to Premium, because only Premium supports pipeline authentication",
+      "Disable the admin user and give the pipeline and the runtime managed identities with AcrPush and AcrPull",
+      "Store the admin credentials in Key Vault and have the pipeline read them at build time"
+    ],
+    "answer": 2,
+    "explanation": "The admin user is a single shared credential with full push and pull rights that leaks into logs and rarely rotates; managed identities remove the credential entirely and let you grant push and pull separately. Putting the same shared password in Key Vault is an improvement in storage but not in blast radius, and rotation only shortens the window during which the shared secret is useful."
+  },
+  {
+    "id": "2.5-q6",
+    "topic": "scale to zero",
+    "stem": "What does scale to zero mean for an internal container app that gets no traffic overnight?",
+    "options": [
+      "The app keeps one warm replica but is billed at a reduced idle rate",
+      "The app is deleted and redeployed from the registry when the next request arrives",
+      "Replicas drop to zero and compute billing stops, at the cost of a cold start on the next request",
+      "The Container Apps environment shuts down, so every app in it stops together"
+    ],
+    "answer": 2,
+    "explanation": "With no traffic and a scale rule that allows a minimum of zero, KEDA removes every replica and you stop paying for compute until a request or event wakes it - the trade is that the first caller pays a cold start. The app is not deleted, and the environment is shared infrastructure that stays put for the other apps in it."
+  },
+  {
+    "id": "2.5-q7",
+    "topic": "what containers do not fix",
+    "scenario": "A singleton Node service keeps user sessions in memory and falls over under load. A developer proposes containerising it to make it scalable.",
+    "stem": "What is the honest response?",
+    "options": [
+      "Containerising fixes it, because Container Apps runs multiple replicas behind one ingress",
+      "Containerising changes packaging, not architecture - the in-memory session state must move out before more replicas help",
+      "Containerising fixes it if you enable Dapr, which shares state between replicas automatically",
+      "Containerising fixes it once you set the KEDA scale rule to HTTP concurrency"
+    ],
+    "answer": 1,
+    "explanation": "A container is a packaging format: run two replicas of a service that holds sessions in memory and half the requests land on the wrong instance. Container Apps and KEDA will happily give you more replicas, and Dapr offers a state store, but somebody still has to change the code to use one - the platform cannot make a stateful singleton stateless."
+  },
+  {
+    "id": "2.5-q8",
+    "topic": "App Service for Containers",
+    "scenario": "A team already runs four APIs on one App Service plan with staging slots and VNet integration, and now needs one of them to ship as an image because of a native dependency.",
+    "stem": "What is the lowest-change option?",
+    "options": [
+      "Move all four APIs to Container Apps so the estate stays consistent",
+      "Run that one API on Container Instances and leave the rest alone",
+      "Deploy that API as App Service for Containers on the existing plan, keeping the slots and VNet integration",
+      "Adopt AKS, since a container in an existing cluster is easier to operate than a mixed estate"
+    ],
+    "answer": 2,
+    "explanation": "App Service for Containers changes only the deploy unit - the plan, slots, networking and runbooks all carry over, which is exactly what 'lowest change' means here. Container Apps is the better default for a greenfield container, but migrating four working APIs to get one native dependency is a much bigger change, and ACI cannot host an API that must stay up."
+  }
+]
