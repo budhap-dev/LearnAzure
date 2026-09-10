@@ -1,0 +1,110 @@
+[
+  {
+    "id": "1.1-q1",
+    "topic": "cloud definition",
+    "stem": "Which statement best describes cloud computing?",
+    "options": [
+      "Hosting your servers in a third-party data centre that you rent by the year",
+      "Renting metered, on-demand computing resources over the internet and paying for what you use",
+      "Running virtual machines instead of physical servers",
+      "Outsourcing IT operations to a managed service provider"
+    ],
+    "answer": 1,
+    "explanation": "Cloud is defined by on-demand self-service, elasticity and metered billing. A rented rack in someone else's data centre is still capacity you buy up front; virtualisation on its own is a technology, not a business model."
+  },
+  {
+    "id": "1.1-q2",
+    "topic": "CapEx and OpEx",
+    "scenario": "Finance asks why the proposal to move the web shop to Azure shows no hardware purchase line.",
+    "stem": "What is the right explanation?",
+    "options": [
+      "Azure includes hardware in a one-off setup fee",
+      "The hardware cost is deferred to the end of the contract",
+      "Cloud shifts spend from capital expenditure to operational expenditure - a monthly bill for what ran",
+      "Microsoft donates the hardware for the first year"
+    ],
+    "answer": 2,
+    "explanation": "Cloud is OpEx: there is no up-front purchase, only a metered bill. That is the whole point of the model - and it is why the cost becomes a behaviour to manage rather than a purchase to approve."
+  },
+  {
+    "id": "1.1-q3",
+    "topic": "elasticity",
+    "stem": "What is the difference between scalability and elasticity?",
+    "options": [
+      "They are two words for the same idea",
+      "Scalability is adding bigger machines; elasticity is adding more machines",
+      "Scalability is the ability to handle more load; elasticity is doing so automatically, in both directions",
+      "Elasticity applies only to storage, scalability only to compute"
+    ],
+    "answer": 2,
+    "explanation": "Scalability is capability; elasticity is automatic, demand-driven scaling up and back down. Bigger machine versus more machines is the scale-up versus scale-out distinction, which is a separate idea."
+  },
+  {
+    "id": "1.1-q4",
+    "topic": "elasticity",
+    "scenario": "A promotion drives twelve times the usual traffic for six hours, then it drops back.",
+    "stem": "Which cloud property is doing the most work for you in that situation?",
+    "options": [
+      "Broad network access",
+      "Rapid elasticity",
+      "Resource pooling",
+      "Measured service"
+    ],
+    "answer": 1,
+    "explanation": "Rapid elasticity is capacity growing and shrinking with demand. Resource pooling is what makes it possible behind the scenes, and measured service is what makes sure you only pay for the six hours - but elasticity is the property you are relying on."
+  },
+  {
+    "id": "1.1-q5",
+    "topic": "why Azure",
+    "scenario": "Your organisation already uses Microsoft 365, runs SQL Server and builds with .NET and React.",
+    "stem": "Which is the strongest practical argument for choosing Azure over another provider?",
+    "options": [
+      "Azure is the largest cloud provider by market share",
+      "Azure is the only provider that can run SQL Server",
+      "Identity, SQL Server, licensing and tooling already line up with Azure, so friction is lowest",
+      "Azure is always the cheapest option"
+    ],
+    "answer": 2,
+    "explanation": "The honest case for Azure is friction: the Entra ID tenant already exists, Azure SQL is SQL Server run by Microsoft, Hybrid Benefit carries licences over, and the tooling defaults to Azure. AWS is larger, other clouds can run SQL Server on VMs, and no provider is always cheapest."
+  },
+  {
+    "id": "1.1-q6",
+    "topic": "when not to move",
+    "stem": "Which workload gains the LEAST from moving to the cloud as it is?",
+    "options": [
+      "A new product with unknown demand",
+      "A seasonal web shop with a huge annual peak",
+      "A steady, fully depreciated internal reporting server with no growth",
+      "A start-up's API that doubles its users every quarter"
+    ],
+    "answer": 2,
+    "explanation": "Cloud pays off through elasticity and avoiding up-front capacity. A steady workload on hardware that is already paid for has neither problem to solve, so it is the weakest candidate - at least until the hardware needs replacing."
+  },
+  {
+    "id": "1.1-q7",
+    "topic": "lift and shift",
+    "scenario": "A colleague proposes copying each of your four on-premises servers to an identical Azure virtual machine.",
+    "stem": "What is the most accurate assessment?",
+    "options": [
+      "It is the recommended end state because it changes the least",
+      "It is a valid first step, but it keeps the patching and forgoes most of the elasticity and cost benefits",
+      "It is impossible - Azure does not support virtual machines",
+      "It automatically makes the application elastic"
+    ],
+    "answer": 1,
+    "explanation": "Lift-and-shift is a common and sometimes sensible first move, but one-to-one VMs keep all of the operational burden and none of the platform benefits. Treat it as a step towards managed services, not a destination."
+  },
+  {
+    "id": "1.1-q8",
+    "topic": "economies of scale",
+    "stem": "Why can a hyperscaler offer compute at a lower unit cost than a company running its own rack?",
+    "options": [
+      "They use older hardware that is cheaper to buy",
+      "Buying power, custom hardware, automated operations and energy deals at enormous scale",
+      "They do not pay for electricity",
+      "Government subsidies cover their data centres"
+    ],
+    "answer": 1,
+    "explanation": "Economies of scale: at millions of servers, procurement, automation and energy costs per unit fall far below what any single company can reach - and competition passes some of that on."
+  }
+]

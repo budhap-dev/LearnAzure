@@ -1,0 +1,88 @@
+[
+  {
+    "term": "Cloud computing",
+    "aliases": ["the cloud"],
+    "definition": "Renting computing resources - servers, storage, networking, databases and whole services - from a provider over the internet, on demand, and paying only for what is used. The provider owns and runs the hardware.",
+    "example": "Creating an Azure SQL database from the portal in five minutes, and paying by the hour it exists.",
+    "lessons": ["1.1"],
+    "related": ["Elasticity", "Pay-as-you-go", "Hyperscaler"]
+  },
+  {
+    "term": "On-premises",
+    "aliases": ["on-prem"],
+    "definition": "Infrastructure that an organisation owns and runs in its own buildings or a rack it rents. Contrast with cloud, where the provider owns the hardware. Most real estates are hybrid: some on-premises, some cloud.",
+    "icon": "server-farm",
+    "lessons": ["1.1"],
+    "related": ["Cloud computing", "Hybrid cloud"]
+  },
+  {
+    "term": "Hybrid cloud",
+    "definition": "Running some workloads on-premises and some in a public cloud, managed as one estate. Azure treats this as normal and provides networking, identity and management tools that span both.",
+    "icon": "azure-arc",
+    "lessons": ["1.1"],
+    "related": ["On-premises", "Cloud computing"]
+  },
+  {
+    "term": "CapEx",
+    "aliases": ["capital expenditure"],
+    "definition": "Spending money up front on assets such as servers, which are then depreciated over years. On-premises infrastructure is CapEx: you size and pay for capacity before anyone uses it.",
+    "lessons": ["1.1"],
+    "related": ["OpEx"]
+  },
+  {
+    "term": "OpEx",
+    "aliases": ["operational expenditure"],
+    "definition": "Ongoing spending on services as they are used - a monthly bill rather than an asset purchase. Cloud is OpEx, which makes cost visible and continuous, and turns cost control into a habit rather than a purchase decision.",
+    "lessons": ["1.1", "1.6"],
+    "related": ["CapEx", "Pay-as-you-go"]
+  },
+  {
+    "term": "Pay-as-you-go",
+    "aliases": ["consumption-based pricing", "PAYG"],
+    "definition": "The default cloud pricing model: resources are metered (per second, per gigabyte, per request) and billed for actual use with no up-front commitment. Reservations and savings plans trade commitment for a discount.",
+    "lessons": ["1.1", "1.6"],
+    "related": ["OpEx", "Reservation"]
+  },
+  {
+    "term": "Elasticity",
+    "aliases": ["rapid elasticity"],
+    "definition": "Capacity that grows and shrinks automatically with demand, in both directions. It is the property that lets a web shop handle a twelve-times traffic spike and then stop paying for it an hour later.",
+    "icon": "autoscale",
+    "lessons": ["1.1"],
+    "related": ["Scalability", "Autoscale"]
+  },
+  {
+    "term": "Scalability",
+    "aliases": ["scale up", "scale out"],
+    "definition": "The ability of a system to handle more load by adding resources. Scaling up means a bigger machine; scaling out means more machines. Elasticity is scalability done automatically.",
+    "lessons": ["1.1"],
+    "related": ["Elasticity"]
+  },
+  {
+    "term": "Economies of scale",
+    "definition": "The lower cost per unit that comes from operating at enormous size. Hyperscalers buy hardware, energy and automation at a scale no single company can match, and competition passes part of the saving to customers.",
+    "lessons": ["1.1"],
+    "related": ["Hyperscaler"]
+  },
+  {
+    "term": "Hyperscaler",
+    "definition": "A cloud provider operating data centres at global scale - Microsoft Azure, Amazon Web Services and Google Cloud. Their size is what makes on-demand, metered computing affordable.",
+    "icon": "globe",
+    "lessons": ["1.1"],
+    "related": ["Economies of scale", "Cloud computing"]
+  },
+  {
+    "term": "Lift and shift",
+    "aliases": ["rehost"],
+    "definition": "Moving servers to the cloud as they are, typically one on-premises machine to one virtual machine. A common first step that keeps all the patching and most of the cost, and none of the platform benefits. Treat it as a stage, not a destination.",
+    "icon": "azure-migrate",
+    "lessons": ["1.1"],
+    "related": ["On-premises", "Virtual machine"]
+  },
+  {
+    "term": "Azure Hybrid Benefit",
+    "definition": "A licensing benefit that lets existing Windows Server and SQL Server licences with Software Assurance reduce the price of the equivalent Azure services. Often the single biggest saving for a Microsoft-shaped organisation.",
+    "lessons": ["1.1", "1.6"],
+    "related": ["Pay-as-you-go"]
+  }
+]

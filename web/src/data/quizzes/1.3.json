@@ -1,0 +1,111 @@
+[
+  {
+    "id": "1.3-q1",
+    "topic": "layers of the footprint",
+    "stem": "Which list is ordered from the smallest physical unit to the largest?",
+    "options": [
+      "Region, availability zone, data centre, geography",
+      "Data centre, availability zone, region, geography",
+      "Geography, region, availability zone, data centre",
+      "Availability zone, data centre, geography, region"
+    ],
+    "answer": 1,
+    "explanation": "A data centre is a building; a zone is one or more data centres with independent power and networking; a region groups zones inside one boundary; a geography holds one or more regions and fixes where data at rest lives. Reversing the list is the most common slip - remember that the geography is the legal boundary, so it must be the biggest."
+  },
+  {
+    "id": "1.3-q2",
+    "topic": "data residency",
+    "scenario": "Your legal team must confirm to a regulator that UK customers' order data never leaves the United Kingdom.",
+    "stem": "Which Azure concept gives them that assurance?",
+    "options": [
+      "Choosing a zone-redundant tier for the database",
+      "Deploying into a region inside the United Kingdom geography, such as UK South",
+      "Putting Azure Front Door in front of the application",
+      "Selecting the cheapest region and enabling encryption"
+    ],
+    "answer": 1,
+    "explanation": "Azure keeps customer data at rest inside the geography of the region you choose, and UK South and UK West both sit in the United Kingdom geography. Zone redundancy is about resilience, not location; Front Door caches at the edge but holds no data at rest; encryption protects data wherever it is but does not decide where."
+  },
+  {
+    "id": "1.3-q3",
+    "topic": "availability zones",
+    "scenario": "A stakeholder asks what they get for the higher price of the zone-redundant database tier.",
+    "stem": "What is the accurate one-sentence answer?",
+    "options": [
+      "If the whole UK South region fails, the shop keeps running from UK West automatically",
+      "If one of Microsoft's buildings in the region loses power, the shop stays up and nobody is paged",
+      "Backups are kept for longer",
+      "Latency for users in India improves"
+    ],
+    "answer": 1,
+    "explanation": "Zone-redundant means the service spreads copies across the region's zones, so a data centre failure is invisible to users. It does nothing for a failure of the whole region - that needs the paired region and a disaster recovery plan - and it has no effect on backup retention or on distance to users."
+  },
+  {
+    "id": "1.3-q4",
+    "topic": "region pairs",
+    "stem": "What does a region pair give you that availability zones do not?",
+    "options": [
+      "Lower prices in the second region",
+      "Protection against a single data centre failing",
+      "Sequenced planned maintenance and prioritised recovery when an entire region is lost",
+      "Guaranteed two-millisecond latency between the two regions"
+    ],
+    "answer": 2,
+    "explanation": "Pairs are hundreds of miles apart in the same geography: Microsoft never updates both at once and restores the pair first after a regional disaster. Zones already cover a single building failing. Two-millisecond latency is the figure for zones inside one region, not for regions hundreds of miles apart."
+  },
+  {
+    "id": "1.3-q5",
+    "topic": "choosing a region",
+    "scenario": "Your team is designing a new service and wants to deploy it in a newly opened region because it is closest to the users.",
+    "stem": "What should you check before committing?",
+    "options": [
+      "Nothing - every Azure service is available in every region on launch day",
+      "That every service in the design is available there, and whether the region has a pair or relies on zones alone",
+      "That the region has at least ten availability zones",
+      "That the region is inside the United States, because only US regions support production workloads"
+    ],
+    "answer": 1,
+    "explanation": "Services arrive region by region, and newer regions often open with three zones and no pair, which changes your disaster recovery story. Regions typically have three zones, not ten, and production workloads run in every public region - the constraint is the catalogue, not the country."
+  },
+  {
+    "id": "1.3-q6",
+    "topic": "latency",
+    "scenario": "The React front end loads in under a second in London but takes four seconds in Bengaluru; all Azure resources are in UK South.",
+    "stem": "Which is the cheapest change that is likely to help most?",
+    "options": [
+      "Move the whole application, including the database, to Central India",
+      "Upgrade the App Service plan to a larger size",
+      "Serve the static bundle from Front Door or CDN points of presence, keeping the API and data in the UK",
+      "Enable zone redundancy on the database"
+    ],
+    "answer": 2,
+    "explanation": "The delay is distance: every request pays a long round trip. Caching the bundle at an edge point of presence near the user removes most of that tax without moving any data at rest. A bigger plan does nothing for distance, zone redundancy is about resilience, and a full second deployment is the expensive option to consider only if residency or checkout latency demands it."
+  },
+  {
+    "id": "1.3-q7",
+    "topic": "sovereign clouds",
+    "stem": "Which statement about sovereign clouds is correct?",
+    "options": [
+      "They are ordinary Azure regions with a different price list",
+      "Azure Government and Azure China are physically and logically separate clouds with their own portals and smaller catalogues",
+      "Any customer can deploy to Azure Government to get better compliance",
+      "Sovereign clouds automatically replicate data to the global Azure cloud for resilience"
+    ],
+    "answer": 1,
+    "explanation": "Sovereign clouds are separate instances run for a jurisdiction: Azure Government for US public bodies and Azure China operated by 21Vianet under Chinese law. They are not just another region, access is restricted to eligible customers, and separation from global Azure is the entire point - nothing replicates across."
+  },
+  {
+    "id": "1.3-q8",
+    "topic": "zone postures",
+    "scenario": "A design review lists a Basic-tier App Service as 'zone-redundant' because the region has three zones.",
+    "stem": "What is wrong with that claim?",
+    "options": [
+      "Nothing - any resource in a region with zones is automatically spread across them",
+      "Zones only help when the service tier supports and is configured for them; a Basic tier is regional, so a zone outage can take it down",
+      "App Service can never use availability zones",
+      "Zone redundancy only applies to storage, not compute"
+    ],
+    "answer": 1,
+    "explanation": "A service is zone-redundant, zonal or regional depending on its tier and configuration - the region merely makes zones available. App Service does support zone redundancy on Premium tiers, and so do databases and storage, which is why the review should name the tier rather than the intent."
+  }
+]

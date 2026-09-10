@@ -1,0 +1,103 @@
+[
+  {
+    "term": "Tenant",
+    "aliases": ["Entra ID tenant", "directory"],
+    "definition": "One Microsoft Entra ID directory: the set of users, groups and applications an organisation signs in with. It is the top of the Azure tree and the boundary for identity. Every subscription trusts exactly one tenant, and the same tenant usually serves Microsoft 365.",
+    "example": "northline.com is one tenant; every Northline subscription, developer and pipeline identity lives in it.",
+    "icon": "entra-id",
+    "lessons": ["1.4"],
+    "related": ["Microsoft Entra ID", "Management group", "Subscription"]
+  },
+  {
+    "term": "Management group",
+    "aliases": ["MG"],
+    "definition": "A container for subscriptions (and other management groups) used to apply policy and role assignments across many subscriptions at once. Rules set here are inherited by every subscription beneath. Every tenant has a root management group, even if nobody has looked at it.",
+    "example": "mg-northline holds sub-prod and sub-nonprod, with a 'UK regions only' policy assigned once at the top.",
+    "icon": "management-group",
+    "lessons": ["1.4"],
+    "related": ["Subscription", "Scope", "Azure Policy"]
+  },
+  {
+    "term": "Subscription",
+    "aliases": ["sub"],
+    "definition": "The billing, quota and policy boundary in Azure: one invoice line, its own service limits, and a natural scope for 'prod rules apply here'. Subscriptions are free to create and sit under a management group. Splitting prod from nonprod at this level is the minimum most teams should do.",
+    "example": "sub-prod and sub-nonprod, so a contractor with Contributor on nonprod cannot touch production.",
+    "icon": "subscription",
+    "lessons": ["1.4", "1.6"],
+    "related": ["Management group", "Resource group", "Tenant"]
+  },
+  {
+    "term": "Resource group",
+    "aliases": ["RG"],
+    "definition": "A container for resources that share a lifecycle - deployed, updated and deleted together. Deleting the group deletes everything in it. The group has a region for its metadata, but the resources inside may live anywhere.",
+    "example": "rg-tracking-prod-uksouth holds the Tracking API, its database and its storage account.",
+    "icon": "resource-group",
+    "lessons": ["1.4", "1.8"],
+    "related": ["Subscription", "Resource", "Resource lock"]
+  },
+  {
+    "term": "Resource",
+    "definition": "A single manageable item in Azure - a web app, a database, a storage account, a virtual network. Every resource lives in exactly one resource group, has a resource ID, and is created and managed through a resource provider.",
+    "example": "The App Service app-tracking-api-prod is one resource; its SQL database is another.",
+    "icon": "all-resources",
+    "lessons": ["1.4"],
+    "related": ["Resource group", "Resource ID", "Resource provider"]
+  },
+  {
+    "term": "Scope",
+    "definition": "Any level of the Azure tree - management group, subscription, resource group or resource - at which access or policy can be assigned. Assignments flow down to everything beneath, so put each rule at the highest scope where it is true for everyone below.",
+    "example": "Assign Reader at the management group and every subscription and resource group beneath inherits it.",
+    "lessons": ["1.4"],
+    "related": ["Role-based access control", "Azure Policy", "Management group"]
+  },
+  {
+    "term": "Role-based access control",
+    "aliases": ["RBAC", "Azure RBAC"],
+    "definition": "Azure's authorisation system: a role (such as Reader, Contributor or Owner) is assigned to a user, group or identity at a scope, and the permission is inherited downwards. It answers 'who can do what, where'. Assign roles to groups, not individuals, and at the highest true scope.",
+    "example": "Developers get Contributor on sub-nonprod and Reader on sub-prod; only the pipeline identity can change prod.",
+    "icon": "roles",
+    "lessons": ["1.4"],
+    "related": ["Scope", "Microsoft Entra ID", "Azure Policy"]
+  },
+  {
+    "term": "Azure Policy",
+    "aliases": ["Policy"],
+    "definition": "A governance service that decides what is allowed to exist: deny resources outside approved regions, require a cost-centre tag, or audit anything without backup. Assigned at a scope and inherited, so new subscriptions are born compliant. It complements RBAC, which controls who, not what.",
+    "example": "A policy on mg-northline denies any resource created outside UK South and UK West.",
+    "icon": "policy",
+    "lessons": ["1.4"],
+    "related": ["Scope", "Tag", "Role-based access control"]
+  },
+  {
+    "term": "Naming convention",
+    "definition": "An agreed pattern for resource names, typically type-workload-environment-region, so anyone can read what a thing is from its name. Names cannot be changed after creation, so agree the convention before the first resource exists.",
+    "example": "rg-tracking-prod-uksouth, app-tracking-api-prod, sql-tracking-prod-uksouth.",
+    "lessons": ["1.4"],
+    "related": ["Tag", "Resource group"]
+  },
+  {
+    "term": "Tag",
+    "aliases": ["tags", "resource tag"],
+    "definition": "A name-value label on a resource, resource group or subscription, such as owner, cost-centre or environment. Tags are what cost reports group by and what policies can filter on. They are not inherited, so use a policy to require them.",
+    "example": "cost-centre: CC-4410 on every Tracking resource lets finance split the bill by team.",
+    "icon": "tag",
+    "lessons": ["1.4", "1.6"],
+    "related": ["Naming convention", "Azure Policy", "Subscription"]
+  },
+  {
+    "term": "Resource lock",
+    "aliases": ["lock", "CanNotDelete", "ReadOnly"],
+    "definition": "A guard on a scope that blocks deletion (CanNotDelete) or any change (ReadOnly) for everyone, including Owners, until someone deliberately removes the lock. It turns an accidental delete into an error message. Put one on anything holding production data.",
+    "example": "A CanNotDelete lock on rg-tracking-prod would have stopped the contractor deleting the tracking database.",
+    "lessons": ["1.4"],
+    "related": ["Resource group", "Role-based access control"]
+  },
+  {
+    "term": "Resource ID",
+    "aliases": ["resource identifier"],
+    "definition": "The full path of a resource through the Azure tree: subscription, resource group, resource provider, type and name. Read it right to left and you know exactly where something lives. You paste it into role assignments, pipelines and support tickets.",
+    "example": "/subscriptions/3f2c.../resourceGroups/rg-tracking-prod-uksouth/providers/Microsoft.Web/sites/app-tracking-api-prod",
+    "lessons": ["1.4", "1.5"],
+    "related": ["Resource", "Resource provider", "Subscription"]
+  }
+]

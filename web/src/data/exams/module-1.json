@@ -1,0 +1,203 @@
+{
+  "module": 1,
+  "minutes": 25,
+  "poolFromLessons": 10,
+  "questions": [
+    {
+      "id": "m1-q1",
+      "topic": "service models",
+      "scenario": "A four-person team with no operations specialist must host a React front end and a Node API. They want to spend their time on features, not patching.",
+      "stem": "Which hosting approach best fits, and why?",
+      "options": [
+        "Virtual machines, because they give the team full control of the operating system",
+        "PaaS services such as Static Web Apps and App Service, because Microsoft patches the OS and runtime while the team owns only code and data",
+        "SaaS, because it removes all responsibility from the team",
+        "A single large virtual machine running both tiers to keep the bill simple"
+      ],
+      "answer": 1,
+      "explanation": "PaaS moves the operating system, runtime and infrastructure below the shared-responsibility line, which is exactly what a team without operations capacity needs. VMs maximise control but also maximise chores; SaaS is for buying an application, not hosting your own."
+    },
+    {
+      "id": "m1-q2",
+      "topic": "regions and residency",
+      "scenario": "Legal insists that customer data for a UK insurance product must stay in the United Kingdom, and the product must survive a whole data centre failing.",
+      "stem": "Which deployment choice satisfies both requirements?",
+      "options": [
+        "Deploy to UK South using zone-redundant services, so data stays in the UK geography and survives a zone failure",
+        "Deploy to West Europe, because it is closer to most of Europe",
+        "Deploy to UK South and replicate to East US for resilience",
+        "Deploy to a single availability zone in UK South to keep cost down"
+      ],
+      "answer": 0,
+      "explanation": "Availability zones are separate data centres inside one region, so zone redundancy gives data-centre-level resilience without data leaving the UK geography. Replicating to East US breaks the residency rule; a single zone does not survive a data centre loss; West Europe is not in the UK."
+    },
+    {
+      "id": "m1-q3",
+      "topic": "scope hierarchy",
+      "scenario": "A company wants production spending isolated from development, a hard billing boundary between the two, and a security policy that applies to both without being set twice.",
+      "stem": "How should the Azure hierarchy be laid out?",
+      "options": [
+        "One subscription with two resource groups (dev and prod); apply the policy to each resource group",
+        "Two subscriptions (dev and prod) under one management group; apply the policy at the management group so both inherit it",
+        "Two tenants, one for dev and one for prod, with the policy applied in each",
+        "One resource group holding everything, with tags to separate dev from prod"
+      ],
+      "answer": 1,
+      "explanation": "Subscriptions are the billing and quota boundary, so dev and prod belong in separate subscriptions. A management group above them lets one Policy assignment flow down to both. Resource groups do not separate billing; separate tenants would split identity and are far heavier than needed."
+    },
+    {
+      "id": "m1-q4",
+      "topic": "resource groups",
+      "scenario": "A web app, its App Service plan, its database and its Key Vault are always deployed, updated and retired together. A separate reporting database is shared by three other applications.",
+      "stem": "What is the sensible resource group layout?",
+      "options": [
+        "Everything in one resource group so it is easy to find",
+        "One resource group per resource type: all databases together, all web apps together",
+        "The web app and its dedicated resources in one resource group; the shared reporting database in its own resource group with its own lifecycle",
+        "One resource group per person on the team"
+      ],
+      "answer": 2,
+      "explanation": "A resource group is a lifecycle container: things that are created and deleted together belong together. The shared database outlives any one application, so it needs its own group. Grouping by resource type or by person ignores lifecycle and makes clean-up dangerous."
+    },
+    {
+      "id": "m1-q5",
+      "topic": "Azure Resource Manager",
+      "scenario": "An auditor asks who created a particular virtual machine last Tuesday and from which tool.",
+      "stem": "Where does that answer come from, and why does it exist?",
+      "options": [
+        "The virtual machine's own event log, because Azure writes creation events into the guest OS",
+        "The Activity Log, because every control-plane request passes through Azure Resource Manager and is recorded regardless of whether it came from the portal, the CLI or a template",
+        "Application Insights, because it tracks all Azure operations",
+        "The billing invoice, which lists who created each resource"
+      ],
+      "answer": 1,
+      "explanation": "Every create, update or delete goes through Azure Resource Manager, which authenticates, authorises and logs it in the Activity Log with the caller and the client. Application Insights monitors applications, not management operations; the guest OS knows nothing about who asked Azure to create it."
+    },
+    {
+      "id": "m1-q6",
+      "topic": "infrastructure as code",
+      "scenario": "Production drifted from test because two engineers made different manual changes in the portal over several weeks. The team wants this never to happen again.",
+      "stem": "What is the most effective remedy?",
+      "options": [
+        "Ban the portal entirely and require everyone to use the Azure CLI interactively",
+        "Define the environments in Bicep or Terraform, deploy every change through that code, and treat the portal as read-only for production",
+        "Take a screenshot of every portal change and store it in a wiki",
+        "Give only one engineer permission to change production"
+      ],
+      "answer": 1,
+      "explanation": "Infrastructure as code makes the desired state explicit, repeatable and reviewable, and idempotent deployments re-converge environments that drift. Interactive CLI commands drift just as easily as portal clicks; screenshots and single-owner bottlenecks do not fix the root cause."
+    },
+    {
+      "id": "m1-q7",
+      "topic": "cost control",
+      "scenario": "A developer left a premium-tier database and two large virtual machines running over a long weekend in a test subscription. The finance team found out from the invoice a month later.",
+      "stem": "Which combination would have caught this within a day?",
+      "options": [
+        "A budget on the test subscription with cost alerts, plus auto-shutdown schedules on the virtual machines",
+        "Buying a three-year reservation for the virtual machines",
+        "Moving the test resources to a cheaper region",
+        "Asking developers to be more careful"
+      ],
+      "answer": 0,
+      "explanation": "Budgets with alerts make spend visible as it happens, and auto-shutdown removes the most common cause of weekend waste. A reservation would lock in the cost of idle machines; a cheaper region reduces the rate, not the mistake."
+    },
+    {
+      "id": "m1-q8",
+      "topic": "reservations",
+      "scenario": "One production database has run at the same size, 24 hours a day, for two years and will for the foreseeable future. Three test databases are created and deleted every few weeks.",
+      "stem": "Where does a one-year reservation make sense?",
+      "options": [
+        "On all four databases, because reservations always save money",
+        "On the production database only, because reservations pay off for steady, long-running use and are wasted on resources that get switched off",
+        "On the test databases only, because they are cheaper",
+        "Nowhere - reservations are only for virtual machines"
+      ],
+      "answer": 1,
+      "explanation": "A reservation is a commitment: it discounts steady usage and charges you whether or not the resource runs. The production database is the textbook case; short-lived test databases should stay pay-as-you-go. Reservations exist for many services, not just VMs."
+    },
+    {
+      "id": "m1-q9",
+      "topic": "SLAs",
+      "scenario": "A stakeholder wants '100% uptime' in a contract. Your design chains Front Door, App Service and Azure SQL Database, each with its own SLA of roughly 99.9% to 99.99%.",
+      "stem": "What should you tell them?",
+      "options": [
+        "Azure guarantees 100% uptime for all services, so the contract is fine",
+        "The composite SLA of services in series is lower than any single one - roughly the product of them - so promise a realistic figure and add redundancy where it matters",
+        "The SLA of the chain equals the highest SLA in it",
+        "SLAs do not apply to PaaS services"
+      ],
+      "answer": 1,
+      "explanation": "Dependent services in series multiply: 99.99% × 99.95% × 99.99% is about 99.93%. No cloud provider promises 100%, and an SLA is a financial commitment with service credits, not a guarantee. Redundancy in parallel is how you push the number up - at a cost."
+    },
+    {
+      "id": "m1-q10",
+      "topic": "RPO and RTO",
+      "scenario": "The business says it can tolerate losing at most 15 minutes of orders and must be trading again within one hour after a regional failure.",
+      "stem": "Which pair of requirements has the business just stated?",
+      "options": [
+        "RPO of 1 hour and RTO of 15 minutes",
+        "RPO of 15 minutes and RTO of 1 hour",
+        "An SLA of 99.9% and a service credit of 15%",
+        "A backup every hour and a restore every 15 minutes"
+      ],
+      "answer": 1,
+      "explanation": "Recovery point objective is how much data you can afford to lose (15 minutes); recovery time objective is how long you can be down (1 hour). Getting them the wrong way round leads to designs that protect the wrong thing."
+    },
+    {
+      "id": "m1-q11",
+      "topic": "Well-Architected Framework",
+      "scenario": "In a design review a colleague asks: 'What happens when the database is unavailable for two minutes, and will we know?'",
+      "stem": "Which Well-Architected pillars is that question probing?",
+      "options": [
+        "Cost Optimization and Performance Efficiency",
+        "Reliability and Operational Excellence",
+        "Security and Cost Optimization",
+        "Performance Efficiency only"
+      ],
+      "answer": 1,
+      "explanation": "Surviving a dependency failure is Reliability; knowing about it through monitoring and alerts is Operational Excellence. Good reviews walk all five pillars, but this question is squarely about those two."
+    },
+    {
+      "id": "m1-q12",
+      "topic": "first workload",
+      "scenario": "You are landing a React app, a Node API and a SQL Server database on Azure for the first time, with a small budget and a team that knows the code but not the cloud.",
+      "stem": "Which starting design is the most defensible?",
+      "options": [
+        "Three virtual machines mirroring the current servers, because it changes the least",
+        "Static Web Apps for the React app, App Service for the Node API and Azure SQL Database, in one resource group with a budget alert and infrastructure defined in Bicep",
+        "A Kubernetes cluster, because it will scale to anything later",
+        "Everything in a single App Service instance, including the database as a file"
+      ],
+      "answer": 1,
+      "explanation": "Managed PaaS services match the team's skills, keep operations light and cost predictable, and a resource group plus Bicep plus a budget gives lifecycle, repeatability and cost visibility from day one. VMs recreate the old chores; Kubernetes adds complexity the team does not need yet."
+    },
+    {
+      "id": "m1-q13",
+      "topic": "shared responsibility",
+      "scenario": "After moving the API to App Service, a penetration test finds a vulnerable Node dependency in your code.",
+      "stem": "Whose responsibility is fixing it?",
+      "options": [
+        "Microsoft's, because App Service is a managed service",
+        "Yours, because application code and its dependencies stay on the customer's side of the line in every service model except SaaS",
+        "Nobody's - PaaS services are not subject to penetration tests",
+        "The network team's, because a firewall would have prevented it"
+      ],
+      "answer": 1,
+      "explanation": "PaaS moves the OS and runtime to Microsoft, but your code, your dependencies, your data and your identity configuration remain yours. A firewall does not patch an application library."
+    },
+    {
+      "id": "m1-q14",
+      "topic": "region choice",
+      "scenario": "A new Azure service you need is only available in a few regions, and none of them is the one your other resources use. Latency between the regions is around 20 milliseconds.",
+      "stem": "What is the reasonable next step?",
+      "options": [
+        "Abandon the service - resources must all be in one region",
+        "Check whether 20 ms of extra latency, cross-region data transfer cost and any residency rules are acceptable, and if so deploy that service in the region where it exists",
+        "Move every existing resource to the new region immediately",
+        "Open a support ticket demanding the service be added to your region today"
+      ],
+      "answer": 1,
+      "explanation": "Service availability is one of the factors in region choice, alongside latency, residency, price and capacity. Resources can live in different regions; the trade-off is latency, egress cost and compliance, which you evaluate rather than assume."
+    }
+  ]
+}

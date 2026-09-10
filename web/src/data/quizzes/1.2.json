@@ -1,0 +1,110 @@
+[
+  {
+    "id": "1.2-q1",
+    "topic": "service models",
+    "stem": "Which statement correctly matches each service model to what you receive?",
+    "options": [
+      "IaaS gives you a product, PaaS gives you a machine, SaaS gives you a platform",
+      "IaaS gives you a machine, PaaS gives you a platform, serverless gives you a trigger, SaaS gives you a product",
+      "IaaS and PaaS are the same; SaaS adds a licence",
+      "Serverless gives you a machine with no operating system"
+    ],
+    "answer": 1,
+    "explanation": "Each model moves more of the stack to Microsoft: a VM (IaaS), a patched runtime for your code (PaaS), code that runs when triggered (serverless), a finished product you sign in to (SaaS). Serverless still runs on machines - you simply never choose or see one."
+  },
+  {
+    "id": "1.2-q2",
+    "topic": "shared responsibility",
+    "scenario": "Your board asks which responsibilities remain with the company after moving everything to PaaS and SaaS.",
+    "stem": "Which two rows of the shared responsibility table never move to Microsoft?",
+    "options": [
+      "Operating system patching and the runtime",
+      "Data and identity",
+      "Building and hardware",
+      "Network firewalls and the application code"
+    ],
+    "answer": 1,
+    "explanation": "Data (classification, backup, who can see it) and identity and access are always the customer's, even in SaaS. OS and runtime patching move to Microsoft in PaaS, and application code moves to Microsoft only in SaaS - so those rows do slide."
+  },
+  {
+    "id": "1.2-q3",
+    "topic": "managed service",
+    "stem": "What defines a managed service?",
+    "options": [
+      "A service that an outsourcing partner runs for you under a support contract",
+      "Any service that runs on a virtual machine Microsoft owns",
+      "A service where the provider owns the operating system, runtime and uptime, and you own code, data and configuration",
+      "A service with no cost when idle"
+    ],
+    "answer": 2,
+    "explanation": "The key idea of the lesson: Microsoft owns the OS, runtime and uptime; you own code, data and configuration. Zero idle cost is a property of serverless specifically, and every Azure service runs on hardware Microsoft owns - that is not what makes it managed."
+  },
+  {
+    "id": "1.2-q4",
+    "topic": "IaaS",
+    "scenario": "A legacy ERP system only ships as a Windows installer and needs a custom monitoring agent on the operating system.",
+    "stem": "Which service model fits, and what does the team take on?",
+    "options": [
+      "PaaS on App Service - Microsoft will install the agent",
+      "Serverless on Azure Functions - the installer runs as a trigger",
+      "IaaS on a virtual machine - the team owns OS patching and the agent",
+      "SaaS - Microsoft 365 includes ERP"
+    ],
+    "answer": 2,
+    "explanation": "Something that needs root access to the OS forces IaaS, and the price is that the team patches the operating system and runtime. App Service does not let you install arbitrary OS agents, and Functions run short triggered code, not a Windows installer. Not every workload fits a managed service - name the reason and move on."
+  },
+  {
+    "id": "1.2-q5",
+    "topic": "cost model",
+    "scenario": "A Node API handles a steady 200 million small calls a month, evenly spread across the day.",
+    "stem": "What should the team do before assuming Azure Functions will be cheaper than App Service?",
+    "options": [
+      "Nothing - serverless is always cheaper because it scales to zero",
+      "Measure: per-execution billing on steady, high-volume traffic can cost more than a fixed App Service plan",
+      "Choose a VM, because VMs are always cheapest for APIs",
+      "Choose Functions, because App Service cannot autoscale"
+    ],
+    "answer": 1,
+    "explanation": "Per-execution billing suits spiky traffic; per-instance billing suits steady load. A chatty API that never goes quiet gains nothing from scale-to-zero and pays for every call, so a fixed plan can win. App Service does autoscale, and VMs bring back patching without solving the cost question."
+  },
+  {
+    "id": "1.2-q6",
+    "topic": "serverless",
+    "stem": "A nightly stock-sync job that runs for four minutes was a Windows service on-premises. Why is a timer-triggered Azure Function a good fit?",
+    "options": [
+      "Functions guarantee sub-millisecond start-up",
+      "It is billed only for the four minutes it runs, with no server to size or patch",
+      "Functions can run for days without limit",
+      "Windows services cannot be rewritten for anything else"
+    ],
+    "answer": 1,
+    "explanation": "The job is short and infrequent: exactly the shape per-execution billing rewards. The tempting wrong answers are the constraints of serverless, not its strengths - cold starts make latency less predictable, and long-running processes are a reason to avoid Functions."
+  },
+  {
+    "id": "1.2-q7",
+    "topic": "lock-in",
+    "scenario": "One engineer wants the API on App Service; another wants it on Azure Functions using Azure-specific triggers and bindings.",
+    "stem": "What is the honest portability trade-off?",
+    "options": [
+      "Both options are equally portable to another host",
+      "App Service locks you in; Functions are fully portable",
+      "A Node API on App Service moves to any Linux host; a Function built on Azure-specific bindings is a rewrite to move",
+      "Neither can ever leave Azure"
+    ],
+    "answer": 2,
+    "explanation": "Plain Node on App Service is just Node - it runs anywhere. Functions that lean on Azure triggers and bindings tie the code to the platform. Neither is wrong; the lesson's point is to decide the lock-in on purpose rather than discover it later."
+  },
+  {
+    "id": "1.2-q8",
+    "topic": "containers",
+    "stem": "Where do containers sit on the service-model spectrum?",
+    "options": [
+      "They are pure SaaS - Microsoft owns everything",
+      "They are IaaS - you patch the host operating system",
+      "Awkwardly across it: you own the runtime inside the image, while Container Apps or AKS manage the hosts",
+      "They are serverless by definition and always bill per execution"
+    ],
+    "answer": 2,
+    "explanation": "A container packages your app and its runtime, so runtime patching is back with you, but the hosts are managed. That makes containers the right choice when you need PaaS-like operations for something App Service cannot run - not a free pass to SaaS or an automatic serverless bill."
+  }
+]

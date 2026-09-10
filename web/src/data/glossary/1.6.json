@@ -1,0 +1,106 @@
+[
+  {
+    "term": "Azure pricing calculator",
+    "aliases": ["pricing calculator"],
+    "definition": "A free web tool for estimating the monthly cost of a design: add services, choose region, tier, redundancy and hours, and save or share the estimate. It estimates what a design would cost; it does not track what you actually spend.",
+    "example": "Priya's team priced the shop at £1,400 a month in the calculator before creating a single resource.",
+    "lessons": ["1.6"],
+    "related": ["TCO calculator", "Cost Management", "Pay-as-you-go"]
+  },
+  {
+    "term": "TCO calculator",
+    "aliases": ["Total Cost of Ownership calculator"],
+    "definition": "A tool that compares the full cost of running workloads on-premises - hardware, licences, power, space and people - with the equivalent Azure estimate over several years. Built for the migration business case, not the monthly bill.",
+    "example": "The TCO report showed the four-server rack cost £180,000 over three years once staff time and power were counted.",
+    "lessons": ["1.6"],
+    "related": ["Azure pricing calculator", "CapEx", "OpEx"]
+  },
+  {
+    "term": "Cost Management",
+    "aliases": ["Cost Management + Billing", "Microsoft Cost Management"],
+    "definition": "The built-in, free Azure service for seeing and controlling spend: cost analysis with forecasts, budgets, cost alerts and exports. It reports what has run; it cannot stop resources by itself unless a budget alert triggers an automation.",
+    "example": "Cost analysis grouped by the environment tag showed that the dev subscription was spending more than production.",
+    "icon": "cost-management",
+    "lessons": ["1.6"],
+    "related": ["Budget", "Cost alert", "Azure Advisor", "Chargeback"]
+  },
+  {
+    "term": "Budget",
+    "aliases": ["cost budget"],
+    "definition": "A spending amount set on a subscription, resource group or management group for a period, usually a month. A budget does not block spending; it raises cost alerts at the thresholds you choose. Every subscription should have one from the day it is created.",
+    "example": "A £1,500 monthly budget on sub-shop-prod with alerts at 50%, 80% and 100%.",
+    "icon": "cost-budgets",
+    "lessons": ["1.6"],
+    "related": ["Cost alert", "Cost Management"]
+  },
+  {
+    "term": "Cost alert",
+    "aliases": ["budget alert"],
+    "definition": "A notification sent when actual or forecast spend crosses a budget threshold, or when a credit is running low. Delivered by email or to an action group that can run automation, such as shutting down a resource group.",
+    "example": "The 80% alert fired on the 19th of the month, which is how the team found the weekend VM.",
+    "icon": "cost-alerts",
+    "lessons": ["1.6"],
+    "related": ["Budget", "Cost Management"]
+  },
+  {
+    "term": "Savings plan",
+    "aliases": ["Azure savings plan for compute"],
+    "definition": "A commitment to spend a fixed amount per hour on compute for one or three years, in exchange for a discount on whatever eligible compute runs. More flexible than a reservation because it is not tied to one size or region, but the discount is usually smaller.",
+    "example": "A £2-per-hour savings plan covered the API's App Service plan and the batch VMs, even after the VM size changed.",
+    "icon": "savings-plans",
+    "lessons": ["1.6"],
+    "related": ["Reservation", "Pay-as-you-go"]
+  },
+  {
+    "term": "Free account",
+    "aliases": ["Azure free account", "free tier"],
+    "definition": "The sign-up offer for new Azure customers: a credit for the first 30 days, twelve months of limited amounts of popular services, and a set of always-free services within monthly limits. Separately, some services have permanent free tiers such as Static Web Apps Free and App Service F1. Amounts change, so check the current page.",
+    "example": "A learner hosts a React portfolio on Static Web Apps Free and a small serverless Azure SQL database under the free offer.",
+    "icon": "free-services",
+    "lessons": ["1.6"],
+    "related": ["Pay-as-you-go", "Static Web Apps", "App Service"]
+  },
+  {
+    "term": "Spot virtual machine",
+    "aliases": ["Spot VM", "spot instance"],
+    "definition": "A virtual machine that runs on Azure's spare capacity at a very large discount - often up to 90% - but can be evicted at short notice when Azure needs the capacity back. Only for work that can be interrupted and resumed.",
+    "example": "Nightly image-processing jobs run on spot VMs and simply restart if evicted.",
+    "icon": "virtual-machine",
+    "lessons": ["1.6"],
+    "related": ["Virtual machine", "Pay-as-you-go"]
+  },
+  {
+    "term": "Egress",
+    "aliases": ["outbound data transfer", "data transfer out"],
+    "definition": "Data leaving Azure to the internet, or moving between Azure regions, which is billed per gigabyte. Inbound data is free. It is the charge most often missing from estimates: large downloads, cross-region copies and un-cached media all count.",
+    "example": "Copying a 40 GB database from UK South to West Europe nine times produced 360 GB of billable egress.",
+    "lessons": ["1.6"],
+    "related": ["Region", "Pay-as-you-go"]
+  },
+  {
+    "term": "Azure Advisor",
+    "aliases": ["Advisor"],
+    "definition": "A free service that analyses your resources and recommends actions across cost, reliability, security, performance and operational excellence. Cost recommendations include idle VMs, unattached disks and resources that would be cheaper reserved.",
+    "example": "Advisor flagged that the load-test VM had averaged 2% CPU for a fortnight and suggested shutting it down.",
+    "icon": "advisor",
+    "lessons": ["1.6", "1.7"],
+    "related": ["Cost Management", "Right-sizing", "Well-Architected Framework"]
+  },
+  {
+    "term": "Chargeback",
+    "aliases": ["showback"],
+    "definition": "Attributing cloud spend to the team or product that caused it. Showback reports the figure to each team; chargeback actually bills their budget. Both depend on consistent tags, which is why tagging is enforced with policy rather than requested politely.",
+    "example": "Each month finance bills the marketing team for everything tagged cost-centre:marketing.",
+    "icon": "tags",
+    "lessons": ["1.6"],
+    "related": ["Tag", "Cost Management", "Azure Policy"]
+  },
+  {
+    "term": "Right-sizing",
+    "aliases": ["rightsizing"],
+    "definition": "Changing a resource to the smallest size or tier that meets its real demand, based on measured utilisation rather than the original guess. The most common cost saving after switching things off.",
+    "example": "The API's App Service plan dropped from P2v3 to P1v3 after a month at 15% CPU, halving its cost.",
+    "lessons": ["1.6"],
+    "related": ["Azure Advisor", "Scalability"]
+  }
+]
