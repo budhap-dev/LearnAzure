@@ -1,0 +1,33 @@
+[
+  {
+    "term": "Microsoft Entra ID",
+    "aliases": ["Entra ID", "Azure Active Directory", "Azure AD", "AAD"],
+    "definition": "Microsoft's cloud identity service: the directory of users, groups and applications that Azure, Microsoft 365 and thousands of other apps sign in against. Every Azure subscription trusts exactly one Entra ID tenant. Formerly called Azure Active Directory.",
+    "icon": "entra-id",
+    "lessons": ["1.4"],
+    "related": ["Tenant", "Subscription"]
+  },
+  {
+    "term": "Virtual machine",
+    "aliases": ["VM"],
+    "definition": "A rented computer in Azure: you choose the size, the operating system and the disks, and you are responsible for everything inside it - patching, runtime, application. The most flexible and the most hands-on compute option.",
+    "icon": "virtual-machine",
+    "lessons": ["1.2"],
+    "related": ["IaaS"]
+  },
+  {
+    "term": "Autoscale",
+    "definition": "Rules that add or remove instances of a service automatically based on metrics such as CPU, queue length or a schedule. The mechanism behind elasticity for App Service, virtual machine scale sets and Container Apps.",
+    "icon": "autoscale",
+    "lessons": ["1.1"],
+    "related": ["Elasticity"]
+  },
+  {
+    "term": "Reservation",
+    "aliases": ["reserved instance", "Azure Reservations"],
+    "definition": "A commitment to use a specific resource type (such as a VM size or a database tier) for one or three years in exchange for a large discount, often 30-70%. Worth it for steady workloads; wasted on anything you might switch off.",
+    "icon": "reservations",
+    "lessons": ["1.6"],
+    "related": ["Savings plan", "Pay-as-you-go"]
+  }
+]

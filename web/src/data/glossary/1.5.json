@@ -1,0 +1,120 @@
+[
+  {
+    "term": "Azure Resource Manager",
+    "aliases": ["ARM"],
+    "definition": "The single management layer every request to create, change, read or delete an Azure resource goes through, whatever tool sent it. It authenticates the caller, authorises them with RBAC at the scope, checks Azure Policy, then hands the work to the resource provider. There is no back door, so nothing you do to ARM's rules can be bypassed by choosing a different tool.",
+    "example": "A portal click, an az webapp create and a Bicep deployment all arrive at ARM as the same REST call.",
+    "icon": "resource-graph",
+    "lessons": ["1.5"],
+    "related": ["Control plane", "Resource provider", "Role-based access control", "Azure Policy", "Activity log"]
+  },
+  {
+    "term": "Control plane",
+    "definition": "Everything that manages resources rather than using them: creating a database, changing a storage account's redundancy, deleting a web app. Control-plane traffic goes through Azure Resource Manager, is governed by RBAC roles such as Contributor, and is recorded in the Activity log. Control-plane rights do not let you read what is inside a resource.",
+    "example": "Creating the storage account and setting its redundancy is control plane; the blobs inside it are not.",
+    "lessons": ["1.5"],
+    "related": ["Data plane", "Azure Resource Manager", "Activity log", "Role-based access control"]
+  },
+  {
+    "term": "Data plane",
+    "definition": "Reading and writing what is inside a resource: uploading a blob, running a SELECT, fetching a secret. It goes straight to the service's own endpoint and never touches Azure Resource Manager, so it needs its own roles or keys and shows up in the resource's diagnostic logs rather than the Activity log. Grant it separately from control-plane access and any one identity's blast radius halves.",
+    "example": "Storage Blob Data Reader lets an app read blobs without any right to manage the storage account.",
+    "lessons": ["1.5"],
+    "related": ["Control plane", "Azure Resource Manager", "Role-based access control"]
+  },
+  {
+    "term": "Azure portal",
+    "aliases": ["the portal"],
+    "definition": "The web interface for Azure: browse the estate, create resources with forms, read logs and learn a service by poking at it. It is the best tool for exploring and one-off checks, and the worst for anything repeatable - clicks cannot be reviewed, versioned or replayed, so environments built by hand drift apart.",
+    "example": "Use the portal to look at why the app is unhealthy; use a file in source control to change it.",
+    "icon": "portal",
+    "lessons": ["1.5"],
+    "related": ["Cloud Shell", "Azure CLI", "Azure Resource Manager", "Infrastructure as code"]
+  },
+  {
+    "term": "Azure CLI",
+    "aliases": ["az CLI", "az"],
+    "definition": "A cross-platform command-line tool whose commands read like what they do - az group create, az webapp create - and return JSON. It suits scripting from Bash and CI, and quick queries. It is imperative, so a script that half-runs leaves a half-built estate and rerunning it often fails with 'already exists'.",
+    "example": "az group create --name rg-shop-test --location uksouth",
+    "icon": "cloud-shell",
+    "lessons": ["1.5"],
+    "related": ["Azure PowerShell", "Cloud Shell", "Azure portal", "Azure Resource Manager"]
+  },
+  {
+    "term": "Azure PowerShell",
+    "aliases": ["Az PowerShell module", "Az module"],
+    "definition": "The PowerShell module for managing Azure, with cmdlets such as New-AzWebApp that return objects rather than JSON text. It does everything the Azure CLI does, so pick one per team: maintaining scripts in both doubles the work for no extra power.",
+    "example": "New-AzResourceGroup -Name rg-shop-test -Location uksouth",
+    "icon": "powershell",
+    "lessons": ["1.5"],
+    "related": ["Azure CLI", "Cloud Shell", "Azure Resource Manager"]
+  },
+  {
+    "term": "Cloud Shell",
+    "aliases": ["Azure Cloud Shell"],
+    "definition": "A browser terminal inside the Azure portal with the Azure CLI, PowerShell and Git already installed and already signed in as you, plus a small persistent file share. It is the fastest way to run one command during an incident, including from a phone. The file share is a small storage cost, and anything you leave in it is not backed up.",
+    "example": "Open Cloud Shell from the portal toolbar and run az webapp restart without installing anything.",
+    "icon": "cloud-shell",
+    "lessons": ["1.5"],
+    "related": ["Azure CLI", "Azure PowerShell", "Azure portal"]
+  },
+  {
+    "term": "ARM template",
+    "aliases": ["Azure Resource Manager template"],
+    "definition": "A JSON file describing the resources that should exist, deployed to Azure Resource Manager, which works out what to create, change or leave alone. It is declarative and idempotent, and it is the format everything else compiles down to. The JSON is verbose enough that few teams now write it by hand - they write Bicep instead.",
+    "example": "azuredeploy.json with a parameter for the environment name, deployed by the pipeline.",
+    "icon": "templates",
+    "lessons": ["1.5"],
+    "related": ["Bicep", "Infrastructure as code", "Idempotent", "Azure Resource Manager"]
+  },
+  {
+    "term": "Bicep",
+    "definition": "A concise, Azure-only language for describing infrastructure that compiles to an ARM template. It gives the same declarative, idempotent deployment with far less syntax, and supports new Azure services from day one. It is Azure-only, so estates spanning clouds usually reach for Terraform instead.",
+    "example": "One main.bicep defines test and prod, with only the environment parameter changing.",
+    "icon": "templates",
+    "lessons": ["1.5"],
+    "related": ["ARM template", "Terraform", "Infrastructure as code", "Idempotent"]
+  },
+  {
+    "term": "Terraform",
+    "definition": "A third-party infrastructure-as-code tool that uses its own language, HCL, and works across Azure, other clouds and SaaS such as GitHub. Unlike Bicep it keeps its own state file recording what it believes exists, and that file must be stored somewhere shared and protected - losing or corrupting it is the classic Terraform outage.",
+    "example": "One Terraform configuration provisions the Azure estate and the GitHub repositories that deploy to it.",
+    "lessons": ["1.5"],
+    "related": ["Bicep", "ARM template", "Infrastructure as code"]
+  },
+  {
+    "term": "Infrastructure as code",
+    "aliases": ["IaC"],
+    "definition": "Defining your cloud environment in files kept in source control and applied by a pipeline, rather than by clicking or by ad-hoc scripts. It makes environments reviewable, repeatable and rebuildable, which is what ends drift between test and production. It has a real learning curve and only pays off once a pipeline, not a person, is the thing that changes production.",
+    "example": "Anything that will live longer than a week, or exist in more than one environment, comes from a file.",
+    "icon": "code",
+    "lessons": ["1.5"],
+    "related": ["Bicep", "ARM template", "Terraform", "Idempotent", "Azure portal"]
+  },
+  {
+    "term": "Idempotent",
+    "aliases": ["idempotency"],
+    "definition": "A property of an operation that gives the same result however many times it runs. Deploying a declarative template ten times leaves the estate exactly as one deployment would, because ARM reconciles what exists against what is described. Imperative create commands are not idempotent - the second run errors or makes a duplicate.",
+    "example": "PUT /orders/42 is idempotent and POST /orders is not; a Bicep deployment behaves like the PUT.",
+    "lessons": ["1.5"],
+    "related": ["Infrastructure as code", "Bicep", "ARM template", "Azure Resource Manager"]
+  },
+  {
+    "term": "Resource provider",
+    "aliases": ["RP", "namespace"],
+    "definition": "The Azure service that owns a family of resource types and does the actual work once Azure Resource Manager has approved a request - Microsoft.Web for App Service, Microsoft.Sql for databases, Microsoft.Storage for storage accounts. Its name sits in every resource ID. A subscription can only create a type once its provider is registered, which is what a 'namespace not registered' deployment error means.",
+    "example": "az provider register --namespace Microsoft.Sql fixes a template that cannot create a database.",
+    "icon": "cubes",
+    "lessons": ["1.5", "1.4"],
+    "related": ["Azure Resource Manager", "Resource ID", "Resource", "Azure Policy"]
+  },
+  {
+    "term": "Activity log",
+    "aliases": ["Azure Activity Log"],
+    "definition": "The audit trail of the control plane: every operation that went through Azure Resource Manager, with who called it, what they changed, when, from which IP address and whether it succeeded. It is the first place to look when something changed unexpectedly. It keeps only ninety days by default and records nothing about the data plane, so export it to a workspace if you need longer or need blob and query access too.",
+    "example": "It answers 'who created this virtual machine, from where?' for clicks and scripts alike.",
+    "icon": "activity-log",
+    "lessons": ["1.5"],
+    "related": ["Control plane", "Data plane", "Azure Resource Manager", "Role-based access control"]
+  }
+]

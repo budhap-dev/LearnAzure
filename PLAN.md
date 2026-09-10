@@ -28,7 +28,7 @@ lesson quizzes, timed, graded). A **final learning test** draws from the whole c
 
 | # | Module | Lessons | Theme |
 |---|--------|---------|-------|
-| 1 | Cloud and Azure foundations | 8 | What cloud is, how Azure is organised, cost, SLAs |
+| 1 | Cloud and Azure foundations ✅ | 8 | What cloud is, how Azure is organised, cost, SLAs |
 | 2 | Compute and hosting | 7 | VMs, App Service, Static Web Apps, Functions, containers, AKS |
 | 3 | Storage and data | 7 | Storage accounts, Azure SQL, Cosmos DB, Redis, choosing a store |
 | 4 | Networking, identity and security | 8 | VNets, load balancing, private endpoints, Entra ID, RBAC, Key Vault, Defender |
@@ -41,18 +41,21 @@ lesson quizzes, timed, graded). A **final learning test** draws from the whole c
 Around 63 lessons. Modules are built one at a time; each is verified end-to-end before the
 next starts.
 
-### Module 1 — Cloud and Azure foundations
+### Module 1 — Cloud and Azure foundations — **shipped**
 
 | Id | Lesson |
 |----|--------|
 | 1.1 | Why cloud, and why Azure |
-| 1.2 | IaaS, PaaS, SaaS and serverless — the shared responsibility line |
-| 1.3 | Azure's global footprint — regions, region pairs and availability zones |
-| 1.4 | How Azure is organised — tenant, management groups, subscriptions, resource groups |
-| 1.5 | Azure Resource Manager — portal, CLI, Bicep and how every request flows |
-| 1.6 | Pricing, cost and the free tier — never be surprised by a bill |
+| 1.2 | IaaS, PaaS, SaaS and serverless |
+| 1.3 | Azure's global footprint |
+| 1.4 | How Azure is organised |
+| 1.5 | Azure Resource Manager and how you talk to Azure |
+| 1.6 | Pricing, cost and the free tier |
 | 1.7 | SLAs, reliability vocabulary and the Well-Architected Framework |
-| 1.8 | Your first real workload — a React app, a Node API and SQL on Azure |
+| 1.8 | Your first real workload on Azure |
+
+Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
+at random from the lesson quizzes, over 25 minutes. 97 glossary terms.
 
 ## App architecture
 

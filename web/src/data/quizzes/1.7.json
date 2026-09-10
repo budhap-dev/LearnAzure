@@ -1,0 +1,112 @@
+[
+  {
+    "id": "1.7-q1",
+    "topic": "what an SLA is",
+    "scenario": "A partner's contract demands that your ordering API 'guarantees 100% availability', and the commercial director points out that Azure has SLAs.",
+    "stem": "What is the accurate explanation of what an Azure SLA provides?",
+    "options": [
+      "A guarantee that the service will not fail, backed by Microsoft's engineers",
+      "A financial commitment: if monthly uptime falls below the published percentage, Microsoft issues a service credit",
+      "Insurance that reimburses your lost revenue during an outage",
+      "A promise of 100% availability for any paid tier"
+    ],
+    "answer": 1,
+    "explanation": "An SLA is a published uptime percentage with a service credit if it is missed - a refund on that service's bill, capped at what you paid. It is not a guarantee against failure and never covers lost business revenue, and no Azure service publishes a 100% SLA."
+  },
+  {
+    "id": "1.7-q2",
+    "topic": "nines to minutes",
+    "stem": "A service with a 99.9% monthly SLA can be unavailable for approximately how long each month while still meeting it?",
+    "options": [
+      "About 4 minutes",
+      "About 44 minutes",
+      "About 7 hours",
+      "About 26 seconds"
+    ],
+    "answer": 1,
+    "explanation": "0.1% of a 30-day month (43,200 minutes) is about 43.8 minutes. Four minutes is 99.99%, seven hours is 99%, and 26 seconds is 99.999% - each extra nine divides the allowance by roughly ten."
+  },
+  {
+    "id": "1.7-q3",
+    "topic": "composite SLA",
+    "scenario": "Your request chain is Front Door (99.99%), App Service (99.95%) and Azure SQL Database (99.99%), all in series.",
+    "stem": "What is the composite SLA you can stand behind?",
+    "options": [
+      "99.99%, the highest of the three",
+      "99.95%, the lowest of the three",
+      "Approximately 99.93%",
+      "Approximately 99.98%"
+    ],
+    "answer": 2,
+    "explanation": "Services in series must all be up, so their availabilities multiply: 0.9999 × 0.9995 × 0.9999 ≈ 0.9993. The result is always lower than the weakest link, which is why 'the lowest of the three' is the tempting but wrong shortcut."
+  },
+  {
+    "id": "1.7-q4",
+    "topic": "redundancy in parallel",
+    "scenario": "The App Service tier is the weakest link at 99.95%. A colleague proposes running two independent instances so that both must fail before the tier is down.",
+    "stem": "How does the availability of that tier change?",
+    "options": [
+      "It doubles to 199.9%",
+      "It stays at 99.95%, because both instances have the same SLA",
+      "It rises to roughly 99.99998%, because the chance of both failing is 0.0005 × 0.0005",
+      "It falls, because there are now two things that can break"
+    ],
+    "answer": 2,
+    "explanation": "For redundant copies in parallel, availability is 1 − (1−a)(1−b). Both must fail for the tier to fail, and 0.0005 × 0.0005 is tiny. 'Two things can break' is the intuition for series, not parallel - and availability can never exceed 100%."
+  },
+  {
+    "id": "1.7-q5",
+    "topic": "RPO and RTO",
+    "scenario": "The business states it can lose at most 15 minutes of orders and can tolerate the API being down for at most one hour.",
+    "stem": "Which pair of terms records those two requirements?",
+    "options": [
+      "RTO 15 minutes, RPO 1 hour",
+      "RPO 15 minutes, RTO 1 hour",
+      "SLA 15 minutes, RPO 1 hour",
+      "High availability 15 minutes, disaster recovery 1 hour"
+    ],
+    "answer": 1,
+    "explanation": "RPO (recovery point objective) is how much data you can lose, measured in time - 15 minutes of orders. RTO (recovery time objective) is how long you can be down - one hour. Swapping them is the classic mistake; remember 'point' is about data and 'time' is about downtime."
+  },
+  {
+    "id": "1.7-q6",
+    "topic": "backup vs DR vs HA",
+    "scenario": "A team says the shop already has disaster recovery because Azure SQL takes automatic nightly backups.",
+    "stem": "What is the right assessment?",
+    "options": [
+      "Correct - backups are the definition of disaster recovery",
+      "Incorrect - a nightly backup implies a 24-hour RPO and a restore-length RTO, and does not give a second region to run in",
+      "Incorrect - disaster recovery only applies to virtual machines",
+      "Correct, provided the backups are stored for at least 30 days"
+    ],
+    "answer": 1,
+    "explanation": "Backup answers 'can we get yesterday's data back'; disaster recovery answers 'can we run somewhere else if the region is lost', which needs replicated data, a second deployment and a rehearsed failover. Nightly backups alone mean up to a day of data loss and hours of restore."
+  },
+  {
+    "id": "1.7-q7",
+    "topic": "no SLA tiers",
+    "scenario": "To save money, a developer moves the partner-facing ordering API onto the App Service F1 free plan as a single instance.",
+    "stem": "What is the consequence for the contract that commits to 99.9%?",
+    "options": [
+      "None - the SLA follows the service, not the plan",
+      "The SLA drops to 99.5% but remains valid",
+      "The API now has no SLA at all, so the composite SLA of the chain is undefined and the commitment cannot be backed",
+      "Microsoft will honour the SLA but pay smaller credits"
+    ],
+    "answer": 2,
+    "explanation": "Free and shared App Service tiers carry no SLA, and a chain with a no-SLA link has no composite SLA to stand behind. SLAs apply only to qualifying configurations, which is why the tier and the instance count matter as much as the service name."
+  },
+  {
+    "id": "1.7-q8",
+    "topic": "Well-Architected pillars",
+    "stem": "Which list correctly names the five pillars of the Azure Well-Architected Framework?",
+    "options": [
+      "Reliability, Security, Cost Optimization, Operational Excellence, Performance Efficiency",
+      "Availability, Security, Cost, Monitoring, Scalability",
+      "Reliability, Compliance, Cost Optimization, Automation, Performance",
+      "Resiliency, Identity, Budgeting, DevOps, Elasticity"
+    ],
+    "answer": 0,
+    "explanation": "The five pillars are Reliability, Security, Cost Optimization, Operational Excellence and Performance Efficiency. The distractors use related words - availability, monitoring, scalability, elasticity - that are concerns inside a pillar rather than pillars themselves."
+  }
+]

@@ -1,0 +1,97 @@
+[
+  {
+    "term": "IaaS",
+    "aliases": ["infrastructure as a service"],
+    "definition": "The cloud model where you rent infrastructure - virtual machines, disks and networks - and run everything from the operating system up yourself. Most flexible, most hands-on: the patching is yours, and the cost runs whether the machine is busy or idle.",
+    "example": "A legacy ERP that only ships as a Windows installer runs on an Azure virtual machine; the team patches Windows every month.",
+    "icon": "virtual-machine",
+    "lessons": ["1.2"],
+    "related": ["PaaS", "Virtual machine", "Shared responsibility model", "Lift and shift"]
+  },
+  {
+    "term": "PaaS",
+    "aliases": ["platform as a service"],
+    "definition": "The cloud model where the provider gives you a place to run code or data with the operating system and runtime patched for you. You deploy the application and own its data. The default choice for web apps, APIs and databases.",
+    "example": "A Node API on App Service and its data in Azure SQL Database: Microsoft patches Linux, Node and the SQL engine; the team deploys code.",
+    "icon": "app-service",
+    "lessons": ["1.2"],
+    "related": ["IaaS", "Managed service", "App Service", "Azure SQL Database"]
+  },
+  {
+    "term": "SaaS",
+    "aliases": ["software as a service"],
+    "definition": "A finished product you sign in to and configure rather than build or host. No engineering is needed, but customisation stops where the product's settings stop. Even here, data and identity remain your responsibility.",
+    "example": "Microsoft 365, Dynamics 365 and GitHub are SaaS: your users, settings and content are yours; everything underneath is Microsoft's.",
+    "lessons": ["1.2"],
+    "related": ["PaaS", "Shared responsibility model"]
+  },
+  {
+    "term": "Serverless",
+    "aliases": ["FaaS", "functions as a service"],
+    "definition": "PaaS pushed to its limit: code runs when something triggers it, scales to zero when nothing does, and is billed per execution rather than per hour. There are still servers; you never choose or see one. Cold starts and limits on run time are the price.",
+    "example": "A timer-triggered Azure Function runs a four-minute stock sync each night and is billed for four minutes a night.",
+    "icon": "function-apps",
+    "lessons": ["1.2"],
+    "related": ["Azure Functions", "PaaS", "Pay-as-you-go"]
+  },
+  {
+    "term": "Shared responsibility model",
+    "definition": "The table that says, for each service model, which layers Microsoft secures and runs and which you do. As you move from IaaS through PaaS to SaaS, more rows shift to Microsoft - but data and identity are always yours.",
+    "example": "On App Service, Microsoft patches the OS and runtime; your team still decides who can reach the admin endpoint and whether backups are tested.",
+    "icon": "compliance",
+    "lessons": ["1.2"],
+    "related": ["IaaS", "PaaS", "SaaS", "Managed service"]
+  },
+  {
+    "term": "Managed service",
+    "definition": "A service where the provider owns the operating system, the runtime and the uptime, and you own only your code, your data and your configuration. The more managed a service is, the less you run and the less control you have over how it runs.",
+    "example": "Azure SQL Database is managed SQL Server: same T-SQL, but Microsoft owns backups, patching and failover.",
+    "lessons": ["1.2"],
+    "related": ["PaaS", "Azure SQL Database", "App Service", "Shared responsibility model"]
+  },
+  {
+    "term": "App Service",
+    "aliases": ["Azure App Service", "Web Apps"],
+    "definition": "Azure's PaaS host for web apps and APIs in Node, .NET, Python, Java and more. Microsoft patches the OS and runtime; you deploy code and get autoscale, deployment slots and backups. Billed per instance-hour of the plan, busy or idle.",
+    "example": "Priya's Node API runs on a Linux App Service plan that scales out on Black Friday and back in afterwards.",
+    "icon": "app-service",
+    "lessons": ["1.2"],
+    "related": ["PaaS", "App Service plan", "Azure Functions", "Autoscale"]
+  },
+  {
+    "term": "Azure Functions",
+    "aliases": ["Functions", "function app"],
+    "definition": "Azure's serverless compute: small units of code that run in response to a trigger such as an HTTP request, a timer, a queue message or a blob upload. Billed per execution and memory-time on the consumption plan. Azure-specific triggers and bindings are convenient but tie the code to the platform.",
+    "example": "A nightly stock-sync Function replaces a Windows service and costs pennies a month.",
+    "icon": "function-apps",
+    "lessons": ["1.2"],
+    "related": ["Serverless", "App Service"]
+  },
+  {
+    "term": "Azure SQL Database",
+    "aliases": ["Azure SQL"],
+    "definition": "SQL Server run as a managed PaaS service. Your schema, T-SQL and most tooling move as they are; Microsoft owns the engine patching, automated backups, high availability and failover. Some instance-level features need SQL Managed Instance instead.",
+    "example": "The retailer's orders database moves from a SQL Server box in the rack to Azure SQL Database with no schema changes.",
+    "icon": "azure-sql",
+    "lessons": ["1.2"],
+    "related": ["PaaS", "Managed service"]
+  },
+  {
+    "term": "Static Web Apps",
+    "aliases": ["SWA", "Azure Static Web Apps"],
+    "definition": "A PaaS service for hosting static front ends - a built React, Angular or Vue bundle - from a global edge, with a CI pipeline wired from GitHub and an optional Functions-backed API. The free tier covers most small sites.",
+    "example": "The React front end is a folder of built files served by Static Web Apps; there is no server to think about.",
+    "icon": "static-web-apps",
+    "lessons": ["1.2"],
+    "related": ["PaaS", "App Service", "Azure Functions"]
+  },
+  {
+    "term": "Container",
+    "aliases": ["Docker container", "container image"],
+    "definition": "A package of your application plus its runtime and dependencies that runs the same anywhere a container host exists. On Azure, Container Apps and AKS manage the hosts while you own patching what is inside the image - so containers sit between IaaS and PaaS on the spectrum.",
+    "example": "The same Docker image that runs under Docker Compose on a dev box runs on Container Apps in production.",
+    "icon": "container-apps",
+    "lessons": ["1.2"],
+    "related": ["PaaS", "IaaS", "App Service"]
+  }
+]

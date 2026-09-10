@@ -1,0 +1,245 @@
+{
+  "modules": [
+    {
+      "number": 1,
+      "title": "Cloud and Azure foundations",
+      "tagline": "What cloud really is, how Azure is organised, and how to never be surprised by a bill.",
+      "description": "Start with the vocabulary every Azure conversation uses: service models, regions, subscriptions, resource groups, Azure Resource Manager, pricing and SLAs. By the end you can read any Azure architecture diagram and sketch how a React front end, a Node API and a SQL database land on Azure.",
+      "icon": "globe",
+      "status": "ready",
+      "lessons": [
+        {
+          "id": "1.1",
+          "title": "Why cloud, and why Azure",
+          "summary": "On-premises versus cloud, CapEx versus OpEx, elasticity, and where Azure fits among the big three.",
+          "minutes": 12,
+          "objectives": [
+            "Explain the business case for cloud in one minute",
+            "Describe elasticity, pay-as-you-go and economies of scale",
+            "Say why a Microsoft-heavy organisation usually lands on Azure"
+          ],
+          "icons": ["globe", "server-farm", "cost-management"]
+        },
+        {
+          "id": "1.2",
+          "title": "IaaS, PaaS, SaaS and serverless",
+          "summary": "The service models, the shared responsibility line, and where a React app, a Node API and SQL Server sit on it.",
+          "minutes": 14,
+          "objectives": [
+            "Place any Azure service on the IaaS / PaaS / SaaS / serverless spectrum",
+            "Draw the shared responsibility line for each model",
+            "Choose a model for a given team and workload"
+          ],
+          "icons": ["virtual-machine", "app-service", "function-apps"]
+        },
+        {
+          "id": "1.3",
+          "title": "Azure's global footprint",
+          "summary": "Geographies, regions, region pairs and availability zones, and how they decide latency, resilience and data residency.",
+          "minutes": 12,
+          "objectives": [
+            "Tell apart a geography, a region, a region pair and an availability zone",
+            "Pick a region for a workload using latency, residency, price and service availability",
+            "Explain what zone-redundant means to a stakeholder"
+          ],
+          "icons": ["region", "location", "resiliency"]
+        },
+        {
+          "id": "1.4",
+          "title": "How Azure is organised",
+          "summary": "Tenant, management groups, subscriptions, resource groups and resources - the hierarchy that governs cost, access and policy.",
+          "minutes": 15,
+          "objectives": [
+            "Draw the Azure scope hierarchy from memory",
+            "Decide what goes in a subscription versus a resource group",
+            "Apply a naming and tagging convention a team can live with"
+          ],
+          "icons": ["management-group", "subscription", "resource-group"]
+        },
+        {
+          "id": "1.5",
+          "title": "Azure Resource Manager and how you talk to Azure",
+          "summary": "Portal, CLI, PowerShell, SDKs, Bicep and the REST API all go through one front door: Azure Resource Manager.",
+          "minutes": 14,
+          "objectives": [
+            "Describe what Azure Resource Manager does with every request",
+            "Choose between portal, CLI and infrastructure as code for a task",
+            "Explain control plane versus data plane and why it matters for security"
+          ],
+          "icons": ["portal", "cloud-shell", "templates"]
+        },
+        {
+          "id": "1.6",
+          "title": "Pricing, cost and the free tier",
+          "summary": "Pay-as-you-go, reservations and savings plans, the pricing calculator, budgets and alerts - the toolkit for a bill with no surprises.",
+          "minutes": 14,
+          "objectives": [
+            "List what you pay for in a typical web workload",
+            "Use budgets, alerts and tags to keep cost visible",
+            "Explain reservations and savings plans and when they are worth it"
+          ],
+          "icons": ["cost-management", "cost-budgets", "reservations"]
+        },
+        {
+          "id": "1.7",
+          "title": "SLAs, reliability vocabulary and the Well-Architected Framework",
+          "summary": "What 99.9% really allows, composite SLAs, RPO and RTO, and the five pillars every design review should walk through.",
+          "minutes": 14,
+          "objectives": [
+            "Convert an SLA percentage into minutes of downtime",
+            "Work out a composite SLA for a chain of services",
+            "Name the five Well-Architected pillars and one question for each"
+          ],
+          "icons": ["service-health", "resiliency", "advisor"]
+        },
+        {
+          "id": "1.8",
+          "title": "Your first real workload on Azure",
+          "summary": "A React app, a Node API and a SQL database - which services, what gets created, what it costs and what to do next.",
+          "minutes": 16,
+          "objectives": [
+            "Map a typical three-tier web app onto Azure services",
+            "Describe every resource that gets created and why",
+            "Estimate a monthly cost and know where the certification path goes next"
+          ],
+          "icons": ["static-web-apps", "app-service", "azure-sql"]
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "title": "Compute and hosting",
+      "tagline": "Virtual machines, App Service, Static Web Apps, Functions, containers and AKS - and how to choose.",
+      "description": "Every way Azure can run your code, from a VM you patch yourself to a function that bills per execution. The module ends with a decision guide you can use in a design review.",
+      "icon": "app-service",
+      "status": "planned",
+      "lessons": [
+        { "id": "2.1", "title": "Virtual machines and scale sets", "summary": "", "minutes": 14, "objectives": [], "icons": ["virtual-machine"] },
+        { "id": "2.2", "title": "App Service - the PaaS home for web apps and APIs", "summary": "", "minutes": 15, "objectives": [], "icons": ["app-service"] },
+        { "id": "2.3", "title": "Static Web Apps for React and React Native web", "summary": "", "minutes": 12, "objectives": [], "icons": ["static-web-apps"] },
+        { "id": "2.4", "title": "Azure Functions and serverless thinking", "summary": "", "minutes": 14, "objectives": [], "icons": ["function-apps"] },
+        { "id": "2.5", "title": "Containers - Container Registry, Container Instances and Container Apps", "summary": "", "minutes": 15, "objectives": [], "icons": ["container-apps"] },
+        { "id": "2.6", "title": "Azure Kubernetes Service - when you really need it", "summary": "", "minutes": 15, "objectives": [], "icons": ["aks"] },
+        { "id": "2.7", "title": "Choosing compute - a decision guide", "summary": "", "minutes": 12, "objectives": [], "icons": ["cubes"] }
+      ]
+    },
+    {
+      "number": 3,
+      "title": "Storage and data",
+      "tagline": "Storage accounts, Azure SQL, Cosmos DB, Redis and picking the right store for the job.",
+      "description": "Where data lives on Azure and how to choose: blobs, files, queues and tables in a storage account; Azure SQL in its three flavours for a SQL Server person; Cosmos DB for global scale; Redis for speed; and backup and recovery.",
+      "icon": "storage-account",
+      "status": "planned",
+      "lessons": [
+        { "id": "3.1", "title": "Storage accounts - blobs, files, queues and tables", "summary": "", "minutes": 15, "objectives": [], "icons": ["storage-account"] },
+        { "id": "3.2", "title": "Azure SQL for the SQL Server professional", "summary": "", "minutes": 16, "objectives": [], "icons": ["azure-sql"] },
+        { "id": "3.3", "title": "Cosmos DB - planet-scale NoSQL", "summary": "", "minutes": 14, "objectives": [], "icons": ["cosmos-db"] },
+        { "id": "3.4", "title": "Caching with Azure Cache for Redis", "summary": "", "minutes": 10, "objectives": [], "icons": ["redis"] },
+        { "id": "3.5", "title": "Open-source databases - PostgreSQL and MySQL on Azure", "summary": "", "minutes": 10, "objectives": [], "icons": ["postgresql"] },
+        { "id": "3.6", "title": "Backup, recovery and data protection", "summary": "", "minutes": 12, "objectives": [], "icons": ["recovery-services-vault"] },
+        { "id": "3.7", "title": "Choosing a data store - a decision guide", "summary": "", "minutes": 12, "objectives": [], "icons": ["data-explorer"] }
+      ]
+    },
+    {
+      "number": 4,
+      "title": "Networking, identity and security",
+      "tagline": "Virtual networks, load balancing, private endpoints, Entra ID, RBAC, managed identities, Key Vault and Defender.",
+      "description": "The two things that make or break an Azure estate: how traffic flows and who is allowed to do what. Learn the network building blocks, the four front doors for HTTP traffic, and the identity model that replaces connection strings with managed identities.",
+      "icon": "virtual-network",
+      "status": "planned",
+      "lessons": [
+        { "id": "4.1", "title": "Virtual networks, subnets and network security groups", "summary": "", "minutes": 15, "objectives": [], "icons": ["virtual-network"] },
+        { "id": "4.2", "title": "Load Balancer, Application Gateway, Front Door and Traffic Manager", "summary": "", "minutes": 15, "objectives": [], "icons": ["front-door"] },
+        { "id": "4.3", "title": "Private endpoints, DNS and hybrid connectivity", "summary": "", "minutes": 14, "objectives": [], "icons": ["private-endpoint"] },
+        { "id": "4.4", "title": "Microsoft Entra ID - the identity backbone", "summary": "", "minutes": 15, "objectives": [], "icons": ["entra-id"] },
+        { "id": "4.5", "title": "Role-based access control and managed identities", "summary": "", "minutes": 15, "objectives": [], "icons": ["managed-identity"] },
+        { "id": "4.6", "title": "Key Vault, secrets and App Configuration", "summary": "", "minutes": 12, "objectives": [], "icons": ["key-vault"] },
+        { "id": "4.7", "title": "Defender for Cloud, Sentinel and the security baseline", "summary": "", "minutes": 12, "objectives": [], "icons": ["defender"] },
+        { "id": "4.8", "title": "Zero trust and securing a web workload end to end", "summary": "", "minutes": 14, "objectives": [], "icons": ["waf"] }
+      ]
+    },
+    {
+      "number": 5,
+      "title": "Integration and messaging",
+      "tagline": "Service Bus, Event Grid, Event Hubs, API Management and Logic Apps - decoupling systems the Azure way.",
+      "description": "How systems talk to each other without being tied together: queues and topics, events and streams, an API gateway in front of everything, and low-code workflows for the glue.",
+      "icon": "service-bus",
+      "status": "planned",
+      "lessons": [
+        { "id": "5.1", "title": "Messaging patterns - queues, topics, events and streams", "summary": "", "minutes": 12, "objectives": [], "icons": ["storage-queue"] },
+        { "id": "5.2", "title": "Service Bus - enterprise messaging", "summary": "", "minutes": 14, "objectives": [], "icons": ["service-bus"] },
+        { "id": "5.3", "title": "Event Grid - reacting to what happens", "summary": "", "minutes": 12, "objectives": [], "icons": ["event-grid"] },
+        { "id": "5.4", "title": "Event Hubs - high-volume streaming", "summary": "", "minutes": 12, "objectives": [], "icons": ["event-hubs"] },
+        { "id": "5.5", "title": "API Management - one front door for your APIs", "summary": "", "minutes": 14, "objectives": [], "icons": ["api-management"] },
+        { "id": "5.6", "title": "Logic Apps and low-code integration", "summary": "", "minutes": 10, "objectives": [], "icons": ["logic-apps"] }
+      ]
+    },
+    {
+      "number": 6,
+      "title": "Observability and reliability",
+      "tagline": "Azure Monitor, Log Analytics, Application Insights, alerts, and designing for failure.",
+      "description": "Seeing what is happening and staying up when things break: metrics and logs, the query language, distributed tracing for a React-and-Node app, alerting that people actually respond to, and high availability and disaster recovery patterns.",
+      "icon": "monitor",
+      "status": "planned",
+      "lessons": [
+        { "id": "6.1", "title": "Azure Monitor - metrics, logs and the data platform", "summary": "", "minutes": 14, "objectives": [], "icons": ["monitor"] },
+        { "id": "6.2", "title": "Log Analytics and just enough KQL", "summary": "", "minutes": 14, "objectives": [], "icons": ["log-analytics"] },
+        { "id": "6.3", "title": "Application Insights for web apps and APIs", "summary": "", "minutes": 14, "objectives": [], "icons": ["application-insights"] },
+        { "id": "6.4", "title": "Alerts, action groups and on-call that works", "summary": "", "minutes": 12, "objectives": [], "icons": ["alerts"] },
+        { "id": "6.5", "title": "High availability and disaster recovery patterns", "summary": "", "minutes": 15, "objectives": [], "icons": ["resiliency"] },
+        { "id": "6.6", "title": "The Well-Architected review in practice", "summary": "", "minutes": 12, "objectives": [], "icons": ["advisor"] }
+      ]
+    },
+    {
+      "number": 7,
+      "title": "DevOps on Azure",
+      "tagline": "Azure DevOps and GitHub, pipelines, infrastructure as code, environments and release strategies.",
+      "description": "Shipping software to Azure repeatably: the two toolchains, YAML pipelines and GitHub Actions, Bicep and Terraform, secrets and identities in CI, deployment slots, blue-green and canary releases, and the gates that make a pipeline trustworthy.",
+      "icon": "azure-devops",
+      "status": "planned",
+      "lessons": [
+        { "id": "7.1", "title": "DevOps on Azure - the landscape and the two toolchains", "summary": "", "minutes": 12, "objectives": [], "icons": ["azure-devops"] },
+        { "id": "7.2", "title": "Repos, branching and pull-request policies", "summary": "", "minutes": 12, "objectives": [], "icons": ["branch"] },
+        { "id": "7.3", "title": "Azure Pipelines - YAML, agents, stages and environments", "summary": "", "minutes": 15, "objectives": [], "icons": ["builds"] },
+        { "id": "7.4", "title": "GitHub Actions for Azure", "summary": "", "minutes": 14, "objectives": [], "icons": ["workflow"] },
+        { "id": "7.5", "title": "Infrastructure as code - Bicep and Terraform", "summary": "", "minutes": 15, "objectives": [], "icons": ["templates"] },
+        { "id": "7.6", "title": "Secrets, identities and security in the pipeline", "summary": "", "minutes": 12, "objectives": [], "icons": ["key-vault"] },
+        { "id": "7.7", "title": "Release strategies - slots, blue-green, canary and feature flags", "summary": "", "minutes": 14, "objectives": [], "icons": ["web-slots"] },
+        { "id": "7.8", "title": "Quality gates, testing and DevOps metrics", "summary": "", "minutes": 12, "objectives": [], "icons": ["load-testing"] }
+      ]
+    },
+    {
+      "number": 8,
+      "title": "Azure AI",
+      "tagline": "Azure OpenAI, AI Foundry, AI Services, AI Search, RAG, agents and responsible AI.",
+      "description": "The Azure AI platform at the level a lead needs: which service does what, how retrieval-augmented generation works, what an agent is, how to keep AI workloads secure and affordable, and how to evaluate quality before shipping.",
+      "icon": "ai-foundry",
+      "status": "planned",
+      "lessons": [
+        { "id": "8.1", "title": "The Azure AI landscape", "summary": "", "minutes": 12, "objectives": [], "icons": ["ai-services"] },
+        { "id": "8.2", "title": "Azure OpenAI and Foundry Models", "summary": "", "minutes": 15, "objectives": [], "icons": ["azure-openai"] },
+        { "id": "8.3", "title": "Azure AI Foundry - projects, hubs and the developer loop", "summary": "", "minutes": 14, "objectives": [], "icons": ["ai-foundry"] },
+        { "id": "8.4", "title": "Azure AI Services - vision, speech, language and documents", "summary": "", "minutes": 14, "objectives": [], "icons": ["document-intelligence"] },
+        { "id": "8.5", "title": "Azure AI Search and retrieval-augmented generation", "summary": "", "minutes": 15, "objectives": [], "icons": ["ai-search"] },
+        { "id": "8.6", "title": "Agents, tools and orchestration", "summary": "", "minutes": 14, "objectives": [], "icons": ["foundry-agent-service"] },
+        { "id": "8.7", "title": "Responsible AI, content safety and evaluation", "summary": "", "minutes": 12, "objectives": [], "icons": ["content-safety"] },
+        { "id": "8.8", "title": "Cost, security and operations for AI workloads", "summary": "", "minutes": 12, "objectives": [], "icons": ["ai-gateway"] }
+      ]
+    },
+    {
+      "number": 9,
+      "title": "Architecture and leading a team",
+      "tagline": "Reference architectures, landing zones, migration, governance and the certification map.",
+      "description": "Pulling it together: the reference architectures you will meet most, enterprise landing zones, moving an existing estate to Azure, governance with Policy and Cost Management, and capstone scenarios to test your judgement.",
+      "icon": "landing-zone",
+      "status": "planned",
+      "lessons": [
+        { "id": "9.1", "title": "Reference architectures you will meet most", "summary": "", "minutes": 15, "objectives": [], "icons": ["landing-zone"] },
+        { "id": "9.2", "title": "Landing zones and governance at scale", "summary": "", "minutes": 14, "objectives": [], "icons": ["policy"] },
+        { "id": "9.3", "title": "Migrating an existing estate", "summary": "", "minutes": 14, "objectives": [], "icons": ["azure-migrate"] },
+        { "id": "9.4", "title": "Certifications and how to keep learning", "summary": "", "minutes": 10, "objectives": [], "icons": ["learn"] },
+        { "id": "9.5", "title": "Capstone scenarios - design reviews you can run", "summary": "", "minutes": 20, "objectives": [], "icons": ["guide"] }
+      ]
+    }
+  ]
+}

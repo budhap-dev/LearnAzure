@@ -1,0 +1,91 @@
+[
+  {
+    "term": "Three-tier architecture",
+    "aliases": ["three tier", "n-tier"],
+    "definition": "The classic split of an application into a presentation tier (the browser or mobile client), an application tier (the API) and a data tier (the database). It is the shape most business systems already have, which is why it maps so cleanly onto managed Azure services. The tiers are logical, not physical, so a mobile app and a web app are two clients of the same middle tier rather than a fourth tier.",
+    "example": "The shop's React bundle, its Node API and its orders database are the three tiers, hosted on Static Web Apps, App Service and Azure SQL Database.",
+    "icon": "web-app-database",
+    "lessons": ["1.8", "1.1"],
+    "related": ["Static Web Apps", "App Service", "Azure SQL Database"]
+  },
+  {
+    "term": "Connection string",
+    "definition": "The single piece of configuration that tells an application where a database or storage account is and how to authenticate to it. Historically it carried a password, which is what makes it the most commonly leaked secret in any estate. On Azure, keep the string in Key Vault and prefer a managed identity so there is no password in it at all.",
+    "example": "The Node API reads its SQL connection string from Key Vault at startup rather than from an app setting.",
+    "icon": "connections",
+    "lessons": ["1.8"],
+    "related": ["Key Vault", "Managed identity", "Azure SQL Database"]
+  },
+  {
+    "term": "App Service plan",
+    "aliases": ["service plan", "plan"],
+    "definition": "The sized, billed compute that App Service apps run on: an operating system, a pricing tier and a number of instances. Apps and their deployment slots are tenants on the plan and cost nothing extra by themselves. The gotcha is that an empty plan still bills, so it is the plan you size, scale and delete, not the app.",
+    "example": "plan-shop-prod runs P1v3 with two instances; the API app and its staging slot both sit on it.",
+    "icon": "app-service-plan",
+    "lessons": ["1.8"],
+    "related": ["App Service", "Deployment slot", "Autoscale"]
+  },
+  {
+    "term": "Application Insights",
+    "aliases": ["App Insights", "appi"],
+    "definition": "Azure's application performance monitoring service: it records requests, failures, dependency calls and traces from your code, and correlates them into an end-to-end view of a single user request. One line of configuration in a Node or .NET app is usually enough to start. Its data lands in a Log Analytics workspace, so ingestion volume and retention are where the cost appears.",
+    "example": "A slow checkout is traced from the API request through to the exact SQL call that took four seconds.",
+    "icon": "application-insights",
+    "lessons": ["1.8"],
+    "related": ["Log Analytics workspace", "App Service", "Azure SQL Database"]
+  },
+  {
+    "term": "Managed identity",
+    "aliases": ["MSI", "system-assigned identity"],
+    "definition": "An identity in Microsoft Entra ID that Azure creates and manages for a resource, so the resource can authenticate to other Azure services without any credential in configuration. Azure rotates the underlying credential for you and there is nothing to leak. It only works against services that accept Entra tokens, and you still have to grant the identity a role on the target.",
+    "example": "The API's managed identity is granted Key Vault Secrets User and a database role, so no password exists anywhere.",
+    "icon": "managed-identity",
+    "lessons": ["1.8"],
+    "related": ["Key Vault", "Microsoft Entra ID", "Role-based access control", "Connection string"]
+  },
+  {
+    "term": "Key Vault",
+    "aliases": ["Azure Key Vault", "vault"],
+    "definition": "A managed store for secrets, certificates and encryption keys, with access controlled by RBAC and every read written to an audit log. App Service and Functions can reference a secret directly from an app setting so the value never appears in configuration. Access is a network and permission decision in its own right, so plan who and what may read each vault before the first deploy.",
+    "example": "kv-shop-prod holds the SQL connection string; only the API's managed identity may read it.",
+    "icon": "key-vault",
+    "lessons": ["1.8"],
+    "related": ["Managed identity", "Connection string", "Role-based access control"]
+  },
+  {
+    "term": "Deployment slot",
+    "aliases": ["slot", "staging slot"],
+    "definition": "A second, fully running copy of an App Service app on the same plan, with its own hostname, used to deploy and smoke-test a build before it takes live traffic. Swapping exchanges the warmed instances with production so there is no cold start and no downtime, and swapping back is your rollback. Slots share the plan's compute, so a busy staging slot competes with production for the same instances.",
+    "example": "Thursday's release is deployed to the staging slot, tested, then swapped into production in seconds.",
+    "icon": "web-slots",
+    "lessons": ["1.8"],
+    "related": ["App Service", "App Service plan"]
+  },
+  {
+    "term": "AZ-900",
+    "aliases": ["Azure Fundamentals"],
+    "definition": "Microsoft's Azure Fundamentals certification: cloud concepts, the core Azure services, and how identity, governance, cost and SLAs work. It is the natural first exam and covers most of what this module teaches. It is deliberately broad and shallow, so passing it proves vocabulary and judgement rather than hands-on skill.",
+    "example": "Finish module 1, revise the pricing and SLA lessons, and AZ-900 is within reach.",
+    "icon": "learn",
+    "lessons": ["1.8"],
+    "related": ["SLA", "Well-Architected Framework"]
+  },
+  {
+    "term": "Storage account",
+    "aliases": ["Azure Storage account"],
+    "definition": "The container resource for Azure Storage: blobs, files, queues and tables, priced at pennies per gigabyte plus transactions and egress. Blobs served straight to the browser are the cheapest way to hold images, documents and backups. Its name is the exception to every naming convention - 3 to 24 lower-case letters and digits, no hyphens, and globally unique.",
+    "example": "stshopimagesprod holds the shop's product images, served directly to the React app.",
+    "icon": "storage-account",
+    "lessons": ["1.8"],
+    "related": ["Naming convention", "Redundancy", "Egress"]
+  },
+  {
+    "term": "Log Analytics workspace",
+    "aliases": ["Log Analytics", "workspace"],
+    "definition": "The store and query engine behind Azure Monitor: application traces, platform metrics and audit logs land in one workspace and are queried with a single language, KQL. Having one workspace per environment keeps correlation easy. Billing is by gigabyte ingested and by how long you keep it, so retention settings quietly become one of the larger monitoring line items.",
+    "example": "log-shop-prod receives Application Insights telemetry and App Service platform logs for the whole shop.",
+    "icon": "log-analytics",
+    "lessons": ["1.8"],
+    "related": ["Application Insights", "Cost Management"]
+  }
+]

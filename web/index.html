@@ -3,8 +3,20 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>web</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="Learn Azure: a scenario-driven course from cloud foundations to DevOps and Azure AI." />
+    <meta name="theme-color" content="#0f6cbd" />
+    <title>Learn Azure</title>
+    <script>
+      // Apply the saved theme before first paint so there is no flash. Must agree with
+      // DEFAULT_THEME in src/lib/theme.ts.
+      (function () {
+        try {
+          var t = localStorage.getItem('learnazure.theme') || 'azure';
+          if (t !== 'system') document.documentElement.setAttribute('data-theme', t);
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

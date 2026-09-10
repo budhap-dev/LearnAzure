@@ -1,0 +1,90 @@
+[
+  {
+    "term": "Region",
+    "aliases": ["Azure region"],
+    "definition": "A set of data centres, usually grouped into three availability zones, inside a boundary where Azure sells services. Every resource is created in a region, and the region decides latency, price, service availability and which geography holds the data.",
+    "example": "Priya's shop runs in UK South; the same App Service plan would cost a different amount in East US and might not have every service in a brand-new region.",
+    "icon": "region",
+    "lessons": ["1.3"],
+    "related": ["Geography", "Availability zone", "Region pair", "Latency"]
+  },
+  {
+    "term": "Geography",
+    "aliases": ["Azure geography"],
+    "definition": "A market - usually a country or a bloc such as Europe - containing one or more regions, that defines where customer data at rest is kept. Region pairs always sit inside one geography. This is the layer legal and compliance teams care about.",
+    "example": "UK South and UK West are both in the United Kingdom geography, so orders stored in either stay in the UK.",
+    "icon": "globe",
+    "lessons": ["1.3"],
+    "related": ["Region", "Data residency", "Sovereign cloud"]
+  },
+  {
+    "term": "Region pair",
+    "aliases": ["paired region"],
+    "definition": "Two regions in the same geography, typically hundreds of miles apart, that Microsoft links: planned maintenance is sequenced so both are never updated at once, and after a regional disaster the pair is restored first. Newer regions may have no pair and rely on zones plus your own backups.",
+    "example": "UK South is paired with UK West; West Europe with North Europe; Central India with South India.",
+    "icon": "resiliency",
+    "lessons": ["1.3"],
+    "related": ["Region", "Availability zone", "Disaster recovery"]
+  },
+  {
+    "term": "Availability zone",
+    "aliases": ["AZ", "zone"],
+    "definition": "One or more data centres within a region with independent power, cooling and networking, close enough to the other zones for a round trip of about two milliseconds but far enough apart that a fire or power failure affects only one. A region usually has three.",
+    "example": "Three App Service instances, one per zone, keep the Node API up when one building in UK South loses power.",
+    "icon": "location",
+    "lessons": ["1.3"],
+    "related": ["Zone-redundant", "Region", "Data centre", "High availability"]
+  },
+  {
+    "term": "Data centre",
+    "aliases": ["datacenter", "data center"],
+    "definition": "A physical building full of servers, power and cooling. Azure customers never choose a specific data centre; you choose a region, and sometimes a zone, and Microsoft places the hardware.",
+    "example": "A zone outage in Azure terms is one or more data centres losing power, cooling or network at once.",
+    "icon": "server-farm",
+    "lessons": ["1.3"],
+    "related": ["Availability zone", "Region", "On-premises"]
+  },
+  {
+    "term": "Data residency",
+    "aliases": ["residency"],
+    "definition": "The requirement that data physically stays within a given country or jurisdiction. Azure keeps customer data at rest inside the geography of the region you choose, so residency is decided by region choice, not by code or configuration. Edge caches hold no data at rest.",
+    "example": "If Indian customers' data must stay in India, the retailer needs a second deployment in Central India rather than a setting on the UK one.",
+    "icon": "compliance",
+    "lessons": ["1.3"],
+    "related": ["Geography", "Region", "Sovereign cloud"]
+  },
+  {
+    "term": "Latency",
+    "aliases": ["round-trip time", "RTT"],
+    "definition": "The time a request takes to travel to a server and back, set mostly by physical distance. A round trip between London and Mumbai costs over 100 milliseconds before any work is done, and a page needs several, which is why region choice and edge caching decide how fast an app feels.",
+    "example": "The React shop loads in under a second in London and takes four seconds in Bengaluru because every call goes to UK South.",
+    "lessons": ["1.3"],
+    "related": ["Region", "Point of presence"]
+  },
+  {
+    "term": "Sovereign cloud",
+    "aliases": ["sovereign region", "Azure Government", "Azure China"],
+    "definition": "A physically and logically separate instance of Azure run for a jurisdiction under its own rules, with its own portal, endpoints and a smaller catalogue. Azure Government serves US public bodies; Azure China is operated by 21Vianet under Chinese law. Access is limited to eligible customers.",
+    "example": "A US federal agency deploys to Azure Government; a UK retailer uses the public cloud's UK regions instead.",
+    "lessons": ["1.3"],
+    "related": ["Geography", "Data residency"]
+  },
+  {
+    "term": "Zone-redundant",
+    "aliases": ["ZRS", "zone redundancy"],
+    "definition": "A service configuration that spreads copies across availability zones automatically so a zone outage is invisible to users. Contrast with zonal (pinned to one zone; you run copies yourself) and regional (no zone guarantee). It usually costs more and does nothing for a whole-region failure.",
+    "example": "Zone-redundant Azure SQL Database keeps replicas in three zones of UK South; a Basic tier does not, whatever the region offers.",
+    "icon": "resiliency",
+    "lessons": ["1.3"],
+    "related": ["Availability zone", "Region pair", "High availability", "Redundancy"]
+  },
+  {
+    "term": "Point of presence",
+    "aliases": ["PoP", "edge location"],
+    "definition": "A small site in a city internet exchange where Azure Front Door or Azure CDN terminates TLS and caches content close to users. Points of presence hold no customer data at rest, so they cut latency without changing where data lives.",
+    "example": "Front Door caches the React bundle at a Mumbai point of presence while the API and database stay in UK South.",
+    "icon": "front-door",
+    "lessons": ["1.3"],
+    "related": ["Latency", "Region", "Static Web Apps"]
+  }
+]

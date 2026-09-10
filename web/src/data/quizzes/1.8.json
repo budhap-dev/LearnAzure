@@ -1,0 +1,112 @@
+[
+  {
+    "id": "1.8-q1",
+    "topic": "service choice",
+    "scenario": "Ana's team ships a React bundle, a Node API and a SQL Server schema that Tom wants to keep unchanged.",
+    "stem": "Which combination of Azure services matches those three tiers in the shop's first design?",
+    "options": [
+      "Static Web Apps for the React bundle, App Service on Linux for the Node API, Azure SQL Database for the schema",
+      "Virtual machines for all three, so the team keeps full control of the stack",
+      "App Service for the React bundle, Azure Functions for the Node API, Cosmos DB for the schema",
+      "Static Web Apps for the React bundle, Container Apps for the Node API, SQL Server on a virtual machine"
+    ],
+    "answer": 0,
+    "explanation": "Each tier goes to the managed service built for it: Static Web Apps gives the bundle a global CDN and free certificate, App Service on Linux runs a long-lived Node process with Microsoft patching the OS, and Azure SQL Database is the same T-SQL engine with backups included. Virtual machines would work but hand the patching, the proxy and the backup job straight back to the team, which is exactly the operational burden the move is meant to remove."
+  },
+  {
+    "id": "1.8-q2",
+    "topic": "App Service plan",
+    "stem": "In the shop's design, which resource is the compute you actually pay for each month?",
+    "options": [
+      "The App Service app, because that is where the Node code is deployed",
+      "The App Service plan, because the apps and slots on it are tenants of that compute",
+      "The resource group, because it aggregates the cost of everything inside it",
+      "The deployment slot, because it runs a second warm copy of the API"
+    ],
+    "answer": 1,
+    "explanation": "The plan is the sized, billed compute; apps and their slots are free tenants that share it, which is why autoscale rules and the tier live on the plan. Believing the app is the bill leads people to size the wrong thing and to be surprised when a second app costs nothing extra while an idle plan bills all month."
+  },
+  {
+    "id": "1.8-q3",
+    "topic": "secrets and identity",
+    "scenario": "Dev suggests pasting the SQL connection string, password and all, into the API's App Service application settings because \"they are encrypted at rest\".",
+    "stem": "What should you say in the design review?",
+    "options": [
+      "Agree, since app settings are encrypted and never appear in the code repository",
+      "Agree, but insist the password is rotated every ninety days by hand",
+      "Put the secret in Key Vault and have the API reach it with a managed identity, so there is no password to leak",
+      "Store the string in the Bicep parameter file instead, so it is version controlled with the deployment"
+    ],
+    "answer": 2,
+    "explanation": "Anyone with Reader on the app can read its application settings, so a pasted connection string is visible far beyond the people who should see it; Key Vault plus a managed identity means Azure issues the API's identity and there is no password in the design at all. Encryption at rest is real but irrelevant here - it protects the disk, not the people browsing the app's configuration blade, and a parameter file is worse still because the secret then lives in Git."
+  },
+  {
+    "id": "1.8-q4",
+    "topic": "deployment slots",
+    "scenario": "The shop releases on Thursday evenings and the last release took the API down for four minutes while it restarted and warmed up.",
+    "stem": "How does a staging deployment slot change that release?",
+    "options": [
+      "It runs the release on a separate App Service plan, so production capacity is untouched",
+      "It deploys and warms the new build in the staging slot, then swaps it into production with no downtime and swaps back if it misbehaves",
+      "It keeps the previous build's files on disk so a failed release rolls back automatically",
+      "It splits traffic permanently between two versions so half the shoppers always see the new build"
+    ],
+    "answer": 1,
+    "explanation": "A slot is a warm copy of the app on the same plan: you deploy there, smoke-test the real thing, and the swap exchanges the running instances so nobody sees a cold start - and the swap back is your rollback. The tempting answer is the separate plan, but slots share the plan you already pay for, which is precisely why they are cheap enough to use on every release."
+  },
+  {
+    "id": "1.8-q5",
+    "topic": "cost drivers",
+    "scenario": "The board asks why the starter design is about £50-100 a month and the production-ready one is about £300-500 for what looks like the same shop.",
+    "stem": "What is the honest explanation for the gap?",
+    "options": [
+      "Production uses extra Azure services that the starter design leaves out",
+      "Production is charged at a higher rate per resource because it is a production subscription",
+      "The gap buys nines: Premium tiers with a meaningful SLA, at least two zone-redundant instances and longer log retention",
+      "The starter design is a discounted trial price that expires after twelve months"
+    ],
+    "answer": 2,
+    "explanation": "The service list barely changes; what changes is the tier and the instance count, because Free and Basic tiers carry no meaningful SLA and zone redundancy needs two or more Premium instances in different availability zones, plus more monitoring data kept for longer. Azure does not price a resource differently because you called the subscription \"prod\", and the starter figures are ordinary list prices rather than a trial."
+  },
+  {
+    "id": "1.8-q6",
+    "topic": "day-one mistakes",
+    "scenario": "The first deploy to production succeeds, the app starts, but every request that touches the database fails with a login error. The connection string and credentials are confirmed correct.",
+    "stem": "What is the most likely cause?",
+    "options": [
+      "The Azure SQL firewall is still blocking App Service, because no rule allows Azure services or a private endpoint exists",
+      "The App Service plan is too small to hold the connection pool",
+      "The database was created in a different resource group from the API",
+      "Azure SQL does not accept connections from Linux App Service without a special driver"
+    ],
+    "answer": 0,
+    "explanation": "Azure SQL rejects everything until a firewall rule or private endpoint lets the caller in, and the rejection surfaces as what looks like a wrong password - which is why teams burn an afternoon re-checking credentials that were never wrong. Plan size affects throughput, not admission, and resource group membership grants no network access either way, so neither would produce a login failure."
+  },
+  {
+    "id": "1.8-q7",
+    "topic": "governance",
+    "scenario": "A developer spins up P1v3 in the dev environment \"for an hour\" to test autoscale, and the finance team discovers it six weeks later.",
+    "stem": "Which pair of controls would most directly have prevented the surprise?",
+    "options": [
+      "A CanNotDelete lock on the dev resource group and a weekly cost review meeting",
+      "Reader access for developers in dev and a manual approval step for every deployment",
+      "Tiers pinned to Basic in the dev parameter file, and a budget alert deployed by the same Bicep template as the resources",
+      "A separate region for dev and a tag naming the resource owner"
+    ],
+    "answer": 2,
+    "explanation": "The parameter file stops the expensive tier ever being deployed to dev, and a budget alert that ships with the infrastructure catches whatever slips through within days rather than weeks. Locks protect against deletion and tags only label spend after the fact, while giving developers Reader in their own dev environment stops them working at all."
+  },
+  {
+    "id": "1.8-q8",
+    "topic": "certification path",
+    "stem": "Having finished this module, what is the sensible certification path for an engineer who writes the application code?",
+    "options": [
+      "AZ-900 first, then AZ-204, with AZ-400, AI-102 or AZ-305 afterwards",
+      "AZ-104 first, then AZ-900, then AZ-305",
+      "AZ-305 first, because it covers the architecture this module described",
+      "AZ-204 first, then AZ-900 as a refresher, then AZ-400"
+    ],
+    "answer": 0,
+    "explanation": "AZ-900 is the fundamentals exam this module largely covers, and the path then splits by role: AZ-204 for the person writing the code, AZ-104 for the person running the platform, with AZ-400, AI-102 and AZ-305 building on top. AZ-305 is the tempting choice because this lesson felt like an architecture review, but it expects an associate exam such as AZ-204 or AZ-104 behind you first."
+  }
+]

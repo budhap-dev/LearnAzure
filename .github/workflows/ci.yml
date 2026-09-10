@@ -1,0 +1,57 @@
+name: Build and verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    # The job name is the required status check on main - keep it in sync with branch protection.
+    name: Build and verify
+    runs-on: ubuntu-latest
+    env:
+      SWA_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+      VITE_BUILD_NUMBER: ${{ github.run_number }}
+      VITE_BUILD_SHA: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Install
+        run: npm ci
+        working-directory: web
+
+      - name: Lint
+        run: npm run lint
+        working-directory: web
+
+      # verify-content.mjs runs as part of build: lessons, quizzes, icons, diagrams, glossary.
+      - name: Verify content and build
+        run: npm run build
+        working-directory: web
+
+      - name: Deploy to Azure Static Web Apps
+        if: github.event_name == 'push' && env.SWA_TOKEN != ''
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN }}
+          action: upload
+          app_location: web/dist
+          api_location: ''
+          skip_app_build: true
+
+      - name: Deployment skipped
+        if: github.event_name == 'push' && env.SWA_TOKEN == ''
+        run: |
+          echo "::notice::Built and verified, but not deployed: add the AZURE_STATIC_WEB_APPS_API_TOKEN secret to deploy to Azure Static Web Apps, or connect the repo to Vercel."

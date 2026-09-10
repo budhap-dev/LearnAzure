@@ -1,0 +1,110 @@
+[
+  {
+    "id": "1.5-q1",
+    "topic": "what ARM does",
+    "stem": "What does Azure Resource Manager do with every management request, in order?",
+    "options": [
+      "Authenticate the caller, authorise them at the scope, check policy, then hand off to the resource provider",
+      "Check policy, bill the subscription, authenticate the caller, then create the resource itself",
+      "Authorise the caller, cache the request, then forward it to the nearest region",
+      "Validate the template syntax, authenticate the caller, then write to the Activity log only"
+    ],
+    "answer": 0,
+    "explanation": "ARM authenticates the token from Microsoft Entra ID, authorises it with RBAC at the scope, checks Azure Policy for whether the result may exist, and only then hands the work to the provider that owns the type. ARM never creates the resource itself - that is the provider's job, which is why an unregistered provider fails the deployment even when your permissions are perfect."
+  },
+  {
+    "id": "1.5-q2",
+    "topic": "one front door",
+    "scenario": "A developer says the portal must be easier to lock down than the CLI, because clicks go through a different system than scripts.",
+    "stem": "Why is that reasoning wrong?",
+    "options": [
+      "The portal is actually harder to lock down because it uses a separate legacy API",
+      "The portal, CLI, PowerShell, templates and SDKs all issue the same ARM REST calls, so identity, RBAC, Policy and the audit trail are identical",
+      "The CLI bypasses RBAC when run from Cloud Shell, so it needs extra rules",
+      "Only templates go through ARM; interactive tools talk straight to the resource providers"
+    ],
+    "answer": 1,
+    "explanation": "There is no back door: every tool is a different front-end over the same ARM REST API, so the same token, roles, policies and Activity log entries apply whichever one is used. The tools differ in ergonomics and repeatability, not in the permissions they get - so you cannot make a tool safer by choosing it, only by changing the role assignment."
+  },
+  {
+    "id": "1.5-q3",
+    "topic": "choosing a tool",
+    "scenario": "Priya's team needs test and production to be identical, rebuildable from source control, and deployed by a pipeline.",
+    "stem": "Which tool fits that requirement best?",
+    "options": [
+      "The Azure portal, with a written runbook of the clicks to follow",
+      "An Azure CLI script that creates each resource in turn",
+      "A Bicep file, deployed with the environment name as a parameter",
+      "The JavaScript SDK, called from the Node API at start-up"
+    ],
+    "answer": 2,
+    "explanation": "Bicep is declarative and idempotent, so one file plus a parameter defines both environments and redeploying it converges rather than duplicating. A CLI script is imperative: run it twice and it errors or duplicates, and a half-finished run leaves a half-built estate - which is exactly the drift the team is trying to end."
+  },
+  {
+    "id": "1.5-q4",
+    "topic": "choosing a tool",
+    "scenario": "You are on a train, on your phone, and an incident needs one resource's setting checked and changed right now.",
+    "stem": "What is the fastest sensible way to run a single Azure CLI command?",
+    "options": [
+      "Install the Azure CLI locally and sign in with a service principal",
+      "Open Cloud Shell in the portal, which is a browser terminal already signed in as you",
+      "Write a Bicep file and set up a pipeline to deploy it",
+      "Raise a support ticket asking Microsoft to make the change"
+    ],
+    "answer": 1,
+    "explanation": "Cloud Shell gives you the CLI, PowerShell, Git and a small persistent file share in the browser, already authenticated, so there is nothing to install on a phone. Bicep and a pipeline are the right answer for lasting changes, but they are far too slow for one urgent read-and-fix during an incident."
+  },
+  {
+    "id": "1.5-q5",
+    "topic": "declarative and idempotent",
+    "stem": "What does it mean to say that deploying a Bicep file is idempotent?",
+    "options": [
+      "Every deployment creates a fresh copy of the resources so the old ones can be rolled back",
+      "The deployment can only run once per subscription",
+      "Deploying the same file repeatedly converges on the same result, creating, changing or leaving resources alone as needed",
+      "The file is validated before anything is created, so a failed deployment changes nothing"
+    ],
+    "answer": 2,
+    "explanation": "Idempotent means the tenth run leaves the estate in the same state as the first: ARM compares the described state to what exists and reconciles it, the way React reconciles the DOM. Pre-flight validation is a separate and weaker guarantee - a validated deployment can still fail part-way, and idempotency is what makes simply running it again the fix."
+  },
+  {
+    "id": "1.5-q6",
+    "topic": "control plane vs data plane",
+    "stem": "A pipeline identity has Contributor on a storage account but cannot read the blobs inside it. Why?",
+    "options": [
+      "Contributor is a read-only role, so it needs Owner instead",
+      "Contributor is a control-plane role; reading blob contents is a data-plane operation needing a role such as Storage Blob Data Reader or a key",
+      "The storage account firewall is blocking the pipeline's IP address",
+      "Blob access is only ever possible with an account key, never with a role"
+    ],
+    "answer": 1,
+    "explanation": "Control-plane roles manage the resource - create it, set redundancy, delete it - while reading and writing its contents goes straight to the service endpoint on the data plane and needs its own role assignment. Owner would not help either, because it is also a control-plane role; the split is deliberate, and granting each plane separately is what keeps a single identity's blast radius small."
+  },
+  {
+    "id": "1.5-q7",
+    "topic": "Activity log",
+    "scenario": "A security review asks who created a virtual machine nobody recognises, when, and from where.",
+    "stem": "Where do you look first, and why?",
+    "options": [
+      "The virtual machine's own diagnostic logs, because they record everything about it",
+      "The Activity log, because it records every control-plane operation with the caller, the time, the source IP and the outcome",
+      "Azure Policy compliance results, because they list every resource that has been created",
+      "The Bicep files in source control, because they are the record of the estate"
+    ],
+    "answer": 1,
+    "explanation": "The Activity log is the control-plane audit trail, retained for ninety days by default, and it captures clicks and scripts side by side because both went through ARM. The VM's diagnostic logs cover data-plane activity inside the machine, and source control only shows what was meant to exist - not the change somebody made by hand."
+  },
+  {
+    "id": "1.5-q8",
+    "topic": "resource providers",
+    "stem": "A template deployment fails with an error saying the namespace Microsoft.Sql is not registered. What has happened?",
+    "options": [
+      "The subscription has not yet enabled the resource provider that owns SQL resource types; register it and redeploy",
+      "The deploying identity is missing the SQL Contributor role at the resource group scope",
+      "An Azure Policy is denying SQL resources in that region",
+      "The Bicep file references an API version that no longer exists"
+    ],
+    "answer": 0,
+    "explanation": "Every resource type belongs to a provider, and a subscription can only create that type once the provider is registered - fixed with a one-off az provider register --namespace Microsoft.Sql. A missing role or a policy denial is a tempting guess because both also block a deployment, but each reports itself as an authorisation or policy failure rather than an unregistered namespace."
+  }
+]

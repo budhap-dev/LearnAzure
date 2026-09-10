@@ -1,0 +1,111 @@
+[
+  {
+    "id": "1.6-q1",
+    "topic": "what you pay for",
+    "scenario": "A developer shut down a load-test VM from inside Windows on Friday evening. On Monday the VM still appears on the bill for the whole weekend.",
+    "stem": "Why was the VM still charged?",
+    "options": [
+      "Azure bills VMs for a minimum of seven days after creation",
+      "Stopping the operating system does not release the hardware; the VM must be deallocated to stop compute charges",
+      "The VM was in a premium region where compute is billed monthly",
+      "Weekend usage is billed at a flat rate regardless of state"
+    ],
+    "answer": 1,
+    "explanation": "A VM stopped from inside the OS still reserves its compute and keeps billing; only a deallocated VM stops the compute meter (disks and public IPs still cost). There is no minimum billing period, and weekends are metered like any other time."
+  },
+  {
+    "id": "1.6-q2",
+    "topic": "egress",
+    "scenario": "A script copied a 40 GB test database from UK South to West Europe nine times because of a retry bug.",
+    "stem": "Which charge did this create that the team had not estimated?",
+    "options": [
+      "Inbound data transfer into West Europe",
+      "Outbound data transfer (egress) out of UK South, billed per gigabyte",
+      "A per-region licence for Azure SQL",
+      "Nothing - transfers between Azure regions are free"
+    ],
+    "answer": 1,
+    "explanation": "Data leaving a region, whether to the internet or to another region, is billed per gigabyte; inbound data is free. Cross-region copies are exactly the egress that estimates forget, and nine copies is nine lots of it."
+  },
+  {
+    "id": "1.6-q3",
+    "topic": "calculators",
+    "stem": "A board member asks for evidence that moving off the on-premises rack will save money over three years. Which tool answers that question?",
+    "options": [
+      "The Azure pricing calculator",
+      "Cost analysis in Cost Management",
+      "The TCO calculator",
+      "Azure Advisor"
+    ],
+    "answer": 2,
+    "explanation": "The TCO calculator compares the full on-premises cost - hardware, licences, power, people - with an Azure estimate over several years, which is the business case. The pricing calculator estimates a specific Azure design's monthly cost, and Cost Management reports what has already been spent."
+  },
+  {
+    "id": "1.6-q4",
+    "topic": "budgets",
+    "scenario": "Your team sets a £1,500 monthly budget on the production subscription and assumes Azure will now refuse to spend more than that.",
+    "stem": "What is the accurate description of what the budget does?",
+    "options": [
+      "It caps spending at £1,500 and deallocates resources when reached",
+      "It raises cost alerts at the thresholds you define but does not stop resources on its own",
+      "It applies a discount once spend exceeds £1,500",
+      "It prevents new resources being created once 80% is reached"
+    ],
+    "answer": 1,
+    "explanation": "A budget is a line, not a wall: it triggers alerts by email or to an action group at thresholds you choose. Stopping resources only happens if you wire an alert to automation yourself. The other options describe behaviour Azure budgets do not have."
+  },
+  {
+    "id": "1.6-q5",
+    "topic": "reservations and savings plans",
+    "scenario": "The production database and API have run at a steady size for six months and are not going to change. The batch VMs, however, change size every few weeks.",
+    "stem": "Which combination fits best?",
+    "options": [
+      "Reservations for the database and API; a savings plan for the batch compute",
+      "Spot VMs for the database; reservations for the batch VMs",
+      "A savings plan for everything, because it always gives the biggest discount",
+      "Pay-as-you-go for everything, because commitments are only for enterprises"
+    ],
+    "answer": 0,
+    "explanation": "Reservations give the largest discount when the exact size will not change; savings plans give a smaller discount but follow the spend even when sizes change. Spot VMs can be evicted at any time, so they are wrong for a database, and pay-as-you-go leaves 30-70% on the table for steady workloads."
+  },
+  {
+    "id": "1.6-q6",
+    "topic": "spot VMs",
+    "stem": "Which workload is a good fit for spot virtual machines?",
+    "options": [
+      "The production SQL Server on a VM",
+      "A nightly image-processing batch that can restart if interrupted",
+      "The customer-facing web front end during Black Friday",
+      "A domain controller for the office"
+    ],
+    "answer": 1,
+    "explanation": "Spot VMs are heavily discounted spare capacity that Azure can evict at short notice, so they suit interruptible work such as batch jobs and CI agents. Anything customers or other systems depend on continuously should run on regular or reserved capacity."
+  },
+  {
+    "id": "1.6-q7",
+    "topic": "tags and chargeback",
+    "stem": "Finance wants to bill each product team for the Azure spend they cause. What is the prerequisite that makes this possible?",
+    "options": [
+      "Buying a separate Azure subscription for every employee",
+      "Consistent tags such as cost-centre on every resource, enforced by policy",
+      "Applying Azure Hybrid Benefit to all resources",
+      "Switching every service to a consumption tier"
+    ],
+    "answer": 1,
+    "explanation": "Chargeback and showback depend on being able to attribute cost, and tags are how Cost Management groups spend by team, environment or product. Because a missing tag makes the cost unattributable, tags are enforced with Azure Policy rather than requested. Hybrid Benefit and consumption tiers reduce cost; they do not attribute it."
+  },
+  {
+    "id": "1.6-q8",
+    "topic": "free tier",
+    "scenario": "A colleague wants to host a small internal dashboard on the App Service F1 free plan and asks whether it is suitable for the customer-facing shop as well.",
+    "stem": "What is the right advice?",
+    "options": [
+      "Yes - free plans have the same SLA as paid plans, only with less compute",
+      "No - free and shared tiers have limited compute and no SLA, so they suit learning and experiments, not production",
+      "Yes, as long as the app uses a custom domain",
+      "No - free tiers can only run static HTML"
+    ],
+    "answer": 1,
+    "explanation": "Free and shared tiers such as App Service F1 cap compute minutes and carry no service-level agreement, which rules them out for anything customers depend on. They are ideal for learning and internal experiments. F1 can run Node and .NET apps; the limitation is capacity and SLA, not the language."
+  }
+]

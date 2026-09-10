@@ -1,0 +1,13 @@
+{
+  "navigationFallback": {
+    "rewrite": "/index.html",
+    "exclude": ["/assets/*", "/azure-icons/*", "/favicon.svg"]
+  },
+  "globalHeaders": {
+    "cache-control": "public, max-age=3600, must-revalidate"
+  },
+  "routes": [
+    { "route": "/assets/*", "headers": { "cache-control": "public, max-age=31536000, immutable" } },
+    { "route": "/azure-icons/*", "headers": { "cache-control": "public, max-age=604800" } }
+  ]
+}

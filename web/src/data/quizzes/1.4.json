@@ -1,0 +1,110 @@
+[
+  {
+    "id": "1.4-q1",
+    "topic": "hierarchy",
+    "stem": "Which is the correct order of the Azure hierarchy, from the top down?",
+    "options": [
+      "Subscription, tenant, management group, resource group, resource",
+      "Tenant, management group, subscription, resource group, resource",
+      "Management group, tenant, resource group, subscription, resource",
+      "Tenant, subscription, management group, resource group, resource"
+    ],
+    "answer": 1,
+    "explanation": "The tenant (identity) sits at the top, management groups organise subscriptions, subscriptions hold resource groups, and resource groups hold resources. Management groups sit above subscriptions, not below them - that is what lets a single policy assignment cover many subscriptions."
+  },
+  {
+    "id": "1.4-q2",
+    "topic": "scopes",
+    "scenario": "Your organisation has twelve subscriptions and wants every one of them to allow only UK regions.",
+    "stem": "Where should the policy be assigned?",
+    "options": [
+      "On each resource group, so it is close to the resources",
+      "On each of the twelve subscriptions",
+      "Once, on a management group above all twelve subscriptions",
+      "On the tenant, using Microsoft Entra ID"
+    ],
+    "answer": 2,
+    "explanation": "Policy and RBAC flow down from the scope they are assigned at, so assign each rule at the highest scope where it is true. Assigning it twelve times works today but the thirteenth subscription will be born non-compliant. The tenant is an identity boundary; Entra ID does not carry Azure Policy."
+  },
+  {
+    "id": "1.4-q3",
+    "topic": "blast radius",
+    "scenario": "A contractor with Owner on the company's single subscription deleted a production database while cleaning up test resources.",
+    "stem": "Which structural change would most directly have prevented this?",
+    "options": [
+      "Renaming the production resources so they look different from test",
+      "Separate prod and nonprod subscriptions, with developers holding Contributor on nonprod and Reader on prod",
+      "Adding an environment tag to every resource",
+      "Moving the database to a different region"
+    ],
+    "answer": 1,
+    "explanation": "The problem is scope: everyone could do everything everywhere. Splitting environments into subscriptions and assigning roles per scope means the contractor never had delete rights on prod. Names and tags are useful labels but grant or block nothing, and a region is about location, not access."
+  },
+  {
+    "id": "1.4-q4",
+    "topic": "resource groups",
+    "stem": "What is the right rule for deciding which resources share a resource group?",
+    "options": [
+      "Resources of the same type, such as all databases together",
+      "Resources in the same region, because a group can only hold one region",
+      "Resources that are deployed, updated and deleted together",
+      "Resources owned by the same person"
+    ],
+    "answer": 2,
+    "explanation": "A resource group is a lifecycle boundary: delete the group and everything inside goes with it. Grouping by type splits one workload across many groups, and the group's region is only where its metadata lives - the resources inside can be anywhere."
+  },
+  {
+    "id": "1.4-q5",
+    "topic": "subscriptions",
+    "scenario": "Finance asks for the monthly Azure bill broken down by team, and the estate is one subscription shared by three teams.",
+    "stem": "What is the most practical way to get that breakdown?",
+    "options": [
+      "Ask Microsoft support to split the invoice",
+      "Apply a cost-centre tag to every resource, enforced by policy, and group cost reports by that tag",
+      "Create a management group per team",
+      "Rename every resource to start with the team's name"
+    ],
+    "answer": 1,
+    "explanation": "Cost reports group by tags, so a mandatory cost-centre tag gives the split within the existing subscription. A management group per team only helps if each team also has its own subscription, since a management group is not itself a billing boundary. Names describe what a thing is; tags describe whose it is."
+  },
+  {
+    "id": "1.4-q6",
+    "topic": "resource locks",
+    "scenario": "You put a CanNotDelete lock on the production resource group. A colleague who is an Owner tries to delete the database inside it.",
+    "stem": "What happens when that Owner attempts to delete the database?",
+    "options": [
+      "The delete succeeds because Owner overrides locks",
+      "The delete fails until someone deliberately removes the lock",
+      "The delete succeeds but is flagged in the Activity log",
+      "The database is moved to the recycle bin for thirty days"
+    ],
+    "answer": 1,
+    "explanation": "Locks apply to everyone, including Owners; the point is to turn an accidental delete into a deliberate two-step action. Owners can remove the lock, but that is a separate, visible operation. Azure has no general recycle bin for resources."
+  },
+  {
+    "id": "1.4-q7",
+    "topic": "tags",
+    "stem": "You tag a resource group with environment: prod. What happens to a new resource created inside it?",
+    "options": [
+      "It inherits the environment tag automatically",
+      "It has no tags unless a policy or the person creating it adds them",
+      "It inherits the tag only if it is a compute resource",
+      "It is rejected until a tag is supplied"
+    ],
+    "answer": 1,
+    "explanation": "Tags are not inherited, which is why cost reports develop gaps within weeks. Use an Azure Policy to require or automatically add the tag; without one, nothing is enforced and nothing is inherited."
+  },
+  {
+    "id": "1.4-q8",
+    "topic": "resource ID",
+    "stem": "Reading the ID /subscriptions/3f2c.../resourceGroups/rg-shop-prod/providers/Microsoft.Web/sites/app-shop-api, what is Microsoft.Web?",
+    "options": [
+      "The region the app runs in",
+      "The management group the subscription belongs to",
+      "The resource provider that owns the App Service resource type",
+      "The name of the App Service plan"
+    ],
+    "answer": 2,
+    "explanation": "The providers segment names the resource provider - Microsoft.Web for App Service, Microsoft.Sql for databases - followed by the type and the resource name. Region, management group and plan are not part of the ID path at all."
+  }
+]
