@@ -1,0 +1,111 @@
+[
+  {
+    "id": "2.4-q1",
+    "topic": "trigger choice",
+    "scenario": "An order confirmation email must be sent once per order, must survive a failure of the sending code, and must not delay the checkout response.",
+    "stem": "Which trigger fits the email function?",
+    "options": [
+      "An HTTP trigger called by the checkout API after it writes the order",
+      "A queue trigger on a Service Bus queue that checkout writes the order to",
+      "A timer trigger that runs every minute and looks for orders without emails",
+      "A blob trigger on the invoice PDF that is generated later"
+    ],
+    "answer": 1,
+    "explanation": "A queue trigger gives one invocation per message with automatic retries and a dead-letter queue, and checkout returns as soon as the message is queued, so a failure in the email path never breaks the sale. An HTTP call would make checkout wait and lose the work if the call failed, and a one-minute timer adds latency plus polling you would have to write yourself."
+  },
+  {
+    "id": "2.4-q2",
+    "topic": "bindings",
+    "stem": "What does an output binding actually save you writing?",
+    "options": [
+      "The business logic of the function, which the platform generates from the binding definition",
+      "The retry policy, which output bindings enforce at the platform level for any destination",
+      "The client setup, connection handling and send code for the target service",
+      "The authentication to the target service, which bindings always perform anonymously"
+    ],
+    "answer": 2,
+    "explanation": "A binding is declarative plumbing: you return an object and the host constructs the client and writes to the queue, blob or container for you, so the SDK boilerplate disappears. It does not write your logic, and it still needs a connection or managed identity to authenticate - the convenience is what ties the code to Azure."
+  },
+  {
+    "id": "2.4-q3",
+    "topic": "hosting plans",
+    "scenario": "A function must reach Azure SQL through a private endpoint, occasionally runs for twenty minutes, and is idle most of the day.",
+    "stem": "Which hosting plan is the best fit?",
+    "options": [
+      "Consumption, because the workload is idle most of the day",
+      "Flex Consumption, which keeps scale-to-zero while adding VNet integration and a longer timeout",
+      "Dedicated on the existing App Service plan, because it has no timeout at all",
+      "Container Apps, because only containers support private endpoints"
+    ],
+    "answer": 1,
+    "explanation": "Flex Consumption is the plan that combines scale-to-zero billing with virtual network integration and a much longer run time, which is exactly the three requirements here. Plain Consumption fails on both the VNet and the twenty-minute run, and Dedicated would work but bills all day for a workload that is idle most of it."
+  },
+  {
+    "id": "2.4-q4",
+    "topic": "cold starts",
+    "scenario": "A customer-facing search endpoint on a Consumption plan responds in 150 ms all afternoon but takes five seconds on the first request after a quiet period.",
+    "stem": "Which response actually removes the problem rather than reducing it?",
+    "options": [
+      "Move the app to a Premium plan with always-ready instances, or off serverless altogether",
+      "Add a timer function that pings the endpoint every five minutes to keep it warm",
+      "Increase the memory allocated to the function so it starts faster",
+      "Reduce the function timeout so slow starts are cut short and retried"
+    ],
+    "answer": 0,
+    "explanation": "Only a plan with instances kept permanently warm - Premium or Flex Consumption always-ready, or a plan that is simply always on - guarantees no user waits for an instance to be created. Keep-warm pings help the first instance and do nothing when scale-out creates a second one, and cutting the timeout would turn a slow request into a failed one."
+  },
+  {
+    "id": "2.4-q5",
+    "topic": "timeouts",
+    "scenario": "A nightly import runs comfortably in four minutes in test. In production the supplier sends six times as many rows and the function fails part-way through with no error in the code.",
+    "stem": "What is the most likely explanation, and the right fix?",
+    "options": [
+      "The queue message expired; raise the message time-to-live",
+      "The database connection pool was exhausted; raise the pool size",
+      "The function hit the Consumption plan's run-time ceiling of ten minutes; split the work with Durable Functions or move to a plan with a longer timeout",
+      "The function ran out of memory; raise the memory allocation for the plan"
+    ],
+    "answer": 2,
+    "explanation": "Consumption caps a single invocation at five minutes by default and ten at most, so work that grows with the data eventually crosses the line and the host stops it mid-run - which looks like a silent failure. Fan-out with Durable Functions or a Flex Consumption, Premium or Dedicated plan lifts the ceiling; memory and pool limits would surface as explicit errors instead."
+  },
+  {
+    "id": "2.4-q6",
+    "topic": "cost curve",
+    "scenario": "A steady API handling roughly 130 million calls a month, each taking about 500 ms at 512 MB, has been moved from an App Service plan to Consumption. The bill went up.",
+    "stem": "What is the most likely reason the bill went up after the move?",
+    "options": [
+      "Consumption charges a premium rate for HTTP triggers compared with other triggers",
+      "Per-execution billing multiplies executions by duration by memory, so constant high-volume traffic costs more than a fixed plan that absorbs it for a flat fee",
+      "Consumption bills for idle time between requests as well as execution time",
+      "The App Service plan was still running, so the team paid twice"
+    ],
+    "answer": 1,
+    "explanation": "Serverless is cheap when the duty cycle is low, because you pay only for time actually spent executing; at constant high volume that meter never stops, and half a second at 512 MB per call adds up past what two always-on instances cost. Consumption does not bill idle time or charge a special HTTP rate - the cost is real work, just priced by the second."
+  },
+  {
+    "id": "2.4-q7",
+    "topic": "Durable Functions",
+    "stem": "Which requirement is the clearest signal to reach for Durable Functions?",
+    "options": [
+      "A workflow that fans out to thousands of parallel items, aggregates the results and can wait days for an approval",
+      "An endpoint that must respond in under 100 ms at all times",
+      "A function that must run on a private network with no public ingress",
+      "A job that processes a high-volume telemetry stream in batches"
+    ],
+    "answer": 0,
+    "explanation": "Durable Functions exists for stateful workflows - chaining, fan-out/fan-in and human interaction with timeouts - and keeps that state in an event history instead of a table you maintain. Low latency is a hosting-plan question, private networking is a plan and networking question, and batched telemetry is an ordinary Event Hubs trigger."
+  },
+  {
+    "id": "2.4-q8",
+    "topic": "fit",
+    "stem": "Which workload is the worst candidate for a Consumption-plan function?",
+    "options": [
+      "A webhook receiver that gets a few thousand calls a day in unpredictable bursts",
+      "A nightly job that pulls a supplier file and updates a database table",
+      "A chatty synchronous request path where three functions call each other and a p99 target of 300 ms applies",
+      "A blob-triggered thumbnail generator that runs when marketing uploads images"
+    ],
+    "answer": 2,
+    "explanation": "Chained synchronous calls multiply latency and cost, and every hop can cold-start, so a strict p99 target is the one thing Consumption cannot promise. The other three are exactly the shape serverless suits: short, event-driven, latency-tolerant work with a low duty cycle."
+  }
+]

@@ -15,13 +15,14 @@ interface Suggestion {
  * Header search with an autocomplete dropdown over lessons and glossary terms. Loads the
  * lesson index on first focus; fully keyboard-driven (up/down/enter/escape).
  */
-export function SearchBox({ onNavigate }: { onNavigate?: () => void }) {
+export function SearchBox({ onNavigate, shortcut = false }: { onNavigate?: () => void; shortcut?: boolean }) {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [records, setRecords] = useState<SearchRecord[] | null>(null);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
   const boxRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   function ensureIndex() {
     if (records === null) loadIndex().then(setRecords);
@@ -34,6 +35,22 @@ export function SearchBox({ onNavigate }: { onNavigate?: () => void }) {
     document.addEventListener('mousedown', onAway);
     return () => document.removeEventListener('mousedown', onAway);
   }, []);
+
+  // "/" focuses search from anywhere, the way most documentation sites work. Ignored while
+  // typing in a field, so it never swallows a real slash.
+  useEffect(() => {
+    if (!shortcut) return;
+    function onKey(e: KeyboardEvent) {
+      if (e.key !== '/' || e.metaKey || e.ctrlKey || e.altKey) return;
+      const el = document.activeElement;
+      const tag = el?.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (el as HTMLElement)?.isContentEditable) return;
+      e.preventDefault();
+      inputRef.current?.focus();
+    }
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [shortcut]);
 
   const q = query.trim();
   const suggestions: Suggestion[] = [];
@@ -84,6 +101,7 @@ export function SearchBox({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <div className="header-search" ref={boxRef} role="search">
       <input
+        ref={inputRef}
         type="search"
         placeholder="Search lessons and terms…"
         value={query}
@@ -101,6 +119,7 @@ export function SearchBox({ onNavigate }: { onNavigate?: () => void }) {
         }}
         onKeyDown={onKeyDown}
       />
+      {shortcut && <span className="kbd-hint" aria-hidden="true">/</span>}
       {open && q.length > 1 && (
         <ul className="search-suggest" id="search-suggestions" role="listbox">
           {suggestions.length === 0 && <li className="ss-empty">No matches</li>}

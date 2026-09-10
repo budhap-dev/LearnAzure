@@ -85,6 +85,9 @@ A fenced block with language `diagram` holding JSON:
 - `icon` is an Azure icon slug, or `user`, `internet`, `onprem` for generic shapes.
 - Labels: at most ~16 characters; `sub` at most ~22. Edge labels short.
 - `tone`: `blue` (default), `green`, `amber`, `purple`, `grey`. Group labels are drawn at the bottom-left of the box, so avoid routing an edge into a group's bottom-left corner.
+- A group is one rectangle spanning its members' rows and columns. **No non-member may sit
+  inside that span** - it would look like part of the group. The verifier rejects this, so
+  place outsiders in a row or column the group does not cover.
 
 ## Quiz: `web/src/data/quizzes/<id>.json`
 

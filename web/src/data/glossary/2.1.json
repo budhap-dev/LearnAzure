@@ -1,0 +1,95 @@
+[
+  {
+    "term": "VM size",
+    "aliases": ["SKU", "VM SKU", "instance size"],
+    "definition": "The named hardware shape of a virtual machine, such as Standard_D4s_v5: family letter, vCPU count, an s if it supports premium storage, and a generation. The size fixes not just CPU and memory but the VM's own disk and network throughput ceilings. Changing size usually needs the VM deallocated first.",
+    "example": "Standard_D4s_v5 is general purpose, 4 vCPUs, premium-storage capable, fifth generation.",
+    "icon": "virtual-machine",
+    "lessons": ["2.1"],
+    "related": ["Virtual machine", "Managed disk", "Right-sizing"]
+  },
+  {
+    "term": "Managed disk",
+    "aliases": ["Azure managed disk", "data disk"],
+    "definition": "A virtual disk attached to a VM where Azure owns the underlying storage account and replication. Tiers run from Standard HDD through Standard SSD, Premium SSD and Premium SSD v2 to Ultra Disk. Disks keep billing after a VM is deallocated, and their real speed is limited by the VM size as well as the tier.",
+    "example": "A P30 Premium SSD as the OS disk plus a 1 TiB data disk for the ERP database.",
+    "icon": "disks",
+    "lessons": ["2.1"],
+    "related": ["VM size", "Ephemeral OS disk", "Virtual machine"]
+  },
+  {
+    "term": "VM image",
+    "aliases": ["custom image", "golden image", "Marketplace image"],
+    "definition": "The template a virtual machine is created from: a Marketplace image such as Ubuntu or Windows Server, or your own image with agents, hardening and runtimes already installed. A custom image makes new machines consistent, but it also has to be rebuilt and re-patched on a schedule or it drifts.",
+    "example": "A hardened Windows Server 2022 image with the monitoring agent and the company CA already in place.",
+    "icon": "images",
+    "lessons": ["2.1"],
+    "related": ["Azure Compute Gallery", "VM extension", "Virtual machine scale set"]
+  },
+  {
+    "term": "Azure Compute Gallery",
+    "aliases": ["Shared Image Gallery", "Compute Gallery"],
+    "definition": "The service that stores, versions and replicates VM and container images so teams across subscriptions and regions build from the same base. It handles image versions and regional replicas; it does not patch the image for you.",
+    "example": "One hardened Ubuntu image, version 1.4.2, replicated to UK South and UK West for every team's scale sets.",
+    "icon": "compute-gallery",
+    "lessons": ["2.1"],
+    "related": ["VM image", "Virtual machine scale set", "VM extension"]
+  },
+  {
+    "term": "VM extension",
+    "aliases": ["extensions", "custom script extension"],
+    "definition": "A small agent-run task Azure applies to a VM after it boots: run a script, install the Azure Monitor agent, join a domain, apply Desired State Configuration. Extensions are how a machine becomes useful without a human logging in. A failing extension can leave a VM stuck in a provisioning state.",
+    "example": "A custom script extension that installs the app, then the Azure Monitor agent extension for logs.",
+    "icon": "gear",
+    "lessons": ["2.1"],
+    "related": ["VM image", "Virtual machine", "Azure Compute Gallery"]
+  },
+  {
+    "term": "Availability set",
+    "aliases": ["availability sets"],
+    "definition": "A placement construct that spreads two or more VMs across fault domains and update domains inside a single data centre, raising the SLA to roughly 99.95%. It protects against a rack failing or Azure patching hosts, but not against losing the whole building - that needs availability zones. It never creates or removes VMs.",
+    "example": "The two ERP application servers in one availability set so a rack failure cannot take both.",
+    "icon": "availability-sets",
+    "lessons": ["2.1"],
+    "related": ["Fault domain", "Update domain", "Availability zone"]
+  },
+  {
+    "term": "Fault domain",
+    "definition": "A group of hardware inside a data centre that shares power and a network switch - effectively a rack. VMs in an availability set or scale set are spread across fault domains so one failure cannot take them all.",
+    "example": "Three instances across three fault domains: a failed power supply takes one, not three.",
+    "lessons": ["2.1"],
+    "related": ["Availability set", "Update domain", "Availability zone"]
+  },
+  {
+    "term": "Update domain",
+    "definition": "A reboot group used when Azure patches its hosts: machines in one update domain may restart together, and Azure works through the domains one at a time. Spreading instances across update domains means planned host maintenance never takes your whole tier down at once.",
+    "example": "Five update domains means at most a fifth of the instances restart in any maintenance wave.",
+    "lessons": ["2.1"],
+    "related": ["Availability set", "Fault domain", "High availability"]
+  },
+  {
+    "term": "Virtual machine scale set",
+    "aliases": ["VMSS", "scale set"],
+    "definition": "A group of identical VMs created from one image, usually behind a load balancer and spread across availability zones, with autoscale rules and rolling upgrades. Flexible orchestration is the modern default; Uniform is the older mode for very large identical fleets. Instances are cattle, not pets - never keep state on them.",
+    "example": "vmss-web-prod: three instances across three zones, adding two more when CPU passes 70%.",
+    "icon": "vm-scale-sets",
+    "lessons": ["2.1"],
+    "related": ["Autoscale", "Availability zone", "Ephemeral OS disk"]
+  },
+  {
+    "term": "Deallocation",
+    "aliases": ["deallocate", "stop (deallocated)"],
+    "definition": "Releasing the hardware Azure is holding for a VM, which is the only way to stop compute charges. Shutting down from inside the operating system leaves the VM allocated and still billing. Disks, public IPs and some licences continue to bill even when deallocated, and the temporary disk is lost.",
+    "example": "An auto-shutdown schedule that deallocates every dev VM at 19:00 removes most of the dev bill.",
+    "lessons": ["2.1"],
+    "related": ["Virtual machine", "VM size", "Ephemeral OS disk"]
+  },
+  {
+    "term": "Ephemeral OS disk",
+    "definition": "An OS disk stored on the host's local storage rather than in Azure Storage: no disk charge, faster boots and faster reimaging, but the disk is destroyed if the VM is reallocated or moved. Ideal for stateless scale set instances, wrong for anything that keeps state on the OS disk.",
+    "example": "Scale set instances use ephemeral OS disks so a reimage takes seconds and costs nothing.",
+    "icon": "ssd",
+    "lessons": ["2.1"],
+    "related": ["Managed disk", "Virtual machine scale set", "Deallocation"]
+  }
+]

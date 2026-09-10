@@ -96,6 +96,15 @@ function GenericGlyph({ kind }: { kind: string }) {
   );
 }
 
+/** True when a label pill centred at (x, y) would cover any node box. */
+function overlapsAnyNode(x: number, y: number, w: number, nodes: DiagramNode[]): boolean {
+  const half = w / 2 + 3;
+  return nodes.some((n) => {
+    const { cx, cy } = center(n);
+    return Math.abs(x - cx) < BOX_W / 2 + half && Math.abs(y - cy) < BOX_H / 2 + 13;
+  });
+}
+
 /** Rough width of a label in the group font (11.5px, bold) - good enough to size a box. */
 function labelWidth(text: string): number {
   return text.length * 6.4 + 24;
@@ -147,7 +156,6 @@ export function Diagram({ spec }: { spec: DiagramSpec }) {
           {boxes.map((b, i) => (
             <g key={i} className={`dg-group tone-${b.group.tone ?? 'blue'}`}>
               <rect x={b.minX} y={b.minY} width={b.maxX - b.minX} height={b.maxY - b.minY} rx="12" />
-              <text x={b.minX + 12} y={b.maxY - 9}>{b.group.label}</text>
             </g>
           ))}
 
@@ -159,9 +167,23 @@ export function Diagram({ spec }: { spec: DiagramSpec }) {
             const cb = center(b);
             const p1 = anchor(a, cb.cx, cb.cy);
             const p2 = anchor(b, ca.cx, ca.cy);
-            const mx = (p1.x + p2.x) / 2;
-            const my = (p1.y + p2.y) / 2;
             const w = e.label ? e.label.length * 6.4 + 14 : 0;
+            let mx = (p1.x + p2.x) / 2;
+            let my = (p1.y + p2.y) / 2;
+            // Keep the label off every node box. Try the midpoint, then progressively larger
+            // offsets perpendicular to the edge, and take the first position that is clear.
+            if (e.label) {
+              const dx = p2.x - p1.x;
+              const dy = p2.y - p1.y;
+              const horizontal = Math.abs(dx) >= Math.abs(dy);
+              const candidates: [number, number][] = [[mx, my]];
+              for (const d of [22, 40, 58, 76]) {
+                if (horizontal) candidates.push([mx, my - d], [mx, my + d]);
+                else candidates.push([mx + d + w / 2 - 20, my], [mx - d - w / 2 + 20, my]);
+              }
+              const clear = candidates.find(([cx, cy]) => !overlapsAnyNode(cx, cy, w, nodes));
+              [mx, my] = clear ?? candidates[candidates.length - 1];
+            }
             return (
               <g key={i} className={`dg-edge ${e.dashed ? 'dashed' : ''}`} style={{ animationDelay: `${i * 0.15}s` }}>
                 <line
@@ -204,6 +226,13 @@ export function Diagram({ spec }: { spec: DiagramSpec }) {
               </g>
             );
           })}
+
+          {boxes.map((b, i) => (
+            <g key={`label-${i}`} className={`dg-group-label tone-${b.group.tone ?? 'blue'}`}>
+              <rect x={b.minX + 6} y={b.maxY - 22} width={labelWidth(b.group.label) - 12} height="18" rx="6" />
+              <text x={b.minX + 12} y={b.maxY - 9}>{b.group.label}</text>
+            </g>
+          ))}
         </svg>
       </div>
       {spec.caption && <p className="diagram-caption">{spec.caption}</p>}

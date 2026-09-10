@@ -1,0 +1,72 @@
+[
+  {
+    "term": "Static site",
+    "aliases": ["static front end", "static build"],
+    "definition": "A front end that is just files - HTML, hashed JavaScript and CSS bundles, images - with nothing executing on the server. Every visitor gets identical bytes, which is why the files can be copied to edge locations worldwide. It can still be a fully dynamic app; the dynamism happens in the browser and in the API it calls.",
+    "example": "npm run build produces dist/, and that folder is the whole deployment for the shop's React front end.",
+    "icon": "static-web-apps",
+    "lessons": ["2.3"],
+    "related": ["Static Web Apps", "Edge cache", "Client-side routing"]
+  },
+  {
+    "term": "Client-side routing",
+    "aliases": ["SPA routing", "history API routing"],
+    "definition": "Routing done in the browser by a library such as React Router: the URL changes and a component renders, but no request reaches the server. It makes navigation instant and makes deep links fragile, because the server has no file at the invented path. Any static host needs a fallback rule before refresh and bookmarks work.",
+    "example": "Clicking through to /orders/4821 works; pressing refresh asks the server for a file that does not exist.",
+    "icon": "browser",
+    "lessons": ["2.3"],
+    "related": ["Navigation fallback", "Static site"]
+  },
+  {
+    "term": "Navigation fallback",
+    "aliases": ["navigationFallback", "SPA fallback"],
+    "definition": "A rule in staticwebapp.config.json that serves /index.html for any request that does not match a real file, so the client-side router can handle the path. It is the fix for deep-link 404s. Always set its exclude list, or missing images and API paths get an HTML page with a 200 instead of a 404.",
+    "example": "\"navigationFallback\": { \"rewrite\": \"/index.html\", \"exclude\": [\"/assets/*\", \"/api/*\"] }",
+    "lessons": ["2.3"],
+    "related": ["Client-side routing", "Static Web Apps", "Static site"]
+  },
+  {
+    "term": "Build preset",
+    "aliases": ["Oryx build", "build configuration"],
+    "definition": "The framework detection Static Web Apps applies during the GitHub Actions build: it recognises Vite, Create React App, Next.js, Angular and others and runs the right build command. You override it with app, api and output locations when the repository is not shaped the way it expects. A wrong output location is the usual cause of a deploy that succeeds and serves nothing.",
+    "example": "For a Vite app the preset builds to dist/, so output_location is \"dist\" rather than the React default \"build\".",
+    "icon": "builds",
+    "lessons": ["2.3"],
+    "related": ["Static Web Apps", "Preview environment"]
+  },
+  {
+    "term": "Preview environment",
+    "aliases": ["staging environment", "PR preview"],
+    "definition": "A complete build of a branch or pull request, deployed to its own URL alongside production and removed when the pull request closes. Reviewers and testers open a link instead of running the branch locally. Previews share the site's configuration but are not private by default, so do not put unreleased pricing on one.",
+    "example": "Pull request 214 gets its own URL that designers review before anyone merges to main.",
+    "icon": "branch",
+    "lessons": ["2.3"],
+    "related": ["Static Web Apps", "Deployment slot", "Build preset"]
+  },
+  {
+    "term": "Free managed certificate",
+    "aliases": ["managed TLS certificate", "auto-renewing certificate"],
+    "definition": "A TLS certificate that Azure issues and renews for your custom domain at no cost, on Static Web Apps and App Service. It removes the annual renewal task and the outage that follows forgetting it. It covers standard domains only - no wildcards, and no certificate you can export.",
+    "example": "shop.northline.com serves HTTPS from day one and renews itself without anyone opening a calendar reminder.",
+    "lessons": ["2.3"],
+    "related": ["Static Web Apps", "App Service"]
+  },
+  {
+    "term": "Managed functions",
+    "aliases": ["managed API", "SWA managed API"],
+    "definition": "The /api route of a Static Web App, backed by Azure Functions deployed from the same repository with no separate resource. Same origin means no CORS, and the signed-in user's identity is passed to the function automatically. It supports a subset of the Functions feature set, so a growing API eventually moves to its own Functions or App Service resource.",
+    "example": "A contact form posts to /api/contact, which is a function in the same repo as the React app.",
+    "icon": "function-apps",
+    "lessons": ["2.3"],
+    "related": ["Azure Functions", "Static Web Apps", "App Service"]
+  },
+  {
+    "term": "Edge cache",
+    "aliases": ["edge delivery", "CDN cache"],
+    "definition": "Copies of your files held at points of presence near users, so a request is answered from the nearest city rather than the origin region. It cuts latency dramatically for static assets and does nothing for API calls, which still travel to the region. Hashed filenames make cache invalidation a non-problem; index.html should not be cached aggressively.",
+    "example": "A shopper in Bengaluru gets the React bundle from a Mumbai edge while the API stays in UK South.",
+    "icon": "cdn",
+    "lessons": ["2.3"],
+    "related": ["Point of presence", "Latency", "Static site"]
+  }
+]

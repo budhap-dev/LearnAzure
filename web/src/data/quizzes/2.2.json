@@ -1,0 +1,113 @@
+[
+  {
+    "id": "2.2-q1",
+    "topic": "plan versus app",
+    "scenario": "The App Service bill shows a plan costing £120 a month, and the team insists nothing is deployed to it.",
+    "stem": "What is the most likely explanation?",
+    "options": [
+      "A plan bills for the compute it reserves whether or not any app is deployed on it",
+      "Deleted apps continue to bill for 30 days before the charge stops",
+      "The plan is billing for outbound bandwidth used by other apps in the subscription",
+      "An App Service plan has a fixed minimum charge that applies once per subscription"
+    ],
+    "answer": 0,
+    "explanation": "The plan is the sized compute - instances of a tier in a region - and Azure holds and charges for that whether or not any code runs on it, which is why an abandoned plan is one of the classic wasted lines on an Azure bill. The deleted-app theory is tempting but backwards: deleting apps changes nothing, deleting or downscaling the plan is what stops the charge."
+  },
+  {
+    "id": "2.2-q2",
+    "topic": "scaling",
+    "scenario": "Ana opens her Node API in the portal during a traffic spike and sets scale out to four instances, but nothing changes.",
+    "stem": "What is going on?",
+    "options": [
+      "Scale-out changes need an app restart before they take effect",
+      "The instance count belongs to the plan, and her app is on a Free plan, which cannot scale out",
+      "Autoscale must be disabled before manual instance counts can be applied",
+      "App Service caps manual scale-out at two instances unless a support ticket raises the quota"
+    ],
+    "answer": 1,
+    "explanation": "Scaling is a property of the App Service plan, not of the app, and Free and Shared tiers offer no scale-out at all - so the dial she reached for was never connected to anything. Restarts and autoscale toggles are plausible-sounding distractors, but neither would stop a scale-out on a tier that supports it."
+  },
+  {
+    "id": "2.2-q3",
+    "topic": "tier choice",
+    "scenario": "A new customer-facing API needs a staging slot for zero-downtime releases, autoscale on CPU, zone redundancy, and outbound access to a database on a virtual network.",
+    "stem": "Which tier is the right starting point?",
+    "options": [
+      "Basic B2, upgrading later if the requirements turn out to be real",
+      "Standard S1, since it has slots, autoscale and VNet integration",
+      "Premium v3, because it is the tier where slots, autoscale, VNet integration and zone redundancy all exist",
+      "Isolated v2 in an App Service Environment, because zone redundancy requires single-tenant hardware"
+    ],
+    "answer": 2,
+    "explanation": "Premium v3 is the first tier that carries every item on that list, including zone redundancy, and its price-performance is why most teams jump from Basic straight past Standard. Standard is the tempting answer because it does have slots, autoscale and VNet integration - but not zone redundancy, and Isolated v2 is many times the price for isolation nobody asked for."
+  },
+  {
+    "id": "2.2-q4",
+    "topic": "scale up versus out",
+    "stem": "A single request in a reporting endpoint runs out of memory on every instance. Which change addresses it?",
+    "options": [
+      "Scale out: add more instances so each one handles fewer requests",
+      "Scale up: move the plan to a larger tier so every instance has more memory",
+      "Turn on Always On so the process is never recycled",
+      "Add a health check path so the failing instances are removed from rotation"
+    ],
+    "answer": 1,
+    "explanation": "One request needing more memory than an instance has is a scale-up problem: more instances of the same size each still hit the same ceiling. Always On and health checks are useful settings but neither gives a single request more memory - the health check would just quietly take instances out of rotation while the endpoint keeps failing."
+  },
+  {
+    "id": "2.2-q5",
+    "topic": "slot settings",
+    "scenario": "After a swap, the production API starts writing orders into the staging database. The connection string is set correctly in both slots.",
+    "stem": "What went wrong?",
+    "options": [
+      "The swap copied production's application settings into staging instead of the other way round",
+      "The connection string was not marked as a slot setting, so it travelled with the code during the swap",
+      "Key Vault references cannot be used in a staging slot, so the app fell back to a default",
+      "The staging slot was still receiving a percentage of production traffic after the swap"
+    ],
+    "answer": 1,
+    "explanation": "App settings and connection strings move with the app content during a swap unless they are marked as slot settings (sticky), which is exactly how production ends up with staging's values. Traffic splitting is a real App Service feature and a believable distractor, but it would send some users to staging rather than change which database production writes to."
+  },
+  {
+    "id": "2.2-q6",
+    "topic": "deployment slots",
+    "scenario": "A team swaps a freshly deployed staging slot into production and the first two minutes of requests are slow and error-prone, then everything settles.",
+    "stem": "What is the most likely cause and fix?",
+    "options": [
+      "The plan is undersized; scale up before every release",
+      "The slot was swapped cold, with no warm-up path or traffic; warm the staging slot before swapping",
+      "The swap always causes a restart of production instances, so releases must happen out of hours",
+      "Autoscale removed instances during the swap; disable autoscale during deployments"
+    ],
+    "answer": 1,
+    "explanation": "A swap exchanges routing to instances that must already be warm - if nothing has exercised the app, the first real users pay for JIT, cache fills and connection pools. A correctly warmed swap causes no restart of production at all, which is precisely why the out-of-hours theory misses the point."
+  },
+  {
+    "id": "2.2-q7",
+    "topic": "Always On",
+    "scenario": "An internal API used a few times a day takes eight seconds to answer the first request each morning and milliseconds afterwards.",
+    "stem": "Which setting addresses this directly?",
+    "options": [
+      "Always On, which keeps the app process alive instead of letting it go idle",
+      "Run-from-package, which mounts the deployment zip read-only",
+      "A health check path, which pings the app on a schedule",
+      "ARR affinity, which pins each user to one instance"
+    ],
+    "answer": 0,
+    "explanation": "Without Always On the App Service worker unloads an idle app after around twenty minutes and the next request pays the whole cold start - turning it on is a checkbox available from Basic upwards. Run-from-package does speed start-up a little, but it does not stop the app being unloaded in the first place, so the morning penalty would remain."
+  },
+  {
+    "id": "2.2-q8",
+    "topic": "limits",
+    "scenario": "A team wants App Service to run a nightly job that reconciles two systems and takes about forty minutes, triggered by an HTTP call from a scheduler.",
+    "stem": "What should you tell them?",
+    "options": [
+      "Enable Always On, which removes the request time limit for long-running work",
+      "Scale the plan up to Premium v3, which raises the request timeout to one hour",
+      "HTTP requests to App Service time out at around 230 seconds, so the work belongs in a Function, a WebJob or a queue worker rather than in a request",
+      "Split the job into forty one-minute requests, which is the supported pattern for batch work"
+    ],
+    "answer": 2,
+    "explanation": "App Service enforces a request timeout of roughly 230 seconds regardless of tier or settings, so any long job must run outside the request - triggered by a queue message or a timer and reported on separately. Always On keeps the process warm and a bigger tier gives more CPU, but neither changes that platform timeout."
+  }
+]

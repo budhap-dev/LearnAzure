@@ -1,0 +1,89 @@
+[
+  {
+    "term": "Container image",
+    "aliases": ["image", "Docker image", "OCI image"],
+    "definition": "The immutable package a container runs from: your application, its runtime and the operating-system libraries it needs, in layers. It is built once and run anywhere a container host exists. The layers you inherited from the base image are yours to patch, even though you did not write them.",
+    "example": "acrshopprod.azurecr.io/api:9f3c1ab holds the Node API, Node 20 and ImageMagick in one image.",
+    "icon": "container-registry",
+    "lessons": ["2.5"],
+    "related": ["Container", "Dockerfile", "Image tag", "Azure Container Registry"]
+  },
+  {
+    "term": "Dockerfile",
+    "definition": "The text file that describes how to build a container image: which base image to start from, what to copy in, what to install and what command to run. It is the build recipe, and it belongs in the application repository next to the code. The FROM line is the single most important security decision in it.",
+    "example": "FROM node:20-slim, apt-get install imagemagick, COPY the app, CMD node server.js.",
+    "icon": "code",
+    "lessons": ["2.5"],
+    "related": ["Container image", "Container", "Azure Container Registry"]
+  },
+  {
+    "term": "Azure Container Registry",
+    "aliases": ["ACR", "container registry"],
+    "definition": "A private Docker registry run as an Azure resource, where your build pushes images and your platform pulls them. Tiers are Basic, Standard and Premium, with Premium adding geo-replication, private endpoints and signed images. It ships with an admin user - a shared username and password - that you should disable in favour of a managed identity.",
+    "example": "acrshopprod holds every image the retailer runs; the pipeline pushes with AcrPush, Container Apps pulls with AcrPull.",
+    "icon": "container-registry",
+    "lessons": ["2.5", "2.6"],
+    "related": ["Container image", "Image tag", "Managed identity", "Azure Container Apps"]
+  },
+  {
+    "term": "Image tag",
+    "aliases": ["tag", "image digest", "digest"],
+    "definition": "A mutable label pointing at a container image, such as api:1.4.2 or api:latest; the digest (sha256:...) is the immutable content address underneath it. Anyone with push rights can move a tag to different bytes, so :latest in production is a deployment you cannot reproduce. Tag with the commit SHA and deploy by digest.",
+    "example": "api:9f3c1ab is reproducible; api:latest is whatever someone pushed most recently.",
+    "lessons": ["2.5"],
+    "related": ["Container image", "Azure Container Registry", "Revision"]
+  },
+  {
+    "term": "Azure Container Instances",
+    "aliases": ["ACI"],
+    "definition": "The simplest way to run a container on Azure: a single container group with an IP address, billed per second of vCPU and memory. There is no orchestration, no load balancing and no rolling deployment. Ideal for batch jobs, CI agents and burst offload; wrong for anything that must stay up.",
+    "example": "A nightly reconciliation job runs for four minutes on ACI and costs pennies a month.",
+    "icon": "container-instances",
+    "lessons": ["2.5"],
+    "related": ["Container image", "Azure Container Apps", "Container"]
+  },
+  {
+    "term": "Azure Container Apps",
+    "aliases": ["ACA", "Container Apps"],
+    "definition": "Serverless containers on a managed Kubernetes you never see or patch: revisions with traffic splitting, HTTPS ingress with a free certificate, scale to zero, KEDA-based event-driven scaling, Dapr and jobs. It is the default home for a containerised service on Azure. What you give up is direct access to the cluster - no custom schedulers, no arbitrary operators.",
+    "example": "The thumbnailing API runs on Container Apps, scaling from zero to twelve replicas on HTTP concurrency.",
+    "icon": "container-apps",
+    "lessons": ["2.5", "2.6"],
+    "related": ["Revision", "KEDA", "Dapr", "Ingress", "Azure Container Instances"]
+  },
+  {
+    "term": "Revision",
+    "aliases": ["container app revision"],
+    "definition": "An immutable snapshot of a container app - this image, these environment variables, this scale rule. Deploying creates a new revision rather than replacing the old one, so you can send a percentage of traffic to it and shift the rest when it looks healthy. It is the deployment slot idea done by percentage instead of by swap.",
+    "example": "Revision 13 takes 10% of traffic for an hour; if error rates hold, it goes to 100%.",
+    "icon": "container-apps",
+    "lessons": ["2.5"],
+    "related": ["Azure Container Apps", "Deployment slot", "Ingress"]
+  },
+  {
+    "term": "KEDA",
+    "aliases": ["Kubernetes Event-driven Autoscaling"],
+    "definition": "The event-driven autoscaler built into Container Apps (and installable on AKS) that adds and removes replicas based on an external signal - queue length, HTTP concurrency, a Service Bus backlog, a cron schedule. It is what makes scale to zero possible, because the scaler wakes the app when the signal appears. Choose the scaler that matches the real bottleneck, not CPU by default.",
+    "example": "A worker scales from 0 to 20 replicas when the Service Bus queue passes five messages per replica.",
+    "icon": "autoscale",
+    "lessons": ["2.5"],
+    "related": ["Azure Container Apps", "Autoscale", "Elasticity"]
+  },
+  {
+    "term": "Dapr",
+    "aliases": ["Distributed Application Runtime"],
+    "definition": "A sidecar runtime, built into Container Apps as an opt-in feature, that gives containers service-to-service invocation with retries and mTLS, pub/sub, state stores and secret access behind stable HTTP APIs. It saves you writing that plumbing per language. It is another abstraction to learn and debug, so switch it on for a reason, not by default.",
+    "example": "The order service calls the stock service by app id through Dapr, and gets retries and mTLS without SDK code.",
+    "icon": "cubes",
+    "lessons": ["2.5"],
+    "related": ["Azure Container Apps", "Revision"]
+  },
+  {
+    "term": "Ingress",
+    "definition": "The setting that decides whether and how traffic reaches a container app: external (a public HTTPS endpoint with a free managed certificate) or internal (reachable only inside the environment), on a chosen target port. Turning it off entirely gives you a background worker. It is also where the traffic split across revisions is configured.",
+    "example": "The API has external ingress on port 3000; the worker has ingress disabled and reads from a queue.",
+    "icon": "front-door",
+    "lessons": ["2.5"],
+    "related": ["Azure Container Apps", "Revision", "Ingress controller"]
+  }
+]

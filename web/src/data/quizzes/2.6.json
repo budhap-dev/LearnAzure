@@ -1,0 +1,111 @@
+[
+  {
+    "id": "2.6-q1",
+    "topic": "pods, nodes and pools",
+    "stem": "How do pods, nodes and node pools relate to each other in an AKS cluster?",
+    "options": [
+      "A node runs inside a pod, and pods are grouped into node pools",
+      "A pod is the smallest schedulable unit, it runs on a node (a VM), and identical nodes are grouped into a node pool",
+      "A pod is a group of nodes, and a node pool is the set of pods sharing one machine",
+      "A node pool is a namespace containing pods, and nodes are the containers inside them"
+    ],
+    "answer": 1,
+    "explanation": "Pods hold containers, nodes are the virtual machines pods are placed on, and a node pool is a set of identical nodes scaled and upgraded together. The inverted answers are tempting because 'pool' sounds like the smallest grouping, but the containment runs container inside pod, pod on node, node in pool."
+  },
+  {
+    "id": "2.6-q2",
+    "topic": "managed versus yours",
+    "stem": "In AKS, which of these is Microsoft's responsibility rather than yours?",
+    "options": [
+      "Upgrading the Kubernetes version running on your node pools",
+      "Patching the node OS images",
+      "Running and patching the Kubernetes control plane - API server, scheduler and etcd",
+      "Choosing the networking model and configuring network policy"
+    ],
+    "answer": 2,
+    "explanation": "AKS is managed at the control plane: Microsoft runs the API server, scheduler and etcd, free on the standard tier. Everything from the nodes up - version upgrades, node image patching, networking choices, RBAC and observability - remains yours, which is exactly why 'managed Kubernetes' is often heard as more than it means."
+  },
+  {
+    "id": "2.6-q3",
+    "topic": "cost",
+    "scenario": "A finance review shows a lightly used AKS cluster billing about £600 a month while the services on it handle almost no traffic overnight.",
+    "stem": "What explains the bill, and what is the general lesson?",
+    "options": [
+      "The Kubernetes control plane is charged per API call, so background controllers generate cost",
+      "The nodes are ordinary VMs billed by the hour whether or not pods use them - idle node capacity is the main source of AKS waste",
+      "AKS charges a per-pod fee, so the replica counts need reducing",
+      "The cluster autoscaler is failing to scale to zero nodes, which it would normally do overnight"
+    ],
+    "answer": 1,
+    "explanation": "Node hours are the AKS bill: a node with nothing scheduled on it costs the same as a busy one, and the cluster cannot go to zero because something has to be running to notice work arriving. The autoscaler answer is the tempting one - it does remove under-used nodes, but it will never take a serving cluster to zero the way Container Apps can."
+  },
+  {
+    "id": "2.6-q4",
+    "topic": "cluster autoscaler",
+    "scenario": "Traffic spikes, the Horizontal Pod Autoscaler raises the API to twelve replicas, and several pods sit in Pending.",
+    "stem": "What is happening, and what fixes it?",
+    "options": [
+      "The pods are waiting on image pulls; a Premium registry with geo-replication resolves it",
+      "The Kubernetes control plane is throttling; the Uptime SLA tier raises the limit",
+      "The namespace has no ingress rule; adding one lets the pods start",
+      "No node has room for the new pods; the cluster autoscaler must add nodes to the pool before they can be scheduled"
+    ],
+    "answer": 3,
+    "explanation": "Pending almost always means the scheduler cannot find a node with enough unreserved CPU and memory, so more pods only help once the cluster autoscaler grows the node pool - and that takes minutes, which is the lag to plan for. Image pulls show as ContainerCreating rather than Pending, and ingress affects how traffic reaches pods, not whether they get scheduled."
+  },
+  {
+    "id": "2.6-q5",
+    "topic": "control plane naming",
+    "scenario": "In a design review someone says \"the control plane will handle that\" while discussing both AKS and Azure Resource Manager deployments.",
+    "stem": "Why should you ask them to be specific?",
+    "options": [
+      "Because \"control plane\" means Azure Resource Manager, and Kubernetes calls its equivalent the management plane",
+      "Because the phrase means two different things: the Kubernetes control plane in the cluster, and the Azure Resource Manager control plane for Azure resources",
+      "Because AKS does not have a control plane; Microsoft calls it the managed cluster service",
+      "Because the Kubernetes control plane is a subset of the Azure Resource Manager control plane"
+    ],
+    "answer": 1,
+    "explanation": "Kubernetes has its own control plane - API server, scheduler and etcd - which is entirely separate from the Azure Resource Manager control plane that creates and manages Azure resources, so the same phrase points at two systems with different access models and audit trails. They are not nested and Kubernetes does not call its own control plane anything else, so the only fix is to name which one you mean."
+  },
+  {
+    "id": "2.6-q6",
+    "topic": "the honest test",
+    "scenario": "A team of six runs three containerised services, has no Kubernetes experience, no funded portability requirement and no named platform owner. They propose AKS because it is the industry standard.",
+    "stem": "What is the best recommendation?",
+    "options": [
+      "Adopt AKS but start with a single small node pool to keep costs down while the team learns",
+      "Stay on Container Apps, because none of the conditions that make AKS pay for itself are present",
+      "Adopt AKS Automatic, since it removes the need for Kubernetes knowledge entirely",
+      "Split the difference: run the two workers on AKS and keep the API on Container Apps"
+    ],
+    "answer": 1,
+    "explanation": "The honest test asks about service count, existing investment, funded portability, a capability Container Apps genuinely cannot provide, and a named platform owner - and this team fails every one, so AKS buys ongoing burden with no matching benefit. AKS Automatic is the plausible distractor: it preconfigures node management and defaults, but debugging a cluster still needs real Kubernetes skills the team does not have."
+  },
+  {
+    "id": "2.6-q7",
+    "topic": "packaging and tooling",
+    "stem": "What role does Helm play in a Kubernetes workflow?",
+    "options": [
+      "It replaces the Kubernetes control plane's scheduler with a policy-driven one",
+      "It packages an application's manifests as a chart and templates the per-environment differences through values files",
+      "It is the command-line client that applies manifests to the API server",
+      "It is the ingress controller that routes hostnames and paths to services"
+    ],
+    "answer": 1,
+    "explanation": "Helm is the packaging and templating layer - roughly npm plus templates - so one chart plus a values file per environment replaces hand-maintained YAML per environment. kubectl is the client that talks to the API server and an ingress controller handles HTTP routing; both are commonly used alongside Helm, which is why they are easy to confuse with it."
+  },
+  {
+    "id": "2.6-q8",
+    "topic": "operational burden",
+    "scenario": "A lead is writing the proposal for adopting AKS and lists the monthly node cost as the total cost of the decision.",
+    "stem": "What is the most important thing missing from that proposal?",
+    "options": [
+      "The licence fee for the Kubernetes control plane on the standard tier",
+      "The per-pod charge that applies once replica counts exceed the free grant",
+      "The standing engineering commitment: version upgrades, node patching, capacity planning, RBAC, secrets, observability and on-call skill",
+      "The cost of Azure Container Registry, which is the largest line item in a container estate"
+    ],
+    "answer": 2,
+    "explanation": "The recurring people cost is usually the larger half of an AKS decision: upgrades arrive on Kubernetes' release cadence and never stop, and somebody has to be able to debug a CrashLoopBackOff at 2 a.m. The control plane is free on the standard tier, there is no per-pod charge, and a registry costs tens of pounds a month against hundreds for nodes - so none of the other options is the missing number."
+  }
+]

@@ -1,0 +1,111 @@
+[
+  {
+    "id": "2.3-q1",
+    "topic": "client-side routing",
+    "scenario": "A customer bookmarks https://shop.northline.com/orders/4821. Clicking through to that page from the home page works; opening the bookmark the next morning returns a 404.",
+    "stem": "What change fixes this on Static Web Apps?",
+    "options": [
+      "Add a navigation fallback in staticwebapp.config.json that rewrites unmatched paths to /index.html",
+      "Switch React Router from browser history mode to hash routing so the path never reaches the server",
+      "Add a wildcard DNS record so subpaths resolve to the same site",
+      "Purge the edge cache, because a stale entry is returning the 404"
+    ],
+    "answer": 0,
+    "explanation": "The router invents /orders/4821 in the browser, so a file server correctly reports that no such file exists; the navigation fallback tells Static Web Apps to serve index.html for any unmatched path and let React read the URL. Hash routing would technically work but changes every URL the business has published and is a workaround, not the supported fix - and the cache is innocent, since the 404 is generated fresh each time."
+  },
+  {
+    "id": "2.3-q2",
+    "topic": "navigation fallback",
+    "scenario": "After adding a navigation fallback, missing product images no longer 404 - the browser receives the site's HTML with a 200 status and fails to decode it.",
+    "stem": "What was left out of the configuration?",
+    "options": [
+      "A mimeTypes entry mapping image extensions to their content types",
+      "An exclude list on navigationFallback covering asset and API paths",
+      "A globalHeaders entry setting cache-control on images",
+      "A route rule allowing anonymous access to the assets folder"
+    ],
+    "answer": 1,
+    "explanation": "Without an exclude list the fallback swallows every unmatched request, including asset and /api paths, and returns index.html with a 200 - which is why a missing PNG looks like a decoding bug rather than a missing file. MIME types only describe files that do exist, so they cannot restore a 404 for one that does not."
+  },
+  {
+    "id": "2.3-q3",
+    "topic": "preview environments",
+    "stem": "What does a Static Web Apps preview environment give a team on each pull request?",
+    "options": [
+      "A copy of production traffic mirrored to the branch build for load testing",
+      "A staging slot that must be swapped into production to release the change",
+      "A complete build of the branch at its own URL, removed when the pull request closes",
+      "A read-only render of the changed pages for accessibility scanning only"
+    ],
+    "answer": 2,
+    "explanation": "Each pull request is built and deployed to a separate URL that lives alongside production until the PR closes, so reviewers open a link instead of running the branch locally. It is not an App Service deployment slot: nothing is swapped, and merging to the tracked branch is what releases the change."
+  },
+  {
+    "id": "2.3-q4",
+    "topic": "certificates and domains",
+    "scenario": "Priya's team currently renews the shop's TLS certificate by hand each January and missed it for six hours last year.",
+    "stem": "What changes when the front end moves to Static Web Apps with a custom domain?",
+    "options": [
+      "Azure issues and renews a managed certificate for the domain at no extra cost",
+      "The certificate is issued free but must still be re-uploaded annually",
+      "Certificates are included only on the Standard tier; Free serves HTTP",
+      "The team uploads its existing certificate to Key Vault and Azure references it each year"
+    ],
+    "answer": 0,
+    "explanation": "Static Web Apps issues and auto-renews a free managed certificate for custom domains, which removes the renewal task and the outage that follows forgetting it. Free certificates are not a Standard-only feature - the Free tier serves HTTPS too - although managed certificates do not cover wildcard domains and cannot be exported."
+  },
+  {
+    "id": "2.3-q5",
+    "topic": "managed API",
+    "scenario": "The admin console needs six endpoints today, will need Durable Functions for a multi-step approval flow next quarter, and must run on a pinned Node runtime the platform's managed API does not offer.",
+    "stem": "What is the right call?",
+    "options": [
+      "Use the managed /api and accept the runtime the platform provides",
+      "Move the endpoints into the React app as service workers to avoid a backend",
+      "Deploy a separate Azure Functions app and link it to the Static Web App, which the Standard tier supports",
+      "Host the endpoints on the storage account's static website alongside the bundle"
+    ],
+    "answer": 2,
+    "explanation": "The managed API is deliberately a subset of Functions - fewer runtime choices, no Durable Functions, no separate scaling - and the Standard tier's bring-your-own Functions app removes those limits while keeping same-origin /api routing. Staying on the managed API would block the approval flow, and a storage account static website cannot execute anything at all."
+  },
+  {
+    "id": "2.3-q6",
+    "topic": "choosing a host",
+    "stem": "Which question best decides between Static Web Apps and App Service for a front end?",
+    "options": [
+      "Does anything need to run on the server for each request, or is the output just files?",
+      "Does the application need a custom domain and a TLS certificate?",
+      "Will the team deploy from GitHub rather than Azure DevOps?",
+      "Is the front end written in React rather than Angular or Vue?"
+    ],
+    "answer": 0,
+    "explanation": "Static Web Apps hosts build output and nothing else, so the deciding question is whether server code must run per request - server-side rendering beyond the presets, sessions held in the process, or per-request logic beyond the managed API. Custom domains, certificates, Git-based deployment and framework choice are available on both, so none of them separates the two."
+  },
+  {
+    "id": "2.3-q7",
+    "topic": "React Native",
+    "scenario": "A stakeholder asks whether the team's React Native mobile app will be deployed to Static Web Apps alongside the web front end.",
+    "stem": "What is the accurate answer?",
+    "options": [
+      "Yes, Static Web Apps builds and distributes iOS and Android binaries from the same repository",
+      "No - the mobile app ships through the app stores; Static Web Apps hosts the React Native Web build, the marketing site and the admin console",
+      "Yes, but only the Android build, because Apple requires its own distribution service",
+      "No - mobile apps must instead be hosted on App Service so they can be updated over the air"
+    ],
+    "answer": 1,
+    "explanation": "Hosting and app-store distribution are different pipelines: the phone app goes through the App Store and Google Play and is simply another client of the same API, while Static Web Apps serves web builds. App Service is not a mobile distribution channel either, so nothing changes by moving the site there."
+  },
+  {
+    "id": "2.3-q8",
+    "topic": "tiers",
+    "stem": "The shop's production front end is about to launch on the Free tier. What is the strongest argument for moving it to Standard?",
+    "options": [
+      "The Free tier does not support custom domains or HTTPS",
+      "The Free tier limits the site to a single deployment from the main branch",
+      "The Free tier carries no SLA, and production also loses private endpoints and custom authentication",
+      "The Free tier removes the site if it receives no traffic for thirty days"
+    ],
+    "answer": 2,
+    "explanation": "Free is unsupported by design - no SLA, plus no custom authentication or private endpoints - which is exactly the sentence you do not want to explain during an incident, and Standard costs only a few pounds a month per app. Custom domains, HTTPS and pull-request builds all work on Free, so those are not the reason to upgrade."
+  }
+]

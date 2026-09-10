@@ -1,0 +1,110 @@
+[
+  {
+    "id": "2.7-q1",
+    "topic": "the ladder",
+    "stem": "What is the guiding principle behind the compute decision tree in this lesson?",
+    "options": [
+      "Pick the platform the team already knows, because familiarity beats fit",
+      "Start at the most managed option that can run the workload and move down the ladder only when a named requirement forces it",
+      "Start with containers, because an image can be moved to any of the other services later",
+      "Choose whichever option has the lowest list price for the expected traffic"
+    ],
+    "answer": 1,
+    "explanation": "Every step down the ladder adds something you must run, watch and pay for whether or not anyone is using it, so the burden should be forced on you by a requirement rather than chosen. Starting with containers is the tempting answer because images are portable, but it adds a registry, a build and image hygiene to workloads that a platform would have run from source."
+  },
+  {
+    "id": "2.7-q2",
+    "topic": "question order",
+    "scenario": "A proposal for a new internal reporting front end says \"we will containerise it so we have options later\". The app is a compiled React bundle with no server code.",
+    "stem": "Which question in the decision tree settles this, and what is the answer?",
+    "options": [
+      "Question 3, the runtime dependency question: it needs a container because the build tooling is unusual",
+      "Question 4, the long-running web app question: App Service, because every web thing needs a web server",
+      "Question 1, the static files question: Static Web Apps, because the build output is files and needs no server process",
+      "Question 5, the cluster question: Container Apps, because it is the default for containerised services"
+    ],
+    "answer": 2,
+    "explanation": "The first question asks whether the workload is static files with no server logic, and a React build is exactly that, so it lands on a CDN and never reaches the container question. Choosing App Service would pay for a process that does nothing, and \"options later\" is a preference rather than the named requirement the tree demands."
+  },
+  {
+    "id": "2.7-q3",
+    "topic": "cost shapes",
+    "scenario": "A Functions app on a Consumption plan started as an occasional webhook. It now runs tens of millions of times a month at a steady rate, and the bill has passed what a Premium v3 App Service plan would cost.",
+    "stem": "What does this tell you?",
+    "options": [
+      "The workload has crossed from bursty to steady state, so a fixed plan is now the cheaper billing shape",
+      "The functions must be badly written, because Consumption is always cheaper than a plan",
+      "The app should move to AKS, because a cluster spreads the cost across more services",
+      "Nothing: per-execution billing always tracks usage, so the price is by definition correct"
+    ],
+    "answer": 0,
+    "explanation": "Per-execution billing is near-free when idle and expensive at steady high volume, while a fixed plan is the reverse, so a workload whose shape has changed should change its pricing model too. Consumption being \"always cheaper\" is the half-read version of the lesson; the crossover is precisely the point where it stops being true."
+  },
+  {
+    "id": "2.7-q4",
+    "topic": "cluster decision",
+    "scenario": "A contractor proposes AKS for a five-person team running three small APIs, on the grounds that Kubernetes keeps them portable.",
+    "stem": "What is the strongest objection to raise in the review?",
+    "options": [
+      "Kubernetes cannot run .NET or Node workloads well, so the services would need rewriting",
+      "AKS has no autoscaling, so the team would have to size the cluster for peak by hand",
+      "Question 5 has two conditions - a genuine need for cluster-level control and a named owner - and neither has been shown, so Container Apps does the job for a fraction of the running cost",
+      "Portability is not achievable on Azure, so the stated benefit is impossible"
+    ],
+    "answer": 2,
+    "explanation": "The cluster question requires both a real requirement and a person to own upgrades and on-call; without the second the cluster becomes one person's hobby and then their leaving present. Portability is achievable, but it is a monthly cost - nodes bill whether or not pods use them - and paying it to insure against a migration nobody has funded is the weak part of the argument, not the technology."
+  },
+  {
+    "id": "2.7-q5",
+    "topic": "hard requirements",
+    "stem": "Which requirement genuinely forces a virtual machine rather than a managed platform?",
+    "options": [
+      "The application needs to run continuously rather than scale to zero",
+      "The vendor ships the product only as a Windows installer with a licence bound to the machine",
+      "The team wants shell access so they can read log files quickly",
+      "The service must connect to a database over a private network"
+    ],
+    "answer": 1,
+    "explanation": "Installer-only software, machine-bound licences, GPU drivers and kernel-level agents are the cases no PaaS will accept, and they short-circuit the rest of the tree. Continuous running is what an App Service plan does, private networking is available through VNet integration, and wanting shell access is a preference that costs you an operating system to patch forever."
+  },
+  {
+    "id": "2.7-q6",
+    "topic": "portability",
+    "stem": "How should a compute decision treat the risk of vendor lock-in?",
+    "options": [
+      "As a rule: always choose the most portable option available so migration is never blocked",
+      "As irrelevant, since application code is portable and everything else can be rewritten quickly",
+      "As a price to compare: portability has a monthly running cost, so buy it when a funded requirement exists",
+      "As a reason to run everything on virtual machines, since an image can be copied anywhere"
+    ],
+    "answer": 2,
+    "explanation": "Portability is real but it is bought, most obviously in cluster nodes that bill continuously, so it belongs in the cost comparison rather than in a blanket rule. A VM looks portable but you carry the operating system, its patching and its monitoring with you, which is the most expensive kind of portability there is."
+  },
+  {
+    "id": "2.7-q7",
+    "topic": "revisiting",
+    "stem": "Which of these is a trigger that should reopen a compute decision, rather than something to absorb?",
+    "options": [
+      "A new engineer joins who is more comfortable with a different platform",
+      "The monthly bill crosses the threshold you wrote down as the crossover to a fixed plan",
+      "A release takes longer than usual because the build pipeline was slow",
+      "Traffic doubles for one week during a marketing campaign and then returns to normal"
+    ],
+    "answer": 1,
+    "explanation": "Good triggers are ones you can name in advance and measure: a cost threshold, a platform limit, a dependency the platform will not run, a team change or a funded portability requirement. A single campaign spike is exactly what elastic compute is for, and personal preference is the kind of argument the decision framework exists to settle."
+  },
+  {
+    "id": "2.7-q8",
+    "topic": "review script",
+    "scenario": "Three proposals land in the same week: Functions for notifications, AKS for everything and \"just a VM\" for a new internal tool.",
+    "stem": "Which question does the most to make all three proposals justify themselves?",
+    "options": [
+      "\"Which question in the tree moved you here, and what does it cost at zero traffic and at ten times today's?\"",
+      "\"Has this service been used successfully by another team in the company?\"",
+      "\"Can we deploy it from our existing GitHub Actions workflow without changes?\"",
+      "\"Which option has the highest SLA on paper?\""
+    ],
+    "answer": 0,
+    "explanation": "It forces the proposer to name the requirement that moved them down the ladder and to price both ends of the traffic range, which is what separates a requirement from a preference. Deployment tooling and other teams' experience are useful context, but they justify familiarity rather than fit, and the highest SLA on paper usually just points at the most expensive option."
+  }
+]

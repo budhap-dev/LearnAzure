@@ -1,0 +1,86 @@
+[
+  {
+    "term": "Trigger",
+    "aliases": ["function trigger"],
+    "definition": "The one event that causes a function to run - an HTTP request, a timer, a queue message, a blob upload, a change feed entry. Every function has exactly one trigger, and it decides the scaling behaviour and the retry semantics you get. Choosing the trigger is the real design decision; the code inside is usually the easy part.",
+    "example": "A queue trigger on the orders queue gives one invocation per message, with retries and dead-lettering for free.",
+    "icon": "function-apps",
+    "lessons": ["2.4"],
+    "related": ["Binding", "Azure Functions", "Event-driven scaling"]
+  },
+  {
+    "term": "Binding",
+    "aliases": ["input binding", "output binding"],
+    "definition": "Declarative plumbing between a function and a service: an input binding hands you data, an output binding writes what you return. It removes SDK setup, connection handling and retry code for queues, blobs, tables and Cosmos DB. The convenience is Azure-specific, so bindings are where portability is lost.",
+    "example": "An output binding to a Service Bus topic means the function returns an object instead of constructing a client.",
+    "icon": "input-output",
+    "lessons": ["2.4"],
+    "related": ["Trigger", "Azure Functions", "Managed identity"]
+  },
+  {
+    "term": "Scale to zero",
+    "definition": "Running no instances at all when there is no work, so nothing is billed between events. It is the property that makes serverless cheap for intermittent jobs. It is also what causes cold starts, because the next request has to wait for an instance to exist.",
+    "example": "Between 02:04 and the next night, the stock-sync function app has no instances and costs nothing.",
+    "lessons": ["2.4"],
+    "related": ["Cold start", "Consumption plan", "Serverless"]
+  },
+  {
+    "term": "Event-driven scaling",
+    "aliases": ["scale controller"],
+    "definition": "The platform adding and removing function instances based on the backlog of the trigger source - queue depth, event-hub lag, request rate - rather than on CPU. It reacts in seconds and needs no rules from you. Downstream systems do not scale with it, so a database or a third-party API can become the bottleneck.",
+    "example": "Five thousand queued orders make the worker scale from zero to twenty instances, then back to zero.",
+    "icon": "autoscale",
+    "lessons": ["2.4"],
+    "related": ["Trigger", "Scale to zero", "Autoscale"]
+  },
+  {
+    "term": "Cold start",
+    "definition": "The delay on the first request to an idle app while the platform allocates an instance, starts the language worker and loads your dependencies - typically a second to several seconds. It affects Consumption plans most and grows with dependency size. Mitigate with always-ready instances, or avoid it by not putting latency-critical synchronous paths on serverless.",
+    "example": "The first checkout after a quiet Sunday morning takes six seconds; the next hundred take 200 ms.",
+    "lessons": ["2.4"],
+    "related": ["Scale to zero", "Consumption plan", "Functions Premium plan", "Latency"]
+  },
+  {
+    "term": "Consumption plan",
+    "aliases": ["Functions Consumption"],
+    "definition": "The original serverless hosting plan for Azure Functions: scales to zero, bills per execution and per GB-second with a monthly free grant, and has no VNet integration. Its run time is capped in minutes - five by default, ten at most at the time of writing. Ideal for spiky, short, latency-tolerant work.",
+    "example": "A nightly sync and a handful of webhooks run all month inside the free grant.",
+    "icon": "function-apps",
+    "lessons": ["2.4"],
+    "related": ["Flex Consumption", "Functions Premium plan", "Function timeout", "Scale to zero"]
+  },
+  {
+    "term": "Flex Consumption",
+    "definition": "A newer serverless plan that keeps scale-to-zero and per-second billing while adding virtual network integration, larger instance memory sizes and optional always-ready instances to blunt cold starts. It is the sensible default when plain Consumption's networking or cold starts are the blocker. Regional and language availability lag the older plan, so check before committing.",
+    "example": "The orders worker moves to Flex Consumption so it can reach the database through a private endpoint.",
+    "icon": "function-apps",
+    "lessons": ["2.4"],
+    "related": ["Consumption plan", "Functions Premium plan", "Cold start"]
+  },
+  {
+    "term": "Functions Premium plan",
+    "aliases": ["Elastic Premium", "EP1"],
+    "definition": "A Functions hosting plan with pre-warmed always-ready instances, virtual network integration and long or unbounded run times, billed per vCPU and GB-hour rather than per execution. It removes cold starts and the timeout ceiling. Because at least one instance is always warm, it never bills nothing - roughly £120 a month upwards at the time of writing.",
+    "example": "The customer-facing API moves to Premium so no shopper ever waits for an instance to start.",
+    "icon": "function-apps",
+    "lessons": ["2.4"],
+    "related": ["Consumption plan", "Flex Consumption", "Cold start", "App Service plan"]
+  },
+  {
+    "term": "Function timeout",
+    "aliases": ["functionTimeout"],
+    "definition": "The maximum time a single invocation may run before the host stops it. On Consumption it is five minutes by default and ten at most; Flex Consumption and Premium allow far longer, and Dedicated can be unbounded. Teams meet it in production rather than in test, because test data is smaller.",
+    "example": "An import that takes four minutes for 10,000 rows fails at 10 minutes when the supplier sends 60,000.",
+    "lessons": ["2.4"],
+    "related": ["Consumption plan", "Durable Functions", "Functions Premium plan"]
+  },
+  {
+    "term": "Durable Functions",
+    "aliases": ["orchestrator function", "durable orchestration"],
+    "definition": "An extension that adds state and workflow to Functions: an orchestrator describes the steps in code, activity functions do the work, and entity functions hold small pieces of state. It supports chaining, fan-out/fan-in and waiting days for a human approval. Orchestrator code is replayed from an event history, so it must be deterministic - no clocks, randomness or direct I/O.",
+    "example": "An approval workflow waits up to three days for a manager, then takes the timeout branch.",
+    "icon": "workflow",
+    "lessons": ["2.4"],
+    "related": ["Trigger", "Function timeout", "Azure Functions", "Idempotent"]
+  }
+]

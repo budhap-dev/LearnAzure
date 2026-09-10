@@ -1,0 +1,44 @@
+[
+  {
+    "term": "Bursty workload",
+    "aliases": ["spiky workload", "burst traffic"],
+    "definition": "Work that arrives in short spikes separated by long idle periods, so peak demand is many times the average. It is the shape that per-execution billing and scale to zero were built for. The gotcha is that a burst still needs capacity fast, so cold starts matter more here than anywhere else.",
+    "example": "A webhook that receives 5,000 delivery updates in the ten minutes after a courier run and nothing for the rest of the day.",
+    "icon": "autoscale",
+    "lessons": ["2.7", "2.4"],
+    "related": ["Steady-state workload", "Azure Functions", "Serverless", "Autoscale"]
+  },
+  {
+    "term": "Steady-state workload",
+    "aliases": ["steady load"],
+    "definition": "Work whose demand is broadly constant, so average and peak are close together. A fixed per-instance plan or a reservation is usually cheaper for it than per-execution billing. Workload shape changes over time, so a service that was bursty at launch may quietly become steady and stay on the wrong pricing model.",
+    "example": "An order API serving roughly 40 requests a second every working day is steady, and belongs on a sized plan rather than a consumption plan.",
+    "lessons": ["2.7", "2.4"],
+    "related": ["Bursty workload", "App Service plan", "Reservation", "Savings plan"]
+  },
+  {
+    "term": "Operational burden",
+    "aliases": ["ops burden", "operational overhead"],
+    "definition": "Everything a hosting choice commits you to doing forever: patching, upgrades, certificates, capacity, on-call and the tooling around them. It is real cost that never appears on the Azure invoice, because it is paid in your team's time. Each step down the compute ladder from managed platform to virtual machine adds more of it.",
+    "example": "A Kubernetes cluster adds node image upgrades, quarterly Kubernetes version upgrades and cluster monitoring to someone's job description.",
+    "icon": "toolbox",
+    "lessons": ["2.7"],
+    "related": ["Managed service", "PaaS", "IaaS", "Shared responsibility model"]
+  },
+  {
+    "term": "Vendor lock-in",
+    "aliases": ["lock-in", "cloud lock-in"],
+    "definition": "The cost and effort of moving a workload off a provider once it depends on that provider's services and shapes. It is a spectrum, not a switch: your application code is usually portable, while triggers, bindings, identity and networking configuration are not. Treat it as a price to be compared, not a rule to be obeyed.",
+    "example": "Rewriting a Functions app's triggers and bindings for another cloud is a fortnight of work; re-hosting the same Node code as a container is a day.",
+    "lessons": ["2.7"],
+    "related": ["Portability", "Managed service", "Container", "Operational burden"]
+  },
+  {
+    "term": "Portability",
+    "definition": "How easily a workload can be moved to another platform, cloud or data centre. A container image is highly portable, a virtual machine image carries an operating system with it, and platform configuration rarely moves at all. Portability has a running cost, so buy it when a funded requirement exists rather than as insurance.",
+    "example": "The same image runs on Container Apps, on AKS and on a laptop; the Container Apps scale rules around it do not move.",
+    "icon": "cubes",
+    "lessons": ["2.7"],
+    "related": ["Vendor lock-in", "Container", "Operational burden"]
+  }
+]
