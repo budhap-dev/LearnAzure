@@ -5,7 +5,7 @@
     "definition": "The single management layer every request to create, change, read or delete an Azure resource goes through, whatever tool sent it. It authenticates the caller, authorises them with RBAC at the scope, checks Azure Policy, then hands the work to the resource provider. There is no back door, so nothing you do to ARM's rules can be bypassed by choosing a different tool.",
     "example": "A portal click, an az webapp create and a Bicep deployment all arrive at ARM as the same REST call.",
     "icon": "resource-graph",
-    "lessons": ["1.5"],
+    "lessons": ["1.5", "7.5"],
     "related": ["Control plane", "Resource provider", "Role-based access control", "Azure Policy", "Activity log"]
   },
   {
@@ -64,7 +64,7 @@
     "definition": "A JSON file describing the resources that should exist, deployed to Azure Resource Manager, which works out what to create, change or leave alone. It is declarative and idempotent, and it is the format everything else compiles down to. The JSON is verbose enough that few teams now write it by hand - they write Bicep instead.",
     "example": "azuredeploy.json with a parameter for the environment name, deployed by the pipeline.",
     "icon": "templates",
-    "lessons": ["1.5"],
+    "lessons": ["1.5", "7.5"],
     "related": ["Bicep", "Infrastructure as code", "Idempotent", "Azure Resource Manager"]
   },
   {
@@ -72,14 +72,14 @@
     "definition": "A concise, Azure-only language for describing infrastructure that compiles to an ARM template. It gives the same declarative, idempotent deployment with far less syntax, and supports new Azure services from day one. It is Azure-only, so estates spanning clouds usually reach for Terraform instead.",
     "example": "One main.bicep defines test and prod, with only the environment parameter changing.",
     "icon": "templates",
-    "lessons": ["1.5"],
+    "lessons": ["1.5", "7.5"],
     "related": ["ARM template", "Terraform", "Infrastructure as code", "Idempotent"]
   },
   {
     "term": "Terraform",
     "definition": "A third-party infrastructure-as-code tool that uses its own language, HCL, and works across Azure, other clouds and SaaS such as GitHub. Unlike Bicep it keeps its own state file recording what it believes exists, and that file must be stored somewhere shared and protected - losing or corrupting it is the classic Terraform outage.",
     "example": "One Terraform configuration provisions the Azure estate and the GitHub repositories that deploy to it.",
-    "lessons": ["1.5"],
+    "lessons": ["1.5", "7.5"],
     "related": ["Bicep", "ARM template", "Infrastructure as code"]
   },
   {
@@ -88,7 +88,7 @@
     "definition": "Defining your cloud environment in files kept in source control and applied by a pipeline, rather than by clicking or by ad-hoc scripts. It makes environments reviewable, repeatable and rebuildable, which is what ends drift between test and production. It has a real learning curve and only pays off once a pipeline, not a person, is the thing that changes production.",
     "example": "Anything that will live longer than a week, or exist in more than one environment, comes from a file.",
     "icon": "code",
-    "lessons": ["1.5", "7.1"],
+    "lessons": ["1.5", "7.1", "7.5"],
     "related": ["Bicep", "ARM template", "Terraform", "Idempotent", "Azure portal"]
   },
   {

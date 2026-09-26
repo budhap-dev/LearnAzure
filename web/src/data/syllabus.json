@@ -811,12 +811,19 @@
         {
           "id": "7.5",
           "title": "Infrastructure as code - Bicep and Terraform",
-          "summary": "",
+          "summary": "Declarative desired state, Bicep versus Terraform, modules and Azure Verified Modules, layered deployments with what-if in every pull request, drift, and state.",
           "minutes": 15,
-          "objectives": [],
+          "objectives": [
+            "Choose between Bicep and Terraform for a given estate",
+            "Structure infrastructure as modules, layers and per-environment parameters deployed by pipeline",
+            "Review changes with what-if or plan, and prevent, detect and resolve drift"
+          ],
           "icons": [
-            "templates"
-          ]
+            "templates",
+            "resource-group",
+            "workflow"
+          ],
+          "status": "ready"
         },
         {
           "id": "7.6",

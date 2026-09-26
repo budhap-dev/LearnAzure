@@ -1,0 +1,43 @@
+[
+  {
+    "term": "Terraform state",
+    "aliases": ["state file", "terraform.tfstate", "remote backend", "state locking"],
+    "definition": "The file in which Terraform records which real resources correspond to the code. Keep it in a remote backend - on Azure, a storage account with blob-lease locking, versioning and private access - with one state per environment and layer. It often contains secrets, so protect it like one; a local or unlocked state file is how environments get corrupted.",
+    "example": "Each shop environment's GitHub-organisation Terraform state lives in its own container in a private, versioned storage account.",
+    "lessons": ["7.5"],
+    "related": ["Terraform", "Configuration drift", "What-if"]
+  },
+  {
+    "term": "Bicep module",
+    "aliases": ["module", "Terraform module", "Bicep registry", "template spec"],
+    "definition": "A reusable piece of infrastructure code with parameters and outputs, called from other templates. Modules are versioned and shared through a registry, so every environment and team builds resources the same way. Terraform has the equivalent concept.",
+    "example": "workloads/shop/main.bicep calls the App Service plan and web app modules with different parameters for dev and production.",
+    "icon": "templates",
+    "lessons": ["7.5"],
+    "related": ["Azure Verified Modules", "Bicep", "Infrastructure as code"]
+  },
+  {
+    "term": "What-if",
+    "aliases": ["what-if operation", "terraform plan", "plan", "deployment preview"],
+    "definition": "A preview of exactly what a deployment would create, modify or delete, run before applying it: az deployment ... what-if for Bicep and ARM, terraform plan for Terraform. Posting it on every infrastructure pull request lets reviewers catch destructive changes - including renames, which delete and recreate a resource.",
+    "example": "The what-if comment shows '1 to delete: sqldb-orders-prod' after a rename, and the pull request is stopped.",
+    "lessons": ["7.5"],
+    "related": ["Configuration drift", "Bicep", "Terraform state"]
+  },
+  {
+    "term": "Configuration drift",
+    "aliases": ["drift", "infrastructure drift", "deployment stacks", "deny settings"],
+    "definition": "Any difference between what infrastructure code declares and what is actually deployed, usually from manual changes. Prevent it with read-only production access, Azure Policy and deployment stack deny settings; detect it with scheduled what-if or plan runs; resolve it by updating the code or re-applying it.",
+    "example": "A nightly what-if against production flags an NSG rule opened by hand during an incident.",
+    "lessons": ["7.5"],
+    "related": ["What-if", "Infrastructure as code", "Azure Policy"]
+  },
+  {
+    "term": "Azure Verified Modules",
+    "aliases": ["AVM", "verified modules"],
+    "definition": "Microsoft-maintained Bicep and Terraform modules for Azure services, published in public registries, built to follow Well-Architected defaults and kept up to date. Starting from them avoids hand-writing and maintaining the same resource definitions in every organisation.",
+    "example": "The shop's templates reference br/public:avm/res/web/site for App Service rather than a hand-written module.",
+    "lessons": ["7.5"],
+    "related": ["Bicep module", "Well-Architected Framework"]
+  }
+]
