@@ -1,0 +1,113 @@
+[
+  {
+    "id": "4.7-q1",
+    "topic": "which service does what",
+    "stem": "Which pairing of job and service is right?",
+    "options": [
+      "Azure Policy detects attacks in progress; Sentinel enforces allowed regions",
+      "Azure Policy prevents non-compliant resources; Defender for Cloud assesses posture and, with Defender plans, detects threats; Sentinel correlates security logs into incidents",
+      "Defender for Cloud replaces Azure Policy and Sentinel",
+      "Sentinel scores configuration against the security benchmark"
+    ],
+    "answer": 1,
+    "explanation": "Policy decides what may exist, Defender for Cloud measures how safely it is configured and its paid plans watch for active attacks, and Sentinel is the SIEM that joins signals from everywhere into incidents. They complement each other; none replaces the others."
+  },
+  {
+    "id": "4.7-q2",
+    "topic": "secure score",
+    "scenario": "The secure score is 38% with 214 recommendations. A consultant proposes a sprint to fix the 60 quickest recommendations and 'get the number up'.",
+    "stem": "What should Priya prioritise instead?",
+    "options": [
+      "The quickest recommendations, since the score is what the insurer reads",
+      "Working control by control, highest risk first - identity and public exposure - and exempting deliberate exceptions with a reason and expiry",
+      "Disabling the recommendations that are hard to fix",
+      "Buying Sentinel, which raises the secure score automatically"
+    ],
+    "answer": 1,
+    "explanation": "The score is a compass: MFA and closed public endpoints remove far more risk than dozens of low-weight items. Exemptions record honest exceptions instead of hiding them. Disabling recommendations blinds you, and Sentinel does not affect posture."
+  },
+  {
+    "id": "4.7-q3",
+    "topic": "alert routing",
+    "scenario": "Defender for Storage raised an alert about access from a Tor exit node. It went to a security email alias and was found three weeks later.",
+    "stem": "What is the most important fix?",
+    "options": [
+      "Enable more Defender plans so there are more alerts",
+      "Route alerts through workflow automation to an on-call rotation and a team channel, with an owner for each",
+      "Lower the alert severity threshold",
+      "Turn on Sentinel and leave routing as it is"
+    ],
+    "answer": 1,
+    "explanation": "Detection is worthless if nobody sees it in time. Workflow automation sends alerts to where people already work and get paged. More alerts or a SIEM without routing and ownership only produce more things nobody reads."
+  },
+  {
+    "id": "4.7-q4",
+    "topic": "Sentinel fit",
+    "scenario": "The shop has one ops lead, no security team and no one on call overnight for security. A vendor proposes Microsoft Sentinel ingesting all logs.",
+    "stem": "What is the soundest advice?",
+    "options": [
+      "Adopt Sentinel now, since a SIEM is required for any Azure estate",
+      "Use Defender for Cloud with alert routing now, and consider a managed detection and response service; revisit Sentinel when there is a team or partner to run it",
+      "Ingest all logs into Sentinel but disable analytics rules to save money",
+      "Replace Defender for Cloud with Sentinel"
+    ],
+    "answer": 1,
+    "explanation": "A SIEM needs people to tune rules and triage incidents around the clock, and it is billed per GB ingested. A small team gets more protection from Defender alerts routed to on-call and a managed service than from an unwatched workspace. Sentinel does not replace posture management."
+  },
+  {
+    "id": "4.7-q5",
+    "topic": "Audit before Deny",
+    "scenario": "The team assigns a policy with the Deny effect blocking storage accounts with public network access. The next morning three pipelines fail.",
+    "stem": "What rollout would have avoided this?",
+    "options": [
+      "Assign the policy with Audit first, fix or exempt what it reports, then switch to Deny",
+      "Never use Deny; Audit is always enough",
+      "Assign the policy only to the dev subscription permanently",
+      "Grant the pipelines Owner so they bypass policy"
+    ],
+    "answer": 0,
+    "explanation": "Audit shows what would be blocked without blocking it, so teams can fix templates or record exemptions first. Deny afterwards stops drift for good. Audit alone lets the problem return, and policy applies regardless of the deployer's role, so Owner would not bypass it."
+  },
+  {
+    "id": "4.7-q6",
+    "topic": "just-in-time access",
+    "scenario": "Defender suggests just-in-time VM access for the warehouse VM. The VM already has no public IP and admins reach it through Azure Bastion.",
+    "stem": "Is just-in-time access needed?",
+    "options": [
+      "Yes, it is required for any VM",
+      "Largely no: just-in-time opens management ports from the internet on request, and Bastion has already removed that exposure",
+      "Yes, because Bastion does not support RDP",
+      "No, because just-in-time only works for Linux"
+    ],
+    "answer": 1,
+    "explanation": "Just-in-time temporarily opens NSG rules for RDP or SSH from a requester's IP - valuable when VMs are reached directly. With no public IP and Bastion in place there is no internet-facing management port to time-limit."
+  },
+  {
+    "id": "4.7-q7",
+    "topic": "evidence",
+    "scenario": "The insurer asks for evidence of the shop's cloud security posture against a recognised standard.",
+    "stem": "What is the most direct source?",
+    "options": [
+      "A screenshot of the Azure portal home page",
+      "The regulatory compliance view in Defender for Cloud, which maps assessments to the benchmark and standards such as ISO 27001",
+      "The monthly Azure invoice",
+      "The list of Entra ID users"
+    ],
+    "answer": 1,
+    "explanation": "The regulatory compliance dashboard reports control-by-control status against the Microsoft cloud security benchmark and mapped standards, and can be exported as evidence. The other items say nothing about security configuration."
+  },
+  {
+    "id": "4.7-q8",
+    "topic": "cost control",
+    "scenario": "After enabling Sentinel and connecting every firewall and application log at full verbosity, the monthly Azure bill doubles.",
+    "stem": "What is the best response?",
+    "options": [
+      "Disconnect Sentinel entirely",
+      "Filter what is collected with data collection rules, keep high-value security logs in Sentinel, and send low-value logs to cheaper tiers or not at all",
+      "Move to a different region",
+      "Reduce the number of analytics rules"
+    ],
+    "answer": 1,
+    "explanation": "Sentinel is billed per GB ingested, so cost follows volume. Collect what detections actually use and route verbose, low-value logs to cheaper storage. Analytics rules do not drive ingestion cost, and switching everything off throws away the detections."
+  }
+]

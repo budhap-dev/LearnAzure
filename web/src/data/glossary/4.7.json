@@ -1,0 +1,60 @@
+[
+  {
+    "term": "Microsoft Defender for Cloud",
+    "aliases": ["Defender for Cloud", "Azure Security Center", "Defender plans"],
+    "definition": "Azure's security posture and threat protection service. Its free foundational tier assesses every subscription against the Microsoft cloud security benchmark and produces the secure score; paid Defender plans, priced per resource, detect active threats against servers, storage, databases, Key Vault and more. Formerly Azure Security Center.",
+    "example": "Defender for Storage raises an alert when product-images is read from a Tor exit node, and workflow automation pages the on-call engineer.",
+    "icon": "defender",
+    "lessons": ["4.7"],
+    "related": ["Secure score", "Cloud security posture management", "Microsoft Sentinel", "Microsoft cloud security benchmark"]
+  },
+  {
+    "term": "Secure score",
+    "aliases": ["Defender secure score"],
+    "definition": "Defender for Cloud's measure of how many baseline security controls you meet, weighted by importance. Useful as a compass and a trend; chasing 100% wastes effort on easy points. Work by control, highest risk first, and exempt deliberate exceptions with a reason and an expiry.",
+    "example": "The shop's score rises from 38% to 72% in a quarter by fixing identity and public exposure first.",
+    "lessons": ["4.7"],
+    "related": ["Microsoft Defender for Cloud", "Microsoft cloud security benchmark"]
+  },
+  {
+    "term": "Cloud security posture management",
+    "aliases": ["CSPM", "Defender CSPM", "attack path analysis", "security posture"],
+    "definition": "Continuously checking cloud configuration against a security baseline to find risky settings before attackers do. Defender for Cloud's foundational CSPM is free; the paid Defender CSPM plan adds attack path analysis, which chains findings into realistic routes to sensitive data.",
+    "example": "Attack path analysis shows an internet-facing VM whose managed identity can read the storage account holding customer data.",
+    "lessons": ["4.7"],
+    "related": ["Microsoft Defender for Cloud", "Secure score"]
+  },
+  {
+    "term": "Microsoft cloud security benchmark",
+    "aliases": ["MCSB", "Azure Security Benchmark", "security baseline"],
+    "definition": "Microsoft's baseline of cloud security controls - identity, network, data protection, logging, backup and more - mapped to CIS, NIST and PCI DSS. Defender for Cloud assigns it to subscriptions as an Azure Policy initiative and scores you against it.",
+    "example": "The insurer accepts the regulatory compliance report showing the shop's standing against the benchmark and ISO 27001.",
+    "lessons": ["4.7"],
+    "related": ["Azure Policy", "Secure score", "Microsoft Defender for Cloud"]
+  },
+  {
+    "term": "Microsoft Sentinel",
+    "aliases": ["Sentinel", "Azure Sentinel"],
+    "definition": "Microsoft's cloud SIEM, built on a Log Analytics workspace. It collects security logs from Azure, Entra ID, Microsoft 365 and third parties, correlates them into incidents, and runs playbooks to respond. Priced by data ingested - roughly $4 to $5 per GB on pay-as-you-go - and only valuable with people to tune rules and triage incidents.",
+    "example": "Sentinel joins a password spray, a successful sign-in and a large blob download into one incident and disables the account through a playbook.",
+    "icon": "sentinel",
+    "lessons": ["4.7"],
+    "related": ["SIEM", "Log Analytics workspace", "Microsoft Defender for Cloud"]
+  },
+  {
+    "term": "SIEM",
+    "aliases": ["security information and event management", "SOAR", "security operations centre", "SOC"],
+    "definition": "Security information and event management: a system that gathers security logs from everywhere, correlates them into incidents and supports investigation, usually run by a security operations team. SOAR adds automated response. Without a team or managed partner watching, it is mostly a bill.",
+    "example": "A small shop buys managed detection and response from a partner instead of running its own SIEM.",
+    "lessons": ["4.7"],
+    "related": ["Microsoft Sentinel", "Log Analytics workspace"]
+  },
+  {
+    "term": "Just-in-time VM access",
+    "aliases": ["JIT", "JIT VM access"],
+    "definition": "A Defender for Servers Plan 2 feature that keeps management ports such as RDP and SSH closed in the NSG and opens them only on approved request, for a limited time, from the requester's IP. Largely unnecessary where Azure Bastion already removes public management access.",
+    "example": "An admin requests RDP to a VM for one hour from the office IP; the NSG rule closes itself afterwards.",
+    "lessons": ["4.7"],
+    "related": ["Azure Bastion", "Network security group", "Microsoft Defender for Cloud"]
+  }
+]

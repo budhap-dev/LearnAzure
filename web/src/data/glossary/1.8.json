@@ -85,7 +85,7 @@
     "definition": "The store and query engine behind Azure Monitor: application traces, platform metrics and audit logs land in one workspace and are queried with a single language, KQL. Having one workspace per environment keeps correlation easy. Billing is by gigabyte ingested and by how long you keep it, so retention settings quietly become one of the larger monitoring line items.",
     "example": "log-shop-prod receives Application Insights telemetry and App Service platform logs for the whole shop.",
     "icon": "log-analytics",
-    "lessons": ["1.8"],
+    "lessons": ["1.8", "4.7"],
     "related": ["Application Insights", "Cost Management"]
   }
 ]
