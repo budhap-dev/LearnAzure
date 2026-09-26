@@ -1,0 +1,111 @@
+[
+  {
+    "id": "7.6-q1",
+    "topic": "leaked secret",
+    "scenario": "A production payment key was committed to a private repository three weeks ago. A developer has just removed it in a new commit.",
+    "stem": "What must happen first?",
+    "options": [
+      "Nothing more; the key is gone from the latest commit",
+      "Rotate the key at the provider immediately, then clean the history and move the new key to Key Vault",
+      "Make the repository private",
+      "Rewrite history and keep using the key"
+    ],
+    "answer": 1,
+    "explanation": "The key remains in history, clones and forks, so it must be treated as compromised and replaced. Cleaning history reduces future exposure but does not undo copies already taken. The new key belongs in Key Vault, read at run time."
+  },
+  {
+    "id": "7.6-q2",
+    "topic": "prevention",
+    "stem": "Which control stops most secrets from reaching the repository in the first place?",
+    "options": [
+      "A quarterly manual review of repositories",
+      "Secret scanning with push protection, which blocks pushes containing recognised credentials",
+      "Code owners on every file",
+      "Longer passwords"
+    ],
+    "answer": 1,
+    "explanation": "Push protection checks each push for known token formats and blocks it before the secret lands. Reviews find leaks after the fact, and code owners and password length do not detect credentials."
+  },
+  {
+    "id": "7.6-q3",
+    "topic": "pipeline secrets",
+    "stem": "What is the preferred way for a pipeline to deploy to Azure?",
+    "options": [
+      "A service principal client secret stored as a pipeline secret",
+      "Workload identity federation, with one identity per environment scoped to its resource group",
+      "A personal access token of the lead engineer",
+      "An Owner account's password in a variable group"
+    ],
+    "answer": 1,
+    "explanation": "Federation removes the stored credential entirely, and per-environment scoping limits what any one run can do. Every other option leaves a long-lived secret that can leak or expire."
+  },
+  {
+    "id": "7.6-q4",
+    "topic": "dependency updates",
+    "scenario": "Dependabot opens 40 separate pull requests a week and the team has started ignoring them. Two critical vulnerabilities are over a month old.",
+    "stem": "What is a workable process?",
+    "options": [
+      "Turn Dependabot off",
+      "Group updates into weekly pull requests, auto-merge patch updates that pass tests, and set response times by severity - critical within 48 hours",
+      "Merge every update immediately without tests",
+      "Review dependencies once a year"
+    ],
+    "answer": 1,
+    "explanation": "Grouping and safe automation cut the noise, while severity-based deadlines make sure the dangerous ones get done. Turning it off hides risk, merging untested updates trades one risk for another, and yearly reviews leave months of exposure."
+  },
+  {
+    "id": "7.6-q5",
+    "topic": "code scanning",
+    "stem": "Where does code scanning with CodeQL give the most value?",
+    "options": [
+      "As a monthly report to the security team",
+      "As a required check on every pull request, blocking high-severity findings so they are fixed in the change that introduced them",
+      "Only on the production branch after release",
+      "Only for open-source dependencies"
+    ],
+    "answer": 1,
+    "explanation": "Findings are cheapest to fix while the author still has the change in mind and before it ships. Reports after the fact become backlogs, and dependency issues are handled by dependency scanning."
+  },
+  {
+    "id": "7.6-q6",
+    "topic": "SBOM",
+    "scenario": "A severe vulnerability is announced in a widely used logging library. Leadership asks which of the company's services include it.",
+    "stem": "What makes this answerable in minutes?",
+    "options": [
+      "Asking each team to check",
+      "A software bill of materials generated for every build, searchable across services",
+      "The Azure invoice",
+      "Code owners"
+    ],
+    "answer": 1,
+    "explanation": "An SBOM lists every component and version in each artefact, so a single search shows where the library is present. Asking teams takes days and misses transitive dependencies."
+  },
+  {
+    "id": "7.6-q7",
+    "topic": "separation of duties",
+    "scenario": "One pipeline job installs dependencies, runs tests and then deploys to production with the production identity.",
+    "stem": "Why is this risky?",
+    "options": [
+      "It is slower than two jobs",
+      "Untrusted code - dependencies and their install scripts, tests - runs in the same job that holds production credentials, so any compromised package can use them",
+      "Tests cannot run in the same job as deployment",
+      "Production identities cannot be used in pipelines"
+    ],
+    "answer": 1,
+    "explanation": "Keeping build (untrusted code, no production credentials) separate from deploy (credentials, no untrusted code) means a malicious dependency never sees the keys. The federated production identity should only be available to the deploy job's environment."
+  },
+  {
+    "id": "7.6-q8",
+    "topic": "trusted artefacts",
+    "scenario": "Production pulls the container image tagged latest from the registry, and several people can push to it.",
+    "stem": "Which change makes production run only what the pipeline built?",
+    "options": [
+      "Use a different tag name such as stable",
+      "Allow only the pipeline's identity to push, deploy by immutable digest, and verify the build's provenance attestation before release",
+      "Scan the registry once a month",
+      "Make the registry public"
+    ],
+    "answer": 1,
+    "explanation": "Restricting pushes, pinning by digest and verifying signed provenance together ensure the running image is exactly what the pipeline built from a known commit. Renaming a mutable tag does not change the risk."
+  }
+]

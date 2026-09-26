@@ -5,7 +5,7 @@
     "definition": "A named, versioned value in Key Vault - typically a credential for a service that cannot use Entra ID, such as a payment provider's API key. Each secret should carry an expiry date and a rotation path. Key Vault also holds cryptographic keys and TLS certificates, which it can renew automatically.",
     "example": "payment-api-key in kv-shop-prod has an expiry date and is rotated by a function every 90 days.",
     "icon": "key-vault",
-    "lessons": ["4.6"],
+    "lessons": ["4.6", "7.6"],
     "related": ["Key Vault", "Key Vault reference", "Secret rotation"]
   },
   {
@@ -29,7 +29,7 @@
     "aliases": ["key rotation", "credential rotation", "SecretNearExpiry"],
     "definition": "Replacing a secret with a new value on a schedule or on demand, so a leaked value stops working quickly. On Azure, Key Vault raises a near-expiry event through Event Grid and a small function creates the new value; versionless references pick it up. Where a provider allows two keys, rotate them alternately so one is always valid.",
     "example": "Thirty days before payment-api-key expires, a function requests a new key and stores it as a new version.",
-    "lessons": ["4.6"],
+    "lessons": ["4.6", "7.6"],
     "related": ["Key Vault secret", "Key Vault reference"]
   },
   {
