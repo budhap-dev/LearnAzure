@@ -1,0 +1,112 @@
+[
+  {
+    "id": "6.2-q1",
+    "topic": "SQL to KQL",
+    "stem": "Which KQL is the equivalent of SELECT Name, COUNT(*) FROM AppRequests WHERE Success = 0 GROUP BY Name?",
+    "options": [
+      "AppRequests | where Success == false | summarize count() by Name",
+      "SELECT Name FROM AppRequests | count",
+      "AppRequests | group Name | where Success == 0",
+      "AppRequests | project count(Name) where Success = false"
+    ],
+    "answer": 0,
+    "explanation": "KQL starts with the table and pipes rows through steps: where filters, summarize aggregates by a column. The other options mix SQL syntax into KQL or put steps in an order KQL does not accept."
+  },
+  {
+    "id": "6.2-q2",
+    "topic": "time filters",
+    "scenario": "A query over AppDependencies times out, and on a Basic table another query produced an unexpected charge.",
+    "stem": "What is the most likely missing piece?",
+    "options": [
+      "A render statement",
+      "A time filter such as where TimeGenerated > ago(1h) straight after the table",
+      "A join to AzureActivity",
+      "An order by clause"
+    ],
+    "answer": 1,
+    "explanation": "Without a time filter the engine scans the table's whole retention, which is slow and, on Basic tables, billed per GB scanned. Filtering on TimeGenerated first narrows the data before anything else runs."
+  },
+  {
+    "id": "6.2-q3",
+    "topic": "percentiles",
+    "stem": "Why use percentile(DurationMs, 95) rather than avg(DurationMs) when looking for a slow dependency?",
+    "options": [
+      "Averages are not supported in KQL",
+      "Averages hide the slow tail that real users feel; the 95th percentile shows what the slowest 1 in 20 calls experience",
+      "Percentiles are cheaper to compute",
+      "The 95th percentile removes all errors"
+    ],
+    "answer": 1,
+    "explanation": "A handful of very slow calls barely move an average but ruin those users' experience. The 95th or 99th percentile exposes that tail, which is usually where the problem is."
+  },
+  {
+    "id": "6.2-q4",
+    "topic": "explaining the bill",
+    "scenario": "The workspace bill is three times the estimate and nobody knows why.",
+    "stem": "Which query answers it fastest?",
+    "options": [
+      "Heartbeat | summarize count() by Computer",
+      "Usage | where TimeGenerated > ago(30d) and IsBillable == true | summarize GB = sum(Quantity) / 1000 by DataType | order by GB desc",
+      "AzureActivity | where OperationNameValue has 'delete'",
+      "AppExceptions | take 100"
+    ],
+    "answer": 1,
+    "explanation": "The Usage table records billable volume per table, so summarising it by DataType shows exactly which logs drive the cost. The other queries answer unrelated questions."
+  },
+  {
+    "id": "6.2-q5",
+    "topic": "table plans",
+    "scenario": "Front Door access logs are 40% of ingestion and are read only during occasional investigations. WAF logs are much smaller and drive an alert.",
+    "stem": "What plan choice fits?",
+    "options": [
+      "Both on Basic to save money",
+      "Access logs on Basic (or Auxiliary), WAF logs on Analytics because alerts need Analytics tables",
+      "Both on Analytics, since plans cannot be mixed",
+      "Stop collecting both"
+    ],
+    "answer": 1,
+    "explanation": "High-volume logs that are rarely queried are what the cheaper plans are for. Alert rules cannot run on Basic or Auxiliary tables, so anything alerted on stays on Analytics. Plans are set per table, so mixing them is normal."
+  },
+  {
+    "id": "6.2-q6",
+    "topic": "retention",
+    "scenario": "Compliance requires Key Vault audit events to be available for seven years, but investigations only ever query the last 90 days.",
+    "stem": "What is the cost-effective setup?",
+    "options": [
+      "Interactive retention of seven years",
+      "90 days of interactive retention plus long-term retention up to seven years",
+      "31 days, since that is included",
+      "Export to a spreadsheet each month"
+    ],
+    "answer": 1,
+    "explanation": "Interactive retention costs more the longer it is kept, while long-term retention stores data cheaply and can still be searched or restored when an auditor asks. Thirty-one days fails the requirement, and spreadsheets are neither complete nor tamper-evident."
+  },
+  {
+    "id": "6.2-q7",
+    "topic": "duplicate collection",
+    "scenario": "The Usage query shows AppServiceHTTPLogs is 58% of ingestion. Application Insights already records every request with its status and duration.",
+    "stem": "What is the sensible change?",
+    "options": [
+      "Buy a commitment tier",
+      "Stop sending the HTTP log category, since Application Insights covers the same requests with richer context",
+      "Set a daily cap",
+      "Move Application Insights to another workspace"
+    ],
+    "answer": 1,
+    "explanation": "The cheapest gigabyte is one never ingested. When two sources record the same events, keep the richer one. A commitment tier discounts waste rather than removing it, and a daily cap drops data at the worst moment."
+  },
+  {
+    "id": "6.2-q8",
+    "topic": "sharing knowledge",
+    "scenario": "Only one engineer knows the queries that diagnose checkout problems. They are in her browser history.",
+    "stem": "What should the team do?",
+    "options": [
+      "Ask her to write them on the wiki once",
+      "Save them in the workspace as shared queries and functions, keep them in Git, and build a workbook the on-call engineer opens first",
+      "Give everyone her login",
+      "Nothing; incidents are rare"
+    ],
+    "answer": 1,
+    "explanation": "Saved queries, functions and a workbook deployed from source control turn one person's knowledge into the team's tooling and keep it current. A one-off wiki page goes stale, and shared logins break accountability."
+  }
+]
