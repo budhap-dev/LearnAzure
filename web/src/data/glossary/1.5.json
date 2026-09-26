@@ -96,7 +96,7 @@
     "aliases": ["idempotency"],
     "definition": "A property of an operation that gives the same result however many times it runs. Deploying a declarative template ten times leaves the estate exactly as one deployment would, because ARM reconciles what exists against what is described. Imperative create commands are not idempotent - the second run errors or makes a duplicate.",
     "example": "PUT /orders/42 is idempotent and POST /orders is not; a Bicep deployment behaves like the PUT.",
-    "lessons": ["1.5", "5.1"],
+    "lessons": ["1.5", "5.1", "5.2"],
     "related": ["Infrastructure as code", "Bicep", "ARM template", "Azure Resource Manager"]
   },
   {

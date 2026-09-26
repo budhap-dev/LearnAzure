@@ -1,0 +1,113 @@
+[
+  {
+    "id": "5.2-q1",
+    "topic": "dead-letter queue",
+    "scenario": "A month after launch, the warehouse subscription's dead-letter queue holds 1,200 messages. Nobody was aware of it.",
+    "stem": "What was missing from the design?",
+    "options": [
+      "A larger max delivery count, so messages never reach the dead-letter queue",
+      "An alert on the dead-letter count, an owner, and a way to inspect, fix and resubmit messages",
+      "Receive-and-delete mode, so failed messages are removed",
+      "A second namespace to hold the overflow"
+    ],
+    "answer": 1,
+    "explanation": "Dead-lettering worked as designed - it set aside messages that kept failing. What was missing was treating the dead-letter queue as part of the system: alerting, ownership and a resubmit path. Raising the count only delays the problem, and receive-and-delete would have lost those orders outright."
+  },
+  {
+    "id": "5.2-q2",
+    "topic": "peek-lock",
+    "stem": "In peek-lock mode, what happens if a receiver crashes before completing a message?",
+    "options": [
+      "The message is lost",
+      "The message is moved straight to the dead-letter queue",
+      "The lock expires and the message is delivered again, with its delivery count increased",
+      "The whole queue is locked until an administrator intervenes"
+    ],
+    "answer": 2,
+    "explanation": "The lock is a lease: when it expires without a complete, the broker makes the message available again and counts the delivery. Only after the max delivery count is exceeded does it move to the dead-letter queue. That redelivery is why consumers must be idempotent."
+  },
+  {
+    "id": "5.2-q3",
+    "topic": "ordering",
+    "scenario": "Several warehouse workers read one subscription. Occasionally OrderCancelled for an order is processed before its OrderPlaced, leaving stock negative.",
+    "stem": "What should the team use?",
+    "options": [
+      "A single worker for the whole subscription",
+      "Message sessions with SessionId set to the order ID",
+      "Duplicate detection",
+      "A longer lock duration"
+    ],
+    "answer": 1,
+    "explanation": "Sessions give first-in, first-out per session ID while still processing different orders in parallel. A single worker also restores order but throws away all concurrency. Duplicate detection and lock duration do not affect ordering."
+  },
+  {
+    "id": "5.2-q4",
+    "topic": "two writes",
+    "scenario": "The API saves each order to SQL and then publishes OrderPlaced. During a brief outage, 37 orders were saved but never published.",
+    "stem": "Which pattern prevents this?",
+    "options": [
+      "Publish first, then save to SQL",
+      "Wrap both calls in a try/catch and retry the publish",
+      "The transactional outbox: save the order and an outbox row in one transaction, and have a relay publish and mark rows sent",
+      "Use Premium tier"
+    ],
+    "answer": 2,
+    "explanation": "There is no transaction across SQL and Service Bus, so any ordering of two separate writes can leave them disagreeing after a crash. The outbox turns it into one database transaction, and the relay retries publishing until it succeeds. A try/catch cannot help if the process itself dies, and tier has nothing to do with it."
+  },
+  {
+    "id": "5.2-q5",
+    "topic": "duplicate detection",
+    "scenario": "Duplicate detection is on with a one-hour window, yet the loyalty service still occasionally processes the same order twice.",
+    "stem": "Why does it still happen?",
+    "options": [
+      "Duplicate detection only works on Premium",
+      "Duplicate detection stops repeated sends, not redelivery of a message whose lock expired before it was completed",
+      "The window must be seven days",
+      "Duplicate detection only applies to queues, not topics"
+    ],
+    "answer": 1,
+    "explanation": "The broker deduplicates by MessageId at send time. A consumer that does the work and fails to complete before the lock expires will see the same message again - that is not a duplicate send. Only an idempotent consumer handles it. Duplicate detection is available on Standard and works for topics."
+  },
+  {
+    "id": "5.2-q6",
+    "topic": "long-running work",
+    "scenario": "A report-generation consumer takes about 90 seconds per message on a subscription with the default 60-second lock. Reports are generated twice.",
+    "stem": "What is the fix?",
+    "options": [
+      "Switch to receive-and-delete",
+      "Renew the lock while working (or split the work), so the message is not redelivered mid-processing",
+      "Lower the max delivery count to 1",
+      "Enable sessions"
+    ],
+    "answer": 1,
+    "explanation": "When work outlasts the lock, the broker assumes the receiver died and hands the message to someone else, so the job runs twice. Lock renewal - which the SDKs and Functions can do automatically - or smaller units of work fix it. Receive-and-delete risks losing reports, and a delivery count of 1 dead-letters on the first hiccup."
+  },
+  {
+    "id": "5.2-q7",
+    "topic": "large payloads",
+    "scenario": "A new partner integration needs to send product catalogues of around 5 MB through the shop's Standard-tier namespace.",
+    "stem": "What is the usual design?",
+    "options": [
+      "Split each catalogue into 20 messages and reassemble them",
+      "Store the catalogue in Blob storage and send a small message containing its location - the claim-check pattern",
+      "Compress it until it fits in 256 KB",
+      "Move to Event Grid"
+    ],
+    "answer": 1,
+    "explanation": "Standard messages are limited to 256 KB. The claim check keeps messages small and puts the payload where large objects belong. Splitting and reassembling adds ordering and failure problems, compression is not guaranteed to fit, and Event Grid events are also small."
+  },
+  {
+    "id": "5.2-q8",
+    "topic": "tiers and trade-offs",
+    "scenario": "The shop's security baseline says data services should use private endpoints, but Service Bus private endpoints require Premium at about $680 a month versus about $10 for Standard.",
+    "stem": "What is the most defensible decision?",
+    "options": [
+      "Use Standard and say nothing, since messages are not really data",
+      "Use Standard with Entra-only authentication and SAS keys disabled, and record a dated exception to revisit",
+      "Stop using Service Bus",
+      "Use Basic tier to save more money"
+    ],
+    "answer": 1,
+    "explanation": "Security baselines allow exceptions when they are explicit, justified and time-boxed. Entra-only access with local keys disabled narrows the risk, and the recorded exception keeps the decision visible. A silent gap is how temporary becomes permanent, and Basic lacks topics entirely."
+  }
+]

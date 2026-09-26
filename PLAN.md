@@ -118,7 +118,7 @@ at random from the lesson quizzes. 64 new glossary terms (313 in total).
 | Id | Lesson | Status |
 |----|--------|--------|
 | 5.1 | Messaging patterns - queues, topics, events and streams | shipped |
-| 5.2 | Service Bus - enterprise messaging | planned |
+| 5.2 | Service Bus - enterprise messaging | shipped |
 | 5.3 | Event Grid - reacting to what happens | planned |
 | 5.4 | Event Hubs - high-volume streaming | planned |
 | 5.5 | API Management - one front door for your APIs | planned |
