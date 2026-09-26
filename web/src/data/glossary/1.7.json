@@ -46,7 +46,7 @@
     "definition": "Microsoft's set of design principles for Azure workloads, organised into five pillars: Reliability, Security, Cost Optimization, Operational Excellence and Performance Efficiency. Used as a design-review checklist; Azure Advisor reports findings against the same pillars.",
     "example": "The team walks the five pillars in every design review, asking one question per pillar.",
     "icon": "resiliency",
-    "lessons": ["1.7"],
+    "lessons": ["1.7", "6.6"],
     "related": ["Azure Advisor", "Resiliency", "Cost Management"]
   },
   {
