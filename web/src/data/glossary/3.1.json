@@ -77,7 +77,7 @@
     "definition": "A simple message queue inside a storage account: messages up to 64 KB, at-least-once delivery, and very low cost. Good for decoupling a web request from background work such as resizing an image. It has no topics, ordering guarantees or dead-letter queue - when you need those, use Service Bus.",
     "example": "The API drops a 'resize sku-1234' message on the thumbnails queue; a Function picks it up.",
     "icon": "storage-queue",
-    "lessons": ["3.1"],
+    "lessons": ["3.1", "5.1"],
     "related": ["Storage account", "Azure Functions", "Trigger"]
   },
   {
