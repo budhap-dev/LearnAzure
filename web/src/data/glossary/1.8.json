@@ -76,7 +76,7 @@
     "definition": "The container resource for Azure Storage: blobs, files, queues and tables, priced at pennies per gigabyte plus transactions and egress. Blobs served straight to the browser are the cheapest way to hold images, documents and backups. Its name is the exception to every naming convention - 3 to 24 lower-case letters and digits, no hyphens, and globally unique.",
     "example": "stshopimagesprod holds the shop's product images, served directly to the React app.",
     "icon": "storage-account",
-    "lessons": ["1.8"],
+    "lessons": ["1.8", "3.1"],
     "related": ["Naming convention", "Redundancy", "Egress"]
   },
   {

@@ -1,0 +1,113 @@
+[
+  {
+    "id": "3.3-q1",
+    "topic": "when to use Cosmos DB",
+    "scenario": "A contractor proposes moving the shop's orders, stock and finance tables from Azure SQL to Cosmos DB because the shop is opening in two new countries.",
+    "stem": "What is the right response?",
+    "options": [
+      "Agree: Cosmos DB replicates to any region, so it is the correct home for all data once a business goes international",
+      "Push back: those tables depend on joins and transactions, so they stay relational; Cosmos DB fits the catalogue, baskets and sessions that need local reads in every region",
+      "Agree, but choose the PostgreSQL API so the existing SQL queries and joins keep working unchanged",
+      "Push back: Cosmos DB only supports a single write region, so it cannot help an international shop"
+    ],
+    "answer": 1,
+    "explanation": "Cosmos DB earns its place for data that must sit close to users in several regions, take extreme write rates, or vary in shape - not for relational data with joins and cross-entity transactions, which it cannot do across items and which costs far more to fake. The PostgreSQL API is a different, distributed-Postgres product rather than a way to run T-SQL joins over JSON, and Cosmos DB does support multi-region writes, so the last option is simply wrong."
+  },
+  {
+    "id": "3.3-q2",
+    "topic": "request units and 429",
+    "scenario": "The basket container is provisioned at 400 RU/s. During a promotion the Node API starts logging HTTP 429 responses from Cosmos DB.",
+    "stem": "What does a 429 mean, and what is the SDK already doing about it?",
+    "options": [
+      "The item exceeded the 2 MB limit; the SDK splits the write across two items automatically",
+      "The request rate exceeded the provisioned RU/s for that second; the SDK reads the retry-after header and retries several times before surfacing the error",
+      "The consistency level is too strong for the region; the SDK downgrades the read to eventual and retries",
+      "The container has run out of storage; the SDK queues the write until the partition is split"
+    ],
+    "answer": 1,
+    "explanation": "429 is \"request rate too large\": you asked for more RU in a second than the container has, Cosmos DB refuses rather than queues, and the SDK retries nine times by default using the retry-after header. An oversized item returns 413, not 429, and Cosmos DB never silently changes your consistency level - both distractors describe behaviour that does not exist."
+  },
+  {
+    "id": "3.3-q3",
+    "topic": "hot partition",
+    "scenario": "A multi-tenant container uses /tenantId as its partition key. The UK tenant holds 95% of the data. The container is at 15% of its provisioned RU/s, yet UK requests get 429s.",
+    "stem": "What is happening?",
+    "options": [
+      "The container is undersized; doubling the provisioned RU/s will remove the 429s",
+      "The UK tenant is a hot partition: throughput is divided across physical partitions, so one busy key value hits its share while the rest sit idle",
+      "Session consistency is forcing every UK read to the write region, which throttles them",
+      "The indexing policy is rebuilding after a schema change and temporarily consumes the UK partition's RU"
+    ],
+    "answer": 1,
+    "explanation": "A container's RU/s are spread evenly over its physical partitions, so a key value that attracts most of the traffic exhausts its partition's share while the container as a whole looks nearly idle - the classic hot-partition signature. Doubling throughput is tempting but only raises the hot partition's share a little at double the cost; the real fix is a key with even spread, such as a hierarchical /tenantId then /userId key."
+  },
+  {
+    "id": "3.3-q4",
+    "topic": "partition key choice",
+    "scenario": "Ana is designing the shopping-basket container. Baskets are always fetched and updated by the signed-in user, and there are millions of users.",
+    "stem": "Which partition key should she choose?",
+    "options": [
+      "/userId, because it has high cardinality, spreads evenly and appears in every basket query",
+      "/country, because it keeps each region's baskets together and there are only a few values to manage",
+      "/createdDate, because new baskets are the busiest and this keeps them in one partition",
+      "/status, because most queries filter on whether the basket is active or abandoned"
+    ],
+    "answer": 0,
+    "explanation": "A good key has many distinct values, spreads storage and requests evenly, and is present as an equality filter in the hottest queries - /userId ticks all three for a basket. /country and /status have a handful of values, so one becomes a hot partition, and /createdDate deliberately concentrates today's traffic into one partition, which is the exact failure you are trying to avoid."
+  },
+  {
+    "id": "3.3-q5",
+    "topic": "consistency levels",
+    "stem": "The catalogue is replicated to three regions. A shopper who updates their own basket must see the change immediately, but nobody else needs to; the team also wants to enable multi-region writes. Which consistency level fits?",
+    "options": [
+      "Strong, because it guarantees every read in every region sees the latest write",
+      "Eventual, because it is the cheapest and the shopper will see the change within seconds",
+      "Session, because it guarantees read-your-own-writes at normal RU cost and works with multi-region writes",
+      "Bounded staleness, because it caps the lag at a fixed number of seconds"
+    ],
+    "answer": 2,
+    "explanation": "Session consistency is the default for good reason: a client always reads its own writes, reads cost normal RU, and it is compatible with multi-region writes. Strong is the tempting choice but it doubles read cost, adds cross-region latency, and cannot be combined with multi-region writes at all; eventual does not guarantee the shopper sees their own change."
+  },
+  {
+    "id": "3.3-q6",
+    "topic": "multi-region and cost",
+    "scenario": "Priya adds Australia East and Ireland as regions on the catalogue account, which runs at 4,000 RU/s manual in UK South, then turns on multi-region writes.",
+    "stem": "What should she expect on the bill and the SLA?",
+    "options": [
+      "The bill stays roughly the same because replicas share the primary region's throughput, and the SLA rises to 99.999%",
+      "Throughput and storage are billed for each of the three regions, roughly tripling the data-store cost, and multi-region writes carry a 99.999% read and write SLA",
+      "Only storage is billed per region; throughput is billed once, and the SLA remains 99.99% regardless of regions",
+      "The bill triples and the SLA falls, because more regions mean more replication conflicts"
+    ],
+    "answer": 1,
+    "explanation": "Every region holds a full copy of the container and bills its own throughput and storage, so three regions is three bills - and finance should see that multiplier before the tick boxes are ticked. In exchange, a multi-region-writes account carries a 99.999% SLA for reads and writes; the single-region figure is 99.99%, and conflicts are resolved by policy rather than reducing the SLA."
+  },
+  {
+    "id": "3.3-q7",
+    "topic": "change feed",
+    "scenario": "The team needs the product search index to reflect catalogue changes within seconds, without adding a second write path to the Node API.",
+    "stem": "Which approach is right?",
+    "options": [
+      "An Azure Function triggered by the catalogue container's change feed, which receives each insert and update in order",
+      "A timer-triggered Function that runs a cross-partition query every 10 seconds for items with a recent _ts",
+      "A Cosmos DB stored procedure that calls the search service after each write",
+      "Setting TTL on the catalogue container so stale index entries expire automatically"
+    ],
+    "answer": 0,
+    "explanation": "The change feed is exactly this: a per-container, ordered log of inserts and updates that a Functions trigger consumes without touching the API's write path. Polling with a cross-partition query is the tempting alternative but fans out to every physical partition each run and bills for each; stored procedures are scoped to one partition and cannot call external services, and TTL deletes items rather than syncing anything."
+  },
+  {
+    "id": "3.3-q8",
+    "topic": "capacity modes",
+    "scenario": "The production basket container idles at about 300 RU/s overnight and peaks at around 3,500 RU/s during evening promotions.",
+    "stem": "Which capacity mode fits best?",
+    "options": [
+      "Manual provisioned throughput at 3,500 RU/s, because production must never receive a 429",
+      "Autoscale with a maximum of 4,000 RU/s, so the container scales between 400 and 4,000 RU/s and bills the peak each hour",
+      "Serverless, because paying per RU consumed is always cheapest for variable traffic",
+      "Manual provisioned throughput at 400 RU/s, relying on the SDK's retries to absorb the evening peak"
+    ],
+    "answer": 1,
+    "explanation": "Autoscale is built for this shape: set a maximum, Cosmos DB scales between 10% and 100% of it, and although the per-RU rate is about 1.5x manual you pay for the peak hour rather than for 3,500 RU/s all night. Manual at 3,500 pays for idle capacity most of the day, serverless is single-region with capped burst throughput and is meant for dev, test and low-traffic apps, and manual at 400 would simply throttle the promotion."
+  }
+]

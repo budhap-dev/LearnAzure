@@ -1,0 +1,121 @@
+[
+  {
+    "term": "Azure Backup",
+    "definition": "The managed backup service for things that do not back themselves up: virtual machines, SQL Server and SAP HANA inside VMs, Azure Files, managed disks, blobs and PostgreSQL. Backups are scheduled by a policy and stored in a Recovery Services vault or a Backup vault. It bills a per-instance fee plus storage per GB-month.",
+    "example": "A daily policy on the warehouse VM keeps 30 daily and 12 monthly recovery points in a Recovery Services vault.",
+    "icon": "recovery-services-vault",
+    "lessons": ["3.6"],
+    "related": ["Recovery Services vault", "Backup vault", "Backup policy", "Backup center"]
+  },
+  {
+    "term": "Recovery Services vault",
+    "aliases": ["RSV"],
+    "definition": "The Azure Backup container for virtual machines, SQL Server and SAP HANA running inside VMs, and Azure Files; it also holds Azure Site Recovery replication. Vault soft delete keeps deleted recovery points for 14 days, and multi-user authorisation can require a second person for destructive changes. Backups should be stored geo-redundantly unless you have a reason not to.",
+    "example": "rsv-shop-prod protects the warehouse VM and replicates it to UK West with Site Recovery.",
+    "icon": "recovery-services-vault",
+    "lessons": ["3.6"],
+    "related": ["Azure Backup", "Backup vault", "Azure Site Recovery", "Soft delete"]
+  },
+  {
+    "term": "Backup vault",
+    "definition": "The newer Azure Backup container for blobs, managed disks, PostgreSQL Flexible Servers and AKS. It exists alongside the Recovery Services vault, not instead of it, so a real estate usually needs one of each. Which workload goes in which vault is a common exam and design-review question.",
+    "example": "bv-shop-prod holds vaulted restore points for the product-image container.",
+    "icon": "backup-vault",
+    "lessons": ["3.6"],
+    "related": ["Recovery Services vault", "Azure Backup", "Blob storage"]
+  },
+  {
+    "term": "Backup policy",
+    "definition": "The schedule and retention rules attached to a protected item in a vault: how often a recovery point is taken and how long daily, weekly, monthly and yearly points are kept. The policy decides your RPO and how far back you can go. Shortening it is a destructive change worth protecting with multi-user authorisation.",
+    "example": "Daily at 02:00, keep 30 daily, 12 weekly and 12 monthly recovery points.",
+    "icon": "backup-center",
+    "lessons": ["3.6"],
+    "related": ["Retention period", "Azure Backup", "RPO"]
+  },
+  {
+    "term": "Point-in-time restore",
+    "aliases": ["PITR"],
+    "definition": "Restoring a database or blob container to its state at a chosen moment, rebuilt from full, differential and log backups. Azure SQL keeps 7 days by default and up to 35; Flexible Server 7 to 35 days; Cosmos DB continuous backup 7 or 30 days. The restore always lands in a new database, so you copy the rows you need back rather than overwriting production.",
+    "example": "Restoring sqldb-orders-prod to 16:39 as sqldb-orders-restore, then merging the deleted orders back.",
+    "icon": "azure-sql",
+    "lessons": ["3.6", "3.2"],
+    "related": ["Long-term retention", "Retention period", "Azure SQL Database", "Restore test"]
+  },
+  {
+    "term": "Long-term retention",
+    "aliases": ["LTR"],
+    "definition": "An Azure SQL setting that copies weekly, monthly or yearly full backups to separate storage for up to 10 years, well beyond the 35-day PITR window. It is what covers problems noticed late and regulatory retention, and it survives deletion of the database or server. Billed per GB-month at the backup storage rate.",
+    "example": "Keep the first full backup of every month for 7 years for the finance audit.",
+    "icon": "sql-database",
+    "lessons": ["3.6", "3.2"],
+    "related": ["Point-in-time restore", "Retention period", "Azure SQL Database"]
+  },
+  {
+    "term": "Soft delete",
+    "definition": "A recycle bin for the cloud: a deleted blob, file share, database or vault recovery point is retained for a set period and can be undeleted. Blob soft delete is configurable from 1 to 365 days; Recovery Services vault soft delete holds recovery points for 14 days at no cost. It is off for blobs until you enable it, and it costs the storage of whatever it keeps.",
+    "example": "A blob deleted by the clean-up job was undeleted from the portal because soft delete was set to 30 days.",
+    "icon": "blob",
+    "lessons": ["3.6", "3.1"],
+    "related": ["Immutable storage", "Retention period", "Blob storage", "Recovery Services vault"]
+  },
+  {
+    "term": "Immutable storage",
+    "aliases": ["WORM", "write once read many", "immutability policy"],
+    "definition": "A blob container or version policy that forbids delete and overwrite until a retention period ends (time-based retention) or until a legal hold is lifted. Nobody, including the account owner, can bypass it, which is exactly what ransomware defence and regulators want. A locked time-based policy cannot be shortened, so test it on a throw-away container first.",
+    "example": "Invoices are written to a container with a 7-year locked immutability policy.",
+    "icon": "storage-container",
+    "lessons": ["3.6", "3.1"],
+    "related": ["Soft delete", "Blob storage", "Retention period"]
+  },
+  {
+    "term": "Geo-restore",
+    "definition": "Restoring an Azure SQL or Flexible Server database into another region from the geo-redundant copy of its automated backups. It needs nothing set up in advance, which makes it the cheapest disaster-recovery option, but the copy lags by up to an hour and the restore takes time, so RPO and RTO are both worse than a failover group. It only works if backup storage is geo-redundant, which is the default.",
+    "example": "UK South is down, so Dev geo-restores sqldb-orders-prod onto a new server in UK West.",
+    "icon": "azure-sql",
+    "lessons": ["3.6", "3.2"],
+    "related": ["Region pair", "Failover group", "Disaster recovery", "RPO"]
+  },
+  {
+    "term": "Azure Site Recovery",
+    "aliases": ["ASR"],
+    "definition": "The disaster-recovery service for virtual machines: it replicates disks continuously to a second region and fails a VM, or a whole recovery plan of VMs, over with an RPO of minutes. It is configured in a Recovery Services vault and charged per protected instance per month plus replica storage. Run a test failover into an isolated network regularly, or the plan is theory.",
+    "example": "The warehouse VM replicates to UK West; a test failover every quarter proves it boots.",
+    "icon": "site-recovery",
+    "lessons": ["3.6"],
+    "related": ["Recovery Services vault", "Disaster recovery", "Virtual machine", "RTO"]
+  },
+  {
+    "term": "Backup center",
+    "definition": "The portal's single pane over every Recovery Services vault and Backup vault across subscriptions: protected items, failed jobs, policies, alerts and what has no backup at all. Use it as the weekly check rather than opening vaults one by one. It reports on Azure Backup and Site Recovery, not on Azure SQL's built-in automated backups.",
+    "example": "Backup center showed three VMs in rg-shop-prod with no policy attached.",
+    "icon": "backup-center",
+    "lessons": ["3.6"],
+    "related": ["Azure Backup", "Recovery Services vault", "Backup vault"]
+  },
+  {
+    "term": "Restore test",
+    "aliases": ["restore drill", "recovery drill"],
+    "definition": "A scheduled exercise that restores a real production backup into a throw-away environment, validates the data, and times the whole thing to produce a measured RTO. It is the only way to know a backup works and the runbook is current. Until one has been done, the RTO is a guess and the backup is unproven.",
+    "example": "Quarterly: PITR the orders database to a drill copy, check row counts, record 42 minutes, delete the copy.",
+    "icon": "web-test",
+    "lessons": ["3.6"],
+    "related": ["RTO", "Point-in-time restore", "Disaster recovery"]
+  },
+  {
+    "term": "Retention period",
+    "aliases": ["retention"],
+    "definition": "How long a backup, recovery point, soft-deleted item or blob version is kept before it is discarded. It must be longer than the time it takes to notice a problem, or the good copy is gone before anyone looks for it. Longer retention costs more storage, which is why LTR keeps sparse monthly copies rather than every day.",
+    "example": "PITR retention of 35 days plus monthly LTR for 7 years covers both quick mistakes and late discoveries.",
+    "lessons": ["3.6"],
+    "related": ["Backup policy", "Long-term retention", "Point-in-time restore", "Soft delete"]
+  },
+  {
+    "term": "Customer-managed key",
+    "aliases": ["CMK", "bring your own key", "BYOK"],
+    "definition": "Encrypting a service's data at rest with a key you hold in Key Vault instead of one Microsoft manages. It gives auditors control and revocation, and gives you a new failure mode: if the key is deleted or expires, the data and every backup encrypted with it become unreadable. Turn on Key Vault soft delete and purge protection before enabling it.",
+    "example": "Azure SQL TDE uses a key in kv-shop-prod; purge protection means nobody can permanently delete it.",
+    "icon": "key-vault",
+    "lessons": ["3.6"],
+    "related": ["Key Vault", "Transparent data encryption", "Azure SQL Database"]
+  }
+]

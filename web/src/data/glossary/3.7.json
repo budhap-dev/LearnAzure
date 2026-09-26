@@ -1,0 +1,107 @@
+[
+  {
+    "term": "Data store",
+    "aliases": ["store", "persistence store"],
+    "definition": "Any managed place that data lives: a database, an object store, a cache, a warehouse. The word is deliberately neutral so a design review can ask what shape, scale and consistency the data needs before anyone names a product. Every store you add is a backup policy, a restore test, a security review and an on-call rotation, so each one needs a named owner.",
+    "example": "The shop has three data stores: Azure SQL for orders, Blob Storage for images and invoices, and Redis in front of the catalogue.",
+    "icon": "storage-account",
+    "lessons": ["3.7"],
+    "related": ["Relational database", "NoSQL", "Object storage", "Polyglot persistence"]
+  },
+  {
+    "term": "Relational database",
+    "aliases": ["RDBMS", "SQL database"],
+    "definition": "A store that keeps data in tables with a fixed schema, enforces relationships between them and offers transactions and joins, so several rows can change together or not at all. It is the default for business records - orders, customers, payments - because correctness comes built in. It scales up more easily than out, which is the one requirement that can move data elsewhere.",
+    "example": "Azure SQL Database holding the orders, order lines and customers tables, with a foreign key making sure an order line cannot outlive its order.",
+    "icon": "azure-sql",
+    "lessons": ["3.7"],
+    "related": ["Azure SQL Database", "NoSQL", "OLTP", "Azure Database for PostgreSQL"]
+  },
+  {
+    "term": "NoSQL",
+    "aliases": ["non-relational database"],
+    "definition": "A family of stores - document, key-value, column-family, graph - that trade the fixed schema and joins of a relational database for horizontal scale, flexible shape and predictable latency. Structure moves from the schema into the application, which is freedom when records vary and pain when you need to query across them. Cosmos DB is Azure's managed NoSQL service.",
+    "example": "A product document in Cosmos DB carries different attributes for a jumper and a kettle; asking which customers bought both is a query the store is not built for.",
+    "icon": "cosmos-db",
+    "lessons": ["3.7"],
+    "related": ["Cosmos DB", "Document database", "Relational database", "CAP theorem"]
+  },
+  {
+    "term": "Polyglot persistence",
+    "aliases": ["polyglot storage"],
+    "definition": "Using several kinds of data store in one system, each chosen for the data it holds best - relational for orders, blobs for files, a cache for hot reads, a warehouse for history. Sensible in moderation, but its cost is paid in operations rather than on the invoice: every store is another backup policy, restore test, security review and on-call rotation. Add a store only for a named requirement, and name its owner.",
+    "example": "Azure SQL plus Blob Storage plus Redis is polyglot persistence with three owners; adding Cosmos DB and Data Explorer \"for the right tool\" with no owner is where it goes wrong.",
+    "lessons": ["3.7"],
+    "related": ["Single source of truth", "Operational burden", "Backup policy", "Data store"]
+  },
+  {
+    "term": "OLTP",
+    "aliases": ["online transaction processing", "transactional workload"],
+    "definition": "Online transaction processing: many small, fast, correct operations - place an order, update a stock level, change a password. It wants row-level indexes, low latency and strong consistency, and it is what a relational database on a few vCores does well. Running large reporting queries against the same database is the classic way to slow it down.",
+    "example": "The checkout writing an order and its lines in one transaction, a few hundred times a second at peak.",
+    "icon": "azure-sql",
+    "lessons": ["3.7"],
+    "related": ["OLAP", "Relational database", "Azure SQL Database"]
+  },
+  {
+    "term": "OLAP",
+    "aliases": ["online analytical processing", "analytical workload"],
+    "definition": "Online analytical processing: a few large questions over lots of history - revenue by category by month, cohort retention, year-on-year trends. It wants columnar storage, scans over many rows and tolerates data that is minutes or hours old. On Azure it lives in Microsoft Fabric, Azure Synapse Analytics or Azure Data Explorer, fed by a copy of the transactional data, never by querying production directly.",
+    "example": "Finance's year-on-year revenue report runs in Fabric against last night's copy of the orders, not against the database taking today's orders.",
+    "icon": "synapse",
+    "lessons": ["3.7"],
+    "related": ["OLTP", "Data warehouse", "ETL"]
+  },
+  {
+    "term": "CAP theorem",
+    "aliases": ["CAP", "Brewer's theorem"],
+    "definition": "A distributed store cannot promise both perfect consistency and full availability while its nodes are partitioned from each other; when the network splits, it must give up one. It is true and rarely the useful design question, because partitions are rare and the trade-off is a dial rather than a switch - Cosmos DB offers five consistency levels for that reason. Ask what consistency each screen actually needs instead of labelling a whole system AP or CP.",
+    "example": "The basket must never show an item the shopper removed, so it reads with strong consistency; the \"viewed today\" counter can be a minute stale and reads eventually.",
+    "lessons": ["3.7"],
+    "related": ["Consistency level", "NoSQL", "Multi-region writes", "Latency"]
+  },
+  {
+    "term": "Object storage",
+    "aliases": ["object store"],
+    "definition": "Storage for files as whole objects - images, PDFs, exports, backups, logs - addressed by name over HTTPS rather than by path on a disk, billed per GB-month and scaling without any capacity planning. On Azure it is Blob Storage. It is the answer to the first question in any data decision: if the data is a file, it goes here, not in a database column.",
+    "example": "Product images and seven years of PDF invoices in a blob container, with a lifecycle policy moving old invoices to the cool and then archive tiers.",
+    "icon": "blob",
+    "lessons": ["3.7"],
+    "related": ["Blob storage", "Access tier", "Storage account"]
+  },
+  {
+    "term": "Data warehouse",
+    "aliases": ["analytics platform", "lakehouse"],
+    "definition": "A store built for analytical queries over large volumes of history, typically columnar and read-mostly, loaded from copies of the transactional systems. On Azure the current front door is Microsoft Fabric, with Azure Synapse Analytics behind many existing estates and Azure Data Explorer for telemetry and logs. It is a discipline of its own with its own team, so this course only points at the door.",
+    "example": "A Fabric lakehouse holding every order since launch, refreshed nightly, that Power BI queries without touching production.",
+    "icon": "synapse",
+    "lessons": ["3.7"],
+    "related": ["OLAP", "ETL", "Data store"]
+  },
+  {
+    "term": "ETL",
+    "aliases": ["extract, transform, load", "ELT", "data pipeline"],
+    "definition": "Extract, transform, load: the pipeline that copies data out of a transactional store, reshapes it and loads it into a warehouse or another system. On Azure it is usually Azure Data Factory or a Fabric pipeline, or a change feed for near-real-time copies. The point is that analytics runs on the copy, so the copy's freshness is a requirement to write down.",
+    "example": "A nightly Data Factory pipeline copies the day's orders from Azure SQL into the Fabric lakehouse for the finance reports.",
+    "icon": "data-factory",
+    "lessons": ["3.7"],
+    "related": ["Data warehouse", "OLAP", "Change feed"]
+  },
+  {
+    "term": "Vector database",
+    "aliases": ["vector store", "vector search"],
+    "definition": "A store, or a feature of one, that indexes embeddings - arrays of numbers representing meaning - so you can search by similarity rather than by exact match. On Azure it is usually a capability of something you already run: pgvector on PostgreSQL, vector search in Cosmos DB, or Azure AI Search for retrieval-augmented generation. Reach for a separate product only when scale or relevance forces it.",
+    "example": "\"Find products like this one\" answered by a pgvector index on the catalogue's embedding column, rather than by a seventh data store.",
+    "icon": "ai-search",
+    "lessons": ["3.7"],
+    "related": ["pgvector", "Cosmos DB", "NoSQL"]
+  },
+  {
+    "term": "Single source of truth",
+    "aliases": ["system of record", "SSOT"],
+    "definition": "The one store that owns a given fact; every other copy - a cache, a search index, a warehouse, a read replica - is derived from it and could be deleted and rebuilt. Naming it per fact is what keeps polyglot persistence honest. The gotcha is a cache or index that quietly becomes the only copy of something, which is an outage waiting for an eviction.",
+    "example": "Azure SQL owns the price of a product; Redis and the CDN hold copies with a TTL, and clearing them loses nothing.",
+    "lessons": ["3.7"],
+    "related": ["Polyglot persistence", "Cache-aside pattern", "Data store"]
+  }
+]

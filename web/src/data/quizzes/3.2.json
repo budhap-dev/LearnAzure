@@ -1,0 +1,112 @@
+[
+  {
+    "id": "3.2-q1",
+    "topic": "choosing a flavour",
+    "scenario": "A SQL Server 2019 estate relies on a dozen SQL Agent jobs, a linked server to a warehouse system and cross-database joins with three-part names. The team wants Microsoft to own OS and engine patching and has eight weeks to move.",
+    "stem": "Which Azure SQL flavour is the honest first choice?",
+    "options": [
+      "Azure SQL Database, rewriting the Agent jobs as Functions and the cross-database joins as Elastic Query",
+      "Azure SQL Managed Instance, because it keeps Agent, linked servers and cross-database queries while Microsoft runs the engine",
+      "SQL Server on an Azure VM, because only IaaS supports SQL Agent",
+      "Azure SQL Database in an elastic pool, since pooled databases can query each other directly"
+    ],
+    "answer": 1,
+    "explanation": "Managed Instance exists precisely for instance-shaped estates: Agent, linked servers and cross-database queries all work, and Microsoft still patches the engine and OS. The SQL Database route is possible but stacks three workarounds into an eight-week window; the VM answer is wrong because Managed Instance also has Agent, and pooling changes billing, not the T-SQL surface."
+  },
+  {
+    "id": "3.2-q2",
+    "topic": "purchasing models",
+    "stem": "Why does Microsoft steer new workloads to the vCore purchasing model rather than DTU?",
+    "options": [
+      "DTU databases cannot be backed up automatically",
+      "vCore prices compute, memory and storage separately, and supports Azure Hybrid Benefit and reservations",
+      "vCore databases are always cheaper than DTU databases at every size",
+      "DTU is only available on Managed Instance and SQL Server VMs"
+    ],
+    "answer": 1,
+    "explanation": "vCore makes the bill legible - you can see and change compute, memory and storage independently - and it is where Hybrid Benefit and reservations apply. DTU is not always dearer; a 5-DTU Basic database is about $5 a month, cheaper than anything on vCore, which is exactly why the 'always cheaper' option is a trap."
+  },
+  {
+    "id": "3.2-q3",
+    "topic": "service tiers",
+    "scenario": "A developer creates the dev copy of the orders database on Business Critical 'so it matches production', and finance queries a database line costing three times what they expected.",
+    "stem": "What should the team change?",
+    "options": [
+      "Move dev to the General Purpose tier, ideally serverless with auto-pause, since local SSD and replicas buy nothing for a dev workload",
+      "Keep Business Critical but turn off zone redundancy to bring the price down",
+      "Move dev to Hyperscale, which is the cheapest vCore tier",
+      "Keep Business Critical and apply a reservation, which removes most of the premium"
+    ],
+    "answer": 0,
+    "explanation": "Business Critical costs roughly 2.5-3x General Purpose because of local SSD and a three-replica cluster, none of which a dev database uses; serverless General Purpose bills per vCore-second and pauses to storage-only when idle. Hyperscale is a size-and-restore tier, not a bargain tier, and a reservation discounts a commitment rather than removing the Business Critical premium."
+  },
+  {
+    "id": "3.2-q4",
+    "topic": "serverless",
+    "scenario": "An internal reporting tool on a serverless Azure SQL Database fails its first query every morning with a connection error, then works normally for the rest of the day.",
+    "stem": "What is happening and what is the right response?",
+    "options": [
+      "The firewall rule expires overnight; add a permanent IP rule",
+      "The database auto-paused after an hour idle and takes about a minute to resume; the app needs retry logic, or a longer auto-pause delay if the cost is acceptable",
+      "Serverless databases lose their connection pool at midnight; restart the app service nightly",
+      "The database failed over to its geo-secondary overnight; repoint the connection string"
+    ],
+    "answer": 1,
+    "explanation": "Auto-pause is the point of serverless - you pay storage only while paused - and the resume takes around a minute, during which connections fail with a transient error. Retry with back-off fixes it properly; a longer auto-pause delay trades money for convenience. Firewall rules do not expire and geo-failover would not resolve itself an hour later."
+  },
+  {
+    "id": "3.2-q5",
+    "topic": "failover groups",
+    "stem": "How does a failover group differ from active geo-replication on its own?",
+    "options": [
+      "A failover group replicates synchronously, so no data is lost on failover",
+      "A failover group works only with Managed Instance, while geo-replication works only with SQL Database",
+      "A failover group adds a listener DNS name and fails a set of databases over together, automatically after a grace period, so connection strings do not change",
+      "A failover group replicates to any region, while geo-replication is limited to the region pair"
+    ],
+    "answer": 2,
+    "explanation": "Both use asynchronous replication; the group adds the listener name, group-level failover and an automatic trigger, which is what stops a failover from becoming a connection-string hunt. The synchronous option is the tempting wrong answer - a forced failover can still lose the last seconds of commits, so RPO is seconds rather than zero."
+  },
+  {
+    "id": "3.2-q6",
+    "topic": "authentication",
+    "scenario": "A code review finds the Node API's connection string in an app setting with a SQL login and password embedded in it.",
+    "stem": "What is the recommended replacement?",
+    "options": [
+      "Rotate the SQL password monthly and keep it in the app setting",
+      "Connect with the app's managed identity through Entra ID authentication and switch the server to Entra-only, so there is no password at all",
+      "Move the SQL password into Key Vault and read it through a managed identity",
+      "Turn on transparent data encryption so the connection string is encrypted at rest"
+    ],
+    "answer": 1,
+    "explanation": "Entra ID authentication with a managed identity removes the secret rather than hiding it, and Entra-only mode stops anyone recreating a SQL login later. Putting the password in Key Vault is better than an app setting but still leaves a password to rotate and leak; TDE encrypts data files on disk and has nothing to do with connection strings."
+  },
+  {
+    "id": "3.2-q7",
+    "topic": "backups and retention",
+    "scenario": "Six weeks after go-live, finance asks for the orders database as it stood on a date five weeks ago. The team has changed nothing about backups since creating the database.",
+    "stem": "What will they find?",
+    "options": [
+      "Automatic backups are kept for a year, so the restore is a portal click",
+      "Point-in-time restore keeps only about seven days by default, and long-term retention was never configured, so that date is gone",
+      "Backups only exist if a Recovery Services vault was attached, so there are no backups at all",
+      "Business Critical keeps 35 days automatically, so it depends on the tier chosen"
+    ],
+    "answer": 1,
+    "explanation": "Azure SQL takes backups automatically from day one, but the default point-in-time window is seven days (configurable up to 35) and long-term retention is off until someone sets a policy. The vault answer is wrong because SQL PaaS backups do not need one, and no tier extends retention by itself."
+  },
+  {
+    "id": "3.2-q8",
+    "topic": "limits and throttling",
+    "scenario": "A checkout API on an S0 database slows to a crawl on Saturday afternoons; the portal shows DTU at 100% but the team cannot tell whether CPU or I/O is the problem.",
+    "stem": "What is the most useful next step?",
+    "options": [
+      "Add indexes until the DTU metric drops, since 100% DTU always means missing indexes",
+      "Move the database to the vCore model on General Purpose, where CPU, memory and I/O are visible and sized separately, and check the connection pool against the worker limit",
+      "Enable read scale-out on the S0 database so reads go to a replica",
+      "Put the database into an elastic pool with the reporting database to borrow its unused DTUs"
+    ],
+    "answer": 1,
+    "explanation": "DTU bundles the three resources into one opaque number, which is exactly why the team cannot diagnose it; vCore separates them and gives a clearer worker and tempdb ceiling to check the Node pool against. Indexes may help but cannot be assumed from a saturated DTU meter, read scale-out needs Business Critical or Hyperscale, and pooling with one other database rarely covers a shared Saturday peak."
+  }
+]

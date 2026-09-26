@@ -1,0 +1,98 @@
+[
+  {
+    "term": "Cache",
+    "aliases": ["caching", "in-memory cache"],
+    "definition": "A copy of data kept somewhere faster than its source, on the bet it will be read again soon - in Azure, usually an in-memory Redis store in front of a database. It is the cheapest performance win available and also the easiest way to serve data that is no longer true, so every cached item needs a rule for when it goes stale.",
+    "example": "The product page is served from Redis for 60 seconds at a time instead of running six SQL queries per view.",
+    "icon": "redis",
+    "lessons": ["3.4"],
+    "related": ["Cache-aside pattern", "Edge cache", "Azure Cache for Redis"]
+  },
+  {
+    "term": "Cache-aside pattern",
+    "aliases": ["cache aside", "lazy loading cache"],
+    "definition": "The application checks the cache first; on a miss it reads the database, stores the result in the cache with a TTL and returns it. Writes update the database and delete the cached key. It is simple and fails safely - if the cache is down you fall back to the database - but it needs invalidation on write or customers see stale data.",
+    "example": "GET product:42 from Redis; on a miss, SELECT from Azure SQL, SET the key with a 60 second TTL.",
+    "icon": "redis",
+    "lessons": ["3.4"],
+    "related": ["Cache", "Write-through cache", "Cache stampede", "Time to live"]
+  },
+  {
+    "term": "Azure Cache for Redis",
+    "aliases": ["Redis cache"],
+    "definition": "Microsoft's managed Redis service, sold in Basic (single node, no SLA), Standard (replicated, 99.9%), Premium (clustering, persistence, VNet, zone redundancy) and Enterprise (Redis modules, active geo-replication) tiers. Billed per hour by cache size and tier whether or not it holds data. It is the service you will find in existing estates; new deployments should compare Azure Managed Redis first.",
+    "example": "A Standard C1 with 1 GB serves sessions and product pages for the shop at roughly $100 a month.",
+    "icon": "redis",
+    "lessons": ["3.4"],
+    "related": ["Azure Managed Redis", "Cache", "Eviction policy"]
+  },
+  {
+    "term": "Azure Managed Redis",
+    "aliases": ["Managed Redis"],
+    "definition": "The newer Redis offering on Azure, built on Redis Enterprise in every tier - Memory Optimized, Balanced, Compute Optimized and Flash Optimized - with modules such as search and JSON included. It publishes 99.99% zone-redundant and up to 99.999% with active geo-replication, and starts smaller than the old Premium tier. Treat it as the default for new work; it is a separate resource type, not an upgrade of an existing cache.",
+    "example": "A new shop picks a small Balanced Managed Redis instance rather than a Premium Azure Cache for Redis.",
+    "icon": "managed-redis",
+    "lessons": ["3.4"],
+    "related": ["Azure Cache for Redis", "Cache"]
+  },
+  {
+    "term": "Eviction policy",
+    "aliases": ["maxmemory-policy", "allkeys-lru", "volatile-lru"],
+    "definition": "The rule Redis applies when memory is full: which keys to throw away to make room. allkeys-lru drops the least recently used key and is the right choice for a pure cache. The Azure default, volatile-lru, only evicts keys that have a TTL, so keys written without one accumulate until the cache rejects writes.",
+    "example": "Setting allkeys-lru on the shop cache stopped the OOM write errors caused by keys that never expired.",
+    "icon": "redis",
+    "lessons": ["3.4"],
+    "related": ["Azure Cache for Redis", "Time to live", "Cache hit ratio"]
+  },
+  {
+    "term": "Cache hit ratio",
+    "aliases": ["hit rate", "cache hit rate"],
+    "definition": "The share of cache reads that find the key, shown as a metric on the cache. It is the one number that says whether a cache is paying for itself: below roughly 80% the keys, TTLs or the choice of what to cache need revisiting. A cache with a low hit ratio adds latency and cost to every miss without saving the database anything.",
+    "example": "The product cache runs at 94% hits; the search-results cache at 30%, so search was removed from Redis.",
+    "icon": "metrics",
+    "lessons": ["3.4"],
+    "related": ["Cache", "Eviction policy", "Cache-aside pattern"]
+  },
+  {
+    "term": "Session state",
+    "aliases": ["session store", "external session store"],
+    "definition": "Per-user data an API keeps between requests - a basket, a login context, a wizard's progress. Kept in process memory it ties each user to one instance and vanishes when that instance restarts or the app scales out; kept in Redis, any instance can serve any request and sticky sessions are unnecessary.",
+    "example": "express-session backed by connect-redis, so the three App Service instances share every shopper's basket.",
+    "icon": "redis",
+    "lessons": ["3.4"],
+    "related": ["Scale out", "Cache", "App Service"]
+  },
+  {
+    "term": "Write-through cache",
+    "aliases": ["write-through"],
+    "definition": "A pattern where every write updates the cache and the database together, so the cache never holds a stale value. It removes the staleness window that cache-aside leaves but couples each write to the cache being available and caches data that may never be read. Cache-aside with invalidation on write is the usual compromise.",
+    "example": "Updating a price writes the new row to Azure SQL and SETs product:42 in Redis in the same request.",
+    "lessons": ["3.4"],
+    "related": ["Cache-aside pattern", "Cache"]
+  },
+  {
+    "term": "Cache stampede",
+    "aliases": ["thundering herd", "dog-piling"],
+    "definition": "The load spike when a popular cached key expires and many concurrent requests all miss at once and all query the database together. The fix is to stagger TTLs, refresh hot keys ahead of expiry, or let one request refill while the rest wait or serve the old value.",
+    "example": "The homepage key expired on the hour and 400 requests hit Azure SQL in the same second.",
+    "lessons": ["3.4"],
+    "related": ["Cache-aside pattern", "Time to live", "Cache hit ratio"]
+  },
+  {
+    "term": "Redis data structures",
+    "aliases": ["Redis types", "sorted set", "Redis hash"],
+    "definition": "Redis stores more than strings: hashes, lists, sets, sorted sets, streams and counters, each with atomic server-side operations. They are why Redis handles rate limiting, leaderboards and queues without the application doing read-modify-write round trips. A plain key-value view of Redis misses most of its value.",
+    "example": "INCR on ratelimit:key123 with a 60 second TTL gives an atomic per-minute counter across all API instances.",
+    "icon": "redis",
+    "lessons": ["3.4"],
+    "related": ["Cache", "Azure Cache for Redis"]
+  },
+  {
+    "term": "Output caching",
+    "aliases": ["response caching", "full-page caching"],
+    "definition": "Caching a whole rendered response - the HTML or JSON an endpoint returns - rather than the data behind it, so a hit skips the work entirely. It gives the biggest win for read-heavy public pages and the biggest staleness risk for anything personalised, which must be excluded from the key or not cached at all.",
+    "example": "The category listing JSON is cached in Redis for two minutes; the basket endpoint is never output-cached.",
+    "lessons": ["3.4"],
+    "related": ["Cache", "Edge cache", "Cache-aside pattern"]
+  }
+]

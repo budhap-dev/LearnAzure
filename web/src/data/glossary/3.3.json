@@ -1,0 +1,128 @@
+[
+  {
+    "term": "Cosmos DB",
+    "aliases": ["Azure Cosmos DB"],
+    "definition": "Microsoft's globally distributed NoSQL database: JSON items replicated to any set of regions, single-digit-millisecond reads and writes, throughput and storage scaled independently, and no schema to migrate. It is priced in request units and designed for multi-region, high-write or variable-shape data. Most systems do not need it, and relational data with joins and transactions belongs in Azure SQL.",
+    "example": "The shop's catalogue and baskets moved to Cosmos DB in UK South and Australia East; orders and stock stayed in Azure SQL.",
+    "icon": "cosmos-db",
+    "lessons": ["3.3", "3.7"],
+    "related": ["Document database", "Request unit", "Partition key", "Azure SQL Database", "NoSQL"]
+  },
+  {
+    "term": "Document database",
+    "aliases": ["document store"],
+    "definition": "A database that stores each record as a self-contained JSON document rather than as rows spread across normalised tables. Documents in one container can have different shapes, and the data you read together is embedded in one document. There are no joins across documents, so you model for the queries you will run rather than for a schema.",
+    "example": "A catalogue item carries its own attributes, prices and images in one JSON document, with no join to fetch it.",
+    "icon": "cosmos-db",
+    "lessons": ["3.3", "3.7"],
+    "related": ["Cosmos DB", "NoSQL", "Partition key"]
+  },
+  {
+    "term": "Request unit",
+    "aliases": ["RU", "RU/s", "request units"],
+    "definition": "The currency Cosmos DB bills in: one RU is roughly the cost of reading a 1 KB item by id and partition key, a 1 KB write costs about five, and a query costs whatever it reads. Throughput is bought in RU per second; exceeding it in any second returns HTTP 429 with a retry-after header rather than queuing. It plays the role a DTU plays for Azure SQL, but is metered per request.",
+    "example": "A basket container at 400 RU/s handles about 80 basket writes a second before it starts returning 429s.",
+    "icon": "cosmos-db",
+    "lessons": ["3.3"],
+    "related": ["Provisioned throughput", "Autoscale throughput", "Hot partition", "DTU"]
+  },
+  {
+    "term": "Partition key",
+    "aliases": ["partition key path"],
+    "definition": "The item property that decides which logical partition each item lives in, chosen when a container is created and unchangeable without creating a new container and migrating. A good key has high cardinality, spreads storage and requests evenly, and appears as an equality filter in the hottest queries. A poor key produces hot partitions and cross-partition fan-out.",
+    "example": "/userId for baskets; /productId for the catalogue; a hierarchical /tenantId then /userId key for a multi-tenant container.",
+    "icon": "cosmos-db",
+    "lessons": ["3.3"],
+    "related": ["Logical partition", "Hot partition", "Request unit", "Document database"]
+  },
+  {
+    "term": "Logical partition",
+    "aliases": ["logical partitions"],
+    "definition": "The set of items in a container that share one partition key value. A logical partition is capped at 20 GB, and Cosmos DB packs many of them on to physical partitions, each limited to 10,000 RU/s and 50 GB. A container's throughput is divided evenly across its physical partitions, so one busy logical partition can be throttled while the container looks idle.",
+    "example": "All basket items for userId 1042 form one small logical partition; a user item with an unbounded orders array heads for the 20 GB cap.",
+    "icon": "cosmos-db",
+    "lessons": ["3.3"],
+    "related": ["Partition key", "Hot partition", "Request unit"]
+  },
+  {
+    "term": "Hot partition",
+    "aliases": ["hot key", "hot partition key"],
+    "definition": "A partition that receives far more requests or data than the others because one partition key value dominates, such as a tenant, a country or today's date. Because throughput is split evenly across physical partitions, the hot one returns 429s while the container's overall utilisation stays low. The fix is a better key, not more RU/s.",
+    "example": "A /tenantId key with the UK shop at 95% of traffic throttled UK requests while the container sat at 15% utilisation.",
+    "icon": "cosmos-db",
+    "lessons": ["3.3"],
+    "related": ["Partition key", "Logical partition", "Request unit"]
+  },
+  {
+    "term": "Consistency level",
+    "aliases": ["consistency levels", "session consistency"],
+    "definition": "The account-wide promise about what a read sees after a write across regions, from strong (every read sees the latest write everywhere) through bounded staleness, session, consistent prefix, to eventual. Session, the default, guarantees you read your own writes at normal RU cost. Strong and bounded staleness double read cost, and strong cannot be combined with multi-region writes.",
+    "example": "The shop runs at session consistency so a shopper sees the item they just added to their basket.",
+    "icon": "cosmos-db",
+    "lessons": ["3.3"],
+    "related": ["Multi-region writes", "Cosmos DB", "Latency", "CAP theorem"]
+  },
+  {
+    "term": "Multi-region writes",
+    "aliases": ["multi-master", "multi-region write"],
+    "definition": "A Cosmos DB account setting that lets every replicated region accept writes, not just reads, with conflicts resolved by last-writer-wins or a custom policy. It gives local write latency everywhere and raises the SLA to 99.999% for reads and writes, against 99.99% for a single region. Every region bills its own copy of throughput and storage, and strong consistency is not available.",
+    "example": "With multi-region writes on, a shopper in Sydney updates their basket in Australia East and the change replicates to UK South.",
+    "icon": "globe",
+    "lessons": ["3.3"],
+    "related": ["Consistency level", "SLA", "Region", "Cosmos DB"]
+  },
+  {
+    "term": "Change feed",
+    "aliases": ["Cosmos DB change feed"],
+    "definition": "An ordered, per-container log of inserts and updates that a consumer - usually an Azure Functions trigger - reads to react to changes without a second write path. It is the standard way to update a search index, build a materialised view or publish events from Cosmos DB. Deletes are not in the default feed, so use TTL as a soft delete when consumers need to see them.",
+    "example": "A Function on the catalogue change feed pushes each changed product into the search index within seconds.",
+    "icon": "function-apps",
+    "lessons": ["3.3"],
+    "related": ["Time to live", "Azure Functions", "Trigger", "Cosmos DB"]
+  },
+  {
+    "term": "Cosmos DB API",
+    "aliases": ["NoSQL API", "API for NoSQL", "API for MongoDB"],
+    "definition": "The wire protocol and query language a Cosmos DB account exposes, chosen at creation: NoSQL (the native one, use it for anything new), MongoDB, PostgreSQL, Apache Cassandra, Apache Gremlin for graphs, and Table. The compatibility APIs exist so existing drivers and code can move without a rewrite; each hides some Cosmos DB features and carries its own quirks.",
+    "example": "The shop's new baskets container uses the NoSQL API; a legacy Mongo app was pointed at an API-for-MongoDB account unchanged.",
+    "icon": "cosmos-db",
+    "lessons": ["3.3"],
+    "related": ["Cosmos DB", "Document database", "Table storage"]
+  },
+  {
+    "term": "Provisioned throughput",
+    "aliases": ["manual throughput", "standard throughput"],
+    "definition": "The Cosmos DB capacity mode where you reserve a fixed number of RU/s on a container or shared across a database, minimum 400, billed per hour whether used or not. At roughly $0.008 per 100 RU/s-hour, 400 RU/s is about $24 a month per region. It suits steady, predictable load; spiky traffic is usually cheaper on autoscale.",
+    "example": "The catalogue container runs at 1,000 RU/s manual because its read load barely changes through the day.",
+    "icon": "cosmos-db",
+    "lessons": ["3.3"],
+    "related": ["Autoscale throughput", "Cosmos DB serverless", "Request unit"]
+  },
+  {
+    "term": "Autoscale throughput",
+    "aliases": ["autoscale RU/s", "autoscale provisioned throughput"],
+    "definition": "The Cosmos DB capacity mode where you set a maximum RU/s and the container scales instantly between 10% and 100% of it, billed on the highest level reached each hour. The per-RU rate is about 1.5x manual, but paying for the peak hour rather than for the peak all day makes it cheaper for most production workloads. Set the maximum from real metrics, not from fear.",
+    "example": "The basket container autoscales between 400 and 4,000 RU/s, so overnight costs a tenth of an evening promotion.",
+    "icon": "autoscale",
+    "lessons": ["3.3"],
+    "related": ["Provisioned throughput", "Cosmos DB serverless", "Autoscale"]
+  },
+  {
+    "term": "Cosmos DB serverless",
+    "aliases": ["serverless Cosmos DB", "serverless capacity mode"],
+    "definition": "The Cosmos DB capacity mode with no reserved throughput: you pay per million RU consumed (around $0.25) plus storage. It is limited to a single region and a capped burst throughput per container, which makes it right for dev, test and low-traffic apps and wrong for production at scale. Separately, the free tier gives one account per subscription the first 1,000 RU/s and 25 GB free.",
+    "example": "The team's dev environment is a serverless account that costs a few pounds a month.",
+    "icon": "cosmos-db",
+    "lessons": ["3.3"],
+    "related": ["Provisioned throughput", "Autoscale throughput", "Serverless"]
+  },
+  {
+    "term": "Time to live",
+    "aliases": ["TTL"],
+    "definition": "An expiry, in seconds, after which a stored item is deleted automatically. In Cosmos DB it is a container-level default with a per-item override, and expired items are removed in the background using spare RU at no extra charge; in a cache such as Redis it is the per-key expiry that keeps stale data from living forever. Forgetting it on transient data is how baskets and sessions pile up for years.",
+    "example": "The baskets container has a 30-day TTL and the sessions container a 24-hour TTL, so neither needs a clean-up job.",
+    "icon": "cosmos-db",
+    "lessons": ["3.3", "3.4"],
+    "related": ["Change feed", "Cache", "Cosmos DB"]
+  }
+]

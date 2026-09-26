@@ -1,0 +1,203 @@
+{
+  "module": 3,
+  "minutes": 25,
+  "poolFromLessons": 10,
+  "questions": [
+    {
+      "id": "m3-q1",
+      "topic": "files in a database",
+      "scenario": "The shop's API stores product images as varbinary columns in the orders database. The database has grown to 400 GB, backups take four hours, and the product page slows whenever images are read in bulk.",
+      "stem": "What is the best change?",
+      "options": [
+        "Move the images to Blob Storage, store only the blob path in SQL, and serve them to shoppers through a CDN",
+        "Move the database to the Business Critical tier so the local SSDs serve image reads faster",
+        "Move the images into a Cosmos DB container, since it scales storage independently of throughput",
+        "Put the images in Azure Cache for Redis so the database is only read on a cache miss"
+      ],
+      "answer": 0,
+      "explanation": "An image is a file, and a file in a database is the dearest way to store bytes and the quickest way to slow a backup. Blob Storage costs pennies per GB-month and a CDN takes the reads and the egress off the origin. A bigger tier, a document store capped at 2 MB per item, or a memory cache sized by the GB all pay far more to keep the same mistake."
+    },
+    {
+      "id": "m3-q2",
+      "topic": "choosing an Azure SQL flavour",
+      "scenario": "Priya is moving a 180 GB SQL Server 2019 database to Azure in eight weeks. It has a dozen SQL Agent jobs, a linked server to the warehouse system, and reports that use three-part names to join across to a second database. Nobody wants to patch an operating system.",
+      "stem": "Which flavour of Azure SQL is the honest first move?",
+      "options": [
+        "Azure SQL Database, rewriting the Agent jobs as Elastic Jobs and the joins as Elastic Query before cutover",
+        "SQL Server on an Azure VM, because only a VM supports SQL Agent",
+        "Azure SQL Managed Instance, which keeps Agent, linked servers and cross-database queries without an OS to patch",
+        "Two Azure SQL Databases in an elastic pool, so the cross-database joins run inside the same pool"
+      ],
+      "answer": 2,
+      "explanation": "Managed Instance exists for exactly this instance-shaped estate: near-100% compatibility including Agent, linked servers and cross-database queries, with Microsoft patching the engine. SQL Database could work, but three workarounds in eight weeks is the risk. A VM is not the only home for Agent, and an elastic pool shares budget, not a query scope - it does not make cross-database joins work."
+    },
+    {
+      "id": "m3-q3",
+      "topic": "partition key",
+      "scenario": "A contractor's Cosmos DB design uses /tenantId as the partition key for every container. The UK shop is one tenant and holds 95% of the data and traffic. In load testing, the container returns HTTP 429 while its overall normalised RU consumption sits at 15%.",
+      "stem": "What is the most likely cause, and the fix?",
+      "options": [
+        "The container is under-provisioned; raise the RU/s until the 429s stop",
+        "A hot partition: the UK tenant's logical partition takes most requests. Use a hierarchical key such as /tenantId then /userId, in a new container",
+        "The consistency level is too strong; drop from session to eventual to halve the RU cost of reads",
+        "The SDK is not retrying; set the retry count higher so the 429s are absorbed"
+      ],
+      "answer": 1,
+      "explanation": "429s at low overall utilisation are the signature of a hot partition: throughput is spread evenly across partitions, so one dominant key value exhausts its share while the rest sit idle. Raising RU/s pays for capacity the other partitions never use. The partition key cannot be changed in place, so the fix is a new container with a better key and a migration. Session consistency already costs normal RU, and more retries only hide the signal."
+    },
+    {
+      "id": "m3-q4",
+      "topic": "do you need Cosmos DB",
+      "scenario": "The shop is opening in Ireland and Australia. Shoppers in Sydney wait 300 ms for catalogue pages. All catalogue edits are made by one merchandising team in the UK, and the catalogue's schema is stable.",
+      "stem": "What is the best recommendation?",
+      "options": [
+        "Move the catalogue to Cosmos DB with multi-region writes, so every region reads and writes locally",
+        "Move the whole shop, orders included, to Cosmos DB, since it is the globally distributed database",
+        "Upgrade the Azure SQL database to Business Critical and add a readable secondary",
+        "Keep the catalogue in Azure SQL, put Redis in front of it and a CDN in front of images and rendered pages, and write down the trigger for moving to Cosmos DB"
+      ],
+      "answer": 3,
+      "explanation": "The requirement is fast reads in far regions, not writes from them, and a cache plus an edge serves that for a fraction of the cost of multi-region writes. Moving orders loses joins and transactions for no gain. A readable secondary in the UK does nothing for latency in Sydney. The trigger - writes originating in a second region, or a schema that varies per category - is what would make Cosmos DB the right answer later."
+    },
+    {
+      "id": "m3-q5",
+      "topic": "session state",
+      "scenario": "The Node API scaled out from one to three App Service instances for a promotion. Within an hour, customers report that items vanish from their baskets. Sessions are held in each instance's memory.",
+      "stem": "What is the right fix?",
+      "options": [
+        "Store sessions in Azure Cache for Redis so that every instance reads the same basket",
+        "Turn on ARR affinity so each shopper always returns to the same instance",
+        "Scale back to one larger instance, since baskets only work on a single machine",
+        "Store the basket in the browser's localStorage and send it with every request"
+      ],
+      "answer": 0,
+      "explanation": "An external session store makes every instance interchangeable, so instances can restart, scale in or scale out without losing anyone's basket. Sticky sessions hide the problem until an instance restarts or scales away, and still lose every basket on it. Scaling up gives up the scale-out. Client-side storage moves trusted state to the client and still leaves nothing shared across devices."
+    },
+    {
+      "id": "m3-q6",
+      "topic": "cache staleness",
+      "scenario": "After adding cache-aside with a 10-minute TTL to the product API, the product page is fast. But customers can add an item to the basket that sold out five minutes ago, and support now receives complaints about cancelled orders.",
+      "stem": "What should the team change?",
+      "options": [
+        "Remove the cache entirely, since any cache will eventually show stale stock",
+        "Switch the eviction policy to allkeys-lru so stale keys are evicted first",
+        "Invalidate the product's cache key whenever stock changes, and read stock from the database at checkout",
+        "Shorten the TTL to one second for every key, so staleness is never noticeable"
+      ],
+      "answer": 2,
+      "explanation": "The TTL is the honesty setting, and data a customer acts on - stock at checkout - needs invalidation on write and a read from the source of truth at the decision point. Removing the cache throws away the win. Eviction policy decides what goes when memory is full, not what is out of date. A one-second TTL on everything turns most reads back into misses."
+    },
+    {
+      "id": "m3-q7",
+      "topic": "redundancy is not backup",
+      "scenario": "At 16:40 on a Friday a clean-up script with a wrong WHERE clause deletes forty thousand orders from the zone-redundant Azure SQL database. The images are on geo-redundant storage. Dev says the data is safe because everything is redundant.",
+      "stem": "How should Priya recover the orders?",
+      "options": [
+        "Fail over the database to its secondary in the region pair, which still holds the orders",
+        "Point-in-time restore the database to 16:39 as a new database, then copy the missing orders back",
+        "Open a support ticket so Microsoft can roll the database back in place to 16:39",
+        "Restore from the last long-term retention backup, which is taken every night"
+      ],
+      "answer": 1,
+      "explanation": "Redundancy copies every write, including the bad ones, so every replica and any geo-secondary deleted the orders within moments. Point-in-time restore goes to any second in the retention window, always as a new database, and the missing rows are then copied back without losing the orders taken since. There is no in-place rollback, and long-term retention holds weekly or monthly fulls, not nightly ones - it is for losses found too late for PITR."
+    },
+    {
+      "id": "m3-q8",
+      "topic": "retention and time-to-notice",
+      "scenario": "A bad migration quietly corrupted a price column. Finance notices six weeks later. The Azure SQL database has point-in-time restore set to its maximum of 35 days and no long-term retention.",
+      "stem": "What is the lesson for the design?",
+      "options": [
+        "Geo-redundant backup storage would have kept an older copy in the region pair",
+        "Nothing could have helped; corruption older than 35 days is always unrecoverable on PaaS",
+        "Business Critical would have kept a readable replica from before the migration",
+        "Retention must outlast time-to-notice, so configure long-term retention with weekly and monthly backups kept for longer"
+      ],
+      "answer": 3,
+      "explanation": "Long-term retention keeps weekly, monthly or yearly full backups for up to ten years, and exists precisely for problems found after the PITR window closes. Geo-redundant backup storage copies the same short retention to another region; a replica copied the corruption the moment it was written. The design question is how long a bug can hide, not how much redundancy there is."
+    },
+    {
+      "id": "m3-q9",
+      "topic": "securing blob access",
+      "scenario": "The React Native app stopped loading product images at 09:00 one morning. A contractor had put a signed URL for the images container in the mobile build a year earlier, with a one-year expiry. The API already runs with a managed identity.",
+      "stem": "What is the right design going forward?",
+      "options": [
+        "Issue a new signed URL with a ten-year expiry and ship it in the next app release",
+        "Make the container public-read so the app no longer needs a signature",
+        "Have the API issue short-lived user delegation SAS tokens on demand, signed through its managed identity, and disable shared-key access",
+        "Embed a storage account key in the app so it can sign its own URLs"
+      ],
+      "answer": 2,
+      "explanation": "A user delegation SAS is signed with an Entra identity rather than an account key, lives for minutes, and is issued by the API when needed, so nothing that expires or leaks sits in a shipped build. A longer expiry repeats the incident later. A public container is found by scan bots within hours, and an account key in an app is a root password for every service in the account."
+    },
+    {
+      "id": "m3-q10",
+      "topic": "archive tier",
+      "scenario": "Finance wants 6 TB of old file-server backups kept somewhere cheap. Dev proposes the archive tier for all of it. The same set is also the team's fallback if a file is deleted by mistake, which happens a few times a month.",
+      "stem": "What is the best advice?",
+      "options": [
+        "Use cool or cold for the set you restore from, and a lifecycle policy that moves only data nobody expects to read into archive",
+        "Archive all of it; rehydration is instant for small files",
+        "Keep all 6 TB in the hot tier, because any cheaper tier charges to read",
+        "Store the backups in a premium file share so restores run at SSD speed"
+      ],
+      "answer": 0,
+      "explanation": "Archive is cheap because it is offline: every restore needs a rehydration that can take up to 15 hours and incurs a retrieval charge, and deleting before 180 days incurs an early-deletion fee. Data you expect to read belongs in cool or cold, and a lifecycle policy moves it down the tiers by rule. Hot for 6 TB of backups pays the highest storage price for no reason, and premium file shares are several times dearer per GB."
+    },
+    {
+      "id": "m3-q11",
+      "topic": "connection pooling on Postgres",
+      "scenario": "The reviews API on App Service uses the pg library with a pool of 20 connections per process against a 2-vCore PostgreSQL Flexible Server. During a promotion it autoscales from six instances to thirty, and the database starts refusing logins.",
+      "stem": "What is the best fix?",
+      "options": [
+        "Turn on zone-redundant HA so the standby accepts the overflow connections",
+        "Add a read replica and send half the connections to it",
+        "Scale the server to 16 vCores for the duration of every promotion",
+        "Point the API at the built-in PgBouncer, which multiplexes the app's pools onto a handful of real connections"
+      ],
+      "answer": 3,
+      "explanation": "Thirty instances with twenty connections each ask for 600 server processes, beyond what a 2-vCore server allows. PgBouncer is built into Flexible Server and lets the application keep its pools while the database sees a small number of connections. The HA standby cannot be read or connected to, a replica only helps read-only traffic, and scaling the server buys connections at many times the price."
+    },
+    {
+      "id": "m3-q12",
+      "topic": "reporting on OLTP",
+      "scenario": "Dev wants to point Power BI directly at the production orders database for a new set of year-on-year revenue reports. Analysts will refresh them several times a day.",
+      "stem": "What should Priya say?",
+      "options": [
+        "Fine, as long as the reports run outside peak trading hours",
+        "Copy the data out to an analytical store such as Microsoft Fabric or Synapse and report there, because OLAP queries fight OLTP work for CPU and locks",
+        "Move the orders database to Cosmos DB, which handles analytics and transactions equally well",
+        "Put Redis in front of the database so the report queries are served from the cache"
+      ],
+      "answer": 1,
+      "explanation": "Year-on-year reports are OLAP work - few large scans over lots of history - and they compete with checkout for the same CPU, memory and locks. Copying the data to a warehouse keeps the OLTP database fast and gives analysts columnar storage built for the job. Off-peak scheduling breaks as soon as someone refreshes at noon, Cosmos DB is not an analytics engine, and a cache does not hold historical aggregates."
+    },
+    {
+      "id": "m3-q13",
+      "topic": "polyglot persistence",
+      "scenario": "Over one week, separate proposals ask for Cosmos DB for the catalogue, PostgreSQL for a new service and a Redis cache, on top of the existing Azure SQL orders database. Each proposal is defensible alone. The ops team is three people.",
+      "stem": "What is the most important question for the review?",
+      "options": [
+        "Which store is the newest, since newer stores scale better",
+        "Whether all four can be put in the same resource group to simplify billing",
+        "Which named requirement forces each store off the Azure SQL default, and who owns its backup policy, restore test, on-call and security review",
+        "Whether the CAP theorem classifies each store as AP or CP"
+      ],
+      "answer": 2,
+      "explanation": "Each extra store is a backup policy, a restore test, a security review and an on-call rotation for as long as the product exists. A proposal has to name the requirement - regions, milliseconds, writes per second - that rules out the default, and a person who owns the store. Age, billing layout and the AP-versus-CP label say nothing about whether the team can run it."
+    },
+    {
+      "id": "m3-q14",
+      "topic": "revisiting the data store",
+      "scenario": "The design document chose Azure SQL for the catalogue and recorded a trigger: move to Cosmos DB if writes must originate outside the UK. The company now opens a merchandising office in Sydney that will edit the Australian catalogue directly.",
+      "stem": "What should happen now?",
+      "options": [
+        "Nothing; data store decisions are permanent once the schema is in production",
+        "Reopen the catalogue decision as the design planned, and plan a Cosmos DB migration with a partition key designed from the top queries",
+        "Add a second Azure SQL database in Australia and let each office edit its own copy",
+        "Increase the Redis TTL so Sydney's edits are cached for longer"
+      ],
+      "answer": 1,
+      "explanation": "The trigger was written down so that this becomes a scheduled review rather than an argument, and writes originating in a second region are the named requirement that Cosmos DB multi-region writes serve. Data store moves are projects, so the migration is planned with the partition key designed first. Two unsynchronised SQL copies create two sources of truth, and a longer TTL makes the edits slower to appear, not possible."
+    }
+  ]
+}

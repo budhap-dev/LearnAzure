@@ -1,0 +1,98 @@
+[
+  {
+    "term": "Azure Database for PostgreSQL",
+    "aliases": ["Azure PostgreSQL", "PostgreSQL Flexible Server"],
+    "definition": "Microsoft's managed PaaS offering of the community PostgreSQL engine, sold as Flexible Server: you choose a tier, storage and major version, and Azure handles patching, backups and optional zone-redundant failover. Extensions such as PostGIS and pgvector are enabled per server. It has no licence cost, but compute, storage and HA still bill by the hour.",
+    "example": "pg-shop-reviews-prod: General Purpose, 2 vCores, zone-redundant HA, pgvector enabled for recommendations.",
+    "icon": "postgresql",
+    "lessons": ["3.5"],
+    "related": ["Flexible Server", "Azure Database for MySQL", "PostgreSQL extension", "Azure SQL Database"]
+  },
+  {
+    "term": "Azure Database for MySQL",
+    "aliases": ["Azure MySQL", "MySQL Flexible Server"],
+    "definition": "Microsoft's managed PaaS offering of the MySQL engine, sold as Flexible Server with the same tiers, storage model, HA, read replicas and backups as its PostgreSQL sibling. It suits teams and products already built on MySQL. Unlike PostgreSQL it has no extension mechanism, and on Linux its table names are case-sensitive even though string comparisons are not.",
+    "example": "A WordPress-based marketing site on a Burstable B1ms MySQL Flexible Server, stopped at weekends.",
+    "icon": "mysql",
+    "lessons": ["3.5"],
+    "related": ["Flexible Server", "Azure Database for PostgreSQL", "Open-source database"]
+  },
+  {
+    "term": "Flexible Server",
+    "definition": "The current and only deployment shape for Azure Database for PostgreSQL and MySQL: a single managed server with a chosen compute tier, separately billed storage, optional zone-redundant HA, read replicas, stop/start and in-place major version upgrades. It replaced the retired Single Server; any guidance mentioning Single Server is out of date. Storage can grow but never shrink.",
+    "example": "Stopping the dev Flexible Server overnight leaves only the storage charge running.",
+    "icon": "postgresql",
+    "lessons": ["3.5"],
+    "related": ["Azure Database for PostgreSQL", "Azure Database for MySQL", "Burstable tier", "Read replica"]
+  },
+  {
+    "term": "Burstable tier",
+    "aliases": ["Burstable", "B-series"],
+    "definition": "The cheapest Flexible Server compute tier, where the server banks CPU credits while idle and spends them under load. A B1ms costs around $13 a month and is ideal for dev, test and light spiky use. Once the credit bank is empty the server is throttled to a low baseline, so sustained work such as imports or production traffic belongs on General Purpose.",
+    "example": "The nightly catalogue import crawled after an hour because the B1ms had run out of credits.",
+    "icon": "postgresql",
+    "lessons": ["3.5"],
+    "related": ["Flexible Server", "Right-sizing", "Scale up"]
+  },
+  {
+    "term": "Read replica",
+    "aliases": ["read replicas"],
+    "definition": "A separate, readable copy of a Flexible Server fed asynchronously from the primary; you can have several, and they may sit in another region. Use it to move reports and batch jobs off the primary, or as a manual disaster-recovery target by promoting it. Because replication is asynchronous it lags, so never expect to read your own write from a replica.",
+    "example": "The finance report runs against a replica in UK West and can be a few seconds behind the shop.",
+    "icon": "postgresql",
+    "lessons": ["3.5"],
+    "related": ["Flexible Server", "High availability", "Disaster recovery", "Read scale-out"]
+  },
+  {
+    "term": "PostgreSQL extension",
+    "aliases": ["extensions", "Postgres extension"],
+    "definition": "A packaged add-on that extends the PostgreSQL engine with new types, functions or indexes - PostGIS for geography, pg_cron for scheduling, pg_stat_statements for slow-query analysis, pgvector for embeddings. On Flexible Server an extension must be allow-listed on the server before CREATE EXTENSION works. Extensions are the main reason teams choose PostgreSQL over MySQL.",
+    "example": "Allow-listing pg_stat_statements let the team find the three queries causing 80% of the load.",
+    "icon": "postgresql",
+    "lessons": ["3.5"],
+    "related": ["pgvector", "Azure Database for PostgreSQL", "Flexible Server"]
+  },
+  {
+    "term": "pgvector",
+    "definition": "A PostgreSQL extension that adds a vector column type, distance operators and approximate nearest-neighbour indexes, so embeddings can be stored and searched next to ordinary relational data. It turns an existing Postgres database into a small vector store without a separate service. It is fine for millions of vectors; beyond that, or for hybrid search features, a dedicated search service earns its place.",
+    "example": "Product embeddings in a vector(1536) column power \"customers who liked this also liked\" in the reviews service.",
+    "icon": "postgresql",
+    "lessons": ["3.5"],
+    "related": ["PostgreSQL extension", "Vector database", "Azure Database for PostgreSQL"]
+  },
+  {
+    "term": "Connection pooling",
+    "aliases": ["PgBouncer", "connection pooler"],
+    "definition": "Keeping a small set of database connections open and sharing them across many requests, because each PostgreSQL connection is a server process with real memory cost and a small server allows only a few hundred. Node's pg pool does this per process, but pool size multiplied by App Service instances can still exhaust the server. Flexible Server's built-in PgBouncer on port 6432 multiplexes all those app connections onto a few real ones.",
+    "example": "Thirty API instances with a pool of 20 held 600 connections until PgBouncer reduced it to about 20 at the database.",
+    "icon": "postgresql",
+    "lessons": ["3.5"],
+    "related": ["Flexible Server", "Scale out", "Connection string"]
+  },
+  {
+    "term": "Open-source database",
+    "aliases": ["OSS database"],
+    "definition": "A database engine whose source is freely licensed - PostgreSQL, MySQL, MariaDB, Redis, MongoDB in its earlier form - so there is no per-core licence to buy. On Azure they are sold as managed services where you pay for compute, storage and HA but never a licence line. Open source removes the licence, not the bill, and each engine brings its own dialect, tooling and operational skills.",
+    "example": "Moving from Azure SQL to PostgreSQL saved the licence component but meant rewriting T-SQL stored procedures.",
+    "lessons": ["3.5"],
+    "related": ["Azure Database for PostgreSQL", "Azure Database for MySQL", "Azure SQL Database", "Managed service"]
+  },
+  {
+    "term": "Major version upgrade",
+    "aliases": ["in-place upgrade"],
+    "definition": "Moving a Flexible Server from one major engine version to a newer one - PostgreSQL 15 to 17, say - in place from the portal or CLI, instead of the traditional dump, create and restore. It involves a short outage and cannot be rolled back except by point-in-time restore to a new server, so test it on a restored copy first. Each major version has an end-of-support date that Azure enforces.",
+    "example": "The team rehearsed the PostgreSQL 15 to 17 upgrade on a PITR copy before running it on production one Sunday morning.",
+    "icon": "postgresql",
+    "lessons": ["3.5"],
+    "related": ["Flexible Server", "Point-in-time restore", "Managed service"]
+  },
+  {
+    "term": "Azure Database Migration Service",
+    "aliases": ["DMS", "Database Migration Service"],
+    "definition": "A managed service that copies databases into Azure - SQL Server, PostgreSQL, MySQL and others - as a one-off bulk load or as a continuous sync that keeps source and target aligned until you cut over. It moves schema and data; between different engines it does not translate stored procedures or T-SQL, which remain a rewrite. Plan the cutover window around the final sync.",
+    "example": "DMS kept the on-premises PostgreSQL in sync with pg-shop-reviews-prod for a week before the Saturday cutover.",
+    "icon": "database-migration",
+    "lessons": ["3.5"],
+    "related": ["Lift and shift", "Flexible Server", "Azure SQL Database"]
+  }
+]
