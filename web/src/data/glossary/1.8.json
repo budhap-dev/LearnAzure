@@ -31,7 +31,7 @@
     "definition": "Azure's application performance monitoring service: it records requests, failures, dependency calls and traces from your code, and correlates them into an end-to-end view of a single user request. One line of configuration in a Node or .NET app is usually enough to start. Its data lands in a Log Analytics workspace, so ingestion volume and retention are where the cost appears.",
     "example": "A slow checkout is traced from the API request through to the exact SQL call that took four seconds.",
     "icon": "application-insights",
-    "lessons": ["1.8"],
+    "lessons": ["1.8", "6.1"],
     "related": ["Log Analytics workspace", "App Service", "Azure SQL Database"]
   },
   {
@@ -85,7 +85,7 @@
     "definition": "The store and query engine behind Azure Monitor: application traces, platform metrics and audit logs land in one workspace and are queried with a single language, KQL. Having one workspace per environment keeps correlation easy. Billing is by gigabyte ingested and by how long you keep it, so retention settings quietly become one of the larger monitoring line items.",
     "example": "log-shop-prod receives Application Insights telemetry and App Service platform logs for the whole shop.",
     "icon": "log-analytics",
-    "lessons": ["1.8", "4.7"],
+    "lessons": ["1.8", "4.7", "6.1"],
     "related": ["Application Insights", "Cost Management"]
   }
 ]

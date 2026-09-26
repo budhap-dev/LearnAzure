@@ -65,7 +65,7 @@
     "definition": "A governance service that decides what is allowed to exist: deny resources outside approved regions, require a cost-centre tag, or audit anything without backup. Assigned at a scope and inherited, so new subscriptions are born compliant. It complements RBAC, which controls who, not what.",
     "example": "A policy on mg-northline denies any resource created outside UK South and UK West.",
     "icon": "policy",
-    "lessons": ["1.4", "4.7"],
+    "lessons": ["1.4", "4.7", "6.1"],
     "related": ["Scope", "Tag", "Role-based access control"]
   },
   {

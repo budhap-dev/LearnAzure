@@ -632,17 +632,24 @@
       "tagline": "Azure Monitor, Log Analytics, Application Insights, alerts, and designing for failure.",
       "description": "Seeing what is happening and staying up when things break: metrics and logs, the query language, distributed tracing for a React-and-Node app, alerting that people actually respond to, and high availability and disaster recovery patterns.",
       "icon": "monitor",
-      "status": "planned",
+      "status": "in-progress",
       "lessons": [
         {
           "id": "6.1",
           "title": "Azure Monitor - metrics, logs and the data platform",
-          "summary": "",
+          "summary": "Monitoring versus observability, metrics, logs, traces and changes, what Azure collects by itself and what you must switch on, and one workspace per environment.",
           "minutes": 14,
-          "objectives": [],
+          "objectives": [
+            "Explain the signals behind observability and what each is good for",
+            "Switch on what Azure does not collect by default: diagnostic settings, the Monitor Agent and data collection rules",
+            "Design Log Analytics workspaces and enforce the logging baseline with policy"
+          ],
           "icons": [
-            "monitor"
-          ]
+            "monitor",
+            "log-analytics",
+            "diagnostic-settings"
+          ],
+          "status": "ready"
         },
         {
           "id": "6.2",
