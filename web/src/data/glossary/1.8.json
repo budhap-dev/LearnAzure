@@ -31,7 +31,7 @@
     "definition": "Azure's application performance monitoring service: it records requests, failures, dependency calls and traces from your code, and correlates them into an end-to-end view of a single user request. One line of configuration in a Node or .NET app is usually enough to start. Its data lands in a Log Analytics workspace, so ingestion volume and retention are where the cost appears.",
     "example": "A slow checkout is traced from the API request through to the exact SQL call that took four seconds.",
     "icon": "application-insights",
-    "lessons": ["1.8", "6.1"],
+    "lessons": ["1.8", "6.1", "6.3"],
     "related": ["Log Analytics workspace", "App Service", "Azure SQL Database"]
   },
   {

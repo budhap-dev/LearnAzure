@@ -139,7 +139,7 @@ at random from the lesson quizzes. 41 new glossary terms (354 in total).
 |----|--------|--------|
 | 6.1 | Azure Monitor - metrics, logs and the data platform | shipped |
 | 6.2 | Log Analytics and just enough KQL | shipped |
-| 6.3 | Application Insights for web apps and APIs | planned |
+| 6.3 | Application Insights for web apps and APIs | shipped |
 | 6.4 | Alerts, action groups and on-call that works | planned |
 | 6.5 | High availability and disaster recovery patterns | planned |
 | 6.6 | The Well-Architected review in practice | planned |

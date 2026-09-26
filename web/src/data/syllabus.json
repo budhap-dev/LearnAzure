@@ -671,12 +671,19 @@
         {
           "id": "6.3",
           "title": "Application Insights for web apps and APIs",
-          "summary": "",
+          "summary": "Instrumenting APIs, React and React Native with OpenTelemetry and the JS SDK, distributed tracing end to end, the application map, availability tests, sampling and privacy.",
           "minutes": 14,
-          "objectives": [],
+          "objectives": [
+            "Instrument servers, browsers and mobile apps so telemetry reaches one Application Insights resource",
+            "Follow one request end to end with distributed tracing and the application map",
+            "Use release annotations, custom events, availability tests and sampling well"
+          ],
           "icons": [
-            "application-insights"
-          ]
+            "application-insights",
+            "app-service",
+            "static-web-apps"
+          ],
+          "status": "ready"
         },
         {
           "id": "6.4",

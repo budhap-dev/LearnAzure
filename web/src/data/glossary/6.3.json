@@ -1,0 +1,43 @@
+[
+  {
+    "term": "OpenTelemetry",
+    "aliases": ["OTel", "Azure Monitor OpenTelemetry distro"],
+    "definition": "The vendor-neutral, open-source standard for producing traces, metrics and logs from applications. Azure Monitor's OpenTelemetry distro packages it for Node, .NET, Java and Python: one call at start-up instruments incoming requests and common dependencies and sends the data to Application Insights. It must be initialised before other modules load.",
+    "example": "The Node API calls useAzureMonitor() as its first line and immediately reports requests, SQL calls and Service Bus sends.",
+    "lessons": ["6.3"],
+    "related": ["Application Insights", "Distributed tracing"]
+  },
+  {
+    "term": "Distributed tracing",
+    "aliases": ["trace", "traces", "operation ID", "traceparent", "W3C Trace Context", "correlation ID"],
+    "definition": "Following one request across every service it touches by passing a trace ID along - in the W3C traceparent header over HTTP, or in message properties through a broker - so each piece of telemetry records the same operation ID. It turns separate logs into one timeline of the request.",
+    "example": "One checkout's browser call, API request, SQL query, payment call and warehouse function all share operation_Id 4bf92f35...",
+    "lessons": ["6.3"],
+    "related": ["Application Insights", "OpenTelemetry", "Application map"]
+  },
+  {
+    "term": "Application map",
+    "aliases": ["app map"],
+    "definition": "An Application Insights view that draws every component and dependency of a system as a graph, with call volume, failure rate and latency on each connection, built from distributed tracing data. Usually the first place to look when something is slow or failing.",
+    "example": "The map shows the catalogue API making 42 SQL calls per product page, which explains the eight-second pages in Sydney.",
+    "icon": "application-insights",
+    "lessons": ["6.3"],
+    "related": ["Distributed tracing", "Application Insights"]
+  },
+  {
+    "term": "Sampling",
+    "aliases": ["telemetry sampling", "adaptive sampling", "fixed-rate sampling"],
+    "definition": "Keeping a representative fraction of application telemetry to control cost, while keeping each sampled trace complete - its request, dependencies and exceptions together. Counts are scaled up in the portal. Sample high-volume, unremarkable traffic; keep critical paths such as checkout unsampled.",
+    "example": "The catalogue API is sampled at 25%, cutting its telemetry cost by three quarters; checkout is recorded in full.",
+    "lessons": ["6.3"],
+    "related": ["Application Insights", "Log table plan"]
+  },
+  {
+    "term": "Availability test",
+    "aliases": ["standard test", "synthetic monitoring", "URL ping test", "web test"],
+    "definition": "A synthetic check that Application Insights runs against your site from several locations worldwide every few minutes, checking the response and the TLS certificate. Standard tests replace the retiring URL ping tests; custom tests reported from a function cover multi-step journeys.",
+    "example": "A standard test from five regions alerts when the home page fails from two or more of them.",
+    "lessons": ["6.3"],
+    "related": ["Application Insights", "Health probe"]
+  }
+]

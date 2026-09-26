@@ -5,7 +5,7 @@
     "definition": "Being able to answer new questions about a running system - why only one payment provider is failing since 14:02 - from telemetry you already collect, rather than only checking thresholds you set in advance. It rests on metrics, logs, traces and a record of changes, collected before the incident.",
     "example": "One query across Front Door's WAF log and the activity log shows a managed-rule update blocking the payment callback.",
     "lessons": ["6.1"],
-    "related": ["Azure Monitor", "Metric", "Resource log", "Application Insights"]
+    "related": ["Azure Monitor", "Metric", "Resource log", "Application Insights", "Distributed tracing"]
   },
   {
     "term": "Azure Monitor",

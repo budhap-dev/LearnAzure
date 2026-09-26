@@ -1,0 +1,113 @@
+[
+  {
+    "id": "6.3-q1",
+    "topic": "end to end",
+    "scenario": "Shoppers in Sydney report eight-second product pages. Server logs show 200 OK responses in about 300 milliseconds.",
+    "stem": "Which Application Insights view is the best starting point?",
+    "options": [
+      "Live metrics for CPU",
+      "The application map and an end-to-end transaction for a slow page, which show every dependency call and its duration",
+      "The activity log",
+      "Availability test results only"
+    ],
+    "answer": 1,
+    "explanation": "The map and the transaction timeline show where the time goes across every hop. Here they reveal 42 SQL calls per page, cheap from London but slow from Sydney. CPU and the activity log say nothing about request paths, and availability tests only confirm the page is slow."
+  },
+  {
+    "id": "6.3-q2",
+    "topic": "one resource per environment",
+    "scenario": "Each microservice has its own Application Insights resource. The application map shows unconnected islands and traces end at every service boundary.",
+    "stem": "What should change?",
+    "options": [
+      "Add more sampling",
+      "Send every component in an environment to one Application Insights resource so traces and the map span the whole system",
+      "Create one resource per operation",
+      "Turn off dependency tracking"
+    ],
+    "answer": 1,
+    "explanation": "Distributed tracing and the application map work across the components that report to the same resource. Splitting per service fragments both. One resource per environment, backed by the environment's workspace, keeps the whole request in one place."
+  },
+  {
+    "id": "6.3-q3",
+    "topic": "trace propagation",
+    "scenario": "Server-side traces join up correctly, but browser page views and fetch calls from the React app never connect to the API's requests.",
+    "stem": "What is the most likely cause?",
+    "options": [
+      "The browser SDK cannot trace fetch calls",
+      "CORS on the API does not allow the traceparent header, so trace context is stripped from browser calls",
+      "The React app needs its own workspace",
+      "Front Door removes all headers"
+    ],
+    "answer": 1,
+    "explanation": "Browser-to-API correlation depends on the trace headers reaching the API. If CORS does not allow them, the browser omits them and the server starts a new trace. Allowing traceparent (and the SDK's correlation headers) joins the two."
+  },
+  {
+    "id": "6.3-q4",
+    "topic": "instrumentation order",
+    "scenario": "After adding the OpenTelemetry distro to the Node API, incoming requests appear in Application Insights but SQL and Redis calls do not.",
+    "stem": "What is the likely mistake?",
+    "options": [
+      "SQL calls are never recorded",
+      "The distro was initialised after the database and Redis modules were loaded, so they were not instrumented; initialise it first",
+      "The connection string is wrong",
+      "Sampling is at 100%"
+    ],
+    "answer": 1,
+    "explanation": "Auto-instrumentation patches libraries as they load, so anything imported before the distro starts is missed. A wrong connection string would lose everything, and sampling at 100% keeps everything."
+  },
+  {
+    "id": "6.3-q5",
+    "topic": "release regressions",
+    "scenario": "A release doubled checkout's 95th percentile duration, and nobody noticed for four days.",
+    "stem": "What would have caught it the same day?",
+    "options": [
+      "More detailed debug logging",
+      "Release annotations from the pipeline on the performance charts, with an alert on checkout p95 compared with the previous period",
+      "A second Application Insights resource for the new release",
+      "Disabling sampling everywhere"
+    ],
+    "answer": 1,
+    "explanation": "Marking each deployment on the charts makes a step change after a release obvious, and an alert on p95 makes it impossible to miss. More logs add cost, not attention, and splitting resources hides the comparison."
+  },
+  {
+    "id": "6.3-q6",
+    "topic": "sampling",
+    "scenario": "The catalogue API generates most of the telemetry volume; checkout is low volume but business-critical.",
+    "stem": "How should sampling be applied?",
+    "options": [
+      "Sample everything at 10%",
+      "Sample the catalogue API (for example at 25%) and keep checkout unsampled",
+      "Never sample",
+      "Sample checkout only, since it matters most"
+    ],
+    "answer": 1,
+    "explanation": "Sampling saves the most where volume is high and individual requests are unremarkable, and it keeps sampled traces complete. Critical, low-volume paths are cheap to keep in full, and every failure there matters. Blanket sampling hides rare checkout failures."
+  },
+  {
+    "id": "6.3-q7",
+    "topic": "outside-in checks",
+    "stem": "What does a standard availability test add that server-side telemetry cannot?",
+    "options": [
+      "Nothing; server telemetry covers everything",
+      "It checks the site from several locations worldwide on a schedule, so outages and certificate problems are seen even when no real users reach the server",
+      "It replaces the need for Application Insights in the app",
+      "It load-tests the API"
+    ],
+    "answer": 1,
+    "explanation": "If DNS, Front Door or a certificate fails, real requests may never arrive, so server telemetry stays quiet. Synthetic checks from outside see what users see. They are not load tests and do not replace in-app telemetry."
+  },
+  {
+    "id": "6.3-q8",
+    "topic": "privacy",
+    "scenario": "A developer adds the shopper's email address and full card number as custom properties on the CheckoutCompleted event for easier debugging.",
+    "stem": "What should the review say?",
+    "options": [
+      "Fine, because telemetry is internal",
+      "Remove them: personal and payment data must not go into telemetry; use an order ID to correlate, and scrub any library that leaks such data",
+      "Keep the email but mask the card",
+      "Store them only in dev"
+    ],
+    "answer": 1,
+    "explanation": "Telemetry is a second store of data with its own retention and access, and card numbers must never be logged at all. An order ID gives the same debugging link without copying personal data. Dev environments often hold production-like data too."
+  }
+]
