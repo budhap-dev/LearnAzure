@@ -688,12 +688,19 @@
         {
           "id": "6.4",
           "title": "Alerts, action groups and on-call that works",
-          "summary": "",
+          "summary": "Alert rules and action groups, paging on symptoms not causes, SLIs, SLOs and error budgets, Service Health, and the habits that make on-call humane.",
           "minutes": 12,
-          "objectives": [],
+          "objectives": [
+            "Build alert rules and action groups that page only when users are hurt",
+            "Define SLIs, SLOs and error budgets and alert on burn rate",
+            "Run on-call with Service Health, runbooks, processing rules and regular alert reviews"
+          ],
           "icons": [
-            "alerts"
-          ]
+            "alerts",
+            "service-health",
+            "application-insights"
+          ],
+          "status": "ready"
         },
         {
           "id": "6.5",

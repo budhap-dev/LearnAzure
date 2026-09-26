@@ -39,7 +39,7 @@
     "definition": "A notification sent when actual or forecast spend crosses a budget threshold, or when a credit is running low. Delivered by email or to an action group that can run automation, such as shutting down a resource group.",
     "example": "The 80% alert fired on the 19th of the month, which is how the team found the weekend VM.",
     "icon": "cost-alerts",
-    "lessons": ["1.6", "6.1"],
+    "lessons": ["1.6", "6.1", "6.4"],
     "related": ["Budget", "Cost Management"]
   },
   {
