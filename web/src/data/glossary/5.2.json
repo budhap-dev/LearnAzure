@@ -1,0 +1,59 @@
+[
+  {
+    "term": "Azure Service Bus",
+    "aliases": ["Service Bus", "Service Bus namespace", "ASB"],
+    "definition": "Azure's broker for business messages that must not be lost. A namespace holds queues (point-to-point) and topics with filtered subscriptions (publish-subscribe), with peek-lock delivery, dead-lettering, sessions, duplicate detection and transactions. Standard costs about $10 a month plus operations; Premium adds dedicated capacity and private networking.",
+    "example": "sb-shop-prod carries every order event from the checkout API to the warehouse, email and analytics subscribers.",
+    "icon": "service-bus",
+    "lessons": ["5.2"],
+    "related": ["Service Bus topic", "Dead-letter queue", "Message broker", "Peek-lock"]
+  },
+  {
+    "term": "Service Bus topic",
+    "aliases": ["topic subscription", "subscription filter", "SQL filter", "correlation filter"],
+    "definition": "The publish-subscribe entity in Service Bus. A publisher sends to the topic; each subscription behaves like its own queue holding a copy of every message that matches its filter. A subscription nobody reads keeps filling and can eventually block sends to the whole topic.",
+    "example": "The warehouse subscription on order-events only receives OrderPlaced and OrderCancelled; the analytics subscription receives everything.",
+    "lessons": ["5.2"],
+    "related": ["Azure Service Bus", "Publish-subscribe"]
+  },
+  {
+    "term": "Peek-lock",
+    "aliases": ["peek lock", "message lock", "lock duration", "max delivery count", "receive and delete"],
+    "definition": "The safe way to receive: the broker locks a message for a period (60 seconds by default) while the receiver works, and deletes it only when the receiver completes it. If the receiver crashes or the lock expires, the message is delivered again and its delivery count rises; past the max delivery count it is dead-lettered. Receive-and-delete skips the lock and loses messages on any crash.",
+    "example": "The warehouse worker completes each message only after the stock reservation is committed.",
+    "lessons": ["5.2"],
+    "related": ["Dead-letter queue", "At-least-once delivery", "Azure Service Bus"]
+  },
+  {
+    "term": "Dead-letter queue",
+    "aliases": ["DLQ", "dead letter queue", "poison message", "dead-lettering"],
+    "definition": "A sub-queue where a broker moves messages that cannot be processed - they exceeded the max delivery count, expired, or were rejected deliberately - along with the reason. Messages stay there until someone reads them, so every dead-letter queue needs an alert, an owner and a way to fix and resubmit.",
+    "example": "An alert fires when order-events/warehouse has any dead-lettered message; the on-call engineer fixes the data and resubmits.",
+    "lessons": ["5.2", "5.1"],
+    "related": ["Peek-lock", "Azure Service Bus", "At-least-once delivery"]
+  },
+  {
+    "term": "Message session",
+    "aliases": ["session", "SessionId", "FIFO", "first in, first out"],
+    "definition": "A Service Bus feature that groups messages by a session ID and delivers each group to one receiver at a time, in order. It gives first-in, first-out per key - such as per order - while different keys still run in parallel. A slow session delays only its own messages.",
+    "example": "With SessionId set to the order ID, OrderCancelled can no longer be processed before OrderPlaced for the same order.",
+    "lessons": ["5.2"],
+    "related": ["Azure Service Bus", "Peek-lock"]
+  },
+  {
+    "term": "Duplicate detection",
+    "aliases": ["deduplication", "dedup", "MessageId"],
+    "definition": "A Service Bus setting that remembers each MessageId for a chosen window, from minutes up to seven days, and silently drops repeats sent within it. It protects against a publisher retrying a send, not against redelivery to consumers, so consumers must still be idempotent.",
+    "example": "The outbox relay sends with MessageId 1042-OrderPlaced; if it retries after a timeout, the second copy is dropped.",
+    "lessons": ["5.2"],
+    "related": ["Idempotent", "Transactional outbox", "Azure Service Bus"]
+  },
+  {
+    "term": "Transactional outbox",
+    "aliases": ["outbox pattern", "outbox", "dual write problem", "two writes problem"],
+    "definition": "A pattern that saves a business change and the event describing it in the same database transaction, as a row in an outbox table; a separate relay publishes outbox rows and marks them sent. It prevents the database and the broker disagreeing when a crash happens between the two writes.",
+    "example": "The order row and its OrderPlaced outbox row commit together; a timer-triggered function publishes the outbox every few seconds.",
+    "lessons": ["5.2"],
+    "related": ["Duplicate detection", "Idempotent", "Azure Service Bus"]
+  }
+]

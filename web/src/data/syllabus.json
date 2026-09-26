@@ -548,12 +548,19 @@
         {
           "id": "5.2",
           "title": "Service Bus - enterprise messaging",
-          "summary": "",
+          "summary": "Queues, topics and filtered subscriptions; peek-lock and the dead-letter queue; sessions, duplicate detection, the transactional outbox, and the tiers.",
           "minutes": 14,
-          "objectives": [],
+          "objectives": [
+            "Design topics, subscriptions and filters, and receive messages safely with peek-lock",
+            "Own the dead-letter queue: alerts, investigation and resubmission",
+            "Use sessions, duplicate detection and the transactional outbox, and choose a tier"
+          ],
           "icons": [
-            "service-bus"
-          ]
+            "service-bus",
+            "function-apps",
+            "azure-sql"
+          ],
+          "status": "ready"
         },
         {
           "id": "5.3",
