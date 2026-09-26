@@ -1,0 +1,114 @@
+[
+  {
+    "id": "3.7-q1",
+    "topic": "the default",
+    "scenario": "A contractor's architecture pack proposes Cosmos DB for the shop's orders, customers and payments, on the grounds that \"it scales globally and we will not have to migrate later\". The shop sells in one country from one region and the team has modelled these tables in SQL Server for eight years.",
+    "stem": "What is the right decision in the review?",
+    "options": [
+      "Accept it: Cosmos DB is a superset of a relational database, so nothing is lost by starting there",
+      "Reject it and use Azure SQL: no named requirement - regions, latency, schema variability or write scale - moves the orders off the relational default, and the team's modelling skill is already there",
+      "Accept it for orders but keep customers in SQL, so the team can compare both stores in production",
+      "Reject it and use PostgreSQL, because open-source databases avoid Cosmos DB's lock-in"
+    ],
+    "answer": 1,
+    "explanation": "The framework defaults to Azure SQL for transactional data the team already knows how to model, and only a named requirement with a number attached moves it; \"we might need to scale later\" is a preference. Cosmos DB is not a superset - orders with relationships and multi-row transactions are exactly the joins and aggregates that cost many request units and lose the correctness a relational store gives for free."
+  },
+  {
+    "id": "3.7-q2",
+    "topic": "files versus records",
+    "scenario": "A proposal stores PDF invoices as a binary column in the orders database \"so everything is in one place and covered by the same backup\". Invoices must be kept, unaltered, for seven years.",
+    "stem": "What should the review say?",
+    "options": [
+      "Move the invoices to Blob Storage with a lifecycle policy and an immutable retention policy; keep only the blob reference in the database",
+      "Agree: keeping invoices in the database means point-in-time restore covers them automatically",
+      "Move the invoices to Cosmos DB, whose document model suits PDF content better than a relational table",
+      "Keep them in the database but move the table to a separate Hyperscale database so the size does not matter"
+    ],
+    "answer": 0,
+    "explanation": "The first question in the tree is whether the data is a file or an object, and a PDF is one: object storage costs pennies per GB, tiers down on a schedule and can be made immutable for the regulator's retention period, while a binary column bloats every backup and restore for years. The \"same backup\" argument is tempting, but blob soft delete and versioning cover the files, and a seven-year immutable policy is something a database column cannot promise."
+  },
+  {
+    "id": "3.7-q3",
+    "topic": "the catalogue",
+    "scenario": "The product catalogue must load in under 100 ms for shoppers in five countries. Every product change is made by one merchandising team in the UK, and the product schema is stable.",
+    "stem": "Which design satisfies the requirement at the lowest cost and operational burden?",
+    "options": [
+      "Cosmos DB with multi-region writes in all five countries, because global low latency is a named Cosmos DB requirement",
+      "Azure SQL in UK South with active geo-replication to five regions, and the API reading from the nearest replica",
+      "Azure SQL in UK South as the source of truth, Redis in front of the API, and a CDN serving images and rendered product pages at the edge",
+      "A PostgreSQL flexible server per country, synchronised nightly by an ETL job"
+    ],
+    "answer": 2,
+    "explanation": "The named requirement is fast reads in five countries, not writes: all writes come from one place, so a cache and an edge network serve the reads for a fraction of the cost of multi-region writes and leave one single source of truth. Cosmos DB becomes the right answer only if a fact changes - writes originating in several regions, or a schema that varies per product - and the review should record that as the trigger."
+  },
+  {
+    "id": "3.7-q4",
+    "topic": "OLTP versus OLAP",
+    "scenario": "The reporting team asks to point Power BI directly at the production orders database so that finance can run year-on-year revenue by category whenever they like.",
+    "stem": "What is the right response?",
+    "options": [
+      "Allow it but ask them to run reports only outside trading hours",
+      "Allow it, since Azure SQL scales up automatically when the reporting queries arrive",
+      "Copy the data out to a warehouse - Fabric or Synapse - with an ETL pipeline, and point Power BI there",
+      "Add a Redis cache in front of the orders database so the reports hit the cache instead"
+    ],
+    "answer": 2,
+    "explanation": "Revenue by category over years is OLAP work: few large scans over history that fight the checkout's small transactions for CPU, memory and locks, so it belongs in a store built for it and fed by a copy. Restricting the hours only moves the outage, and a cache does not help queries that touch every row once."
+  },
+  {
+    "id": "3.7-q5",
+    "topic": "consistency",
+    "scenario": "During a design review someone argues that because of the CAP theorem the shop must choose between \"an AP system\" and \"a CP system\" for all of its data before any store can be selected.",
+    "stem": "What is the most useful reply?",
+    "options": [
+      "Agree, and choose CP for the whole shop because retail needs correctness above all",
+      "Agree, and choose AP for the whole shop because availability is what customers notice",
+      "Point out that CAP only applies to NoSQL stores, so choosing Azure SQL makes the question go away",
+      "Ask what consistency each screen actually needs - basket and payment strong, a view counter can be stale - and let the store and its consistency level follow per screen"
+    ],
+    "answer": 3,
+    "explanation": "CAP is true but the trade-off is a dial, not a switch, and the partition it describes is rare; the useful design question is what each screen must never show, which is why Cosmos DB exposes five consistency levels rather than two. Picking one letter for the whole system either overpays for strong consistency on data that does not need it or risks showing a customer an item they removed."
+  },
+  {
+    "id": "3.7-q6",
+    "topic": "polyglot persistence",
+    "scenario": "A proposal for a new feature adds Cosmos DB, a second Redis cache and Azure Data Explorer alongside the existing Azure SQL database, with the justification \"right tool for each job\".",
+    "stem": "What is the strongest objection to raise?",
+    "options": [
+      "Azure does not support running a relational and a NoSQL store in the same resource group",
+      "Polyglot persistence is an anti-pattern and every workload should use exactly one store",
+      "Cosmos DB and Redis cannot be used together because both hold JSON documents",
+      "Each added store is a backup policy, a restore test, a security review and an on-call rotation for as long as the product exists, and the proposal names no owner for any of them"
+    ],
+    "answer": 3,
+    "explanation": "Polyglot persistence is right as far as it goes, but its cost is paid in operations rather than on the invoice, so the review should demand a named owner and a named requirement per store, not reject the idea outright. Two stores with owners beat four with none; \"only one store, ever\" is the opposite over-correction and would put files and reports in the orders database."
+  },
+  {
+    "id": "3.7-q7",
+    "topic": "cost shapes",
+    "scenario": "A team compares a 2-vCore Azure SQL database at roughly $350-400 a month with 1,000 RU/s of Cosmos DB at around $60 a month and concludes Cosmos DB is \"six times cheaper\" for their order-history API, which runs joins and aggregates across customers.",
+    "stem": "What is wrong with the comparison?",
+    "options": [
+      "vCores reserve capacity used however you like, while every Cosmos DB query draws down request units - and joins, aggregates and cross-partition queries draw many, so the bill scales with the queries, not the reservation",
+      "Nothing: request units are a flat fee, so the Cosmos DB figure is what the team will pay",
+      "The Azure SQL figure is wrong because relational databases are always billed per query",
+      "Cosmos DB has no storage charge, so the comparison understates how much cheaper it really is"
+    ],
+    "answer": 0,
+    "explanation": "The two billing shapes are not comparable at a glance: 1,000 RU/s is a throughput ceiling that expensive queries exhaust quickly, at which point the team either provisions far more or is throttled, whereas the vCore price buys compute that a well-indexed join uses cheaply. At low, even, simple load Cosmos DB often is cheaper; for cross-customer aggregates it is often dearer, and neither store is \"the cheap one\"."
+  },
+  {
+    "id": "3.7-q8",
+    "topic": "revisiting",
+    "scenario": "Eighteen months after choosing Azure SQL plus Redis for the catalogue, a merchandising team in Australia is now editing products from Sydney, and the product schema has grown forty nullable columns to cope with per-category attributes.",
+    "stem": "What should the team conclude?",
+    "options": [
+      "Nothing has changed in principle; add more nullable columns and a bigger cache",
+      "Add a second Azure SQL database in Australia and let both teams write to their own copy",
+      "Both triggers written into the original decision have fired - writes from a second region and a schema that varies per record - so this is the scheduled point to move the catalogue to Cosmos DB",
+      "Move the entire shop, including orders and payments, to Cosmos DB so there is only one store"
+    ],
+    "answer": 2,
+    "explanation": "The point of writing triggers down is that the revisit becomes a scheduled review rather than an argument, and here the two named facts the original decision depended on have both changed. Moving the orders too would be a preference for one store rather than a requirement, and two writable relational copies with no conflict handling is the kind of consistency problem multi-region writes in Cosmos DB exist to solve."
+  }
+]

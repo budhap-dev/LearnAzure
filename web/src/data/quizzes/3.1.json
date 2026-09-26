@@ -1,0 +1,112 @@
+[
+  {
+    "id": "3.1-q1",
+    "topic": "archive tier",
+    "scenario": "Dev moved 6 TB of old file-server backups to the archive tier last month. Today an auditor asks for a folder from that set and Dev promises it \"within the hour\".",
+    "stem": "What should Priya tell him before he promises anything else?",
+    "options": [
+      "Archive blobs are offline: a rehydration request can take up to 15 hours and carries a retrieval charge, so the folder will not be back within the hour",
+      "Archive blobs can be read directly at reduced throughput, so the folder will download slowly but will arrive",
+      "Archive is only for blobs older than a year, so last month's copy will still be in the hot tier and readable",
+      "Rehydration is instant, but each archive read is billed at ten times the hot-tier read price"
+    ],
+    "answer": 0,
+    "explanation": "Archive is cheap precisely because the data is taken offline; you must rehydrate to hot or cool first, which takes hours (standard priority up to 15), and you pay retrieval per GB on top. The reduced-throughput theory is tempting because it describes how cool and cold behave, but archive cannot be read in place at all."
+  },
+  {
+    "id": "3.1-q2",
+    "topic": "redundancy",
+    "scenario": "The team wants the product-image account to keep working if one Azure data centre in UK South goes down, and finance has rejected paying double for a copy in another region.",
+    "stem": "Which redundancy option fits?",
+    "options": [
+      "LRS, because three copies on separate disks already cover a data-centre failure",
+      "ZRS, because three copies across availability zones survive the loss of a whole data centre at a modest premium over LRS",
+      "GRS, because a data-centre failure is only survivable with a copy in the paired region",
+      "RA-GRS, because a readable secondary is the only way to keep reads working during an outage"
+    ],
+    "answer": 1,
+    "explanation": "ZRS spreads the three copies across availability zones in the same region, so a data-centre outage does not take the account down, for roughly 25% more than LRS. LRS's three copies live in one data centre, so it protects against disk and rack failure only; GRS and RA-GRS cover a regional disaster, which is more than was asked and more than finance will pay."
+  },
+  {
+    "id": "3.1-q3",
+    "topic": "shared access signatures",
+    "scenario": "The React Native app stopped loading product images at 09:00 on Tuesday. The images are still in the container and nothing was deployed that morning.",
+    "stem": "What is the most likely cause, and what is the right fix?",
+    "options": [
+      "The storage account key was rotated; put the new key in the mobile app's config and release",
+      "A SAS token baked into the mobile build expired; have the API issue short-lived SAS tokens on demand instead",
+      "The container's access tier moved to cool, so reads now fail; move it back to hot",
+      "The account hit its request limit at the morning peak; scale the account to Premium"
+    ],
+    "answer": 1,
+    "explanation": "A signed URL with a fixed expiry dies at that moment for every installed copy of the app, and the only fix for a hard-coded one is another app-store release - which is why SAS tokens should be minted by the API, minutes long. A key in the mobile app would be an even bigger mistake, and a cool-tier blob is still readable, it just costs more to read."
+  },
+  {
+    "id": "3.1-q4",
+    "topic": "authentication",
+    "stem": "The Node API on App Service needs to read and write blobs in one container, and the security review says \"no secrets in configuration\". Which approach satisfies that?",
+    "options": [
+      "Store the storage account key as a Key Vault secret and read it through a Key Vault reference",
+      "Give the app's managed identity the Storage Blob Data Contributor role on that container and disable shared-key access on the account",
+      "Give the app's managed identity the Contributor role on the storage account resource",
+      "Generate a five-year account SAS for the container and put it in an app setting"
+    ],
+    "answer": 1,
+    "explanation": "A managed identity holding a data-plane role such as Storage Blob Data Contributor means no secret exists anywhere, and disabling shared-key access closes the account-key door for good. The Key Vault option is the seductive one - it hides the key but the key still exists and still grants everything; and Contributor on the resource is a control-plane role that manages the account without granting access to any blob."
+  },
+  {
+    "id": "3.1-q5",
+    "topic": "access tiers and early deletion",
+    "scenario": "Ana proposes putting all daily database export files straight into the cold tier because it is a fifth of the hot price, then deleting each file after 14 days.",
+    "stem": "What will happen to the bill?",
+    "options": [
+      "It will fall by about 80% as intended, since cold storage is priced per GB-month like hot",
+      "Each file deleted before 90 days is charged for the remaining days anyway, so the early-deletion fee wipes out most of the saving",
+      "Cold-tier blobs cannot be deleted for 90 days, so the deletions will fail and storage will grow",
+      "Cold-tier writes are free, so the bill will fall by more than 80%"
+    ],
+    "answer": 1,
+    "explanation": "Cool, cold and archive each carry a minimum stay - 30, 90 and 180 days - and deleting or re-tiering a blob earlier is billed as if it had stayed, so a 14-day lifetime in cold pays for 90 days. Deletion itself is never blocked by the tier; the trap is the fee, not a lock, which is why short-lived data belongs in hot."
+  },
+  {
+    "id": "3.1-q6",
+    "topic": "choosing a service",
+    "scenario": "A legacy .NET reporting tool being lifted to a virtual machine expects to read and write files on a shared network drive using a UNC path.",
+    "stem": "Which storage service should back that drive?",
+    "options": [
+      "Blob storage, mounted as a drive through the blob REST API",
+      "Azure Files, because it exposes SMB shares the VM can map exactly like the old file server",
+      "Table storage, because each file can be stored as a row with its bytes in a property",
+      "A queue per report, so files arrive as messages the tool can consume"
+    ],
+    "answer": 1,
+    "explanation": "Azure Files is the SMB and NFS file-share service: a VM maps the share and the tool sees a UNC path and a drive letter, which is precisely the lift-and-shift case it exists for. Blob storage is the tempting default because it is where most files belong, but it is a flat object store without SMB semantics, and Table storage entities are capped at 1 MB with no file semantics at all."
+  },
+  {
+    "id": "3.1-q7",
+    "topic": "throttling",
+    "scenario": "During a flash sale the image-resize worker starts logging HTTP 429 responses from the storage account, and some thumbnails never get written.",
+    "stem": "What is happening and what is the first thing to fix?",
+    "options": [
+      "The account's capacity limit is full; raise the quota through a support ticket",
+      "The account is being throttled above its request rate; add retry with back-off and consider spreading load across prefixes or accounts",
+      "The SAS token has expired; regenerate it with a longer expiry",
+      "The blobs are in the cool tier, which rejects writes above a fixed rate; move the container to hot"
+    ],
+    "answer": 1,
+    "explanation": "429 is the storage service's throttling signal when a standard account is pushed past roughly 20,000 requests a second, and the correct response is to treat it as a transient fault - retry with exponential back-off - then reduce the pressure by spreading hot prefixes or splitting accounts. An expired SAS returns 403, not 429, and access tiers change what operations cost, not how many you are allowed."
+  },
+  {
+    "id": "3.1-q8",
+    "topic": "public access and egress",
+    "stem": "Product images must be visible to every shopper. Which design serves them safely and cheaply?",
+    "options": [
+      "Enable anonymous access on the account and make the container public so image URLs work directly",
+      "Keep anonymous access off and have the Node API stream every image to the browser",
+      "Keep anonymous access off at the account level and serve the container through a CDN, which caches the images and cuts egress",
+      "Embed a long-lived read SAS in every image URL rendered by the React app"
+    ],
+    "answer": 2,
+    "explanation": "A CDN in front of the container gives the world fast public reads while the account itself stays locked down, and cached hits do not pay storage egress - typically the largest of the three storage meters for a shop. Making the container public is the tempting shortcut, but it also exposes anything else that lands there and means every read pays full egress; streaming through the API turns a storage problem into an App Service capacity problem."
+  }
+]

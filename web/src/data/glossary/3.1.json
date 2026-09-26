@@ -1,0 +1,119 @@
+[
+  {
+    "term": "Blob storage",
+    "aliases": ["Azure Blob Storage", "blobs"],
+    "definition": "The object-storage service inside a storage account: files of any size held as blobs in flat containers, addressed by URL. It is the default home for images, documents, backups, logs and static assets. It is not a file system - the slashes in a blob name are just characters unless hierarchical namespace is enabled.",
+    "example": "https://stshopprod.blob.core.windows.net/product-images/sku-1234/main.jpg is one blob in the product-images container.",
+    "icon": "blob",
+    "lessons": ["3.1"],
+    "related": ["Storage account", "Storage container", "Block blob", "Access tier"]
+  },
+  {
+    "term": "Block blob",
+    "aliases": ["block blobs"],
+    "definition": "The everyday blob type: uploaded as a list of blocks and committed as one object, up to around 190 TiB. Page blobs back virtual machine disks and append blobs suit write-once logs, but almost everything an application stores is a block blob. Access tiers apply to block blobs only.",
+    "example": "A 4 MB product image uploaded from the browser is stored as a single block blob.",
+    "icon": "blob",
+    "lessons": ["3.1"],
+    "related": ["Blob storage", "Access tier", "Managed disk"]
+  },
+  {
+    "term": "Storage container",
+    "aliases": ["blob container", "container (storage)"],
+    "definition": "A named, flat grouping of blobs inside a storage account, similar to an S3 bucket. Access level (private or anonymous read) and role assignments can be scoped to a container, so use separate containers for data with different audiences. Not to be confused with a Docker container.",
+    "example": "product-images is a private container; the CDN reads from it, the API writes to it.",
+    "icon": "storage-container",
+    "lessons": ["3.1"],
+    "related": ["Blob storage", "Storage account", "Shared access signature"]
+  },
+  {
+    "term": "Access tier",
+    "aliases": ["hot tier", "cool tier", "cold tier", "archive tier", "blob tier"],
+    "definition": "The per-blob (or account default) setting that trades storage price for access price: hot, cool, cold and archive get cheaper per GB-month and dearer per read. Cool, cold and archive carry minimum stays of 30, 90 and 180 days with early-deletion fees. Archive is offline and needs rehydration, which can take hours.",
+    "example": "Hot at roughly $0.018 per GB-month for live images; archive at roughly $0.002 for backups nobody expects to read.",
+    "icon": "blob",
+    "lessons": ["3.1"],
+    "related": ["Lifecycle management policy", "Blob storage", "Block blob"]
+  },
+  {
+    "term": "Lifecycle management policy",
+    "aliases": ["lifecycle policy", "blob lifecycle management"],
+    "definition": "A rule set on a storage account that moves blobs between access tiers or deletes them based on age since creation, last modification or last access. It is how tiering happens without anybody remembering to do it. An account created without one silently becomes a hot-tier bill for data nobody reads.",
+    "example": "Move to cool 30 days after last modification, archive at 180 days, delete after seven years.",
+    "icon": "storage-account",
+    "lessons": ["3.1"],
+    "related": ["Access tier", "Blob storage", "Storage account"]
+  },
+  {
+    "term": "Storage redundancy",
+    "aliases": ["LRS", "ZRS", "GRS", "GZRS", "RA-GRS", "RA-GZRS", "locally redundant storage", "zone-redundant storage", "geo-redundant storage"],
+    "definition": "The per-account choice of how many copies of your data exist and where: LRS keeps three in one data centre, ZRS three across availability zones, GRS and GZRS add three more in the paired region, and the RA- variants make that secondary readable. Geo copies are asynchronous, so a failover can lose the last few minutes, and the failover itself is something you initiate.",
+    "example": "The product-image account uses ZRS in UK South; the backup account uses GZRS.",
+    "icon": "storage-account",
+    "lessons": ["3.1"],
+    "related": ["Redundancy", "Zone-redundant", "Region pair", "RPO"]
+  },
+  {
+    "term": "Shared access signature",
+    "aliases": ["SAS", "SAS token", "user delegation SAS"],
+    "definition": "A signed URL that grants specific permissions on a specific blob, container or account until a specific time, optionally from specific IP addresses. A user delegation SAS is signed with an Entra ID identity rather than an account key and is the version to prefer. The classic failure is a long-lived SAS embedded in a client build that expires in production.",
+    "example": "The Node API mints a ten-minute write-only SAS for one blob so the browser can upload an image directly.",
+    "icon": "storage-account",
+    "lessons": ["3.1"],
+    "related": ["Storage account key", "Managed identity", "Storage container"]
+  },
+  {
+    "term": "Azure Files",
+    "aliases": ["Azure file shares", "file shares"],
+    "definition": "Fully managed SMB and NFS file shares inside a storage account, mountable from virtual machines, containers and on-premises machines. It is the lift-and-shift answer for applications that expect a network drive or a UNC path. Premium file shares are SSD-backed for consistent performance; standard shares are cheaper and fine for shared config and modest workloads.",
+    "example": "The legacy reporting tool on a VM maps \\\\stshopprod.file.core.windows.net\\reports exactly as it mapped the old file server.",
+    "icon": "files",
+    "lessons": ["3.1"],
+    "related": ["Storage account", "Lift and shift", "Virtual machine"]
+  },
+  {
+    "term": "Queue storage",
+    "aliases": ["Azure Queue Storage", "storage queue"],
+    "definition": "A simple message queue inside a storage account: messages up to 64 KB, at-least-once delivery, and very low cost. Good for decoupling a web request from background work such as resizing an image. It has no topics, ordering guarantees or dead-letter queue - when you need those, use Service Bus.",
+    "example": "The API drops a 'resize sku-1234' message on the thumbnails queue; a Function picks it up.",
+    "icon": "storage-queue",
+    "lessons": ["3.1"],
+    "related": ["Storage account", "Azure Functions", "Trigger"]
+  },
+  {
+    "term": "Table storage",
+    "aliases": ["Azure Table Storage", "storage tables"],
+    "definition": "A schemaless key-value store inside a storage account: each entity has a partition key and a row key, up to 255 properties and 1 MB, and nothing else is indexed. It is very cheap for lookups by key and hopeless for joins or ad-hoc queries. Cosmos DB's Table API offers the same model with global distribution and indexing when you outgrow it.",
+    "example": "Device heartbeat rows keyed by store number and timestamp, queried only by key.",
+    "icon": "table",
+    "lessons": ["3.1"],
+    "related": ["Storage account", "Azure SQL Database", "Queue storage"]
+  },
+  {
+    "term": "Hierarchical namespace",
+    "aliases": ["Data Lake Storage Gen2", "ADLS Gen2", "HNS"],
+    "definition": "An account-level option that gives blob containers real directories with atomic renames and POSIX-style access control lists, turning the account into Azure Data Lake Storage Gen2. It is the foundation for Synapse, Databricks and Microsoft Fabric workloads. Enable it for analytics accounts only: some blob features differ, and once on it cannot be turned off.",
+    "example": "stshopanalytics has hierarchical namespace on so Synapse can read /sales/2026/09/ as a folder.",
+    "icon": "data-lake",
+    "lessons": ["3.1"],
+    "related": ["Blob storage", "Storage account", "Storage container"]
+  },
+  {
+    "term": "Storage account key",
+    "aliases": ["account key", "shared key", "access key"],
+    "definition": "One of two root secrets on a storage account that grant every permission on every service in it. Anyone holding a key is effectively the account owner, and keys leak through config files, pipelines and screenshots. Rotate them, and in production disable shared-key access entirely so that only Entra ID and user delegation SAS work.",
+    "example": "Azure Policy denies any storage account in rg-shop-prod with shared-key access enabled.",
+    "icon": "key-vault",
+    "lessons": ["3.1"],
+    "related": ["Shared access signature", "Managed identity", "Role-based access control"]
+  },
+  {
+    "term": "Storage Explorer",
+    "aliases": ["Azure Storage Explorer"],
+    "definition": "Microsoft's free desktop client for browsing storage accounts: upload and download blobs, inspect queues and tables, set tiers, and generate SAS tokens. It signs in with Entra ID or a connection string and also connects to Azurite, the local emulator, so developers can work against blobs, queues and tables with no Azure subscription.",
+    "example": "Ana uses Storage Explorer against Azurite on her laptop, then against stshopdev with her Entra login.",
+    "icon": "storage-explorer",
+    "lessons": ["3.1"],
+    "related": ["Storage account", "Shared access signature", "Blob storage"]
+  }
+]

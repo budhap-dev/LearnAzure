@@ -30,7 +30,7 @@ lesson quizzes, timed, graded). A **final learning test** draws from the whole c
 |---|--------|---------|-------|
 | 1 | Cloud and Azure foundations ✅ | 8 | What cloud is, how Azure is organised, cost, SLAs |
 | 2 | Compute and hosting ✅ | 7 | VMs, App Service, Static Web Apps, Functions, containers, AKS |
-| 3 | Storage and data | 7 | Storage accounts, Azure SQL, Cosmos DB, Redis, choosing a store |
+| 3 | Storage and data ✅ | 7 | Storage accounts, Azure SQL, Cosmos DB, Redis, choosing a store |
 | 4 | Networking, identity and security | 8 | VNets, load balancing, private endpoints, Entra ID, RBAC, Key Vault, Defender |
 | 5 | Integration and messaging | 6 | Service Bus, Event Grid, Event Hubs, API Management, Logic Apps |
 | 6 | Observability and reliability | 6 | Monitor, Log Analytics, App Insights, alerts, Well-Architected, HA/DR |
@@ -71,6 +71,26 @@ at random from the lesson quizzes, over 25 minutes. 97 glossary terms.
 
 Every way Azure runs code, each lesson naming what the service is for, what it costs, how it
 scales and what it cannot do. The module ends with a decision guide for design reviews.
+
+### Module 3 — Storage and data — **shipped**
+
+| Id | Lesson |
+|----|--------|
+| 3.1 | Storage accounts - blobs, files, queues and tables |
+| 3.2 | Azure SQL for the SQL Server professional |
+| 3.3 | Cosmos DB - planet-scale NoSQL |
+| 3.4 | Caching with Azure Cache for Redis |
+| 3.5 | Open-source databases - PostgreSQL and MySQL on Azure |
+| 3.6 | Backup, recovery and data protection |
+| 3.7 | Choosing a data store - a decision guide |
+
+Where data lives and how to choose, written for a SQL Server professional. Each store lesson
+names the data shape it suits, its cost driver, its scale model and what breaks; 3.6 argues
+that nobody has a backup until they have restored from it; 3.7 is the decision guide for
+design reviews.
+
+Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
+at random from the lesson quizzes. 88 new glossary terms (249 in total).
 
 ## App architecture
 

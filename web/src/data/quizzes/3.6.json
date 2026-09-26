@@ -1,0 +1,113 @@
+[
+  {
+    "id": "3.6-q1",
+    "topic": "redundancy versus backup",
+    "scenario": "A contractor's script deletes forty thousand orders from a zone-redundant Azure SQL database at 16:40. The ops lead says the data is safe because the database is replicated across three zones.",
+    "stem": "Why is the ops lead wrong, and what actually recovers the orders?",
+    "options": [
+      "Zone redundancy only protects data written in the last 24 hours; older rows need geo-replication",
+      "Zone replicas copy every write including the delete, so only a point-in-time restore to 16:39 brings the orders back",
+      "The replicas hold the old rows for 14 days, so failing over to a secondary zone recovers them",
+      "The delete is held in the transaction log for 35 days and can be rolled back from the portal"
+    ],
+    "answer": 1,
+    "explanation": "Redundancy keeps the service up when hardware fails by copying every write immediately - including the bad ones - so the deleted rows are gone from all three zones within milliseconds. Failing over to another zone is the tempting answer because 'replica' sounds like 'copy', but a replica is not frozen at a point in time; only a PITR to before 16:40, into a new database, gets the orders back."
+  },
+  {
+    "id": "3.6-q2",
+    "topic": "retention",
+    "scenario": "A migration silently corrupted product prices; the finance team noticed six weeks later. The Azure SQL database has default backup settings.",
+    "stem": "Can the pre-migration data be recovered, and what should change?",
+    "options": [
+      "Yes, geo-restore uses geo-redundant backup storage which keeps copies for 90 days",
+      "Yes, the default 35-day PITR window covers it as long as the database was not deleted",
+      "No, default PITR is 7 days and even the maximum is 35; configure long-term retention so weekly or monthly fulls outlast the time it takes to notice a problem",
+      "No, Azure SQL backups are overwritten daily; export a BACPAC every night to a storage account instead"
+    ],
+    "answer": 2,
+    "explanation": "Default PITR retention is 7 days and can be raised to 35, neither of which reaches six weeks; long-term retention keeps weekly, monthly or yearly full backups for up to 10 years, which is precisely for problems noticed late. Geo-restore is about surviving a lost region, not longer retention - it restores from the same backup window, just from the region pair's copy."
+  },
+  {
+    "id": "3.6-q3",
+    "topic": "vaults",
+    "scenario": "Priya's team needs backups for a legacy warehouse VM with SQL Server installed on it, an Azure Files share, and the product-image blob container.",
+    "stem": "Which vault types are needed?",
+    "options": [
+      "One Recovery Services vault for everything, since it is the general-purpose Azure Backup container",
+      "A Recovery Services vault for the VM, SQL-in-VM and Files, plus a Backup vault for the blobs",
+      "A Backup vault for everything, because Recovery Services vaults are being retired",
+      "No vault for the VM, since managed disks are backed up automatically, and a Backup vault for the Files share"
+    ],
+    "answer": 1,
+    "explanation": "Recovery Services vaults protect VMs, SQL Server and SAP HANA inside VMs, and Azure Files; Backup vaults protect blobs, managed disks, PostgreSQL Flexible Servers and AKS, so this workload needs one of each. Managed disks are not backed up automatically - they are redundant, which is a different thing - so the VM still needs a policy."
+  },
+  {
+    "id": "3.6-q4",
+    "topic": "ransomware",
+    "scenario": "A security review asks what happens if an attacker obtains a backup administrator's credentials and deletes every recovery point before encrypting the VMs.",
+    "stem": "Which two vault settings answer that review?",
+    "options": [
+      "Geo-redundant vault storage and a resource lock on the vault",
+      "Soft delete, which keeps deleted backup data for 14 days, and multi-user authorisation, which needs a second person to approve destructive changes",
+      "Customer-managed keys for the vault and a shorter retention period to limit exposure",
+      "Immutable WORM storage on the VM disks and daily backups instead of weekly"
+    ],
+    "answer": 1,
+    "explanation": "Vault soft delete means a deleted recovery point is recoverable for 14 days at no cost, and multi-user authorisation with a Resource Guard means one stolen identity cannot turn soft delete off or shorten retention. A resource lock on the vault is a reasonable extra, but a compromised admin can remove a lock; geo-redundancy does nothing about deletion because the deletion replicates too."
+  },
+  {
+    "id": "3.6-q5",
+    "topic": "deletion",
+    "stem": "Which statement about deleted resources and their backups is correct?",
+    "options": [
+      "Deleting an Azure SQL logical server keeps PITR backups for the full retention window",
+      "A deleted PostgreSQL Flexible Server keeps its automated backups for only about 5 days",
+      "Deleting a resource group leaves every backup inside it intact because backups are held in a separate subscription",
+      "Long-term retention backups are deleted the moment the database is dropped"
+    ],
+    "answer": 1,
+    "explanation": "Flexible Server gives you roughly 5 days to restore a deleted server before its backups go too, which is why a resource lock on the production resource group is worth having. Deleting an Azure SQL database keeps PITR for the retention window, but deleting the logical server removes PITR and only LTR survives - so the first option is the reverse of the truth."
+  },
+  {
+    "id": "3.6-q6",
+    "topic": "blob protection",
+    "scenario": "A clean-up job deleted a year of product images from a storage account last month. The account has no extra settings enabled.",
+    "stem": "Which protection would have allowed a self-service recovery, and why did it not exist?",
+    "options": [
+      "Geo-redundant storage; the account was LRS so the images were never copied elsewhere",
+      "Blob soft delete and versioning; blob storage protects nothing against deletion until you turn them on",
+      "Azure SQL long-term retention; the images should have been stored as varbinary in the database",
+      "Cosmos DB continuous backup; the storage account should have been a Cosmos DB account"
+    ],
+    "answer": 1,
+    "explanation": "Blob soft delete keeps deleted blobs for 1 to 365 days and versioning keeps overwritten ones, but both are off until someone switches them on; with neither, a delete is final. GRS is the tempting answer, but a geo-replica replicates the delete just as faithfully as a zone replica does."
+  },
+  {
+    "id": "3.6-q7",
+    "topic": "customer-managed keys",
+    "scenario": "Auditors require customer-managed keys for the shop's databases and backups. An engineer proposes putting the key in Key Vault and moving on.",
+    "stem": "What must be in place before the switch, and why?",
+    "options": [
+      "Purge protection on the Key Vault, because if the key is deleted or expires every backup encrypted with it becomes unreadable",
+      "A second Key Vault in the paired region, because CMK requires the key to exist in both regions of a pair",
+      "A longer PITR window, because CMK-encrypted backups take longer to restore",
+      "Nothing extra; Azure keeps a Microsoft-managed copy of the key as a fallback"
+    ],
+    "answer": 0,
+    "explanation": "With a customer-managed key, Microsoft cannot read your data or backups without it, so a tidied-up or expired key turns every backup into noise; purge protection and a documented key-recovery path stop that. There is no Microsoft fallback copy - that is the entire point of CMK, and why the last option is dangerous."
+  },
+  {
+    "id": "3.6-q8",
+    "topic": "restore test",
+    "scenario": "Dev reports that backups run every night and the RTO for the orders database is 'about 30 minutes', but nobody on the team has ever restored one.",
+    "stem": "What is the right response in the design review?",
+    "options": [
+      "Accept the figure; Azure publishes restore times for each service tier so the estimate is reliable",
+      "Move the database to a failover group, which removes the need for restores altogether",
+      "Schedule a restore drill into a throw-away resource group, time it end to end, and record the measured RTO in the runbook",
+      "Shorten the backup interval to every 15 minutes so the RTO drops proportionally"
+    ],
+    "answer": 2,
+    "explanation": "Until someone has restored from a real backup, the RTO is a guess and the runbook is untested; a quarterly drill measures the real time, including finding the button and getting approvals. A failover group is an HA and DR tool that replicates deletes as faithfully as any replica, and the backup interval changes RPO, not RTO."
+  }
+]

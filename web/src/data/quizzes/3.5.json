@@ -1,0 +1,113 @@
+[
+  {
+    "id": "3.5-q1",
+    "topic": "Flexible Server",
+    "scenario": "A contractor's design document proposes Azure Database for PostgreSQL Single Server because it is \"the simpler option\".",
+    "stem": "What should you tell them?",
+    "options": [
+      "Single Server is retired; Flexible Server is the only current deployment option for both PostgreSQL and MySQL",
+      "Single Server is fine for dev and test but Flexible Server is required for production SLAs",
+      "Single Server is the MySQL name and Flexible Server is the PostgreSQL name for the same service",
+      "Either is fine, since Azure migrates Single Server to Flexible Server automatically at the first major version upgrade"
+    ],
+    "answer": 0,
+    "explanation": "Single Server has been retired, so any document or article that recommends it is out of date; Flexible Server is the one shape both engines now come in, for dev and production alike. The dev-versus-production split sounds plausible because Flexible Server does have production features Single Server lacked, but the real reason is simpler: you cannot create a Single Server any more."
+  },
+  {
+    "id": "3.5-q2",
+    "topic": "compute tiers",
+    "scenario": "To save money, a team runs the nightly product-catalogue import on a Burstable B1ms server. The first hour is fine, then the import slows to a crawl and the CPU graph flatlines at a low percentage.",
+    "stem": "What is the most likely cause?",
+    "options": [
+      "The storage has run out of IOPS and needs to be resized",
+      "The server has exhausted its CPU credits, and Burstable tiers throttle once the credit bank is empty",
+      "PgBouncer is limiting the import to a single real connection",
+      "Automated backups start at that hour and take priority over user queries"
+    ],
+    "answer": 1,
+    "explanation": "Burstable servers bank CPU credits while idle and spend them under load; a sustained job empties the bank and the server is throttled to its baseline, which looks exactly like a flatlined CPU graph. IOPS starvation is the tempting alternative, but it would show as high I/O wait rather than a CPU ceiling, and the fix here is a General Purpose tier for sustained work."
+  },
+  {
+    "id": "3.5-q3",
+    "topic": "high availability",
+    "scenario": "Priya's team has enabled zone-redundant HA on the reviews database and expects the standby to also absorb reporting queries.",
+    "stem": "Which statement is correct?",
+    "options": [
+      "The standby serves read-only queries automatically, so reports will offload from the primary",
+      "The standby is synchronous and not readable; HA roughly doubles the compute cost and buys automatic failover, not capacity",
+      "The standby is readable but only if the application connects through PgBouncer",
+      "HA is free on General Purpose and above; only Burstable tiers pay extra for a standby"
+    ],
+    "answer": 1,
+    "explanation": "Zone-redundant HA keeps a synchronous standby in another zone purely as insurance: it takes over within minutes if the primary fails, it cannot be queried, and it costs a second server's worth of compute. Read capacity comes from a read replica, which is a different, asynchronous feature - confusing the two is the most common HA misunderstanding on Flexible Server."
+  },
+  {
+    "id": "3.5-q4",
+    "topic": "read replicas",
+    "scenario": "A finance report runs against a read replica in a second region, and the analyst complains that this morning's orders are missing even though the primary has them.",
+    "stem": "What is happening, and is it a fault?",
+    "options": [
+      "The replica has failed over and is now the primary, so the two servers have diverged",
+      "Replication is asynchronous, so the replica can lag behind the primary; this is expected behaviour, not a fault",
+      "Cross-region replicas only sync once a day at the backup window",
+      "The replica's PgBouncer cache is serving stale results and needs to be flushed"
+    ],
+    "answer": 1,
+    "explanation": "Read replicas are fed asynchronously, so under load they can be seconds to minutes behind, and reports that need up-to-the-second data should run on the primary or tolerate the lag. The daily-sync option is plausible-sounding but wrong - replication is continuous - and PgBouncer pools connections, it never caches query results."
+  },
+  {
+    "id": "3.5-q5",
+    "topic": "connection pooling",
+    "scenario": "The Node reviews API uses the pg library with a pool of 20 per instance. During a sale, App Service autoscales from 4 to 30 instances and the database starts rejecting new logins with \"too many connections\".",
+    "stem": "What is the right fix?",
+    "options": [
+      "Scale the database to Memory Optimised, which raises the connection limit enough for any pool size",
+      "Enable the built-in PgBouncer and connect the app to port 6432, so hundreds of app connections are multiplexed onto a few real ones",
+      "Set the pool size to 1 per instance so the total never exceeds the instance count",
+      "Enable zone-redundant HA so the standby accepts the overflow connections"
+    ],
+    "answer": 1,
+    "explanation": "Thirty instances times a pool of 20 is 600 connections, more than a small server allows, and every PostgreSQL connection is a process with real memory cost; PgBouncer sits in front of the engine and lets the app keep its pools while the database sees a small, stable number. A bigger tier does raise the limit, but it treats the symptom at several times the price, and a pool of 1 would throttle the app instead of the problem."
+  },
+  {
+    "id": "3.5-q6",
+    "topic": "collation",
+    "stem": "A query ported from SQL Server, `WHERE email = 'Ana@Shop.com'`, returns rows on SQL Server but nothing on PostgreSQL with the same data. Why?",
+    "options": [
+      "PostgreSQL requires single quotes to be escaped inside string literals",
+      "PostgreSQL's default collation is case-sensitive, whereas SQL Server's default is case-insensitive",
+      "PostgreSQL stores email addresses as a distinct type that normalises to lower case",
+      "The PostgreSQL server has an extension disabled that handles text comparison"
+    ],
+    "answer": 1,
+    "explanation": "SQL Server's default collations are case-insensitive, so years of queries silently ignore case; PostgreSQL compares text exactly unless you use ILIKE, lower(), a case-insensitive collation or the citext extension. It is a schema-design decision to make before migrating, not a missing extension to switch on."
+  },
+  {
+    "id": "3.5-q7",
+    "topic": "choosing the engine",
+    "scenario": "Finance argues the shop should move its main orders database from Azure SQL to PostgreSQL Flexible Server \"because open source is free\".",
+    "stem": "What is the most accurate response?",
+    "options": [
+      "Correct: Flexible Server has no compute charge, only storage, so the saving is most of the bill",
+      "Open source removes the licence component only; you still pay for compute, storage, HA and replicas, and gain a second engine and dialect the team must learn and operate",
+      "Incorrect: Azure charges a PostgreSQL support licence per vCore that roughly matches SQL Server's",
+      "Correct, but only if the team uses MySQL, since PostgreSQL carries a licence fee on Azure"
+    ],
+    "answer": 1,
+    "explanation": "Neither engine has a licence line, and that is a real saving against Azure SQL, but compute, storage, a doubled bill for HA and any replicas remain - and moving a T-SQL codebase means rewriting stored procedures and retraining the ops team. The \"only storage\" option is the seductive one; a 2-vCore General Purpose server alone is around $130-150 a month before storage or HA."
+  },
+  {
+    "id": "3.5-q8",
+    "topic": "extensions and AI",
+    "scenario": "The recommendations team wants to store product embeddings and run nearest-neighbour searches without adding a separate search service.",
+    "stem": "Which choice fits best?",
+    "options": [
+      "Azure Database for MySQL Flexible Server with the pgvector plug-in enabled",
+      "Azure Database for PostgreSQL Flexible Server with the pgvector extension allow-listed and enabled",
+      "Azure SQL Database, because vector search is built into every service tier",
+      "A read replica of the existing MySQL server, which supports vector indexes natively"
+    ],
+    "answer": 1,
+    "explanation": "pgvector is a PostgreSQL extension, enabled per server from the allow-list, that adds a vector column type and similarity search - which is precisely why a Postgres team reaches for it and why it is the hook for the AI work in Module 8. MySQL has no extension mechanism, so the first option cannot exist, and a read replica inherits whatever the primary has and adds no new capability."
+  }
+]

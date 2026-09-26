@@ -1,0 +1,119 @@
+[
+  {
+    "term": "Azure SQL",
+    "aliases": ["Azure SQL family"],
+    "definition": "The umbrella brand for running the SQL Server engine on Azure in three flavours: Azure SQL Database (PaaS, per database), Azure SQL Managed Instance (PaaS, near-100% compatible) and SQL Server on Azure Virtual Machines (IaaS). Same engine and T-SQL throughout; what changes is control, compatibility and who patches. When someone says 'Azure SQL', ask which of the three they mean.",
+    "example": "Priya's review compared all three Azure SQL flavours and chose Managed Instance because of the Agent jobs and linked server.",
+    "icon": "azure-sql",
+    "lessons": ["3.2"],
+    "related": ["Azure SQL Database", "Azure SQL Managed Instance", "SQL Server on Azure Virtual Machines"]
+  },
+  {
+    "term": "Azure SQL Managed Instance",
+    "aliases": ["SQL Managed Instance", "SQL MI", "Managed Instance"],
+    "definition": "A PaaS deployment of a whole SQL Server instance with near-100% compatibility: SQL Agent, cross-database queries, linked servers, CLR, Service Broker and native restore from .bak, inside its own virtual network subnet. Microsoft patches and backs it up. It starts at around 4 vCores, roughly $700 a month at list price before Hybrid Benefit, and creating or resizing one takes minutes to hours rather than seconds.",
+    "example": "The orders and reporting databases moved to one Managed Instance so the existing cross-database joins and Agent jobs kept working.",
+    "icon": "sql-managed-instance",
+    "lessons": ["3.2"],
+    "related": ["Azure SQL", "Azure SQL Database", "Failover group", "PaaS"]
+  },
+  {
+    "term": "SQL Server on Azure Virtual Machines",
+    "aliases": ["SQL Server on Azure VMs", "SQL VM", "SQL Server VM"],
+    "definition": "SQL Server installed on an Azure virtual machine: IaaS with full control over the OS, the engine version and every feature, including ones PaaS cannot offer such as FILESTREAM or SSRS on the same box. You patch the OS and engine and design your own high availability and backups, though an Azure extension automates some of it. Azure Hybrid Benefit applies to the licence.",
+    "example": "A legacy app needing FILESTREAM and a pinned cumulative update stayed on a SQL Server VM while everything else went PaaS.",
+    "icon": "sql-vm",
+    "lessons": ["3.2"],
+    "related": ["Azure SQL", "IaaS", "Virtual machine", "Azure Hybrid Benefit"]
+  },
+  {
+    "term": "DTU",
+    "aliases": ["Database Transaction Unit", "eDTU", "DTU model"],
+    "definition": "The older Azure SQL Database purchasing model, which bundles CPU, memory and I/O into a single number per database. Basic is 5 DTUs for about $5 a month; Standard runs from about $15 (S0, 10 DTUs) to $150 (S3, 100 DTUs) and beyond. Cheap at the bottom, but when the meter reads 100% you cannot tell which resource is saturated or buy more of just that one.",
+    "example": "The checkout API crawled every Saturday on an S0 database pinned at 100% DTU until the team moved it to vCore.",
+    "icon": "sql-database",
+    "lessons": ["3.2"],
+    "related": ["vCore", "Elastic pool", "Azure SQL Database"]
+  },
+  {
+    "term": "vCore",
+    "aliases": ["vCore model", "virtual core"],
+    "definition": "The current Azure SQL purchasing model: you choose a number of virtual cores, and compute, memory and storage are priced and sized separately. It supports Azure Hybrid Benefit and reservations, and is the only model for Managed Instance and Hyperscale. A 2-vCore General Purpose database is roughly $370 a month at list price before Hybrid Benefit removes the licence element.",
+    "example": "Production runs on 4 vCores General Purpose with Hybrid Benefit applied; dev runs serverless with a 1-vCore maximum.",
+    "icon": "azure-sql",
+    "lessons": ["3.2"],
+    "related": ["DTU", "Service tier", "Azure Hybrid Benefit", "Reservation"]
+  },
+  {
+    "term": "Service tier",
+    "aliases": ["General Purpose", "Business Critical", "Azure SQL service tiers"],
+    "definition": "The architecture under an Azure SQL vCore database: General Purpose (stateless compute over remote premium storage, the default), Business Critical (local SSD and a three-replica cluster with a readable secondary, roughly 2.5-3x the price) and Hyperscale (page-server storage for very large databases). Pick General Purpose unless you can name the latency, replica or size requirement that needs another tier - a dev database on Business Critical is pure waste.",
+    "example": "Orders went General Purpose with zone redundancy; the trading engine's ledger, which needs sub-millisecond I/O, went Business Critical.",
+    "icon": "sql-database",
+    "lessons": ["3.2"],
+    "related": ["vCore", "Hyperscale", "Read scale-out", "Zone-redundant"]
+  },
+  {
+    "term": "Hyperscale",
+    "aliases": ["Hyperscale tier"],
+    "definition": "The Azure SQL Database service tier built on page servers and a separate log service rather than a conventional data file, so a database can grow to around 128 TB and restore in minutes regardless of size. It also supports several named read-only replicas. Use it when a database will outgrow the 4 TB of the other tiers, not as a general-purpose default; storage is billed per GB consumed.",
+    "example": "The clickstream database passed 5 TB and moved to Hyperscale so backups and restores stopped taking most of a day.",
+    "icon": "sql-database",
+    "lessons": ["3.2"],
+    "related": ["Service tier", "vCore", "Read scale-out"]
+  },
+  {
+    "term": "Serverless compute tier",
+    "aliases": ["SQL serverless", "auto-pause"],
+    "definition": "An Azure SQL Database compute option that bills per vCore-second between a minimum and maximum you set, and auto-pauses after a period idle (one hour by default), when only storage is charged. Ideal for dev, test and rarely used internal databases. The first connection after a pause takes about a minute to resume and fails until it does, so the application needs retry logic.",
+    "example": "Every developer's copy of the shop database is serverless and pauses overnight, so the whole dev estate costs less than one production database.",
+    "icon": "sql-database",
+    "lessons": ["3.2"],
+    "related": ["Serverless", "vCore", "Transient fault", "Service tier"]
+  },
+  {
+    "term": "Elastic pool",
+    "aliases": ["SQL elastic pool", "elastic database pool"],
+    "definition": "A shared budget of vCores or eDTUs that many Azure SQL databases on one server draw from, so databases that peak at different times share capacity instead of each being sized for its own peak. It suits one-database-per-tenant designs. It saves nothing if the databases peak together, and a pool sized for the sum of every peak is the classic way to pay more than separate databases would cost.",
+    "example": "Forty small tenant databases sit in one 4-vCore pool rather than each paying for its own compute.",
+    "icon": "sql-elastic-pools",
+    "lessons": ["3.2"],
+    "related": ["DTU", "vCore", "Azure SQL Database"]
+  },
+  {
+    "term": "Failover group",
+    "aliases": ["auto-failover group", "FOG"],
+    "definition": "A set of Azure SQL databases or a Managed Instance replicated asynchronously to a secondary server in another region, usually the region pair, behind one listener DNS name. Failover moves the whole group together and can be automatic after a grace period (one hour by default), and applications keep the same connection string. It is the cloud shape of an Always On availability group listener, but replication is asynchronous, so a forced failover can lose the last few seconds of commits.",
+    "example": "shop-orders.database.windows.net points at UK South today and at UK West after a failover, and the Node API never changes its config.",
+    "icon": "azure-sql",
+    "lessons": ["3.2"],
+    "related": ["Active geo-replication", "Region pair", "Disaster recovery", "RPO"]
+  },
+  {
+    "term": "Active geo-replication",
+    "aliases": ["geo-replication", "geo-secondary"],
+    "definition": "Azure SQL Database's asynchronous replication of one database to up to four readable secondaries in other regions - log shipping done for you. Failover is per database and manual, and you repoint connection strings yourself; a failover group adds the listener name and group-level failover on top. Managed Instance does not support it and uses failover groups instead.",
+    "example": "A read-only geo-secondary in UK West serves the reporting dashboards and doubles as the DR copy.",
+    "icon": "sql-database",
+    "lessons": ["3.2"],
+    "related": ["Failover group", "Read scale-out", "Disaster recovery", "Region pair"]
+  },
+  {
+    "term": "Transparent data encryption",
+    "aliases": ["TDE"],
+    "definition": "Encryption of database files, logs and backups at rest, on by default for every new Azure SQL database with a Microsoft-managed key. You can bring your own key from Key Vault when compliance requires it, at the cost of owning the key's lifecycle - lose it and the database is unreadable. TDE protects storage, not connections or queries, so it is no substitute for Entra ID authentication and a private endpoint.",
+    "example": "The auditor's 'is data encrypted at rest?' question was answered by the TDE setting that had been on since the database was created.",
+    "icon": "key-vault",
+    "lessons": ["3.2"],
+    "related": ["Key Vault", "Azure SQL Database", "Managed identity"]
+  },
+  {
+    "term": "Read scale-out",
+    "aliases": ["read-only replica", "ApplicationIntent=ReadOnly"],
+    "definition": "Routing read-only queries to a replica of an Azure SQL database by adding ApplicationIntent=ReadOnly to the connection string, the same trick as a readable Always On secondary. It is included with Business Critical and Hyperscale, and available on geo-secondaries. The replica lags slightly and does not raise the write ceiling, so it helps reporting, not checkout.",
+    "example": "The nightly reconciliation reports moved to ApplicationIntent=ReadOnly and stopped competing with checkout for the primary's CPU.",
+    "icon": "sql-database",
+    "lessons": ["3.2"],
+    "related": ["Service tier", "Active geo-replication", "Hyperscale"]
+  }
+]

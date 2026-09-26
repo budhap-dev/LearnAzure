@@ -1,0 +1,112 @@
+[
+  {
+    "id": "3.4-q1",
+    "topic": "cache-aside",
+    "scenario": "The product page runs six SQL queries per view and the same products are viewed thousands of times an hour.",
+    "stem": "Which pattern should the Node API use with Azure Cache for Redis?",
+    "options": [
+      "Cache-aside: check Redis first, on a miss query SQL and store the result with a TTL",
+      "Write-through: every SQL read is copied into Redis by a database trigger",
+      "Replace the product tables with Redis so reads never reach the database",
+      "Enable persistence on the cache so it becomes the primary copy of product data"
+    ],
+    "answer": 0,
+    "explanation": "Cache-aside is the standard pattern: the application asks the cache, falls back to the database on a miss, and fills the cache for the next request, with a TTL bounding how stale the copy can be. Replacing the tables is tempting because it removes the query entirely, but Redis is a copy, not a system of record - a restart or scale operation on Basic or Standard empties it."
+  },
+  {
+    "id": "3.4-q2",
+    "topic": "session state",
+    "scenario": "After the API scaled out to three App Service instances, shoppers report that their baskets vanish between page loads.",
+    "stem": "What is the most likely cause, and the best fix?",
+    "options": [
+      "Autoscale is restarting instances; scale back to one instance",
+      "Sessions are held in each instance's memory; move them to a shared Redis store",
+      "The database connection pool is too small; scale up Azure SQL",
+      "The React app is caching stale responses; shorten its query cache time"
+    ],
+    "answer": 1,
+    "explanation": "In-memory session state only exists on the instance that created it, so a shopper routed to a different instance appears to have no basket - an external session store in Redis makes every instance interchangeable. Scaling back to one instance would hide the symptom by removing the scale-out you needed, and sticky sessions would only postpone it until an instance restarts."
+  },
+  {
+    "id": "3.4-q3",
+    "topic": "tiers",
+    "scenario": "A team wants to put the production checkout's session store on the cheapest Azure Cache for Redis tier to save money.",
+    "stem": "What should you tell them about the Basic tier?",
+    "options": [
+      "It is fine for production as long as the cache is under 1 GB",
+      "It has no SLA and a single node, so any maintenance or failure drops every session; Standard is the production floor",
+      "It cannot be reached from App Service, only from virtual machines",
+      "It has the same SLA as Standard but without TLS"
+    ],
+    "answer": 1,
+    "explanation": "Basic is a single node with no SLA, meant for development and testing; Standard adds a replicated second node and the 99.9% SLA that a customer-facing store needs. The size limit is a distractor - Basic comes in the same sizes as Standard, it is the missing replica that rules it out."
+  },
+  {
+    "id": "3.4-q4",
+    "topic": "eviction policy",
+    "stem": "A cache is full and writes are being rejected, even though most keys have not been read for days. Which change fixes it?",
+    "options": [
+      "Scale up to a Premium tier, which never runs out of memory",
+      "Set the eviction policy to allkeys-lru so the least recently used keys are dropped when memory is full",
+      "Lower the TTL on new keys to five seconds",
+      "Enable clustering so keys are spread across shards"
+    ],
+    "answer": 1,
+    "explanation": "The Azure default of volatile-lru only evicts keys that carry a TTL, so a cache full of keys written without one fills up and rejects writes - allkeys-lru evicts on recency regardless. Premium and clustering give more memory but the same policy fills that too; they postpone the problem rather than fix it."
+  },
+  {
+    "id": "3.4-q5",
+    "topic": "connection management",
+    "scenario": "A Node API on three instances works for a few minutes after each deploy and then starts failing with Redis connection errors, while the cache shows near-zero CPU.",
+    "stem": "What is the most likely cause?",
+    "options": [
+      "The cache is undersized; scale from C1 to C2",
+      "The code creates a new Redis client on every request and exhausts the cache's connection limit",
+      "TLS handshakes are too slow on the Standard tier",
+      "The eviction policy is deleting the connection keys"
+    ],
+    "answer": 1,
+    "explanation": "A Standard C1 allows roughly a thousand client connections, and a client-per-request pattern burns through that in minutes while leaving CPU and memory idle - the fix is one client per process created at start-up. Scaling to C2 raises the limit and buys a few more minutes; it does not remove the leak."
+  },
+  {
+    "id": "3.4-q6",
+    "topic": "cache stampede",
+    "scenario": "Every hour, on the minute, Azure SQL CPU spikes to 100% for ten seconds and the homepage times out. The homepage is cached in Redis with a one-hour TTL.",
+    "stem": "What is happening?",
+    "options": [
+      "A cache stampede: the key expires, hundreds of concurrent requests all miss and all query SQL at once",
+      "Redis is persisting to disk on the hour and blocking reads",
+      "The TTL is too long, so the data is stale and SQL is rechecking it",
+      "App Service autoscale is adding instances on the hour"
+    ],
+    "answer": 0,
+    "explanation": "When a popular key expires, every request that arrives before the first refill completes is a miss, and they all hit the database together - staggered TTLs, a refresh-ahead job or a lock on the refill prevent it. A too-long TTL causes staleness, not load; the spike is precisely the moment the cache is empty."
+  },
+  {
+    "id": "3.4-q7",
+    "topic": "staleness",
+    "scenario": "Product prices are cached for ten minutes. Finance updates a price and the old one keeps showing at checkout for several minutes.",
+    "stem": "What is the right fix?",
+    "options": [
+      "Stop caching prices, because any cache is unsafe for money",
+      "Delete or update the cached key when the price is written, and keep the TTL as a backstop",
+      "Raise the TTL so the cache is refreshed less often",
+      "Move the price cache to the Premium tier, which stays in sync with the database"
+    ],
+    "answer": 1,
+    "explanation": "Cache-aside needs invalidation on write for anything a customer acts on: the save path deletes the key, and the TTL only covers whatever the invalidation misses. No tier of Redis synchronises itself with Azure SQL, so Premium changes nothing here, and removing the cache throws away the performance win when a one-line invalidation solves it."
+  },
+  {
+    "id": "3.4-q8",
+    "topic": "sizing and cost",
+    "stem": "Which statement about the cost and sizing of Azure Cache for Redis is correct?",
+    "options": [
+      "It is billed per request, so an empty cache costs nothing",
+      "It is billed per hour by cache size and tier, so you size it by how much data must fit in memory",
+      "It is billed per vCore, so you size it by expected CPU load",
+      "It is free on Standard up to 1 GB and billed above that"
+    ],
+    "answer": 1,
+    "explanation": "The meter runs per hour for the size and tier you provisioned whether the cache is full or empty, and memory is the constraint - a 1 GB Standard C1 is roughly $100 a month regardless of traffic. Per-request pricing is how Cosmos DB and Functions think, and it is a common assumption that leads teams to leave idle caches running."
+  }
+]

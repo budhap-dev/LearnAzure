@@ -105,6 +105,11 @@ function overlapsAnyNode(x: number, y: number, w: number, nodes: DiagramNode[]):
   });
 }
 
+/** True when a label pill centred at (x, y) would cover a label already placed. */
+function overlapsAnyLabel(x: number, y: number, w: number, placed: { x: number; y: number; w: number }[]): boolean {
+  return placed.some((p) => Math.abs(x - p.x) < (w + p.w) / 2 + 4 && Math.abs(y - p.y) < 24);
+}
+
 /** Rough width of a label in the group font (11.5px, bold) - good enough to size a box. */
 function labelWidth(text: string): number {
   return text.length * 6.4 + 24;
@@ -132,6 +137,9 @@ export function Diagram({ spec }: { spec: DiagramSpec }) {
       return { group: g, minX, minY, maxX, maxY };
     })
     .filter(Boolean) as { group: DiagramGroup; minX: number; minY: number; maxX: number; maxY: number }[];
+
+  // Edge labels placed so far, so a later label never lands on (and hides) an earlier one.
+  const placedLabels: { x: number; y: number; w: number }[] = [];
 
   const width = Math.max(cols * CELL_W + PAD * 2, ...boxes.map((b) => b.maxX + PAD));
   const height = Math.max(rows * CELL_H + PAD * 2, ...boxes.map((b) => b.maxY + PAD));
@@ -170,8 +178,9 @@ export function Diagram({ spec }: { spec: DiagramSpec }) {
             const w = e.label ? e.label.length * 6.4 + 14 : 0;
             let mx = (p1.x + p2.x) / 2;
             let my = (p1.y + p2.y) / 2;
-            // Keep the label off every node box. Try the midpoint, then progressively larger
-            // offsets perpendicular to the edge, and take the first position that is clear.
+            // Keep the label off every node box and every earlier label. Try the midpoint, then
+            // progressively larger offsets perpendicular to the edge, and take the first position
+            // that is clear of both; failing that, the first clear of the boxes.
             if (e.label) {
               const dx = p2.x - p1.x;
               const dy = p2.y - p1.y;
@@ -181,8 +190,10 @@ export function Diagram({ spec }: { spec: DiagramSpec }) {
                 if (horizontal) candidates.push([mx, my - d], [mx, my + d]);
                 else candidates.push([mx + d + w / 2 - 20, my], [mx - d - w / 2 + 20, my]);
               }
-              const clear = candidates.find(([cx, cy]) => !overlapsAnyNode(cx, cy, w, nodes));
-              [mx, my] = clear ?? candidates[candidates.length - 1];
+              const offBoxes = candidates.filter(([cx, cy]) => !overlapsAnyNode(cx, cy, w, nodes));
+              const clear = offBoxes.find(([cx, cy]) => !overlapsAnyLabel(cx, cy, w, placedLabels));
+              [mx, my] = clear ?? offBoxes[0] ?? candidates[candidates.length - 1];
+              placedLabels.push({ x: mx, y: my, w });
             }
             return (
               <g key={i} className={`dg-edge ${e.dashed ? 'dashed' : ''}`} style={{ animationDelay: `${i * 0.15}s` }}>

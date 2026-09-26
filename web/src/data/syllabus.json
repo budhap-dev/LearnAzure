@@ -264,78 +264,120 @@
       "number": 3,
       "title": "Storage and data",
       "tagline": "Storage accounts, Azure SQL, Cosmos DB, Redis and picking the right store for the job.",
-      "description": "Where data lives on Azure and how to choose: blobs, files, queues and tables in a storage account; Azure SQL in its three flavours for a SQL Server person; Cosmos DB for global scale; Redis for speed; and backup and recovery.",
+      "description": "Where data lives on Azure and how to choose, written for a SQL Server professional: blobs, files, queues and tables in a storage account; Azure SQL in its three flavours; Cosmos DB for global scale; Redis for speed; PostgreSQL and MySQL; and backup you have actually restored from. Each store lesson names the data shape it suits, what it costs, how it scales and what breaks - and the module ends with a decision guide you can run in a design review.",
       "icon": "storage-account",
-      "status": "planned",
+      "status": "ready",
       "lessons": [
         {
           "id": "3.1",
           "title": "Storage accounts - blobs, files, queues and tables",
-          "summary": "",
+          "summary": "One resource, four services: blobs, Files, queues and tables, with redundancy options, access tiers and the right way to let an app in.",
           "minutes": 15,
-          "objectives": [],
+          "objectives": [
+            "Say which of the four storage services fits a given piece of data",
+            "Choose a redundancy option and an access tier, and know what archive really costs",
+            "Secure an account with managed identity and short-lived SAS instead of account keys"
+          ],
           "icons": [
-            "storage-account"
+            "storage-account",
+            "blob",
+            "files"
           ]
         },
         {
           "id": "3.2",
           "title": "Azure SQL for the SQL Server professional",
-          "summary": "",
+          "summary": "SQL Database, Managed Instance or SQL Server on a VM; DTU versus vCore, the service tiers, and what your Always On knowledge becomes.",
           "minutes": 16,
-          "objectives": [],
+          "objectives": [
+            "Choose between SQL Database, Managed Instance and SQL Server on a VM from the features an estate uses",
+            "Pick a purchasing model and service tier, and say when serverless or an elastic pool fits",
+            "Explain zone redundancy, active geo-replication and failover groups in availability-group terms"
+          ],
           "icons": [
-            "azure-sql"
+            "azure-sql",
+            "sql-managed-instance",
+            "sql-database"
           ]
         },
         {
           "id": "3.3",
           "title": "Cosmos DB - planet-scale NoSQL",
-          "summary": "",
+          "summary": "Request units, the partition key you cannot change, five consistency levels, multiple regions - and the honest test for whether you need it.",
           "minutes": 14,
-          "objectives": [],
+          "objectives": [
+            "Say which data belongs in Cosmos DB and which should stay relational",
+            "Choose a partition key and recognise a hot partition from its 429s",
+            "Pick a consistency level and capacity mode, and explain what each extra region costs"
+          ],
           "icons": [
-            "cosmos-db"
+            "cosmos-db",
+            "function-apps",
+            "app-service"
           ]
         },
         {
           "id": "3.4",
           "title": "Caching with Azure Cache for Redis",
-          "summary": "",
+          "summary": "Cache-aside, session state across scaled-out instances, the tiers and their SLAs, and the ways a cache shows customers data that is no longer true.",
           "minutes": 10,
-          "objectives": [],
+          "objectives": [
+            "Apply the cache-aside pattern and choose a TTL a customer can live with",
+            "Move session state out of instance memory so the API can scale out",
+            "Pick a tier and eviction policy, and name what breaks when caches go wrong"
+          ],
           "icons": [
-            "redis"
+            "redis",
+            "app-service",
+            "azure-sql"
           ]
         },
         {
           "id": "3.5",
           "title": "Open-source databases - PostgreSQL and MySQL on Azure",
-          "summary": "",
+          "summary": "Flexible Server for PostgreSQL and MySQL: tiers, HA versus read replicas, connection pooling, extensions like pgvector, and the real cost of a second engine.",
           "minutes": 10,
-          "objectives": [],
+          "objectives": [
+            "Explain what Flexible Server manages and what its tiers cost",
+            "Tell zone-redundant HA from a read replica and say what each is for",
+            "Decide whether a second database engine is worth what it adds to the team"
+          ],
           "icons": [
-            "postgresql"
+            "postgresql",
+            "mysql",
+            "database-migration"
           ]
         },
         {
           "id": "3.6",
           "title": "Backup, recovery and data protection",
-          "summary": "",
+          "summary": "Why redundancy is not backup, what each data store protects by default, vaults and Site Recovery, and the restore drill that proves any of it works.",
           "minutes": 12,
-          "objectives": [],
+          "objectives": [
+            "Tell redundancy from backup and match each to the threats it covers",
+            "State the default backup and retention for Azure SQL, Flexible Server, Cosmos DB and blobs",
+            "Run a restore drill and turn it into a measured RTO"
+          ],
           "icons": [
-            "recovery-services-vault"
+            "recovery-services-vault",
+            "backup-vault",
+            "site-recovery"
           ]
         },
         {
           "id": "3.7",
           "title": "Choosing a data store - a decision guide",
-          "summary": "",
+          "summary": "One decision tree, six questions in order, four cost shapes, and how to defend a data-store choice in a design review.",
           "minutes": 12,
-          "objectives": [],
+          "objectives": [
+            "Walk new data through the six questions and land on a store",
+            "Compare per-GB, per-vCore, per-RU and per-cache-size billing for a workload",
+            "Argue a data-store choice to a team, including who owns it and when to revisit it"
+          ],
           "icons": [
-            "data-explorer"
+            "input-output",
+            "azure-sql",
+            "cosmos-db"
           ]
         }
       ]

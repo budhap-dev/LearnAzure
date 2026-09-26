@@ -69,12 +69,12 @@
   },
   {
     "term": "Azure SQL Database",
-    "aliases": ["Azure SQL"],
+    "aliases": ["SQL Database"],
     "definition": "SQL Server run as a managed PaaS service. Your schema, T-SQL and most tooling move as they are; Microsoft owns the engine patching, automated backups, high availability and failover. Some instance-level features need SQL Managed Instance instead.",
     "example": "The retailer's orders database moves from a SQL Server box in the rack to Azure SQL Database with no schema changes.",
     "icon": "azure-sql",
-    "lessons": ["1.2"],
-    "related": ["PaaS", "Managed service"]
+    "lessons": ["1.2", "3.2"],
+    "related": ["Azure SQL", "PaaS", "Managed service"]
   },
   {
     "term": "Static Web Apps",
