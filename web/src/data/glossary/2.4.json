@@ -5,7 +5,7 @@
     "definition": "The one event that causes a function to run - an HTTP request, a timer, a queue message, a blob upload, a change feed entry. Every function has exactly one trigger, and it decides the scaling behaviour and the retry semantics you get. Choosing the trigger is the real design decision; the code inside is usually the easy part.",
     "example": "A queue trigger on the orders queue gives one invocation per message, with retries and dead-lettering for free.",
     "icon": "function-apps",
-    "lessons": ["2.4", "5.3"],
+    "lessons": ["2.4", "5.3", "5.6"],
     "related": ["Binding", "Azure Functions", "Event-driven scaling"]
   },
   {
@@ -80,7 +80,7 @@
     "definition": "An extension that adds state and workflow to Functions: an orchestrator describes the steps in code, activity functions do the work, and entity functions hold small pieces of state. It supports chaining, fan-out/fan-in and waiting days for a human approval. Orchestrator code is replayed from an event history, so it must be deterministic - no clocks, randomness or direct I/O.",
     "example": "An approval workflow waits up to three days for a manager, then takes the timeout branch.",
     "icon": "workflow",
-    "lessons": ["2.4"],
+    "lessons": ["2.4", "5.6"],
     "related": ["Trigger", "Function timeout", "Azure Functions", "Idempotent"]
   }
 ]

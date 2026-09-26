@@ -1,0 +1,203 @@
+{
+  "module": 5,
+  "minutes": 25,
+  "poolFromLessons": 10,
+  "questions": [
+    {
+      "id": "m5-q1",
+      "topic": "synchronous core",
+      "scenario": "A booking API calls payment, sends a confirmation SMS, updates a CRM and writes an audit record before responding. When the SMS provider is slow, bookings time out.",
+      "stem": "What is the best redesign?",
+      "options": [
+        "Increase the API timeout to two minutes",
+        "Authorise the payment synchronously, then publish a BookingConfirmed event that SMS, CRM and audit subscribers handle afterwards",
+        "Call all four in parallel and wait for all of them",
+        "Remove the SMS"
+      ],
+      "answer": 1,
+      "explanation": "Only the payment result matters to the customer at that moment. Publishing one event lets the other work happen independently, so a slow SMS provider delays texts, not bookings. Longer timeouts and parallel calls still tie the booking to every dependency."
+    },
+    {
+      "id": "m5-q2",
+      "topic": "choosing a broker",
+      "scenario": "Four needs arrive in one planning meeting: resize uploaded images; deliver payment instructions to a finance system that must never lose one; notify partners when orders ship; and collect 30,000 telemetry events a second from devices.",
+      "stem": "Which mapping is right?",
+      "options": [
+        "Service Bus for all four",
+        "Images: Event Grid BlobCreated; payments: Service Bus; partner notifications: Event Grid webhooks; telemetry: Event Hubs",
+        "Images: Event Hubs; payments: Event Grid; notifications: Service Bus; telemetry: Queue storage",
+        "Event Hubs for all four"
+      ],
+      "answer": 1,
+      "explanation": "Each service fits a kind of traffic: Event Grid pushes reactions to things happening, Service Bus carries business messages with locks and dead-lettering, and Event Hubs ingests high-volume streams. Using one broker for everything forces the wrong trade-offs on most of the traffic."
+    },
+    {
+      "id": "m5-q3",
+      "topic": "idempotency",
+      "scenario": "A shipping-label service occasionally prints two labels for one order. Logs show the same message delivered twice after a worker restart.",
+      "stem": "What is the correct fix?",
+      "options": [
+        "Configure exactly-once delivery on the broker",
+        "Make the consumer idempotent - record the order ID when a label is printed and skip repeats",
+        "Disable retries",
+        "Restart workers less often"
+      ],
+      "answer": 1,
+      "explanation": "Brokers deliver at least once, and redelivery after a crash or lock expiry is normal. Idempotent consumers turn duplicates into no-ops. Disabling retries loses messages, and restarts cannot be prevented."
+    },
+    {
+      "id": "m5-q4",
+      "topic": "dead-letter ownership",
+      "scenario": "A quarterly review finds 3,000 messages in several Service Bus dead-letter queues, some months old.",
+      "stem": "What should become standard for every queue and subscription?",
+      "options": [
+        "Increase the max delivery count to 100",
+        "An alert on dead-letter count, a named owner, and a tool or runbook to inspect, fix and resubmit",
+        "Switch to receive-and-delete so nothing is dead-lettered",
+        "Purge dead-letter queues weekly"
+      ],
+      "answer": 1,
+      "explanation": "Dead-lettered messages are real work that failed - orders, refunds, updates. They need detection, ownership and a way back into processing. Raising the count delays the same outcome, receive-and-delete loses messages, and purging deletes the evidence and the work."
+    },
+    {
+      "id": "m5-q5",
+      "topic": "per-key ordering",
+      "scenario": "Account updates for the same customer must be applied in order, but updates for different customers should be processed in parallel.",
+      "stem": "Which Service Bus feature fits?",
+      "options": [
+        "Duplicate detection",
+        "Sessions with SessionId set to the customer ID",
+        "A single consumer for the whole queue",
+        "Scheduled messages"
+      ],
+      "answer": 1,
+      "explanation": "Sessions deliver each session's messages to one receiver at a time, in order, while different sessions run in parallel. A single consumer also preserves order but gives up all parallelism; duplicate detection and scheduling do not affect order."
+    },
+    {
+      "id": "m5-q6",
+      "topic": "outbox",
+      "scenario": "An API writes a refund to its database and then publishes RefundIssued. After an outage, finance finds refunds in the database with no matching event.",
+      "stem": "What pattern closes the gap?",
+      "options": [
+        "Publish first, then write to the database",
+        "A transactional outbox: write the refund and an outbox row in one transaction, and relay outbox rows to the broker",
+        "Retry the publish in a catch block",
+        "Use Event Grid instead of Service Bus"
+      ],
+      "answer": 1,
+      "explanation": "A database write and a broker publish cannot share a transaction, so a crash between them leaves the two disagreeing whichever comes first. The outbox makes the event part of the database transaction and lets a relay publish it reliably, relying on duplicate detection and idempotent consumers."
+    },
+    {
+      "id": "m5-q7",
+      "topic": "Event Grid durability",
+      "scenario": "An internal service must process every OrderShipped event, even through a planned three-day outage. Events currently arrive by Event Grid webhook.",
+      "stem": "What should change?",
+      "options": [
+        "Nothing; Event Grid retries until the service returns",
+        "Have the Event Grid subscription deliver into a Service Bus queue that the service reads when it is back",
+        "Poll the shipping API during the outage",
+        "Increase the webhook timeout"
+      ],
+      "answer": 1,
+      "explanation": "Event Grid retries for about 24 hours, then dead-letters or drops. A Service Bus queue holds messages with no deadline until they are read, so pushing Event Grid events into a queue gives the reaction durability. Polling and timeouts do not solve a three-day gap."
+    },
+    {
+      "id": "m5-q8",
+      "topic": "event loops",
+      "scenario": "A function subscribed to BlobCreated on a container writes a watermarked copy of each image back into the same container. It runs continuously and costs are climbing.",
+      "stem": "What is the fix?",
+      "options": [
+        "Lower Event Grid's retry count",
+        "Watch an input container and write to a different output container, or filter the subscription so outputs do not match",
+        "Add more function instances",
+        "Switch to a timer that lists the container"
+      ],
+      "answer": 1,
+      "explanation": "Each output blob raises a new BlobCreated event, which triggers the function again. Separating input from output, or filtering by path or suffix, breaks the loop. More instances make it loop faster, and a timer brings back polling."
+    },
+    {
+      "id": "m5-q9",
+      "topic": "consumer groups",
+      "scenario": "A new machine-learning feature needs to read the full clickstream that the dashboard and the archive already read from Event Hubs.",
+      "stem": "How should it read the stream?",
+      "options": [
+        "Join the dashboard's consumer group",
+        "Create its own consumer group with its own checkpoints",
+        "Copy events to a Service Bus queue first",
+        "Read from the Capture files only"
+      ],
+      "answer": 1,
+      "explanation": "Each application needs its own consumer group so it sees every event at its own pace without taking partitions away from the dashboard. Joining an existing group splits the stream between two applications, and a queue or files add delay and cost for no benefit."
+    },
+    {
+      "id": "m5-q10",
+      "topic": "partitions",
+      "scenario": "A team is creating a Standard-tier event hub for IoT telemetry that is expected to grow tenfold within a year.",
+      "stem": "What should they decide carefully now?",
+      "options": [
+        "The retention period, since it can never be changed",
+        "The partition count, which is fixed at creation on Standard and caps parallel readers per consumer group",
+        "The number of consumer groups, which is fixed at creation",
+        "The event schema, since Event Hubs validates it"
+      ],
+      "answer": 1,
+      "explanation": "On Standard the number of partitions is set when the hub is created and limits how many instances in a consumer group can read in parallel, so it should be chosen for the expected peak. Retention and consumer groups can be changed later, and Event Hubs does not validate schemas."
+    },
+    {
+      "id": "m5-q11",
+      "topic": "gateway rate limits",
+      "scenario": "One marketplace partner's integration occasionally floods the catalogue API, slowing it for everyone else.",
+      "stem": "Where and how should this be controlled?",
+      "options": [
+        "Add servers to the catalogue API until it copes",
+        "In API Management, with a rate limit and quota on the partner's product, keyed by subscription",
+        "In the WAF, by blocking the partner's IP",
+        "By asking the partner to be careful"
+      ],
+      "answer": 1,
+      "explanation": "Per-subscription limits at the gateway keep any one consumer from starving the others, and the partner gets clear 429 responses. Scaling the backend pays for someone else's bug, IP blocks are blunt and fragile, and requests are not controls."
+    },
+    {
+      "id": "m5-q12",
+      "topic": "gateway authentication",
+      "scenario": "A partner API behind API Management checks only the subscription key. A key leaks in a partner's public script repository.",
+      "stem": "What should the design have included?",
+      "options": [
+        "Longer subscription keys",
+        "Token validation in the policy (for example OAuth client credentials) so a key alone is not enough, plus key rotation",
+        "A second subscription key per partner",
+        "Hiding the API from the developer portal"
+      ],
+      "answer": 1,
+      "explanation": "Subscription keys identify a consumer; they are not strong authentication. Requiring and validating a token means a leaked key cannot be used on its own, and rotation limits the damage. Longer or additional keys leak just as easily."
+    },
+    {
+      "id": "m5-q13",
+      "topic": "low-code or code",
+      "scenario": "The team must connect a SaaS CRM, SharePoint and Teams with simple rules, and separately implement a complex pricing calculation used by checkout.",
+      "stem": "What is the right split?",
+      "options": [
+        "Both as Logic Apps workflows",
+        "The CRM, SharePoint and Teams glue as a Logic Apps workflow; the pricing calculation in code with tests",
+        "Both in Power Automate",
+        "Both as custom Node services"
+      ],
+      "answer": 1,
+      "explanation": "Connector-heavy glue with simple logic is where low-code wins; complex, business-critical logic needs tests, reviews and debugging, which code provides. The workflow can call the pricing service if needed."
+    },
+    {
+      "id": "m5-q14",
+      "topic": "integration ownership",
+      "scenario": "An audit finds a dozen integrations: workflows edited directly in production, connections made with personal accounts, and no alerts on failed runs.",
+      "stem": "Which set of changes addresses the risk?",
+      "options": [
+        "Move everything back into custom code",
+        "Service accounts or managed identities for connections, workflows in Git deployed by pipeline, alerts on failed runs, and a named owner for each integration",
+        "Restrict the portal to one administrator",
+        "Rebuild them all in Power Automate"
+      ],
+      "answer": 1,
+      "explanation": "Low-code still needs engineering discipline: identities that survive staff changes, source control and pipelines for changes, monitoring for failures, and clear ownership. Rewriting in code or moving tools keeps the same gaps, and a single administrator becomes a bottleneck and a single point of failure."
+    }
+  ]
+}

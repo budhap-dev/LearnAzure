@@ -1,0 +1,112 @@
+[
+  {
+    "id": "5.6-q1",
+    "topic": "build or configure",
+    "scenario": "Finance needs a nightly job that fetches a CSV from SFTP, archives it, queues each refund and posts a summary to Teams. Connectors exist for all four systems.",
+    "stem": "What is the most sensible approach?",
+    "options": [
+      "A custom Node service with an SFTP library, the Teams API and the Service Bus SDK",
+      "A Logic Apps workflow using the SFTP, Blob storage, Service Bus and Teams connectors",
+      "A SQL Agent job on the orders database",
+      "A Power Automate flow owned by the finance analyst"
+    ],
+    "answer": 1,
+    "explanation": "When connectors cover every system and the logic is simple, a workflow is faster to build and easier to operate, with a run history for each night. Custom code means owning four integrations, a SQL Agent job is the wrong tool on the wrong server, and a flow owned by one person breaks when they leave."
+  },
+  {
+    "id": "5.6-q2",
+    "topic": "ownership",
+    "scenario": "A Power Automate approval flow stopped working the week its creator left the company.",
+    "stem": "What should the rebuilt flow change?",
+    "options": [
+      "Nothing; recreate it under another analyst's account",
+      "Run it under a team-owned service account (or a managed identity where supported), in a managed environment with an owner",
+      "Move it to Excel macros",
+      "Give every analyst a copy of the flow"
+    ],
+    "answer": 1,
+    "explanation": "Connections made with a person's account die with that account. A service account owned by the team, or a managed identity for Azure connections, survives staff changes, and a managed environment gives it an accountable owner. Copying it to another person just resets the clock."
+  },
+  {
+    "id": "5.6-q3",
+    "topic": "Consumption versus Standard",
+    "scenario": "The shop needs three workflows that must reach resources behind private endpoints, and the team wants them in Git and deployed by pipeline.",
+    "stem": "Which hosting option fits?",
+    "options": [
+      "Consumption, because it is always cheapest",
+      "Logic Apps Standard, with VNet integration and VS Code projects deployed by pipeline",
+      "Power Automate",
+      "Consumption with public endpoints on the resources"
+    ],
+    "answer": 1,
+    "explanation": "Standard runs single-tenant with VNet integration, hosts many workflows in one app, and works as a code project in source control. Consumption has no VNet reach for private resources, Power Automate is for business users, and reopening public endpoints undoes the network design."
+  },
+  {
+    "id": "5.6-q4",
+    "topic": "per-action billing",
+    "scenario": "A Consumption workflow loops over a 60,000-row file every hour, calling three actions per row. The monthly bill is far higher than expected.",
+    "stem": "What explains it, and what are the options?",
+    "options": [
+      "Consumption bills a flat monthly fee; the bill must be wrong",
+      "Consumption bills per action executed, so the loop runs millions of actions a month; batch the work, move bulk data to Data Factory, or use Standard's fixed pricing",
+      "Loops are free but connectors are not",
+      "Only the trigger is billed"
+    ],
+    "answer": 1,
+    "explanation": "Every action in every loop iteration is billed on Consumption, so large for-each loops multiply cost. Batching reduces actions, Data Factory is built for bulk data movement, and Standard's fixed plan price does not grow with action count."
+  },
+  {
+    "id": "5.6-q5",
+    "topic": "error handling",
+    "stem": "How is a try/catch usually expressed in a Logic Apps workflow?",
+    "options": [
+      "It is not possible; failed workflows must be rerun by hand",
+      "A scope containing the steps, followed by a branch configured to run after the scope fails, plus retry policies on individual actions",
+      "An if condition on every action",
+      "A second workflow that polls the first"
+    ],
+    "answer": 1,
+    "explanation": "Scopes group actions, and a following action can be set to run after the scope fails or times out, which gives catch behaviour for logging, alerting or queuing the failed item. Retry policies handle transient errors on individual actions. Failed runs can also be resubmitted from run history."
+  },
+  {
+    "id": "5.6-q6",
+    "topic": "when to use code",
+    "scenario": "A workflow now contains 40 nested conditions implementing partner discount rules, and nobody can test changes safely.",
+    "stem": "What should the team do?",
+    "options": [
+      "Add more conditions",
+      "Move the discount logic into a function or API with tests, and have the workflow call it",
+      "Split it into 40 workflows",
+      "Rewrite it in Power Automate"
+    ],
+    "answer": 1,
+    "explanation": "When the logic becomes the product, it needs code's tools: tests, reviews and debugging. The workflow keeps doing what it is good at - triggers, connectors and orchestration - and calls the function for the rules. Splitting it or moving it to another designer keeps the same problem."
+  },
+  {
+    "id": "5.6-q7",
+    "topic": "changes to production",
+    "scenario": "Someone fixed a production workflow directly in the portal on Friday evening. On Monday nobody knows what changed, and dev and prod behave differently.",
+    "stem": "What practice prevents this?",
+    "options": [
+      "Only one person may edit workflows",
+      "Workflow definitions in Git with parameters per environment, deployed dev to test to prod by pipeline, with portal edits in production avoided",
+      "Take screenshots before editing",
+      "Disable run history"
+    ],
+    "answer": 1,
+    "explanation": "Workflows are JSON and belong in source control like any code, with environment-specific values parameterised and changes promoted by pipeline. That gives review, history and a way back. Restricting editors or taking screenshots does not provide any of those."
+  },
+  {
+    "id": "5.6-q8",
+    "topic": "secrets",
+    "stem": "Where should a workflow get the SFTP password it needs?",
+    "options": [
+      "Typed into the SFTP connection by whoever builds the workflow and never changed",
+      "From Key Vault at run time, using the workflow's managed identity",
+      "From a parameter in the workflow JSON committed to Git",
+      "From an email sent to the workflow"
+    ],
+    "answer": 1,
+    "explanation": "Reading the secret from Key Vault with the workflow's managed identity keeps it out of the definition and out of Git, and lets it be rotated in one place. A value typed once and forgotten never rotates, and one committed to Git is exposed to everyone with repository access."
+  }
+]

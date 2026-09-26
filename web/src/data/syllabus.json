@@ -524,9 +524,9 @@
       "number": 5,
       "title": "Integration and messaging",
       "tagline": "Service Bus, Event Grid, Event Hubs, API Management and Logic Apps - decoupling systems the Azure way.",
-      "description": "How systems talk to each other without being tied together: queues and topics, events and streams, an API gateway in front of everything, and low-code workflows for the glue.",
+      "description": "How systems talk to each other without being tied together: what must happen now and what can happen after; queues, topics, events and streams; Service Bus for business messages, Event Grid for reactions, Event Hubs for high-volume streams; API Management as one front door for every API; and Logic Apps for the glue - each with what it costs and what breaks.",
       "icon": "service-bus",
-      "status": "in-progress",
+      "status": "ready",
       "lessons": [
         {
           "id": "5.1",
@@ -542,8 +542,7 @@
             "service-bus",
             "storage-queue",
             "event-grid"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "5.2",
@@ -559,8 +558,7 @@
             "service-bus",
             "function-apps",
             "azure-sql"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "5.3",
@@ -576,8 +574,7 @@
             "event-grid",
             "system-topic",
             "function-apps"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "5.4",
@@ -593,8 +590,7 @@
             "event-hubs",
             "stream-analytics",
             "power-bi"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "5.5",
@@ -610,17 +606,22 @@
             "api-management",
             "front-door",
             "app-service"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "5.6",
           "title": "Logic Apps and low-code integration",
-          "summary": "",
+          "summary": "Workflows, triggers and connectors; Consumption versus Standard; when low-code beats code and when it does not; and the engineering discipline low-code still needs.",
           "minutes": 10,
-          "objectives": [],
+          "objectives": [
+            "Build integration glue as Logic Apps workflows with connectors instead of custom services",
+            "Choose between Logic Apps Consumption and Standard, Power Automate, Functions and Durable Functions",
+            "Run workflows with proper identity, secrets, error handling, source control and monitoring"
+          ],
           "icons": [
-            "logic-apps"
+            "logic-apps",
+            "api-connections",
+            "service-bus"
           ]
         }
       ]

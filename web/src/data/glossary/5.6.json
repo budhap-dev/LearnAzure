@@ -1,0 +1,45 @@
+[
+  {
+    "term": "Azure Logic Apps",
+    "aliases": ["Logic Apps", "Logic App", "workflow"],
+    "definition": "Azure's workflow service: a trigger followed by actions, built in a visual designer and stored as JSON, with well over a thousand connectors and a recorded history of every run's inputs and outputs. The same engine powers Power Automate. Best for integration glue where connectors do most of the work.",
+    "example": "A nightly workflow fetches the marketplace settlement file from SFTP, queues each refund and posts a summary to Teams.",
+    "icon": "logic-apps",
+    "lessons": ["5.6"],
+    "related": ["Connector", "Logic Apps Standard", "Power Automate", "Trigger"]
+  },
+  {
+    "term": "Connector",
+    "aliases": ["connectors", "managed connector", "API connection", "built-in connector"],
+    "definition": "A prebuilt integration with a service - Azure, Microsoft 365, SFTP, SQL Server, Salesforce, SAP and many more - that handles authentication, paging and the API's quirks, exposed as triggers and actions in Logic Apps and Power Automate. SaaS connectors are throttled, so bulk data belongs elsewhere.",
+    "example": "The SFTP, Service Bus and Teams connectors replace three SDKs the team would otherwise have written code for.",
+    "icon": "api-connections",
+    "lessons": ["5.6"],
+    "related": ["Azure Logic Apps", "Power Automate"]
+  },
+  {
+    "term": "Logic Apps Standard",
+    "aliases": ["Standard logic app", "single-tenant Logic Apps", "Logic Apps Consumption", "Consumption logic app"],
+    "definition": "The single-tenant hosting option for Logic Apps: many workflows per app on a plan with a fixed price, VNet integration and private endpoints, stateful and stateless workflows, and VS Code projects deployed by pipeline. Consumption, the multi-tenant option, bills per action executed and suits a few light workflows.",
+    "example": "la-shop-integration runs on Standard so its workflows can reach private resources through the VNet.",
+    "icon": "logic-apps",
+    "lessons": ["5.6"],
+    "related": ["Azure Logic Apps", "VNet integration"]
+  },
+  {
+    "term": "Power Automate",
+    "aliases": ["Microsoft Power Automate", "Flow", "Microsoft Flow", "Power Platform"],
+    "definition": "Microsoft's low-code automation tool for business users, part of the Power Platform and Microsoft 365, running on the same engine as Logic Apps. Governed by environments and data loss prevention policies in the Power Platform admin centre. Flows should be owned by teams or service accounts, not individuals.",
+    "example": "Finance's refund-approval flow is rebuilt under a service account after the original owner leaves.",
+    "lessons": ["5.6"],
+    "related": ["Azure Logic Apps", "Low-code", "Connector"]
+  },
+  {
+    "term": "Low-code",
+    "aliases": ["low code", "no-code", "citizen developer", "fusion team"],
+    "definition": "Building software mainly by configuring visual designers and prebuilt connectors rather than writing code. It wins where connectors do the work and the logic is simple; it loses when the logic grows complex enough to need tests, reviews and debugging tools. It still needs source control, environments, monitoring and ownership.",
+    "example": "Three integrations become workflows in a day; the pricing engine stays in code.",
+    "lessons": ["5.6"],
+    "related": ["Azure Logic Apps", "Power Automate"]
+  }
+]
