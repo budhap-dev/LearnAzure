@@ -5,7 +5,7 @@
     "definition": "Microsoft's published commitment for an Azure service: a monthly uptime percentage, the configurations it applies to, and the service credit paid if it is missed. It is a financial promise rather than a guarantee, and free, shared and some single-instance tiers have no SLA at all.",
     "example": "App Service on a Standard or Premium plan carries a 99.95% monthly SLA; the F1 free plan carries none.",
     "icon": "service-health",
-    "lessons": ["1.7"],
+    "lessons": ["1.7", "6.4"],
     "related": ["Service credit", "Composite SLA", "Nines"]
   },
   {

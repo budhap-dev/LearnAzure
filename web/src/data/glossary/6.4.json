@@ -1,0 +1,68 @@
+[
+  {
+    "term": "Alert rule",
+    "aliases": ["alert", "metric alert", "log search alert", "activity log alert", "severity"],
+    "definition": "An Azure Monitor rule that watches a signal - a metric, a KQL query or the activity log - tests a condition on a schedule, and fires a stateful alert with a severity from Sev0 to Sev4, calling action groups. Rules are cheap; the attention they demand is not, so each one must be actionable.",
+    "example": "A log search alert fires Sev1 when checkout's error rate would spend the month's error budget in about two days.",
+    "icon": "alerts",
+    "lessons": ["6.4"],
+    "related": ["Action group", "Alert processing rule", "Service level objective"]
+  },
+  {
+    "term": "Action group",
+    "aliases": ["action groups"],
+    "definition": "A reusable Azure Monitor list of whom to notify - push, SMS, voice, email - and what to run - a webhook to a paging tool, a Logic App, a function, an automation runbook - when an alert fires. Point it at rotations and tools, not individuals' inboxes.",
+    "example": "ag-shop-sev1 calls the paging tool's webhook and posts to the incident channel.",
+    "lessons": ["6.4"],
+    "related": ["Alert rule", "Runbook", "Cost alert"]
+  },
+  {
+    "term": "Alert processing rule",
+    "aliases": ["action rule", "maintenance window suppression"],
+    "definition": "A rule applied to alerts after they fire, which can suppress notifications for a scope and time window - such as planned maintenance - or add action groups to many alerts at once. Always give suppressions an end date.",
+    "example": "Notifications for rg-shop-prod are suppressed from 22:00 to 23:00 on release night, then resume automatically.",
+    "lessons": ["6.4"],
+    "related": ["Alert rule", "Action group"]
+  },
+  {
+    "term": "Azure Service Health",
+    "aliases": ["Service Health", "Resource Health", "planned maintenance"],
+    "definition": "The Azure view of Azure's own problems that affect you: service incidents, planned maintenance, and health and security advisories, filtered to your subscriptions, services and regions. Resource Health reports on one resource. Alerts on Service Health should go to on-call, not to whoever created the subscription.",
+    "example": "A Service Health alert tells on-call about an App Service incident in UK South within minutes of Azure declaring it.",
+    "icon": "service-health",
+    "lessons": ["6.4"],
+    "related": ["Alert rule", "Region"]
+  },
+  {
+    "term": "Service level indicator",
+    "aliases": ["SLI"],
+    "definition": "A measurement of what users actually experience, expressed as a ratio of good events to all events - such as the percentage of checkout requests that succeed in under two seconds. The basis for SLOs and symptom-based alerts.",
+    "example": "Checkout's SLI is computed from AppRequests: successful checkout calls under 2 seconds divided by all checkout calls.",
+    "lessons": ["6.4"],
+    "related": ["Service level objective", "Error budget"]
+  },
+  {
+    "term": "Service level objective",
+    "aliases": ["SLO", "burn rate"],
+    "definition": "An internal target for an SLI over a period, such as 99.5% of checkouts good over 30 days. It is set tighter than any external SLA so problems are caught before customers are owed credits, and alerts fire on how fast it is being missed.",
+    "example": "Checkout's SLO is 99.5% over 30 days; a fast-burn alert pages when the last hour would exhaust the budget in two days.",
+    "lessons": ["6.4"],
+    "related": ["Service level indicator", "Error budget", "SLA"]
+  },
+  {
+    "term": "Error budget",
+    "aliases": ["error budget policy"],
+    "definition": "The amount of unreliability an SLO allows - for 99.5% over 30 days, about 3.6 hours of bad checkouts a month. While budget remains, the team ships features; when it is spent, reliability work comes first. It turns 'reliable enough?' into a number.",
+    "example": "Two incidents spend 80% of checkout's error budget by mid-month, so the next sprint goes on the payment retry logic.",
+    "lessons": ["6.4"],
+    "related": ["Service level objective", "Service level indicator"]
+  },
+  {
+    "term": "Runbook",
+    "aliases": ["playbook", "Azure Automation runbook"],
+    "definition": "Written instructions for handling a specific alert or incident - what it means, what to check first, how to mitigate and whom to call - linked from the alert itself. Repeatable steps can be automated, for example as an Azure Automation runbook or a Logic App called by the action group.",
+    "example": "The dead-letter alert links to a runbook: open the Shop health workbook, read the dead-letter reasons, fix, resubmit.",
+    "lessons": ["6.4"],
+    "related": ["Action group", "Alert rule"]
+  }
+]

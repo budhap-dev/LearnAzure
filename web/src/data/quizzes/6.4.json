@@ -1,0 +1,110 @@
+[
+  {
+    "id": "6.4-q1",
+    "topic": "symptoms versus causes",
+    "scenario": "The team receives about 140 alert emails a week, mostly CPU above 70% on individual App Service instances. Everyone filters them unread.",
+    "stem": "What is the best change?",
+    "options": [
+      "Raise the CPU threshold to 90%",
+      "Page only on user-facing symptoms such as checkout error rate, latency and availability; move CPU to dashboards or working-hours tickets",
+      "Send the alerts by SMS instead of email",
+      "Add more alerts so nothing is missed"
+    ],
+    "answer": 1,
+    "explanation": "High CPU is a cause that may or may not hurt anyone; symptom alerts fire only when users are affected. Fewer, meaningful alerts get read. A higher threshold still pages on causes, SMS just moves the noise to phones, and more alerts deepen the fatigue."
+  },
+  {
+    "id": "6.4-q2",
+    "topic": "error budget",
+    "stem": "Checkout's SLO is 99.5% good requests over 30 days. What is the error budget, roughly, in time?",
+    "options": [
+      "About 36 minutes a month",
+      "About 3.6 hours a month",
+      "About 36 hours a month",
+      "There is no budget; any failure breaks the SLO"
+    ],
+    "answer": 1,
+    "explanation": "0.5% of 30 days (720 hours) is 3.6 hours of equivalent full failure. The budget is what the SLO allows to go wrong; spending it quickly is what burn-rate alerts detect."
+  },
+  {
+    "id": "6.4-q3",
+    "topic": "SLO versus SLA",
+    "stem": "Why set an internal SLO tighter than the SLA published to customers?",
+    "options": [
+      "SLAs are only for Azure services",
+      "So the team sees and fixes reliability problems before customers are owed service credits",
+      "Because SLOs are measured monthly and SLAs yearly",
+      "To make dashboards look better"
+    ],
+    "answer": 1,
+    "explanation": "The SLA is a contractual promise with penalties; the SLO is the working target. A tighter SLO gives warning and room to act before the contractual line is crossed."
+  },
+  {
+    "id": "6.4-q4",
+    "topic": "Service Health",
+    "scenario": "During an Azure App Service incident in UK South, Azure's notification went to the email of a contractor who created the subscription two years ago.",
+    "stem": "What should be in place?",
+    "options": [
+      "Nothing; Azure incidents are Microsoft's responsibility",
+      "Service Health alerts for the shop's services and regions, routed to the on-call action group",
+      "A daily check of the Azure status web page",
+      "Resource locks on the App Service"
+    ],
+    "answer": 1,
+    "explanation": "Azure's problems still become your incidents. Service Health alerts scoped to your services and regions, delivered through the on-call action group, reach the people who can fail over or communicate. A status page checked by hand is too slow, and locks have nothing to do with it."
+  },
+  {
+    "id": "6.4-q5",
+    "topic": "maintenance windows",
+    "scenario": "Every Tuesday-night release pages the on-call engineer with expected errors during the slot swap.",
+    "stem": "What is the right tool?",
+    "options": [
+      "Disable the alert rules on Tuesdays by hand",
+      "An alert processing rule that suppresses notifications for the release window, with a defined end",
+      "Delete the checkout alerts",
+      "Lower the alert severity permanently"
+    ],
+    "answer": 1,
+    "explanation": "Alert processing rules suppress notifications for a scope and time window, then stop by themselves. Disabling rules by hand risks forgetting to re-enable them, and deleting or downgrading alerts removes protection for the other 167 hours of the week."
+  },
+  {
+    "id": "6.4-q6",
+    "topic": "burn-rate alerting",
+    "stem": "Why alert on error-budget burn rate rather than on any single failed checkout?",
+    "options": [
+      "Single failures cannot be detected",
+      "Burn rate separates outages, which spend the budget fast and need a page, from slow leaks, which need attention but not at 3am, while ignoring normal background errors",
+      "Burn-rate alerts are free",
+      "Azure only supports burn-rate alerts"
+    ],
+    "answer": 1,
+    "explanation": "Every system has some failures. Measuring how quickly the budget is being spent - fast burn over an hour, slow burn over six - matches the urgency of the page to the damage being done. Alerting on each failure recreates alert fatigue."
+  },
+  {
+    "id": "6.4-q7",
+    "topic": "runbooks",
+    "scenario": "An alert pages the on-call engineer at 03:00 with the text 'DLQ count > 0'. She has never seen it before.",
+    "stem": "What was missing?",
+    "options": [
+      "A higher severity",
+      "A runbook linked from the alert: what it means, what to check first, how to mitigate and whom to call",
+      "A second alert for the same condition",
+      "An SMS as well as the push notification"
+    ],
+    "answer": 1,
+    "explanation": "An alert should tell a stranger at 3am what to do. The runbook turns a cryptic signal into steps, starting with the workbook and the dead-letter reasons. More severity or more notifications only make an unexplained alert louder."
+  },
+  {
+    "id": "6.4-q8",
+    "topic": "alert hygiene",
+    "stem": "Which habit keeps an alert set healthy over time?",
+    "options": [
+      "Adding a new alert after every incident and never removing any",
+      "A weekly review of every alert that fired: actionable ones stay, noisy ones are tuned or deleted, and pages per shift are tracked",
+      "Letting each developer create alerts to their own email",
+      "Reviewing alerts once a year"
+    ],
+    "answer": 1,
+    "explanation": "Alert sets rot: traffic changes, services change, and noise creeps back. A regular review keeps each alert meaningful and the on-call load humane. Only adding alerts, or routing them to individuals, is how the 140-email week happened."
+  }
+]
