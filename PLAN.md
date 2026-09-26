@@ -101,7 +101,7 @@ at random from the lesson quizzes. 88 new glossary terms (249 in total).
 | 4.3 | Private endpoints, DNS and hybrid connectivity | shipped |
 | 4.4 | Microsoft Entra ID - the identity backbone | shipped |
 | 4.5 | Role-based access control and managed identities | shipped |
-| 4.6 | Key Vault, secrets and App Configuration | planned |
+| 4.6 | Key Vault, secrets and App Configuration | shipped |
 | 4.7 | Defender for Cloud, Sentinel and the security baseline | planned |
 | 4.8 | Zero trust and securing a web workload end to end | planned |
 

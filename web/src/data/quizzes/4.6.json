@@ -1,0 +1,113 @@
+[
+  {
+    "id": "4.6-q1",
+    "topic": "what needs a secret",
+    "scenario": "The API's settings still contain the Azure SQL password, the storage account key, the payment provider's API key and the email service's API key.",
+    "stem": "Which of these should end up in Key Vault?",
+    "options": [
+      "All four, since everything sensitive belongs in Key Vault",
+      "Only the payment and email API keys; the SQL password and storage key should be replaced by the API's managed identity",
+      "Only the SQL password, because it is the most sensitive",
+      "None; App Service settings are already encrypted"
+    ],
+    "answer": 1,
+    "explanation": "Azure SQL and Storage accept Entra ID tokens, so a managed identity removes those secrets entirely - the best secret is one that does not exist. Third-party services that only accept an API key still need one, and Key Vault is where it lives. App Service settings are readable by anyone with Contributor."
+  },
+  {
+    "id": "4.6-q2",
+    "topic": "vault per environment",
+    "scenario": "The dev site charged a real card because dev and prod share one Key Vault and someone pointed dev at the live payment secret.",
+    "stem": "What layout prevents this?",
+    "options": [
+      "Keep one vault but prefix secret names with dev- and prod-",
+      "One vault per application per environment, in separate resource groups, with each environment's identity able to read only its own vault",
+      "One vault per secret",
+      "Move all secrets into App Configuration with labels"
+    ],
+    "answer": 1,
+    "explanation": "Vault-level separation means dev's identity simply has no permission on the prod vault, so no naming mistake can cross the boundary. Prefixes in a shared vault still let dev read prod. A vault per secret is unmanageable, and App Configuration is for non-secret settings."
+  },
+  {
+    "id": "4.6-q3",
+    "topic": "throttling",
+    "scenario": "During a sale the API starts failing with 429 responses from Key Vault. The code fetches the payment key from the vault on every checkout request.",
+    "stem": "What is the right fix?",
+    "options": [
+      "Upgrade the vault to Premium",
+      "Create more vaults and spread requests across them",
+      "Read the secret once at start-up - for example through a Key Vault reference - and cache it",
+      "Store the key in the React app so the API does not need it"
+    ],
+    "answer": 2,
+    "explanation": "Vaults are throttled per vault regardless of tier, and a secret that changes rarely does not need fetching per request. A Key Vault reference resolves it once into an environment variable; otherwise cache it in memory and refresh after rotation. Putting a payment key in the browser bundle would publish it to every shopper."
+  },
+  {
+    "id": "4.6-q4",
+    "topic": "front-end secrets",
+    "scenario": "Ana adds VITE_PAYMENT_API_KEY to the React app's build settings so the browser can call the payment provider directly.",
+    "stem": "What is wrong with this?",
+    "options": [
+      "Nothing, because Vite encrypts environment variables in the bundle",
+      "Anything in the front-end bundle is public: every shopper can read the key. The call must go through the API, which holds the key",
+      "Vite does not support environment variables",
+      "It only works if the key is also in Key Vault"
+    ],
+    "answer": 1,
+    "explanation": "Build-time variables are compiled into JavaScript that every browser downloads, so they are published, not hidden. Secrets stay server-side: the browser calls the API, and the API uses the key it received from Key Vault."
+  },
+  {
+    "id": "4.6-q5",
+    "topic": "soft delete and names",
+    "scenario": "Dev deletes kv-shop-dev to start afresh and immediately tries to recreate it with the same name. The deployment fails because the name is in use.",
+    "stem": "Why does recreating the vault fail?",
+    "options": [
+      "Key Vault names can never be reused",
+      "The deleted vault is soft-deleted and keeps its name reserved until it is recovered or purged, or the retention period ends",
+      "The name is taken by another customer",
+      "Vault names must include the date"
+    ],
+    "answer": 1,
+    "explanation": "Soft delete is always on for Key Vault: a deleted vault is retained, recoverable and still owns its name. Recover it, purge it if purge protection allows, or wait. The fix for next time is not to delete and recreate vaults as a reset mechanism."
+  },
+  {
+    "id": "4.6-q6",
+    "topic": "purge protection",
+    "stem": "Why is purge protection required before a storage account or database can use a customer-managed key from Key Vault?",
+    "options": [
+      "It makes the key faster to retrieve",
+      "Without it, someone could permanently delete the key and make all data and backups encrypted with it unreadable",
+      "It lets the key be shared between tenants",
+      "It turns on automatic key rotation"
+    ],
+    "answer": 1,
+    "explanation": "Data encrypted with a customer-managed key is only as recoverable as the key. Purge protection guarantees a deleted key can be recovered throughout the retention period, even if an attacker or a careless admin deletes it. It has nothing to do with speed, sharing or rotation."
+  },
+  {
+    "id": "4.6-q7",
+    "topic": "leaked secret",
+    "scenario": "A security scan finds the email service's API key in a .env file committed to the repository in 2023. The file was deleted a year ago.",
+    "stem": "What must happen?",
+    "options": [
+      "Nothing, since the file no longer exists",
+      "Rewrite the Git history to remove the file",
+      "Rotate the key at the email provider, store the new one in Key Vault, and treat the old one as compromised",
+      "Make the repository private"
+    ],
+    "answer": 2,
+    "explanation": "The key remains in the repository's history and any clone or fork of it, so it must be assumed leaked. Only rotating it makes the leaked value useless. Rewriting history and making the repository private reduce future exposure but do not undo what may already have been copied."
+  },
+  {
+    "id": "4.6-q8",
+    "topic": "feature flags",
+    "scenario": "Ana wants the new checkout live for 10% of shoppers, and to switch it off in seconds if orders drop, without redeploying.",
+    "stem": "What should she use?",
+    "options": [
+      "A deployment slot per percentage of users",
+      "A feature flag in App Configuration with a percentage filter, checked by the code at run time",
+      "An environment variable changed by a pipeline run",
+      "A second copy of the app behind Traffic Manager"
+    ],
+    "answer": 1,
+    "explanation": "A feature flag separates releasing from deploying: the code for both checkouts is live, and a percentage filter decides who sees the new one. Turning it off is a setting change, not a deploy. Slots and pipelines both need a deployment or swap, and a second stack behind DNS is slow to switch and costly."
+  }
+]

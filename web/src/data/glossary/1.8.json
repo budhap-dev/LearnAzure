@@ -49,7 +49,7 @@
     "definition": "A managed store for secrets, certificates and encryption keys, with access controlled by RBAC and every read written to an audit log. App Service and Functions can reference a secret directly from an app setting so the value never appears in configuration. Access is a network and permission decision in its own right, so plan who and what may read each vault before the first deploy.",
     "example": "kv-shop-prod holds the SQL connection string; only the API's managed identity may read it.",
     "icon": "key-vault",
-    "lessons": ["1.8"],
+    "lessons": ["1.8", "4.6"],
     "related": ["Managed identity", "Connection string", "Role-based access control"]
   },
   {

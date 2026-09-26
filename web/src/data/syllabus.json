@@ -478,12 +478,19 @@
         {
           "id": "4.6",
           "title": "Key Vault, secrets and App Configuration",
-          "summary": "",
+          "summary": "What belongs in Key Vault and what in App Configuration, Key Vault references, soft delete and purge protection, rotation, and feature flags.",
           "minutes": 12,
-          "objectives": [],
+          "objectives": [
+            "Decide which values are secrets, which are configuration, and which should not exist",
+            "Use Key Vault references, vault-per-environment and purge protection correctly",
+            "Plan secret rotation and use feature flags to release without a deploy"
+          ],
           "icons": [
-            "key-vault"
-          ]
+            "key-vault",
+            "app-configuration",
+            "managed-identity"
+          ],
+          "status": "ready"
         },
         {
           "id": "4.7",
