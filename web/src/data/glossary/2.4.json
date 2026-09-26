@@ -5,7 +5,7 @@
     "definition": "The one event that causes a function to run - an HTTP request, a timer, a queue message, a blob upload, a change feed entry. Every function has exactly one trigger, and it decides the scaling behaviour and the retry semantics you get. Choosing the trigger is the real design decision; the code inside is usually the easy part.",
     "example": "A queue trigger on the orders queue gives one invocation per message, with retries and dead-lettering for free.",
     "icon": "function-apps",
-    "lessons": ["2.4"],
+    "lessons": ["2.4", "5.3"],
     "related": ["Binding", "Azure Functions", "Event-driven scaling"]
   },
   {
