@@ -828,12 +828,19 @@
         {
           "id": "7.6",
           "title": "Secrets, identities and security in the pipeline",
-          "summary": "",
+          "summary": "The pipeline as production's front door: no secrets, push protection, dependency and code scanning, SBOMs and signed provenance, and keeping credentials away from untrusted code.",
           "minutes": 12,
-          "objectives": [],
+          "objectives": [
+            "Remove pipeline secrets with federation, managed identities and Key Vault, and respond to leaks",
+            "Scan secrets, dependencies and code on every pull request with clear response times",
+            "Ship trusted artefacts with SBOMs and provenance, and separate untrusted code from production credentials"
+          ],
           "icons": [
-            "key-vault"
-          ]
+            "key-vault",
+            "defender",
+            "builds"
+          ],
+          "status": "ready"
         },
         {
           "id": "7.7",

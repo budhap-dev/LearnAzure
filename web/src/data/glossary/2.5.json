@@ -30,7 +30,7 @@
     "aliases": ["tag", "image digest", "digest"],
     "definition": "A mutable label pointing at a container image, such as api:1.4.2 or api:latest; the digest (sha256:...) is the immutable content address underneath it. Anyone with push rights can move a tag to different bytes, so :latest in production is a deployment you cannot reproduce. Tag with the commit SHA and deploy by digest.",
     "example": "api:9f3c1ab is reproducible; api:latest is whatever someone pushed most recently.",
-    "lessons": ["2.5"],
+    "lessons": ["2.5", "7.6"],
     "related": ["Container image", "Azure Container Registry", "Revision"]
   },
   {
