@@ -1,0 +1,113 @@
+[
+  {
+    "id": "5.5-q1",
+    "topic": "rate limiting",
+    "scenario": "A partner's buggy script called the stock API fifty times a second all weekend, slowing checkout, which shares a database with it.",
+    "stem": "What in API Management would have prevented the impact?",
+    "options": [
+      "A developer portal",
+      "A rate limit and quota on the partner's product, keyed by subscription, returning 429 before calls reach the backend",
+      "A newer API version",
+      "Response caching on the orders API"
+    ],
+    "answer": 1,
+    "explanation": "Per-subscription rate limits stop any one consumer overwhelming a shared backend: excess calls are rejected at the gateway with 429 and a Retry-After header. The portal, versions and caching the orders API do nothing to cap a runaway caller of the stock API."
+  },
+  {
+    "id": "5.5-q2",
+    "topic": "keys versus tokens",
+    "stem": "What is the right way to think about an API Management subscription key?",
+    "options": [
+      "It is strong authentication and can replace OAuth",
+      "It identifies which consumer is calling, for limits and analytics; sensitive APIs should also validate a token",
+      "It encrypts the request",
+      "It is only needed for the Consumption tier"
+    ],
+    "answer": 1,
+    "explanation": "A subscription key is a long-lived shared string that leaks easily into logs, scripts and apps. It is good for attributing traffic, not for proving identity. Validating an OAuth token in a policy provides real authentication."
+  },
+  {
+    "id": "5.5-q3",
+    "topic": "bypass",
+    "scenario": "API Management enforces partner limits, but the logs show heavy traffic reaching the stock API's App Service host name directly.",
+    "stem": "What must be fixed?",
+    "options": [
+      "Lower the APIM rate limits",
+      "Restrict the backend so it only accepts traffic from API Management - private networking, access restrictions, or a token only APIM holds",
+      "Add a second APIM instance",
+      "Move the developer portal behind Front Door"
+    ],
+    "answer": 1,
+    "explanation": "If the backend answers directly, every gateway policy is optional. Locking the backend to APIM - the same idea as locking an origin to Front Door - makes the gateway the only way in. Changing APIM settings does nothing for traffic that never passes through it."
+  },
+  {
+    "id": "5.5-q4",
+    "topic": "mobile apps",
+    "scenario": "The mobile team plans to embed a subscription key in the React Native app so it can call the product API.",
+    "stem": "What should they do instead?",
+    "options": [
+      "Obfuscate the key in the app bundle",
+      "Use a product that requires a valid External ID token instead of a key, and validate that token in a policy",
+      "Rotate the key with each app release",
+      "Use the partners' key"
+    ],
+    "answer": 1,
+    "explanation": "Anything in an app bundle can be extracted, so a key there is effectively public. Mobile users already sign in through External ID, so the product should require and validate their token. Obfuscation delays extraction, and rotating per release breaks older installed versions."
+  },
+  {
+    "id": "5.5-q5",
+    "topic": "policies and logic",
+    "scenario": "A developer has written a 300-line APIM policy that calculates partner discount tiers from request data.",
+    "stem": "What is the concern?",
+    "options": [
+      "Policies cannot exceed 100 lines",
+      "Business logic in gateway XML is hard to test, version and debug; it belongs in the API, with policies kept to cross-cutting rules",
+      "Policies only run on the Premium tier",
+      "The calculation will be cached incorrectly"
+    ],
+    "answer": 1,
+    "explanation": "Policies are for concerns shared across APIs - identity, limits, routing, headers, caching. Pricing rules are the business's logic and need tests, code review and deployments alongside the API. Putting them in the gateway hides them from all of that."
+  },
+  {
+    "id": "5.5-q6",
+    "topic": "tiers",
+    "scenario": "The shop's warehouse API runs on a VM reachable only inside the VNet, and APIM will be production-critical.",
+    "stem": "Which tier is the reasonable minimum?",
+    "options": [
+      "Developer, because it is cheapest",
+      "Consumption, because it scales automatically",
+      "Standard v2 (or Premium), which has an SLA and can reach backends through a VNet",
+      "Basic v2, since all tiers can reach private backends"
+    ],
+    "answer": 2,
+    "explanation": "Developer has no SLA and must not carry production. Reaching a backend inside a VNet needs a tier with VNet support, such as Standard v2 or Premium. Consumption and Basic v2 do not reach private backends that way."
+  },
+  {
+    "id": "5.5-q7",
+    "topic": "APIM and Front Door",
+    "scenario": "A contractor proposes removing Front Door because 'API Management is also a gateway'.",
+    "stem": "What is the better view?",
+    "options": [
+      "Agree; APIM includes a WAF and global edge caching",
+      "Keep both: Front Door provides the global edge and WAF, and API Management applies API-specific rules such as keys, quotas and versions behind it",
+      "Remove API Management instead, since Front Door can rate-limit",
+      "Replace both with Traffic Manager"
+    ],
+    "answer": 1,
+    "explanation": "They do different jobs. Front Door is the internet-facing edge with TLS, caching and a web application firewall. API Management understands consumers, products, subscriptions and API versions. The usual chain for HTTP APIs is Front Door, then API Management, then the backends."
+  },
+  {
+    "id": "5.5-q8",
+    "topic": "versioning",
+    "scenario": "The orders API must change a response field from a string to an object. Four partners depend on the current shape.",
+    "stem": "How should this ship through API Management?",
+    "options": [
+      "As a revision made current immediately, since revisions are for changes",
+      "As a new version (/orders/v2) that partners opt into, with v1 kept running for an announced period",
+      "Change it in place and notify partners afterwards",
+      "Use a policy to transform every v2 response back to v1 for everyone"
+    ],
+    "answer": 1,
+    "explanation": "A breaking contract change is a new version consumers move to when ready; revisions are for non-breaking changes to the same contract. Changing in place breaks partners in production, and permanently transforming responses back hides the change instead of managing it."
+  }
+]

@@ -121,7 +121,7 @@ at random from the lesson quizzes. 64 new glossary terms (313 in total).
 | 5.2 | Service Bus - enterprise messaging | shipped |
 | 5.3 | Event Grid - reacting to what happens | shipped |
 | 5.4 | Event Hubs - high-volume streaming | shipped |
-| 5.5 | API Management - one front door for your APIs | planned |
+| 5.5 | API Management - one front door for your APIs | shipped |
 | 5.6 | Logic Apps and low-code integration | planned |
 
 Glossary term ownership, so each lesson PR defines its own terms and no others:
