@@ -845,12 +845,19 @@
         {
           "id": "7.7",
           "title": "Release strategies - slots, blue-green, canary and feature flags",
-          "summary": "",
+          "summary": "Deploying versus releasing, rolling, blue-green, canary and ring-based releases, slot swaps and revisions, metric gates, and expand-and-contract for data.",
           "minutes": 14,
-          "objectives": [],
+          "objectives": [
+            "Separate deploying from releasing and choose rolling, blue-green, canary or ring-based releases",
+            "Use slots, revisions and feature flags for releases that roll back in seconds",
+            "Gate rollouts on SLO metrics and keep data changes compatible with expand and contract"
+          ],
           "icons": [
-            "web-slots"
-          ]
+            "web-slots",
+            "application-insights",
+            "app-configuration"
+          ],
+          "status": "ready"
         },
         {
           "id": "7.8",

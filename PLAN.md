@@ -163,7 +163,7 @@ at random from the lesson quizzes. 35 new glossary terms (389 in total).
 | 7.4 | GitHub Actions for Azure | shipped |
 | 7.5 | Infrastructure as code - Bicep and Terraform | shipped |
 | 7.6 | Secrets, identities and security in the pipeline | shipped |
-| 7.7 | Release strategies - slots, blue-green, canary and feature flags | planned |
+| 7.7 | Release strategies - slots, blue-green, canary and feature flags | shipped |
 | 7.8 | Quality gates, testing and DevOps metrics | planned |
 
 Glossary term ownership, so each lesson PR defines its own terms and no others:

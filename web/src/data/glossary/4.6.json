@@ -38,7 +38,7 @@
     "definition": "A central store for non-secret application settings and feature flags, shared by every service. Labels separate environments, snapshots record what was live at a release, and values can be Key Vault references resolved by each app with its own identity. Free tier for dev; Standard about $36 a month per store.",
     "example": "appcs-shop holds the API's timeouts and URLs under prod and dev labels, plus the NewCheckout feature flag.",
     "icon": "app-configuration",
-    "lessons": ["4.6"],
+    "lessons": ["4.6", "7.7"],
     "related": ["Feature flag", "Key Vault reference", "Key Vault"]
   },
   {
@@ -46,7 +46,7 @@
     "aliases": ["feature toggle", "feature switch"],
     "definition": "A named switch the code checks at run time to turn behaviour on or off, optionally for a percentage of users, named groups or a time window. It separates deploying code from releasing a feature, so a problem is fixed by flipping a switch rather than rolling back a deploy.",
     "example": "The new checkout is live for 10% of shoppers through the NewCheckout flag and can be switched off in seconds.",
-    "lessons": ["4.6", "7.2"],
+    "lessons": ["4.6", "7.2", "7.7"],
     "related": ["Azure App Configuration"]
   }
 ]
