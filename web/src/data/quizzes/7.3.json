@@ -1,0 +1,114 @@
+[
+  {
+    "id": "7.3-q1",
+    "topic": "YAML over classic",
+    "scenario": "The warehouse release pipeline was built in the classic web editor. Nobody can review changes to it, and its history is unclear.",
+    "stem": "What is the main benefit of rebuilding it as a YAML pipeline?",
+    "options": [
+      "YAML pipelines run faster",
+      "The pipeline lives in the repository, so it is versioned, reviewed in pull requests and rebuilt from source like the code it ships",
+      "YAML pipelines need no agents",
+      "Classic pipelines cannot deploy to Azure"
+    ],
+    "answer": 1,
+    "explanation": "Pipeline-as-code brings the same controls as application code: history, review and reproducibility. Speed and agent use are the same, and classic pipelines can deploy to Azure - they are just opaque."
+  },
+  {
+    "id": "7.3-q2",
+    "topic": "build once",
+    "scenario": "A fix passed in test but failed in production. The pipeline rebuilt the code separately for each environment and picked up a newer dependency the second time.",
+    "stem": "What should the pipeline do instead?",
+    "options": [
+      "Rebuild more carefully with pinned versions each time",
+      "Build once, publish the artefact, and deploy that same artefact to test and then production",
+      "Skip the test environment",
+      "Build only in production"
+    ],
+    "answer": 1,
+    "explanation": "Promoting one artefact guarantees production runs exactly what was tested. Pinning helps, but separate builds can still differ. Skipping test or building only in production removes the check entirely."
+  },
+  {
+    "id": "7.3-q3",
+    "topic": "agents",
+    "scenario": "The pipeline must deploy to a server in the warehouse office that has no inbound internet access.",
+    "stem": "Which agent choice fits?",
+    "options": [
+      "A Microsoft-hosted agent, which can reach any network",
+      "A self-hosted agent in the office, which makes outbound connections to Azure DevOps and deploys locally",
+      "Open RDP on the server so the hosted agent can connect in",
+      "No agent is needed for on-premises deployments"
+    ],
+    "answer": 1,
+    "explanation": "Hosted agents run on the internet and cannot reach private networks. A self-hosted agent inside the network pulls jobs over outbound HTTPS, so no inbound ports are opened. Opening RDP to the internet undoes Module 4."
+  },
+  {
+    "id": "7.3-q4",
+    "topic": "environments and checks",
+    "scenario": "A developer worries that anyone could remove the production approval by editing azure-pipelines.yml in a pull request.",
+    "stem": "Where should the production approval be configured?",
+    "options": [
+      "As a step in the YAML file",
+      "On the warehouse-prod environment's approvals and checks, which the YAML cannot override",
+      "In the README",
+      "On the build stage"
+    ],
+    "answer": 1,
+    "explanation": "Checks on an environment are enforced by Azure DevOps whenever a deployment job targets it, regardless of what the pipeline file says. A step in the YAML can be deleted in the same pull request that ships the risky change."
+  },
+  {
+    "id": "7.3-q5",
+    "topic": "service connections",
+    "scenario": "Deployments stopped because the service principal secret behind the Azure service connection expired.",
+    "stem": "What is the durable fix?",
+    "options": [
+      "Create a new secret with the longest possible expiry",
+      "Recreate the service connection with workload identity federation, scoped to one resource group",
+      "Use a personal account for the connection",
+      "Store the secret in a variable group"
+    ],
+    "answer": 1,
+    "explanation": "Federation lets the pipeline exchange its own token for an Azure token, so there is no secret to expire or leak. Scoping it narrowly limits what a compromised pipeline could do. Longer expiries, personal accounts and variable groups keep the underlying problem."
+  },
+  {
+    "id": "7.3-q6",
+    "topic": "connection scope",
+    "scenario": "One service connection with Owner on the whole subscription is shared by every pipeline in the project.",
+    "stem": "What is the risk, and the fix?",
+    "options": [
+      "No risk, since only pipelines use it",
+      "Any pipeline - or anyone who can edit one - can change anything in the subscription; use one federated connection per environment scoped to its resource group, restrict which pipelines can use it, and add checks on production",
+      "It is slower than several connections",
+      "It prevents approvals"
+    ],
+    "answer": 1,
+    "explanation": "A pipeline can do whatever its connection allows, so a broad, shared connection turns any pipeline edit into subscription-wide power. Narrow scope, pipeline permissions and checks on production connections apply least privilege to CI/CD."
+  },
+  {
+    "id": "7.3-q7",
+    "topic": "templates",
+    "scenario": "Security wants dependency scanning in all 30 pipelines, and wants to be sure teams cannot drop it.",
+    "stem": "What is the best mechanism?",
+    "options": [
+      "Email every team asking them to add a scanning step",
+      "An extends template in a shared repository that includes the mandatory scan, which every pipeline must extend",
+      "Copy the step into each pipeline once",
+      "Run scans manually each month"
+    ],
+    "answer": 1,
+    "explanation": "An extends template defines the pipeline's structure, including mandatory steps teams cannot remove, and changes roll out from one place. Emails and one-off copies drift, and monthly manual scans miss everything between them."
+  },
+  {
+    "id": "7.3-q8",
+    "topic": "self-hosted agent hygiene",
+    "scenario": "The self-hosted build agent has run for three years under an admin account, with old tools and files from previous builds.",
+    "stem": "What is the better direction?",
+    "options": [
+      "Leave it; it works",
+      "Move to Managed DevOps Pools or ephemeral agents where possible, and otherwise patch, clean and run the agent with least privilege",
+      "Share its admin password with the team",
+      "Install more tools on it"
+    ],
+    "answer": 1,
+    "explanation": "Long-lived agents accumulate state, stale tools and excessive privilege, and a compromise gives an attacker a trusted path into deployments. Managed or ephemeral agents start clean each time; any remaining self-hosted agent needs patching and least privilege."
+  }
+]
