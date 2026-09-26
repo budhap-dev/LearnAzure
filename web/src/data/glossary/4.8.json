@@ -1,0 +1,34 @@
+[
+  {
+    "term": "Zero trust",
+    "aliases": ["zero-trust", "Zero Trust model", "never trust, always verify"],
+    "definition": "A security model with three principles: verify every request explicitly using all available signals, grant least privilege just in time, and assume breach so one foothold reaches little and is noticed quickly. It replaces the perimeter model, in which anything inside the network was trusted. It is a design rule, not a product.",
+    "example": "The orders database accepts only Entra identities over a private endpoint; being inside the VNet alone gets an attacker nothing.",
+    "lessons": ["4.8"],
+    "related": ["Least privilege", "Assume breach", "Defence in depth", "Conditional Access"]
+  },
+  {
+    "term": "Defence in depth",
+    "aliases": ["defense in depth", "layered security"],
+    "definition": "Protecting a system with several independent layers - identity, edge, network, application, data and monitoring - so that when one control fails, another still stops or detects the attack. The test is that no layer depends on another one holding.",
+    "example": "A phished password meets MFA; if MFA were bypassed, the attacker's identity still holds no production roles, and the attempt raises an alert.",
+    "lessons": ["4.8"],
+    "related": ["Zero trust", "Threat modelling"]
+  },
+  {
+    "term": "Assume breach",
+    "aliases": ["assume compromise"],
+    "definition": "The zero-trust principle of designing as if an attacker is already inside: segment networks, limit what each identity can reach, encrypt data, protect backups from deletion, and monitor so a foothold is found in minutes rather than weeks.",
+    "example": "Because the shop assumes breach, a compromised API instance can read one blob container and nothing else, and Defender flags the unusual reads.",
+    "lessons": ["4.8"],
+    "related": ["Zero trust", "Defence in depth", "Least privilege"]
+  },
+  {
+    "term": "Threat modelling",
+    "aliases": ["threat model", "threat modeling", "STRIDE"],
+    "definition": "Examining a design for what can go wrong before it ships: draw the data flows, mark the trust boundaries, ask what could happen at each crossing (STRIDE: spoofing, tampering, repudiation, information disclosure, denial of service, elevation of privilege), and record a mitigation and owner for each threat or accept the risk in writing.",
+    "example": "At the design review, the flow from the pipeline to Azure is marked as a trust boundary; the mitigation is workload identity federation scoped to one resource group.",
+    "lessons": ["4.8"],
+    "related": ["Defence in depth", "Zero trust"]
+  }
+]

@@ -1,0 +1,203 @@
+{
+  "module": 4,
+  "minutes": 25,
+  "poolFromLessons": 10,
+  "questions": [
+    {
+      "id": "m4-q1",
+      "topic": "address planning",
+      "scenario": "A new team is about to create a VNet for a second workload. The office uses 192.168.0.0/16, the shop's prod and dev VNets use 10.20.0.0/16 and 10.21.0.0/16, and the hub uses 10.0.0.0/16.",
+      "stem": "What should they do before creating it?",
+      "options": [
+        "Use 10.0.0.0/16 again, since each VNet is isolated by default",
+        "Take the next free range from the shared IP plan, such as 10.22.0.0/16, and record it there",
+        "Use 192.168.0.0/16 so it matches the office",
+        "Let Azure choose the range automatically"
+      ],
+      "answer": 1,
+      "explanation": "VNets that might ever be peered or connected to the office must not overlap anything else, and the only reliable way to guarantee that is one shared plan. Reusing a range works until the day the networks need to talk, and then it means a rebuild."
+    },
+    {
+      "id": "m4-q2",
+      "topic": "management access",
+      "scenario": "An auditor finds a VM with a public IP and an NSG rule allowing RDP from Any. The team says the password is strong and changed quarterly.",
+      "stem": "What is the right remediation?",
+      "options": [
+        "Keep the rule but move RDP to a non-standard port",
+        "Remove the public IP, reach the VM through Azure Bastion, and allow RDP only from the Bastion subnet",
+        "Add account lockout and keep the rule",
+        "Restrict the rule to the office IP and keep the public IP"
+      ],
+      "answer": 1,
+      "explanation": "The goal is no management port on the internet at all. Bastion provides RDP through the portal over HTTPS, so the VM needs no public address and the NSG only admits the Bastion subnet. Port changes and lockouts reduce noise; they do not remove the exposure."
+    },
+    {
+      "id": "m4-q3",
+      "topic": "choosing a front door",
+      "scenario": "A public web app on App Service must serve users in Europe and Asia, survive the loss of its primary region and block common web attacks.",
+      "stem": "Which service fits?",
+      "options": [
+        "Azure Load Balancer in the primary region",
+        "Application Gateway WAF_v2 in the primary region",
+        "Azure Front Door Premium with WAF, a primary and a secondary origin, and the origins accepting only Front Door",
+        "Traffic Manager with performance routing and no WAF"
+      ],
+      "answer": 2,
+      "explanation": "Global users, cross-region failover and a WAF for HTTP traffic are exactly Front Door's job. Load Balancer is layer 4 and regional, Application Gateway goes down with its region, and Traffic Manager is DNS only - no WAF, and failover waits on DNS caching. Locking the origin to Front Door stops attackers going around the WAF."
+    },
+    {
+      "id": "m4-q4",
+      "topic": "private endpoint DNS",
+      "scenario": "After adding a private endpoint to a storage account and disabling public access, the API in the prod VNet works, but a function app in the dev VNet, peered through the hub, gets 403 errors.",
+      "stem": "What is the most likely cause?",
+      "options": [
+        "Private endpoints cannot be reached across peering",
+        "The privatelink.blob.core.windows.net zone is linked to the prod VNet but not to the dev VNet, so dev resolves the public address",
+        "The function app needs a service endpoint as well",
+        "The storage account needs a second private endpoint per caller"
+      ],
+      "answer": 1,
+      "explanation": "Private endpoints are reachable over peering, but callers only use them if their name lookup returns the private IP, and that depends on the private DNS zone being linked to their VNet. One zone per service type, linked to every VNet, avoids this class of failure."
+    },
+    {
+      "id": "m4-q5",
+      "topic": "hybrid connectivity",
+      "scenario": "A retailer's distribution centre must replicate 2 Gbps of stock data to Azure continuously, and its regulator requires that the link not cross the public internet.",
+      "stem": "What should connect the site to Azure?",
+      "options": [
+        "A point-to-site VPN from each server",
+        "A site-to-site VPN over the existing internet line",
+        "ExpressRoute through a connectivity provider, with a site-to-site VPN as backup",
+        "Public endpoints with IP allowlists"
+      ],
+      "answer": 2,
+      "explanation": "Sustained high bandwidth plus a no-internet requirement are ExpressRoute's named reasons. A site-to-site VPN crosses the internet, point-to-site is for individual devices, and public endpoints contradict the requirement. The VPN is kept as a backup path in case the circuit fails."
+    },
+    {
+      "id": "m4-q6",
+      "topic": "token checks",
+      "scenario": "An internal API accepts any JWT signed by Entra ID. A developer notices that a token issued for a different app in the same tenant is accepted too.",
+      "stem": "What must the API also check?",
+      "options": [
+        "Only the token's expiry time",
+        "The audience (that the token was issued for this API) and the issuer, plus the roles the caller holds",
+        "The user's IP address",
+        "Nothing more; a valid Entra signature is sufficient"
+      ],
+      "answer": 1,
+      "explanation": "A signature proves Entra ID issued the token, not that it was issued for this API. Checking the audience rejects tokens meant for other apps, the issuer pins the tenant, and roles decide what the caller may do. Accepting any signed token lets every app in the tenant call this one."
+    },
+    {
+      "id": "m4-q7",
+      "topic": "phishing",
+      "scenario": "After a phishing campaign, two staff accounts approved fraudulent MFA push notifications sent in the middle of the night.",
+      "stem": "What is the strongest improvement?",
+      "options": [
+        "Switch MFA from push notifications to text messages",
+        "Require phishing-resistant methods such as passkeys, at least for admins and high-value apps, through Conditional Access",
+        "Disable MFA for night-time sign-ins",
+        "Require longer passwords"
+      ],
+      "answer": 1,
+      "explanation": "Push fatigue and real-time phishing defeat approve-style MFA and text messages. Passkeys and FIDO2 keys are bound to the genuine site, so a phishing page cannot use them. Conditional Access can require them where the stakes are highest; longer passwords do nothing against phishing."
+    },
+    {
+      "id": "m4-q8",
+      "topic": "data-plane access",
+      "scenario": "A reporting app's managed identity is Contributor on the resource group but gets 403 when reading secrets from Key Vault.",
+      "stem": "What is the least-privilege fix?",
+      "options": [
+        "Make the identity Owner on the resource group",
+        "Assign Key Vault Secrets User to the identity on that one vault",
+        "Switch the vault back to a client secret",
+        "Give the identity Key Vault Administrator on the subscription"
+      ],
+      "answer": 1,
+      "explanation": "Contributor manages the vault resource but does not read its contents; reading secrets is a data-plane action. Key Vault Secrets User on the one vault grants exactly that. Owner is also control-plane, and administrator rights across the subscription are far more than the app needs."
+    },
+    {
+      "id": "m4-q9",
+      "topic": "secret-free pipelines",
+      "scenario": "A GitHub Actions workflow deploys to production with a client secret stored as a repository secret. The secret has Contributor on the whole subscription.",
+      "stem": "What should replace it?",
+      "options": [
+        "A certificate stored as a repository secret",
+        "Workload identity federation with a user-assigned identity trusted only for the production environment, holding Contributor on the production resource group",
+        "A personal access token of the lead developer",
+        "The same secret, rotated monthly"
+      ],
+      "answer": 1,
+      "explanation": "Federation removes the stored credential entirely: GitHub's OIDC token is exchanged for an Azure one, and Entra trusts only the named repository and environment. Narrowing the role to the workload's resource group limits damage if the workflow is abused. Certificates and rotated secrets are still credentials that can leak."
+    },
+    {
+      "id": "m4-q10",
+      "topic": "standing privilege",
+      "scenario": "A leaked admin token was used to delete a production resource group overnight. The account held Owner on the subscription permanently.",
+      "stem": "Which change most reduces the chance of this recurring?",
+      "options": [
+        "Assign Owner through Privileged Identity Management so it is eligible, activated with MFA and justification for a few hours",
+        "Rename the admin account",
+        "Remove Owner from everyone and give it to a shared account",
+        "Enable soft delete on the resource group"
+      ],
+      "answer": 0,
+      "explanation": "With PIM, a stolen token for an account that has not activated Owner cannot delete anything, and activation needs MFA and leaves an audit trail. Shared accounts destroy accountability, renaming changes nothing, and resource groups have no soft delete - resource locks and backups are separate safeguards."
+    },
+    {
+      "id": "m4-q11",
+      "topic": "rotation",
+      "scenario": "A payment provider's API key stored in Key Vault leaks through a partner's logs. The team rotates it, but the App Service keeps using the old key for hours.",
+      "stem": "Why, and what should they do?",
+      "options": [
+        "Key Vault caches secrets for 24 hours and cannot be forced",
+        "The Key Vault reference is refreshed periodically or on restart; restart the app (or trigger a refresh) after rotating",
+        "The reference must include the old version number",
+        "Rotation only works for certificates"
+      ],
+      "answer": 1,
+      "explanation": "A versionless Key Vault reference follows the latest secret, but App Service re-reads references periodically and on configuration changes or restarts. After an emergency rotation, restart deliberately so the new value is live immediately. Pinning a version would make it follow nothing."
+    },
+    {
+      "id": "m4-q12",
+      "topic": "shared vaults",
+      "scenario": "One Key Vault holds secrets for the shop's dev, test and production environments, and every environment's identity has Key Vault Secrets User on it.",
+      "stem": "What is the main risk, and the fix?",
+      "options": [
+        "Performance; add a cache",
+        "Any environment can read production secrets, so a dev compromise exposes prod; use one vault per app per environment",
+        "Cost; one vault is cheaper, so keep it",
+        "No risk, because Key Vault logs every read"
+      ],
+      "answer": 1,
+      "explanation": "Least privilege and assume breach both point to separate vaults: a dev identity should have no path to production secrets. Logging records the damage but does not prevent it, and vaults cost almost nothing."
+    },
+    {
+      "id": "m4-q13",
+      "topic": "policy rollout",
+      "scenario": "Security wants to forbid public network access on all data services across ten subscriptions. Several existing pipelines still create storage accounts with public access.",
+      "stem": "How should the policy be rolled out?",
+      "options": [
+        "Assign it with Deny immediately so non-compliant deployments fail",
+        "Assign it with Audit, fix templates and record justified exemptions with expiry dates, then switch to Deny",
+        "Ask teams by email to stop creating public storage",
+        "Assign it only to new subscriptions"
+      ],
+      "answer": 1,
+      "explanation": "Audit reveals what would break without breaking it, so templates can be fixed first; Deny then keeps the estate from drifting back. Deny on day one stops deployments unexpectedly, emails are not enforcement, and limiting the policy to new subscriptions leaves the existing estate exposed."
+    },
+    {
+      "id": "m4-q14",
+      "topic": "end-to-end review",
+      "scenario": "At a design review for a new partner API, the team shows a diagram and a list of Azure services. Priya asks what happens if one developer's laptop is compromised today.",
+      "stem": "What is the review really asking for?",
+      "options": [
+        "A list of the antivirus products installed",
+        "A threat model: data flows, trust boundaries, what could go wrong at each, and a mitigation and owner per threat",
+        "A penetration test after launch",
+        "A larger budget for Defender plans"
+      ],
+      "answer": 1,
+      "explanation": "Walking an attacker through the design - where they start, what each boundary stops, how they would be noticed - is threat modelling, and it belongs in the design review, when mitigations are still design choices. Tools and tests matter, but they do not answer the question of what a single compromise can reach."
+    }
+  ]
+}

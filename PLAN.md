@@ -31,7 +31,7 @@ lesson quizzes, timed, graded). A **final learning test** draws from the whole c
 | 1 | Cloud and Azure foundations ✅ | 8 | What cloud is, how Azure is organised, cost, SLAs |
 | 2 | Compute and hosting ✅ | 7 | VMs, App Service, Static Web Apps, Functions, containers, AKS |
 | 3 | Storage and data ✅ | 7 | Storage accounts, Azure SQL, Cosmos DB, Redis, choosing a store |
-| 4 | Networking, identity and security 🚧 | 8 | VNets, load balancing, private endpoints, Entra ID, RBAC, Key Vault, Defender |
+| 4 | Networking, identity and security ✅ | 8 | VNets, load balancing, private endpoints, Entra ID, RBAC, Key Vault, Defender |
 | 5 | Integration and messaging | 6 | Service Bus, Event Grid, Event Hubs, API Management, Logic Apps |
 | 6 | Observability and reliability | 6 | Monitor, Log Analytics, App Insights, alerts, Well-Architected, HA/DR |
 | 7 | DevOps on Azure | 8 | Azure DevOps vs GitHub, pipelines, GitHub Actions, IaC with Bicep/Terraform, environments, release strategies |
@@ -92,44 +92,26 @@ design reviews.
 Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
 at random from the lesson quizzes. 88 new glossary terms (249 in total).
 
-### Module 4 — Networking, identity and security — **in progress, one lesson per PR**
+### Module 4 — Networking, identity and security — **shipped**
 
-| Id | Lesson | Status |
-|----|--------|--------|
-| 4.1 | Virtual networks, subnets and network security groups | shipped |
-| 4.2 | Load Balancer, Application Gateway, Front Door and Traffic Manager | shipped |
-| 4.3 | Private endpoints, DNS and hybrid connectivity | shipped |
-| 4.4 | Microsoft Entra ID - the identity backbone | shipped |
-| 4.5 | Role-based access control and managed identities | shipped |
-| 4.6 | Key Vault, secrets and App Configuration | shipped |
-| 4.7 | Defender for Cloud, Sentinel and the security baseline | shipped |
-| 4.8 | Zero trust and securing a web workload end to end | planned |
+| Id | Lesson |
+|----|--------|
+| 4.1 | Virtual networks, subnets and network security groups |
+| 4.2 | Load Balancer, Application Gateway, Front Door and Traffic Manager |
+| 4.3 | Private endpoints, DNS and hybrid connectivity |
+| 4.4 | Microsoft Entra ID - the identity backbone |
+| 4.5 | Role-based access control and managed identities |
+| 4.6 | Key Vault, secrets and App Configuration |
+| 4.7 | Defender for Cloud, Sentinel and the security baseline |
+| 4.8 | Zero trust and securing a web workload end to end |
 
-Glossary term ownership, so each lesson PR defines its own terms and no others:
+How traffic flows and who may do what, released one lesson per PR (#4-#12). The network half
+moves the shop from public endpoints to private ones behind a single front door; the identity
+half removes every stored secret it can and puts admin rights behind PIM. 4.8 walks an
+attacker through the finished design and sets a minimum bar for every workload.
 
-- **4.1**: Virtual network, Subnet, CIDR notation, Network security group, Service tag,
-  Application security group, VNet peering, Hub-and-spoke, User-defined route, NAT gateway,
-  Public IP address, Azure Bastion, Azure Firewall.
-- **4.2**: Load balancing, Azure Load Balancer, Application Gateway, Web application firewall,
-  Azure Front Door, Traffic Manager, Health probe, Layer 4 and layer 7, TLS termination,
-  DDoS Protection.
-- **4.3**: Private endpoint, Private Link, Private DNS zone, Service endpoint, Azure DNS Private Resolver, VPN Gateway,
-  ExpressRoute.
-- **4.4**: Identity provider, OAuth 2.0 and OpenID Connect, App registration, Service principal,
-  Multifactor authentication, Conditional Access, Guest user, Microsoft Entra External ID,
-  Emergency access account.
-- **4.5**: Security principal, Role assignment, Built-in role, Custom role, Least privilege,
-  Privileged Identity Management, User-assigned managed identity, Workload identity federation.
-- **4.6**: Key Vault secret, Key Vault reference, Purge protection, Secret rotation, Azure App
-  Configuration, Feature flag.
-- **4.7**: Microsoft Defender for Cloud, Secure score, Cloud security posture management, Microsoft
-  Sentinel, SIEM, Microsoft cloud security benchmark, Just-in-time VM access.
-- **4.8**: Zero trust, Defence in depth, Assume breach, Threat modelling.
-- Existing terms are extended (add the lesson id), never redefined: Microsoft Entra ID, Tenant,
-  Role-based access control, Scope, Control plane, Data plane, Managed identity, Key Vault,
-  Azure Policy, Soft delete, Customer-managed key.
-
-The module test is written with 4.8.
+Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
+at random from the lesson quizzes. 64 new glossary terms (313 in total).
 
 ## App architecture
 
