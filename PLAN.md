@@ -98,7 +98,7 @@ at random from the lesson quizzes. 88 new glossary terms (249 in total).
 |----|--------|--------|
 | 4.1 | Virtual networks, subnets and network security groups | shipped |
 | 4.2 | Load Balancer, Application Gateway, Front Door and Traffic Manager | shipped |
-| 4.3 | Private endpoints, DNS and hybrid connectivity | planned |
+| 4.3 | Private endpoints, DNS and hybrid connectivity | shipped |
 | 4.4 | Microsoft Entra ID - the identity backbone | planned |
 | 4.5 | Role-based access control and managed identities | planned |
 | 4.6 | Key Vault, secrets and App Configuration | planned |
@@ -113,7 +113,7 @@ Glossary term ownership, so each lesson PR defines its own terms and no others:
 - **4.2**: Load balancing, Azure Load Balancer, Application Gateway, Web application firewall,
   Azure Front Door, Traffic Manager, Health probe, Layer 4 and layer 7, TLS termination,
   DDoS Protection.
-- **4.3**: Private endpoint, Private Link, Private DNS zone, Service endpoint, VPN Gateway,
+- **4.3**: Private endpoint, Private Link, Private DNS zone, Service endpoint, Azure DNS Private Resolver, VPN Gateway,
   ExpressRoute.
 - **4.4-4.8**: assigned when 4.4 starts. Existing terms to extend rather than duplicate:
   Microsoft Entra ID, Tenant, Role-based access control, Managed identity, Key Vault.
