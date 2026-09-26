@@ -86,7 +86,7 @@
     "definition": "A set of Azure SQL databases or a Managed Instance replicated asynchronously to a secondary server in another region, usually the region pair, behind one listener DNS name. Failover moves the whole group together and can be automatic after a grace period (one hour by default), and applications keep the same connection string. It is the cloud shape of an Always On availability group listener, but replication is asynchronous, so a forced failover can lose the last few seconds of commits.",
     "example": "shop-orders.database.windows.net points at UK South today and at UK West after a failover, and the Node API never changes its config.",
     "icon": "azure-sql",
-    "lessons": ["3.2"],
+    "lessons": ["3.2", "6.5"],
     "related": ["Active geo-replication", "Region pair", "Disaster recovery", "RPO"]
   },
   {

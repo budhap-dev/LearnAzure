@@ -29,7 +29,7 @@
     "aliases": ["recovery point objective"],
     "definition": "The maximum amount of data loss a business can accept after a failure, expressed as time. An RPO of 15 minutes means replication or backups must never be more than 15 minutes behind. A nightly backup implies an RPO of 24 hours.",
     "example": "Azure SQL geo-replication keeps the secondary a few seconds behind, well inside the shop's 15-minute RPO.",
-    "lessons": ["1.7"],
+    "lessons": ["1.7", "6.5"],
     "related": ["RTO", "Disaster recovery", "Azure SQL Database"]
   },
   {
@@ -37,7 +37,7 @@
     "aliases": ["recovery time objective"],
     "definition": "The maximum time a service may be unavailable after a failure before it must be running again. Meeting an RTO depends less on the technology than on whether the failover has been rehearsed.",
     "example": "An RTO of 1 hour for the ordering API, tested by a quarterly failover to the paired region.",
-    "lessons": ["1.7"],
+    "lessons": ["1.7", "6.5"],
     "related": ["RPO", "Disaster recovery", "High availability"]
   },
   {
@@ -64,7 +64,7 @@
     "definition": "Designing a service to keep running through component failures - a VM dying, a host being patched, a zone losing power - without an outage, usually through redundancy within a region. It does not protect against the whole region being lost; that is disaster recovery.",
     "example": "A zone-redundant Azure SQL database stays online while one availability zone is offline.",
     "icon": "availability-sets",
-    "lessons": ["1.7"],
+    "lessons": ["1.7", "6.5"],
     "related": ["Redundancy", "Disaster recovery", "Availability zone"]
   },
   {
@@ -73,7 +73,7 @@
     "definition": "The plan and mechanisms for recovering a service in another region when the primary region is unavailable: replicated data, a second deployment, and a rehearsed failover measured against RPO and RTO. A backup alone is not disaster recovery.",
     "example": "Geo-replication to the paired region plus a quarterly failover drill that must complete within the one-hour RTO.",
     "icon": "site-recovery",
-    "lessons": ["1.7"],
+    "lessons": ["1.7", "6.5"],
     "related": ["RPO", "RTO", "Region pair", "High availability"]
   },
   {
@@ -90,7 +90,7 @@
     "definition": "A system's ability to keep working, or recover quickly, when parts of it fail or misbehave. It combines redundancy, transient fault handling, graceful degradation and rehearsed recovery. The Reliability pillar of the Well-Architected Framework is largely about resiliency.",
     "example": "When the recommendations service is down, the shop still shows the product page without the 'you may also like' panel.",
     "icon": "resiliency",
-    "lessons": ["1.7"],
+    "lessons": ["1.7", "6.5"],
     "related": ["Redundancy", "Transient fault", "Well-Architected Framework"]
   },
   {
@@ -98,7 +98,7 @@
     "aliases": ["transient error"],
     "definition": "A short-lived failure - a dropped connection, a throttled request, a database failing over - that succeeds if retried a moment later. Cloud services expect them; applications must retry with back-off rather than treat every error as fatal.",
     "example": "The Node API retries a SQL connection three times with increasing delays before returning an error.",
-    "lessons": ["1.7", "5.1"],
+    "lessons": ["1.7", "5.1", "6.5"],
     "related": ["Resiliency", "High availability"]
   }
 ]

@@ -705,12 +705,19 @@
         {
           "id": "6.5",
           "title": "High availability and disaster recovery patterns",
-          "summary": "",
+          "summary": "RTO and RPO per capability, zones and resilient code, four cross-region strategies, failing over the whole stack, and proving it with drills, chaos and load tests.",
           "minutes": 15,
-          "objectives": [],
+          "objectives": [
+            "Set RTO and RPO per business capability and choose a matching strategy",
+            "Apply retry, circuit breaker, bulkhead and degradation patterns within a region",
+            "Fail over the whole stack and prove it with DR drills, chaos experiments and load tests"
+          ],
           "icons": [
-            "resiliency"
-          ]
+            "site-recovery",
+            "chaos-studio",
+            "load-testing"
+          ],
+          "status": "ready"
         },
         {
           "id": "6.6",

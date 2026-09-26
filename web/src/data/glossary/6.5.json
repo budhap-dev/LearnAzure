@@ -1,0 +1,60 @@
+[
+  {
+    "term": "Active-active",
+    "aliases": ["active/active", "multi-region active-active"],
+    "definition": "A disaster recovery design where two or more regions serve users at the same time at full capacity, so losing one costs almost no downtime. It needs data that can be written in every region - Cosmos DB multi-region writes, or data partitioned by geography - and a plan for conflicts, and it roughly doubles cost.",
+    "example": "A global catalogue served from Cosmos DB with multi-region writes runs active-active in Europe and Australia.",
+    "lessons": ["6.5"],
+    "related": ["Active-passive", "Disaster recovery", "Multi-region writes"]
+  },
+  {
+    "term": "Active-passive",
+    "aliases": ["active/passive", "warm standby", "pilot light", "cold standby", "backup and restore"],
+    "definition": "A disaster recovery design where one region serves users and another waits. Backup and restore keeps nothing running (hours to a day to recover); pilot light replicates data with compute off (about an hour); warm standby keeps a scaled-down copy running behind Front Door (minutes).",
+    "example": "Checkout runs warm standby in UK West: a small API instance and a failover-group secondary are always running.",
+    "lessons": ["6.5"],
+    "related": ["Active-active", "Failover group", "Disaster recovery", "RTO"]
+  },
+  {
+    "term": "Retry with exponential backoff",
+    "aliases": ["exponential backoff", "retry pattern", "jitter", "retry storm"],
+    "definition": "Retrying a failed call after a delay that grows each attempt - for example 1, 2 then 4 seconds - with random jitter so clients do not retry in lockstep. It handles transient faults; without backoff and jitter, retries become a retry storm that keeps a recovering service down. Only retry idempotent operations, and cap the attempts.",
+    "example": "The API retries SQL connection failures three times with jittered exponential backoff during a failover.",
+    "lessons": ["6.5"],
+    "related": ["Transient fault", "Circuit breaker", "Idempotent"]
+  },
+  {
+    "term": "Circuit breaker",
+    "aliases": ["circuit breaker pattern", "fail fast"],
+    "definition": "A pattern that stops calling a dependency after repeated failures, fails fast for a cooling-off period, then lets a trial call through to see if it has recovered. It protects both the caller and the struggling dependency, and pairs with a fallback such as cached data.",
+    "example": "When the recommendations service fails ten times in 30 seconds, the circuit opens and product pages show best-sellers for a minute.",
+    "lessons": ["6.5"],
+    "related": ["Retry with exponential backoff", "Bulkhead", "Resiliency"]
+  },
+  {
+    "term": "Bulkhead",
+    "aliases": ["bulkhead pattern", "isolation"],
+    "definition": "Isolating resources - connection pools, instances, plans, replicas - so one failing or overloaded part cannot exhaust what the rest of the system needs, like watertight compartments in a ship.",
+    "example": "Reporting runs on its own App Service plan against a read replica, so a heavy report cannot starve checkout of connections.",
+    "lessons": ["6.5"],
+    "related": ["Circuit breaker", "Read scale-out", "Resiliency"]
+  },
+  {
+    "term": "Chaos engineering",
+    "aliases": ["Azure Chaos Studio", "fault injection", "game day"],
+    "definition": "Deliberately injecting failures - stopped VMs, added latency, denied access, a simulated zone outage - in controlled experiments to check the system behaves as designed. Azure Chaos Studio runs such experiments against Azure resources, with stop conditions; start in staging, then move carefully to production.",
+    "example": "A monthly Chaos Studio experiment adds 2 seconds of latency to the payment dependency and checks that the circuit breaker opens.",
+    "icon": "chaos-studio",
+    "lessons": ["6.5"],
+    "related": ["Resiliency", "Load testing", "Disaster recovery"]
+  },
+  {
+    "term": "Load testing",
+    "aliases": ["Azure Load Testing", "performance testing", "stress test"],
+    "definition": "Running realistic traffic at and beyond expected peak to find how a system behaves and where it breaks, before real users find out. Azure Load Testing runs JMeter or Locust scripts at scale from Azure and correlates results with Azure Monitor metrics.",
+    "example": "A month before Black Friday, the checkout journey is load-tested at three times last year's peak.",
+    "icon": "load-testing",
+    "lessons": ["6.5"],
+    "related": ["Chaos engineering", "Scalability"]
+  }
+]
