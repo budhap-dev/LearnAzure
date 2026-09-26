@@ -654,12 +654,19 @@
         {
           "id": "6.2",
           "title": "Log Analytics and just enough KQL",
-          "summary": "",
+          "summary": "The tables that matter, KQL for SQL Server people, five queries every team needs, workbooks, and the levers that cut a log bill by two thirds.",
           "minutes": 14,
-          "objectives": [],
+          "objectives": [
+            "Read and write KQL queries using what you know from T-SQL",
+            "Build the team's incident queries and a workbook everyone opens first",
+            "Control log cost with collection choices, table plans, retention and commitment tiers"
+          ],
           "icons": [
-            "log-analytics"
-          ]
+            "log-analytics",
+            "workbooks",
+            "application-insights"
+          ],
+          "status": "ready"
         },
         {
           "id": "6.3",

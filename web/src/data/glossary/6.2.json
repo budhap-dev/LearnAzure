@@ -1,0 +1,43 @@
+[
+  {
+    "term": "KQL",
+    "aliases": ["Kusto Query Language", "Kusto", "log query"],
+    "definition": "The query language of Log Analytics, Application Insights, Sentinel and Azure Data Explorer. A query starts with a table and pipes rows through steps such as where, summarize, project, join and render. It maps closely onto T-SQL; always filter on time first.",
+    "example": "AppRequests | where TimeGenerated > ago(1h) and Success == false | summarize count() by Name",
+    "lessons": ["6.2"],
+    "related": ["Log Analytics workspace", "Azure Workbook"]
+  },
+  {
+    "term": "Log table plan",
+    "aliases": ["table plan", "Analytics logs", "Basic logs", "Auxiliary logs"],
+    "definition": "The pricing and capability tier of each table in a Log Analytics workspace. Analytics is full price with fast queries and alerting; Basic costs roughly a quarter plus a charge per GB scanned and cannot drive alerts; Auxiliary is cheapest, for verbose logs searched rarely.",
+    "example": "Front Door access logs move to Basic while WAF logs, which are alerted on, stay on Analytics.",
+    "lessons": ["6.2"],
+    "related": ["Log retention", "Commitment tier", "Log Analytics workspace"]
+  },
+  {
+    "term": "Log retention",
+    "aliases": ["retention", "interactive retention", "long-term retention", "archive"],
+    "definition": "How long a workspace keeps each table's data. Analytics tables include 31 days at no extra charge and can be retained interactively for up to two years; long-term retention keeps data for up to 12 years at a fraction of the price, searched or restored when needed. Match it to audit and investigation needs.",
+    "example": "Key Vault audit events are interactive for 90 days and kept for a year in long-term retention.",
+    "lessons": ["6.2"],
+    "related": ["Log table plan", "Log Analytics workspace"]
+  },
+  {
+    "term": "Commitment tier",
+    "aliases": ["commitment tiers", "capacity reservation"],
+    "definition": "A Log Analytics pricing option that discounts ingestion in exchange for committing to a daily volume, starting at 100 GB a day. Worth it only when volume is steady and predictable; below the commitment you still pay for the full tier.",
+    "example": "A large estate ingesting a steady 300 GB a day saves by moving from pay-as-you-go to a 300 GB commitment tier.",
+    "lessons": ["6.2"],
+    "related": ["Log table plan", "Log Analytics workspace"]
+  },
+  {
+    "term": "Azure Workbook",
+    "aliases": ["Workbooks", "Azure Monitor workbook", "workbook"],
+    "definition": "An interactive report in Azure Monitor built from KQL queries, metrics and parameters - charts, grids and links in one page. Workbooks can be saved as templates and deployed with the infrastructure, so every environment has the same view.",
+    "example": "The Shop health workbook shows error rate, p95 latency, queue depth, WAF blocks and ingestion by table.",
+    "icon": "workbooks",
+    "lessons": ["6.2"],
+    "related": ["KQL", "Azure Monitor"]
+  }
+]
