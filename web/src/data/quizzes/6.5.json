@@ -1,0 +1,112 @@
+[
+  {
+    "id": "6.5-q1",
+    "topic": "RTO per capability",
+    "scenario": "The board asks for 'zero downtime and zero data loss for everything'.",
+    "stem": "What is the most useful response?",
+    "options": [
+      "Agree and build active-active for every system",
+      "Agree RTO and RPO per business capability - checkout, browsing, reporting - and price each level, recording which capabilities need less",
+      "Refuse, because Azure cannot provide high availability",
+      "Buy the highest tier of every service"
+    ],
+    "answer": 1,
+    "explanation": "Each extra nine and each minute less of RTO costs more, and capabilities differ in what an outage really costs. Setting targets per capability spends money where it matters; blanket zero-loss targets either bankrupt the project or are quietly ignored."
+  },
+  {
+    "id": "6.5-q2",
+    "topic": "zones first",
+    "stem": "What is usually the cheapest step with the biggest reliability gain for a workload in one region?",
+    "options": [
+      "Active-active across two continents",
+      "Using zone-redundant configurations of the services, so losing one data centre does not cause an outage",
+      "Running every service on virtual machines",
+      "A second subscription"
+    ],
+    "answer": 1,
+    "explanation": "Zone redundancy protects against the most common large failure - a data centre - often for little or no extra cost, and it requires no application failover. Multi-region designs come after the in-region basics are right."
+  },
+  {
+    "id": "6.5-q3",
+    "topic": "retry storms",
+    "scenario": "After a 30-second database failover, every API instance retries immediately and repeatedly, and the database stays overloaded for ten minutes.",
+    "stem": "What was missing?",
+    "options": [
+      "More retries",
+      "Exponential backoff with jitter, a cap on attempts, and a circuit breaker",
+      "A larger database tier",
+      "Disabling retries entirely"
+    ],
+    "answer": 1,
+    "explanation": "Immediate, synchronised retries turn a short failover into a long outage. Growing, randomised delays spread the load, a cap stops endless attempts, and a circuit breaker gives the dependency room to recover. No retries at all would turn every transient fault into an error."
+  },
+  {
+    "id": "6.5-q4",
+    "topic": "circuit breaker",
+    "scenario": "The recommendations service is down. Every product page waits for it to time out after 10 seconds.",
+    "stem": "Which pattern fixes the user experience?",
+    "options": [
+      "A longer timeout",
+      "A circuit breaker that stops calling it after repeated failures and shows a fallback, such as best-sellers, until it recovers",
+      "A bulkhead around the database",
+      "Queue-based load levelling"
+    ],
+    "answer": 1,
+    "explanation": "An open circuit fails fast instead of waiting on a dead dependency, and the fallback keeps the page useful. Periodic trial calls close the circuit again when the service recovers. A longer timeout makes pages slower still."
+  },
+  {
+    "id": "6.5-q5",
+    "topic": "whole-stack failover",
+    "scenario": "In a DR drill, Front Door switches to the UK West API, which then fails on start-up because it cannot reach its Key Vault and Service Bus namespace in UK South.",
+    "stem": "What does the drill reveal?",
+    "options": [
+      "Front Door is misconfigured",
+      "Only compute was made regional; secrets, messaging and other dependencies also need a UK West deployment or replica",
+      "UK West is too small",
+      "DR drills should not be run in business hours"
+    ],
+    "answer": 1,
+    "explanation": "A failover is only as good as its weakest component. Every dependency - data, secrets, config, messaging, cache, DNS - needs a plan for the other region. Finding that in a planned drill, rather than a real disaster, is exactly why drills exist."
+  },
+  {
+    "id": "6.5-q6",
+    "topic": "active-active",
+    "scenario": "A consultant proposes active-active across UK South and UK West for the orders system, which uses Azure SQL with a failover group.",
+    "stem": "What is the key obstacle?",
+    "options": [
+      "Front Door cannot route to two regions",
+      "A failover group has one writable primary, so both regions cannot accept order writes without a different data design",
+      "App Service cannot run in UK West",
+      "Active-active is cheaper than warm standby"
+    ],
+    "answer": 1,
+    "explanation": "Active-active needs every region to accept writes, which Azure SQL geo-replication does not provide; it needs a multi-write data store or data partitioned by region, with conflict handling. For this stack, warm standby is the realistic top tier."
+  },
+  {
+    "id": "6.5-q7",
+    "topic": "proving it",
+    "stem": "Which practice gives the most trustworthy answer to 'how long would a regional failover take?'",
+    "options": [
+      "An architecture diagram showing both regions",
+      "A scheduled DR drill that fails over for real, following the runbook, and measures RTO and RPO",
+      "The Azure SLA for each service",
+      "A Well-Architected questionnaire"
+    ],
+    "answer": 1,
+    "explanation": "Only doing it measures it. Drills expose broken runbook steps, missing dependencies and slow manual actions, and give a number the board can trust. Diagrams and SLAs describe intentions and components, not the whole recovery."
+  },
+  {
+    "id": "6.5-q8",
+    "topic": "load testing",
+    "scenario": "Last Black Friday the shop peaked at 1,200 checkouts a minute. The team wants confidence before this year's sale.",
+    "stem": "What should they do?",
+    "options": [
+      "Scale everything to the maximum on the day",
+      "Load test the checkout journey with Azure Load Testing at well above last year's peak a month ahead, and fix what breaks first",
+      "Watch the dashboards closely on the day",
+      "Run a chaos experiment that deletes the database"
+    ],
+    "answer": 1,
+    "explanation": "A load test at two to three times the expected peak finds the first bottleneck while there is time to fix it. Maximum scale on the day may still hit a limit in the database or a dependency, and watching dashboards only tells you when it is already failing."
+  }
+]

@@ -141,7 +141,7 @@ at random from the lesson quizzes. 41 new glossary terms (354 in total).
 | 6.2 | Log Analytics and just enough KQL | shipped |
 | 6.3 | Application Insights for web apps and APIs | shipped |
 | 6.4 | Alerts, action groups and on-call that works | shipped |
-| 6.5 | High availability and disaster recovery patterns | planned |
+| 6.5 | High availability and disaster recovery patterns | shipped |
 | 6.6 | The Well-Architected review in practice | planned |
 
 Glossary term ownership, so each lesson PR defines its own terms and no others:
