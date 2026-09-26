@@ -1,0 +1,59 @@
+[
+  {
+    "term": "Azure Event Hubs",
+    "aliases": ["Event Hubs", "event hub", "Event Hubs namespace"],
+    "definition": "Azure's service for high-volume event streams: a partitioned, append-only log that ingests millions of events a second and keeps them for a set retention period. Readers track their own position, so many applications can read and replay the same events. It speaks the Kafka protocol. For telemetry and clickstreams, not for business commands.",
+    "example": "The clickstream hub takes 20,000 events a second on sale days and feeds a live dashboard, a fraud function and the data lake at once.",
+    "icon": "event-hubs",
+    "lessons": ["5.4"],
+    "related": ["Event Hubs partition", "Consumer group", "Event stream", "Apache Kafka"]
+  },
+  {
+    "term": "Event Hubs partition",
+    "aliases": ["partition", "partition count", "Event Hubs partition key"],
+    "definition": "An ordered, append-only sequence within an event hub. Partitions set how many consumers in one consumer group can read in parallel, and on the Standard tier the count is fixed when the hub is created. Events sent with the same partition key land in the same partition, in order; a low-cardinality key creates a hot partition.",
+    "example": "clickstream has 16 partitions and uses sessionId as the key, so each session's events stay in order.",
+    "lessons": ["5.4"],
+    "related": ["Azure Event Hubs", "Consumer group", "Partition key", "Hot partition"]
+  },
+  {
+    "term": "Consumer group",
+    "aliases": ["consumer groups", "$Default"],
+    "definition": "An independent view of an event hub with its own read position in every partition. Each application reading the stream gets its own consumer group, so readers never interfere with each other. Two applications sharing one group split the partitions and each sees only part of the stream.",
+    "example": "dashboard, fraud and archive are three consumer groups on the same clickstream hub.",
+    "lessons": ["5.4"],
+    "related": ["Azure Event Hubs", "Checkpoint", "Event Hubs partition"]
+  },
+  {
+    "term": "Checkpoint",
+    "aliases": ["checkpointing", "offset", "checkpoint store"],
+    "definition": "A consumer's saved position in each partition of an event stream, usually an offset stored in a Blob storage container by the SDK's event processor. After a restart the consumer resumes from its last checkpoint and re-reads everything since, so processing must be idempotent. Checkpoint per batch or every few seconds, not per event.",
+    "example": "The fraud function checkpoints every 500 events; after a redeploy it re-reads at most 500 per partition.",
+    "lessons": ["5.4"],
+    "related": ["Consumer group", "Idempotent", "At-least-once delivery"]
+  },
+  {
+    "term": "Throughput unit",
+    "aliases": ["TU", "throughput units", "auto-inflate", "processing unit", "PU"],
+    "definition": "The unit of capacity on Event Hubs Standard: about 1 MB or 1,000 events a second in and 2 MB a second out, for roughly $22 a month. Exceeding it returns ServerBusy errors. Auto-inflate raises the count to a ceiling you set but does not lower it. Premium uses dedicated processing units instead.",
+    "example": "The shop runs two throughput units normally, auto-inflating to ten on sale days.",
+    "lessons": ["5.4"],
+    "related": ["Azure Event Hubs"]
+  },
+  {
+    "term": "Event Hubs Capture",
+    "aliases": ["Capture"],
+    "definition": "A built-in Event Hubs feature that writes the stream to Blob storage or a data lake as Avro or Parquet files on a time or size window, with no code. It feeds batch analytics and keeps an archive beyond the hub's retention period.",
+    "example": "Capture writes the clickstream to the data lake as Parquet every five minutes for the data team's daily jobs.",
+    "lessons": ["5.4"],
+    "related": ["Azure Event Hubs", "Data warehouse"]
+  },
+  {
+    "term": "Apache Kafka",
+    "aliases": ["Kafka", "Kafka endpoint", "Event Hubs for Kafka"],
+    "definition": "The widely used open-source event streaming platform. Event Hubs Standard and above expose a Kafka-compatible endpoint, so existing Kafka producers and consumers can use Event Hubs by changing configuration rather than code, without running Kafka clusters.",
+    "example": "A partner's Kafka producer sends inventory updates straight to the shop's event hub using its existing client library.",
+    "lessons": ["5.4"],
+    "related": ["Azure Event Hubs", "Event stream"]
+  }
+]

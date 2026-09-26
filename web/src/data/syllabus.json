@@ -582,12 +582,19 @@
         {
           "id": "5.4",
           "title": "Event Hubs - high-volume streaming",
-          "summary": "",
+          "summary": "Streams as retained logs, partitions and keys, consumer groups and checkpoints, throughput units, Capture and Stream Analytics, and why clicks are not orders.",
           "minutes": 12,
-          "objectives": [],
+          "objectives": [
+            "Tell a stream from a queue and decide when Event Hubs is the right home",
+            "Choose partitions, partition keys and consumer groups, and checkpoint safely",
+            "Get value from a stream with Capture, Stream Analytics and Functions"
+          ],
           "icons": [
-            "event-hubs"
-          ]
+            "event-hubs",
+            "stream-analytics",
+            "power-bi"
+          ],
+          "status": "ready"
         },
         {
           "id": "5.5",
