@@ -1,0 +1,53 @@
+[
+  {
+    "term": "DevOps",
+    "aliases": ["Dev Ops", "DevOps culture"],
+    "definition": "A way of working in which the people who build software also run it, and changes flow to production in small, frequent, automated steps, with feedback from production shaping what comes next. It rests on continuous integration, continuous delivery, infrastructure as code and monitoring - and on the rule that the pipeline is the only way to production. It is not a team or a product.",
+    "example": "The shop moves from Friday-evening laptop deployments to small changes shipped through a pipeline several times a week.",
+    "icon": "azure-devops",
+    "lessons": ["7.1"],
+    "related": ["Continuous integration", "Continuous delivery", "Infrastructure as code"]
+  },
+  {
+    "term": "Continuous integration",
+    "aliases": ["CI", "CI build"],
+    "definition": "Merging every change into the main branch often, and automatically building, testing and scanning it each time, so problems surface in minutes rather than at release time.",
+    "example": "Every pull request to the API runs the build, the unit tests and a dependency scan before it can merge.",
+    "icon": "builds",
+    "lessons": ["7.1"],
+    "related": ["Continuous delivery", "DevOps"]
+  },
+  {
+    "term": "Continuous delivery",
+    "aliases": ["CD", "continuous deployment", "CI/CD"],
+    "definition": "Keeping every change that passes the pipeline deployable: it produces one versioned artefact that can go to production at the push of a button, after any required approval. Continuous deployment removes the button and ships every passing change automatically.",
+    "example": "Every merge to main produces a tagged container image that is deployed to staging automatically and to production after approval.",
+    "lessons": ["7.1"],
+    "related": ["Continuous integration", "DevOps"]
+  },
+  {
+    "term": "Azure DevOps",
+    "aliases": ["ADO", "Azure DevOps Services", "VSTS", "TFS", "Team Foundation Server"],
+    "definition": "Microsoft's DevOps suite, successor to Team Foundation Server: Azure Boards for work tracking, Azure Repos for Git, Azure Pipelines for CI/CD, Azure Test Plans for testing and Azure Artifacts for packages. The services can be used separately and alongside GitHub.",
+    "example": "The shop keeps Azure Boards and one Azure Pipeline for the on-premises warehouse integration, while code moves to GitHub.",
+    "icon": "azure-devops",
+    "lessons": ["7.1"],
+    "related": ["Azure Boards", "Azure Artifacts", "DevOps"]
+  },
+  {
+    "term": "Azure Boards",
+    "aliases": ["Boards", "work items"],
+    "definition": "The work-tracking service in Azure DevOps: work items, backlogs, sprints, Kanban boards and delivery plans. It can link work items to commits and pull requests in GitHub as well as Azure Repos.",
+    "example": "A business-facing backlog lives in Azure Boards, and each item links to the GitHub pull requests that delivered it.",
+    "lessons": ["7.1"],
+    "related": ["Azure DevOps"]
+  },
+  {
+    "term": "Azure Artifacts",
+    "aliases": ["Artifacts", "package feed", "private feed"],
+    "definition": "The Azure DevOps service for private package feeds - npm, NuGet, Maven, Python and universal packages - with upstream sources that cache public registries. GitHub Packages is the GitHub equivalent.",
+    "example": "The shop's shared validation library is published to a private npm feed and consumed by the API and the functions.",
+    "lessons": ["7.1"],
+    "related": ["Azure DevOps", "Continuous integration"]
+  }
+]
