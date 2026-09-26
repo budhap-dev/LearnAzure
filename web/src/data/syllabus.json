@@ -599,12 +599,19 @@
         {
           "id": "5.5",
           "title": "API Management - one front door for your APIs",
-          "summary": "",
+          "summary": "One gateway for every API: products, subscriptions and keys, policies for tokens and rate limits, versions, the developer portal, tiers, and where Front Door fits.",
           "minutes": 14,
-          "objectives": [],
+          "objectives": [
+            "Explain what an API gateway does and design API Management products for different consumers",
+            "Write policies for token validation, rate limits and quotas, and keep business logic out of them",
+            "Lock backends to the gateway, version APIs, and choose a tier"
+          ],
           "icons": [
-            "api-management"
-          ]
+            "api-management",
+            "front-door",
+            "app-service"
+          ],
+          "status": "ready"
         },
         {
           "id": "5.6",

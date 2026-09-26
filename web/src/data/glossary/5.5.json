@@ -1,0 +1,67 @@
+[
+  {
+    "term": "API gateway",
+    "aliases": ["gateway", "API front door"],
+    "definition": "A single entry point in front of many APIs that handles the concerns every API shares - authentication, keys, rate limits, versioning, transformation, caching, analytics - so each API only implements its business logic. It becomes critical infrastructure, so it needs an SLA and redundancy.",
+    "example": "Every partner call to the shop's orders, catalogue and stock APIs passes through one API gateway that applies the partner's limits.",
+    "lessons": ["5.5"],
+    "related": ["Azure API Management", "Rate limiting", "Azure Front Door"]
+  },
+  {
+    "term": "Azure API Management",
+    "aliases": ["API Management", "APIM"],
+    "definition": "Azure's API gateway service: a gateway every call passes through, a management plane for APIs, products and policies, and a developer portal for consumers. Tiers run from pay-per-call Consumption to Premium; Developer has no SLA and is not for production.",
+    "example": "apim-shop-prod on Standard v2 fronts the orders, catalogue and warehouse APIs behind Front Door.",
+    "icon": "api-management",
+    "lessons": ["5.5"],
+    "related": ["API gateway", "API Management policy", "API product", "Developer portal"]
+  },
+  {
+    "term": "API Management policy",
+    "aliases": ["APIM policy", "policies", "validate-jwt", "rate-limit-by-key"],
+    "definition": "An XML pipeline in API Management that runs on each call - inbound, backend, outbound and on-error - at global, product, API or operation scope. Policies validate tokens, apply rate limits and quotas, cache, rewrite URLs and headers, and authenticate to backends with a managed identity. Business logic belongs in the API, not in policies.",
+    "example": "The Partners product policy validates an Entra token and allows ten calls a second per subscription.",
+    "lessons": ["5.5"],
+    "related": ["Azure API Management", "Rate limiting", "OAuth 2.0 and OpenID Connect"]
+  },
+  {
+    "term": "API product",
+    "aliases": ["APIM product", "product"],
+    "definition": "A package in API Management that consumers subscribe to: one or more APIs plus the rules for using them, such as rate limits, quotas, whether a key or token is required, and whether sign-up needs approval.",
+    "example": "The Marketplace product exposes the catalogue and stock APIs at five calls a second, with approval required.",
+    "lessons": ["5.5"],
+    "related": ["Subscription key", "Azure API Management"]
+  },
+  {
+    "term": "Subscription key",
+    "aliases": ["API key", "Ocp-Apim-Subscription-Key", "APIM subscription"],
+    "definition": "The key a consumer receives when subscribing to an API Management product, sent on each call to identify them for limits and analytics. It is a shared string, not proof of identity, so pair it with a validated token for anything sensitive, rotate it, and never ship it in a mobile app.",
+    "example": "Each delivery partner has its own subscription key, so the weekend's runaway script is identified and throttled immediately.",
+    "lessons": ["5.5"],
+    "related": ["API product", "Rate limiting"]
+  },
+  {
+    "term": "Rate limiting",
+    "aliases": ["throttling", "quota", "429 Too Many Requests"],
+    "definition": "Capping how many calls a consumer may make in a short window, often with a longer-period quota as well. Calls over the limit get 429 Too Many Requests with a Retry-After header and never reach the backend, so one consumer cannot starve the others.",
+    "example": "A partner limited to ten calls a second gets 429s at the eleventh, and checkout is unaffected.",
+    "lessons": ["5.5"],
+    "related": ["API Management policy", "Subscription key", "API gateway"]
+  },
+  {
+    "term": "Developer portal",
+    "aliases": ["API developer portal", "APIM developer portal"],
+    "definition": "The self-service website API Management generates for API consumers: documentation from each API's OpenAPI description, a console to try calls, product sign-up and key management. It replaces documents emailed to partners.",
+    "example": "The marketplace team signs up in the developer portal, reads the catalogue API docs and receives a key once approved.",
+    "lessons": ["5.5"],
+    "related": ["Azure API Management", "OpenAPI", "API product"]
+  },
+  {
+    "term": "OpenAPI",
+    "aliases": ["Swagger", "OpenAPI specification", "OAS"],
+    "definition": "The standard format for describing an HTTP API - its operations, parameters, request and response shapes and security - in JSON or YAML. Tools generate documentation, clients and tests from it, and API Management imports it to define an API.",
+    "example": "The Node API generates its OpenAPI file at build time, and the pipeline imports it into API Management on every release.",
+    "lessons": ["5.5"],
+    "related": ["Developer portal", "Azure API Management"]
+  }
+]

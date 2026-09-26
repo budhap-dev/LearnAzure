@@ -39,7 +39,7 @@
     "definition": "A global layer 7 entry point running at Microsoft's edge: users connect to the nearest point of presence, TLS ends there, cacheable content is served from the edge, and requests travel over Microsoft's backbone to the healthiest origin in any region. Combines CDN, global load balancing and, in Premium, a managed-rule WAF. The default front door for a public web app.",
     "example": "Front Door Premium serves the shop's images from the edge and fails the API over from UK South to UK West.",
     "icon": "front-door",
-    "lessons": ["4.2", "1.3"],
+    "lessons": ["4.2", "1.3", "5.5"],
     "related": ["Point of presence", "Web application firewall", "Health probe", "Edge cache"]
   },
   {
