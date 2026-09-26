@@ -1,0 +1,113 @@
+[
+  {
+    "id": "4.4-q1",
+    "topic": "authentication versus authorisation",
+    "stem": "In the admin portal, which job belongs to Entra ID and which to the Node API?",
+    "options": [
+      "Entra ID proves who the user is and issues a token; the API decides what that user may do, using the roles in the token",
+      "Entra ID decides which API endpoints each user may call; the API only checks the password",
+      "The API proves who the user is by checking the password hash; Entra ID decides permissions",
+      "Entra ID does both, so the API needs no checks at all"
+    ],
+    "answer": 0,
+    "explanation": "Entra ID authenticates and issues a signed token that carries claims such as app roles. Authorisation - whether this user may refund an order - is the API's decision, made from the validated token. An API that skips its own checks trusts any caller who reaches it."
+  },
+  {
+    "id": "4.4-q2",
+    "topic": "token audience",
+    "scenario": "After adding Entra ID sign-in, the React portal sends the token it received at sign-in to the Node API, and every request fails with 401.",
+    "stem": "What is the likely cause?",
+    "options": [
+      "The API needs a client secret to read tokens",
+      "The portal is sending its ID token, whose audience is the portal; it must request an access token whose audience is the API",
+      "Entra ID tokens cannot be used with Node.js",
+      "The user has not completed MFA"
+    ],
+    "answer": 1,
+    "explanation": "An ID token tells the front end who signed in and is addressed to the front end. APIs accept access tokens issued for them, and a correct API rejects anything whose audience is not its own. MSAL requests the access token by naming the API's scope."
+  },
+  {
+    "id": "4.4-q3",
+    "topic": "client secrets",
+    "scenario": "The nightly integration that posts orders to the warehouse system stopped at 03:00. The app registration's client secret, created two years ago, expired at midnight.",
+    "stem": "What is the best long-term fix?",
+    "options": [
+      "Create a new secret with the longest expiry allowed and set a calendar reminder",
+      "Store the secret in Key Vault so it cannot expire",
+      "Run the integration with a managed identity (or workload identity federation outside Azure) so there is no secret to expire",
+      "Share the admin portal's secret with the integration so there is only one to manage"
+    ],
+    "answer": 2,
+    "explanation": "Secrets expire by design and live in config somewhere. A managed identity has credentials Azure rotates for you, and workload identity federation lets GitHub Actions or another cloud get tokens without a stored secret. Key Vault stores secrets safely but does not stop them expiring, and sharing secrets widens the blast radius."
+  },
+  {
+    "id": "4.4-q4",
+    "topic": "MFA rollout",
+    "scenario": "The shop has 40 staff and no Entra ID P1 licences. After the finance director's account was taken over, Priya wants MFA for everyone this week.",
+    "stem": "What is the fastest sound step?",
+    "options": [
+      "Buy P2 licences and design a full set of Conditional Access policies before enabling anything",
+      "Turn on security defaults, which require MFA for everyone and block legacy authentication at no cost",
+      "Ask staff to use longer passwords",
+      "Enable MFA only for the finance director"
+    ],
+    "answer": 1,
+    "explanation": "Security defaults give MFA for all users and block legacy protocols with one switch and no licence. Conditional Access with P1 adds finer rules later. Longer passwords do nothing against reuse, and protecting one user leaves the next phishing target open."
+  },
+  {
+    "id": "4.4-q5",
+    "topic": "emergency access",
+    "scenario": "A new Conditional Access policy requiring a managed device was applied to all users on Friday evening. Nobody's laptop meets the rule yet, and now no administrator can sign in.",
+    "stem": "What should have prevented this?",
+    "options": [
+      "Two emergency access accounts excluded from all policies, and testing the policy in report-only mode first",
+      "Giving every administrator a second account in the same policy",
+      "Using security defaults instead of Conditional Access",
+      "Raising a Microsoft support ticket in advance"
+    ],
+    "answer": 0,
+    "explanation": "Report-only mode shows who a policy would block before it blocks anyone, and emergency access accounts - excluded from every policy, alerted on use - exist for exactly this lock-out. A second admin account under the same policy is locked out too, and support recovery takes days."
+  },
+  {
+    "id": "4.4-q6",
+    "topic": "customers",
+    "scenario": "Ana proposes signing the React Native app's customers up as users in the staff tenant, so the shop only runs one directory.",
+    "stem": "What should Priya decide?",
+    "options": [
+      "Agree, and put customers in a separate group",
+      "Keep customers in the admin portal's own users table",
+      "Use a separate Microsoft Entra External ID tenant for customers, with its own sign-up, social logins and branding",
+      "Invite each customer as a guest user"
+    ],
+    "answer": 2,
+    "explanation": "Customers need self-service sign-up, social and one-time-code sign-in and a branded experience, and they must never sit alongside staff who have access to internal systems. External ID provides exactly that in its own tenant. A home-grown table means owning password storage and reset, and guest invitations are for business partners."
+  },
+  {
+    "id": "4.4-q7",
+    "topic": "contractors",
+    "scenario": "A contractor who left three months ago can still sign in to the Azure portal. He had been given an account in the shop's tenant, with a password, when he joined.",
+    "stem": "How should contractors be handled from now on?",
+    "options": [
+      "Continue creating accounts, but share one account between all contractors",
+      "Invite them as guest users who sign in with their own company's identity, with access that expires or is removed by access review",
+      "Give them the Owner role only on weekends",
+      "Keep their accounts but remove MFA so they are easier to disable"
+    ],
+    "answer": 1,
+    "explanation": "Guests authenticate with their own organisation, so you hold no password for them, and an expiry date or access review removes the access without relying on someone remembering. Shared accounts destroy accountability, and removing MFA makes the account easier to steal."
+  },
+  {
+    "id": "4.4-q8",
+    "topic": "app roles",
+    "scenario": "The API checks whether a user may refund orders by looking for a group ID in the token's groups claim. It works for most staff, but a senior manager in 230 groups is always refused.",
+    "stem": "What is the better design?",
+    "options": [
+      "Remove the manager from some groups",
+      "Hard-code the manager's user ID in the API",
+      "Define an app role such as Orders.Refund, assign a group to it, and check the roles claim",
+      "Switch the API to read the ID token instead"
+    ],
+    "answer": 2,
+    "explanation": "Beyond 200 groups, Entra ID replaces the groups claim with an overage pointer, so group checks silently fail. App roles are defined by the application, assigned to groups, and arrive as a short roles claim - and the API checks a meaningful name rather than an opaque group ID. The ID token is not meant for APIs at all."
+  }
+]
