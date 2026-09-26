@@ -461,12 +461,19 @@
         {
           "id": "4.5",
           "title": "Role-based access control and managed identities",
-          "summary": "",
+          "summary": "Principal, role and scope; control-plane versus data-plane roles; least privilege with PIM; managed identities and secret-free pipelines.",
           "minutes": 15,
-          "objectives": [],
+          "objectives": [
+            "Read a role assignment as principal, role and scope, and predict what it allows",
+            "Grant data-plane roles to apps and remove standing Owner with PIM",
+            "Replace keys, passwords and client secrets with managed identities and workload identity federation"
+          ],
           "icons": [
-            "managed-identity"
-          ]
+            "roles",
+            "managed-identity",
+            "pim"
+          ],
+          "status": "ready"
         },
         {
           "id": "4.6",

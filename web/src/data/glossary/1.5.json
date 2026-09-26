@@ -12,14 +12,14 @@
     "term": "Control plane",
     "definition": "Everything that manages resources rather than using them: creating a database, changing a storage account's redundancy, deleting a web app. Control-plane traffic goes through Azure Resource Manager, is governed by RBAC roles such as Contributor, and is recorded in the Activity log. Control-plane rights do not let you read what is inside a resource.",
     "example": "Creating the storage account and setting its redundancy is control plane; the blobs inside it are not.",
-    "lessons": ["1.5"],
+    "lessons": ["1.5", "4.5"],
     "related": ["Data plane", "Azure Resource Manager", "Activity log", "Role-based access control"]
   },
   {
     "term": "Data plane",
     "definition": "Reading and writing what is inside a resource: uploading a blob, running a SELECT, fetching a secret. It goes straight to the service's own endpoint and never touches Azure Resource Manager, so it needs its own roles or keys and shows up in the resource's diagnostic logs rather than the Activity log. Grant it separately from control-plane access and any one identity's blast radius halves.",
     "example": "Storage Blob Data Reader lets an app read blobs without any right to manage the storage account.",
-    "lessons": ["1.5"],
+    "lessons": ["1.5", "4.5"],
     "related": ["Control plane", "Azure Resource Manager", "Role-based access control"]
   },
   {

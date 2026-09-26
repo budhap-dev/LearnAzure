@@ -1,0 +1,113 @@
+[
+  {
+    "id": "4.5-q1",
+    "topic": "control and data plane",
+    "scenario": "Dev gave the Node API's managed identity the Owner role on the storage account and removed the account key from its config. Reading a blob now returns 403 AuthorizationPermissionMismatch.",
+    "stem": "What should he grant instead?",
+    "options": [
+      "Owner on the resource group, since the storage account scope is too narrow",
+      "Storage Blob Data Contributor (or Reader) on the container the API uses",
+      "User Access Administrator on the storage account",
+      "Nothing: re-enable the account key, because managed identities cannot read blobs"
+    ],
+    "answer": 1,
+    "explanation": "Owner is a control-plane role: it manages the storage account but does not grant blob access through Entra ID. Reading blobs is a data-plane action that needs a data role such as Storage Blob Data Contributor, ideally scoped to the one container. A wider Owner assignment changes nothing, and managed identities read blobs perfectly well with the right role."
+  },
+  {
+    "id": "4.5-q2",
+    "topic": "scope inheritance",
+    "stem": "A group is assigned Reader at the subscription scope. What can its members see?",
+    "options": [
+      "Only the subscription's settings, not the resources in it",
+      "Every resource group and resource in the subscription, because permissions flow down from the scope",
+      "Only resource groups created after the assignment",
+      "Nothing until Reader is also assigned on each resource group"
+    ],
+    "answer": 1,
+    "explanation": "Role assignments are inherited by everything below the scope, including resources created later. That is why broad scopes are powerful and dangerous: an assignment at the subscription or management group reaches everything underneath."
+  },
+  {
+    "id": "4.5-q3",
+    "topic": "standing admin rights",
+    "scenario": "Fourteen people hold Owner permanently on the production subscription. Most use it a few times a year.",
+    "stem": "What is the best change?",
+    "options": [
+      "Replace Owner with Contributor for everyone, permanently",
+      "Remove Owner from everyone and handle changes by support ticket",
+      "Make a small admin group eligible for Owner through Privileged Identity Management, activated with MFA and a reason for a few hours at a time",
+      "Keep the assignments but enable MFA"
+    ],
+    "answer": 2,
+    "explanation": "PIM removes standing privilege without removing the ability to act: eligible admins activate the role when needed, it expires, and every activation is logged. Contributor for all still leaves fourteen permanent paths to delete production; tickets for everything slow the team to a halt; MFA protects sign-in but not what a signed-in account can do."
+  },
+  {
+    "id": "4.5-q4",
+    "topic": "pipeline scope",
+    "scenario": "The GitHub Actions pipeline for the shop API signs in with a client secret as a service principal holding Owner on the subscription.",
+    "stem": "Which setup follows least privilege and removes the secret?",
+    "options": [
+      "A user-assigned managed identity with Contributor on rg-shop-prod only, federated with the repository's prod environment in GitHub",
+      "The same service principal with a certificate instead of a secret",
+      "The same service principal with Contributor on the subscription",
+      "A personal account of the lead developer stored in GitHub secrets"
+    ],
+    "answer": 0,
+    "explanation": "Workload identity federation lets the workflow exchange GitHub's OIDC token for an Azure token with no stored secret, and Contributor on the workload's resource group is all a deploy needs. A certificate is still a stored credential, subscription Contributor is still far too wide, and a personal account ties production to one person."
+  },
+  {
+    "id": "4.5-q5",
+    "topic": "system versus user-assigned",
+    "scenario": "The infrastructure code tears down and recreates the reporting app on every major release. Each time, its access to Key Vault and SQL has to be granted again by hand.",
+    "stem": "What would fix this?",
+    "options": [
+      "Use a user-assigned managed identity, granted once, and attach it to the app each time it is created",
+      "Use the storage account key instead of an identity",
+      "Assign the roles to the resource group so any new identity inherits them",
+      "Grant the permissions to all managed identities in the subscription"
+    ],
+    "answer": 0,
+    "explanation": "A system-assigned identity is created and deleted with its resource, so every rebuild produces a new identity with no permissions. A user-assigned identity is its own resource; grant it once and attach it to each new instance. Roles do not transfer to identities by being in the same resource group, and granting every identity is the opposite of least privilege."
+  },
+  {
+    "id": "4.5-q6",
+    "topic": "SQL data access",
+    "scenario": "The API's managed identity has Contributor on the Azure SQL server, but connecting with Entra authentication fails with 'login failed for user'.",
+    "stem": "What is missing?",
+    "options": [
+      "A SQL Server Contributor role assignment at the subscription",
+      "A database user for the identity, created with CREATE USER ... FROM EXTERNAL PROVIDER, with the database roles it needs",
+      "A client secret for the managed identity",
+      "Nothing; the role assignment takes 24 hours to apply"
+    ],
+    "answer": 1,
+    "explanation": "Azure SQL grants data access through database users and roles, not Azure RBAC. Contributor manages the server resource; the identity still needs a user inside the database, mapped from Entra ID, with roles such as db_datareader. Managed identities have no secrets to supply, and propagation takes minutes, not a day."
+  },
+  {
+    "id": "4.5-q7",
+    "topic": "keys and Contributor",
+    "scenario": "The team removes every data-plane role from contractors, but leaves them Contributor on rg-shop-prod. The storage account still allows shared-key access.",
+    "stem": "Can the contractors read product images?",
+    "options": [
+      "No, because Contributor is a control-plane role",
+      "Only images in containers marked public",
+      "Yes: Contributor can list the storage account keys, and a key reads every blob",
+      "Only through the Azure portal's read-only view"
+    ],
+    "answer": 2,
+    "explanation": "Listing account keys is a control-plane action that Owner and Contributor both include, and an account key grants full data access. This is why shared-key access should be disabled, leaving Entra ID data roles as the only way in."
+  },
+  {
+    "id": "4.5-q8",
+    "topic": "DefaultAzureCredential",
+    "scenario": "Ana wants the Node API to use the managed identity in Azure but her own account on her laptop, without an if-statement or a different config per environment.",
+    "stem": "What should she use?",
+    "options": [
+      "A storage account key locally and the managed identity in Azure, chosen by an environment variable",
+      "DefaultAzureCredential from @azure/identity, which uses her az login locally and the managed identity in Azure",
+      "A client secret in a .env file for both environments",
+      "The managed identity's credential copied to her laptop"
+    ],
+    "answer": 1,
+    "explanation": "DefaultAzureCredential tries a chain of credential sources and picks the first that works: developer sign-ins such as the Azure CLI locally, the managed identity in Azure. The same code and a host-name-only connection string work everywhere. Managed identity credentials cannot be exported, and keys or secrets bring back the problem being removed."
+  }
+]

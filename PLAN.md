@@ -100,7 +100,7 @@ at random from the lesson quizzes. 88 new glossary terms (249 in total).
 | 4.2 | Load Balancer, Application Gateway, Front Door and Traffic Manager | shipped |
 | 4.3 | Private endpoints, DNS and hybrid connectivity | shipped |
 | 4.4 | Microsoft Entra ID - the identity backbone | shipped |
-| 4.5 | Role-based access control and managed identities | planned |
+| 4.5 | Role-based access control and managed identities | shipped |
 | 4.6 | Key Vault, secrets and App Configuration | planned |
 | 4.7 | Defender for Cloud, Sentinel and the security baseline | planned |
 | 4.8 | Zero trust and securing a web workload end to end | planned |
@@ -118,17 +118,16 @@ Glossary term ownership, so each lesson PR defines its own terms and no others:
 - **4.4**: Identity provider, OAuth 2.0 and OpenID Connect, App registration, Service principal,
   Multifactor authentication, Conditional Access, Guest user, Microsoft Entra External ID,
   Emergency access account.
-- **4.5**: Security principal, Role assignment, RBAC scope, Built-in role, Custom role, Least
-  privilege, Privileged Identity Management, User-assigned managed identity, Workload identity
-  federation, Control plane and data plane.
+- **4.5**: Security principal, Role assignment, Built-in role, Custom role, Least privilege,
+  Privileged Identity Management, User-assigned managed identity, Workload identity federation.
 - **4.6**: Key Vault secret, Key Vault reference, Purge protection, Secret rotation, Azure App
   Configuration, Feature flag.
 - **4.7**: Microsoft Defender for Cloud, Secure score, Cloud security posture management, Microsoft
   Sentinel, SIEM, Microsoft cloud security benchmark, Just-in-time VM access.
 - **4.8**: Zero trust, Defence in depth, Assume breach, Threat modelling.
 - Existing terms are extended (add the lesson id), never redefined: Microsoft Entra ID, Tenant,
-  Role-based access control, Managed identity, Key Vault, Azure Policy, Soft delete,
-  Customer-managed key.
+  Role-based access control, Scope, Control plane, Data plane, Managed identity, Key Vault,
+  Azure Policy, Soft delete, Customer-managed key.
 
 The module test is written with 4.8.
 
