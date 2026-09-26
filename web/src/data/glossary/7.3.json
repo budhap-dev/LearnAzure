@@ -1,0 +1,62 @@
+[
+  {
+    "term": "Azure Pipelines",
+    "aliases": ["Pipelines", "classic release pipeline"],
+    "definition": "The CI/CD service in Azure DevOps. It builds and deploys any language to Azure, other clouds or on-premises servers, using YAML pipelines in the repository (preferred) or the older classic editor.",
+    "example": "The warehouse sync service is built and deployed by an Azure Pipeline that reaches the office server through a self-hosted agent.",
+    "icon": "builds",
+    "lessons": ["7.3"],
+    "related": ["YAML pipeline", "Pipeline agent", "Deployment environment", "Azure DevOps"]
+  },
+  {
+    "term": "YAML pipeline",
+    "aliases": ["azure-pipelines.yml", "pipeline as code", "stages, jobs and steps"],
+    "definition": "A pipeline defined in a YAML file in the repository, so it is versioned and reviewed like code. It is organised as stages, which contain jobs that run on agents, which contain steps - scripts or tasks. Build once in an early stage and deploy that artefact in later ones.",
+    "example": "azure-pipelines.yml builds warehouse-sync once, then deploys the same artefact to test and production.",
+    "lessons": ["7.3"],
+    "related": ["Azure Pipelines", "Pipeline stage", "Pipeline template"]
+  },
+  {
+    "term": "Pipeline agent",
+    "aliases": ["agent", "build agent", "agent pool", "Microsoft-hosted agent", "self-hosted agent", "Managed DevOps Pools"],
+    "definition": "The machine that runs a pipeline job. Microsoft-hosted agents are fresh VMs per job; self-hosted agents are your own machines, needed to reach private networks or on-premises servers, and must be patched and cleaned; Managed DevOps Pools run Microsoft-managed agents inside your VNet. Agents connect outbound only.",
+    "example": "The warehouse-onprem pool is one self-hosted agent in the office, making outbound HTTPS connections only.",
+    "icon": "managed-devops-pools",
+    "lessons": ["7.3"],
+    "related": ["Azure Pipelines", "Deployment environment"]
+  },
+  {
+    "term": "Pipeline stage",
+    "aliases": ["stage", "deployment job", "job", "step", "task"],
+    "definition": "A major phase of a YAML pipeline - Build, Deploy to test, Deploy to production - that runs after the stages it depends on. Stages contain jobs; a deployment job targets an environment and records deployment history.",
+    "example": "DeployProd depends on DeployTest, so production never receives an artefact that did not reach test first.",
+    "lessons": ["7.3"],
+    "related": ["YAML pipeline", "Deployment environment"]
+  },
+  {
+    "term": "Deployment environment",
+    "aliases": ["environment", "approvals and checks", "Azure Pipelines environment"],
+    "definition": "A named deployment target in Azure Pipelines that records what was deployed, from which run and commit, and holds the checks that must pass before a deployment job runs: approvals, branch control, business hours, Azure Monitor alerts and exclusive locks. Checks live on the environment, so editing the YAML cannot remove them.",
+    "example": "warehouse-prod requires an operations approval, runs only from main and only in business hours.",
+    "icon": "deployment-environments",
+    "lessons": ["7.3"],
+    "related": ["Pipeline stage", "Service connection"]
+  },
+  {
+    "term": "Service connection",
+    "aliases": ["service endpoint", "Azure Resource Manager service connection"],
+    "definition": "The stored connection an Azure Pipeline uses to reach Azure or another service. For Azure, use workload identity federation so there is no secret to expire, scope it to one resource group, restrict which pipelines may use it, and put approvals and checks on production connections.",
+    "example": "sc-warehouse-prod is federated, holds Contributor on rg-warehouse-prod only, and can be used only by the warehouse pipeline.",
+    "lessons": ["7.3"],
+    "related": ["Workload identity federation", "Service principal", "Least privilege"]
+  },
+  {
+    "term": "Pipeline template",
+    "aliases": ["template", "extends template", "variable group"],
+    "definition": "Reusable pipeline stages, jobs or steps kept in a shared repository and referenced by many pipelines. An extends template enforces structure: pipelines built on it must run its mandatory steps, such as security scans. Variable groups share settings and can be linked to Key Vault for secrets.",
+    "example": "Every shop pipeline extends the platform template, so dependency scanning runs everywhere without being copied.",
+    "icon": "templates",
+    "lessons": ["7.3"],
+    "related": ["YAML pipeline", "Azure Pipelines"]
+  }
+]

@@ -30,7 +30,7 @@
     "definition": "An application's identity inside one tenant, created from its app registration: the object you assign users and groups to, grant permissions and roles to, and disable. Shown in the portal as an enterprise application. A managed identity is a service principal whose credentials Azure manages for you.",
     "example": "The CI pipeline's service principal holds Contributor on rg-shop-dev only.",
     "icon": "enterprise-applications",
-    "lessons": ["4.4", "4.5"],
+    "lessons": ["4.4", "4.5", "7.3"],
     "related": ["App registration", "Managed identity", "Role-based access control"]
   },
   {

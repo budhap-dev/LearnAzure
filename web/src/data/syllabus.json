@@ -777,12 +777,19 @@
         {
           "id": "7.3",
           "title": "Azure Pipelines - YAML, agents, stages and environments",
-          "summary": "",
+          "summary": "YAML pipelines with stages, jobs and steps, build once and deploy many, agents and pools, environments with approvals, federated service connections, and templates.",
           "minutes": 15,
-          "objectives": [],
+          "objectives": [
+            "Write a YAML pipeline with stages, jobs and steps that builds once and deploys many times",
+            "Choose agents and protect production with environments, approvals and checks",
+            "Connect to Azure with scoped, federated service connections and share pipelines through templates"
+          ],
           "icons": [
-            "builds"
-          ]
+            "builds",
+            "deployment-environments",
+            "templates"
+          ],
+          "status": "ready"
         },
         {
           "id": "7.4",
