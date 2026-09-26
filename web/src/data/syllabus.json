@@ -427,12 +427,19 @@
         {
           "id": "4.3",
           "title": "Private endpoints, DNS and hybrid connectivity",
-          "summary": "",
+          "summary": "Private endpoints and the DNS that makes them work, service endpoints, reaching private names from the office, and VPN versus ExpressRoute.",
           "minutes": 14,
-          "objectives": [],
+          "objectives": [
+            "Make a PaaS resource private with a private endpoint and close its public endpoint",
+            "Design private DNS zones so the cloud and the office resolve the same names",
+            "Choose between site-to-site VPN and ExpressRoute for a named requirement"
+          ],
           "icons": [
-            "private-endpoint"
-          ]
+            "private-endpoint",
+            "dns-zones",
+            "vpn-gateway"
+          ],
+          "status": "ready"
         },
         {
           "id": "4.4",

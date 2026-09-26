@@ -1,0 +1,113 @@
+[
+  {
+    "id": "4.3-q1",
+    "topic": "public access",
+    "scenario": "Dev created a private endpoint for the orders database and the API now connects through 10.20.2.4. A week later an external scan still reports the database's public endpoint as reachable.",
+    "stem": "What did Dev miss?",
+    "options": [
+      "The private endpoint needs a NAT gateway to hide the public address",
+      "Creating a private endpoint does not close the public endpoint; public network access has to be disabled on the server",
+      "Private endpoints take a week to replace the public endpoint",
+      "The scan is wrong: a database with a private endpoint cannot have a public endpoint"
+    ],
+    "answer": 1,
+    "explanation": "A private endpoint adds a private path; it removes nothing. Until public network access is set to Disabled - and ideally enforced by policy - the public endpoint stays open. A NAT gateway handles outbound traffic only, and there is no delayed switch-over."
+  },
+  {
+    "id": "4.3-q2",
+    "topic": "private DNS",
+    "scenario": "After public access is disabled, the API fails with 'connection denied: public network access is disabled'. The connection string still uses sql-shop-prod.database.windows.net, and the private endpoint exists.",
+    "stem": "What is the most likely cause?",
+    "options": [
+      "The connection string must be changed to the private IP address",
+      "The API's name lookup still returns the public address, because the privatelink.database.windows.net zone is not linked to the VNet the API uses",
+      "Private endpoints do not support port 1433",
+      "The API needs a service endpoint as well as the private endpoint"
+    ],
+    "answer": 1,
+    "explanation": "Private endpoints work through DNS: inside a VNet linked to the private zone, the unchanged public name resolves to the private IP. Without the link, the API resolves the public address and is refused. Hard-coding IPs breaks TLS name checks and failover; 1433 works; and service endpoints are a different mechanism."
+  },
+  {
+    "id": "4.3-q3",
+    "topic": "service versus private endpoint",
+    "stem": "Which is a genuine advantage of a private endpoint over a service endpoint?",
+    "options": [
+      "It is free",
+      "It requires no DNS changes",
+      "It can be reached from on-premises over a VPN and lets the resource's public endpoint be switched off",
+      "It applies to every storage account in the region at once"
+    ],
+    "answer": 2,
+    "explanation": "A private endpoint is a real private IP, so anything routed to the VNet, including the office over VPN, can use it, and the public endpoint can then be disabled. Service endpoints are the free option, need no DNS changes and apply to the whole service - which is a weakness, since they cannot stop data going to someone else's account."
+  },
+  {
+    "id": "4.3-q4",
+    "topic": "on-premises DNS",
+    "scenario": "The site-to-site VPN is up and the office can ping 10.20.2.4. But the analysts' SSMS connection to sql-shop-prod.database.windows.net fails because the name resolves to a public address.",
+    "stem": "What should the team add?",
+    "options": [
+      "A hosts file entry on each analyst's laptop",
+      "Azure DNS Private Resolver in the hub, with a conditional forwarder on the office DNS server for privatelink names",
+      "A second private DNS zone called database.windows.net linked to the hub",
+      "Point the office DNS server at 168.63.129.16 over the VPN"
+    ],
+    "answer": 1,
+    "explanation": "Office DNS has to ask something inside Azure that can see the private zones; DNS Private Resolver's inbound endpoint is that, on an ordinary private IP. Hosts files do not scale or survive changes, a zone named database.windows.net would hijack every Azure SQL name, and 168.63.129.16 only answers from inside Azure."
+  },
+  {
+    "id": "4.3-q5",
+    "topic": "zone scope",
+    "scenario": "To make one database private, a contractor creates a private DNS zone called database.windows.net and links it to the prod VNet.",
+    "stem": "What is the risk?",
+    "options": [
+      "None; it is equivalent to the privatelink zone",
+      "It costs more than a privatelink zone",
+      "Every Azure SQL name that is not in the zone - including partners' databases - stops resolving from that VNet",
+      "It only works for Managed Instance"
+    ],
+    "answer": 2,
+    "explanation": "A private zone is authoritative for its whole name inside linked VNets, so owning database.windows.net means any server name without a record in it no longer resolves. The privatelink subdomain exists precisely so that only resources with private endpoints are answered privately and everything else follows the public chain."
+  },
+  {
+    "id": "4.3-q6",
+    "topic": "VPN or ExpressRoute",
+    "scenario": "The shop's office sends about 100 Mbps of report and warehouse traffic to Azure on a busy day. There is no regulatory requirement to avoid the internet, and budget is tight.",
+    "stem": "Which connection is the right starting point?",
+    "options": [
+      "ExpressRoute, because production traffic should never cross the internet",
+      "A site-to-site VPN to a VPN gateway in the hub",
+      "Point-to-site VPN clients on every office PC",
+      "Public endpoints with IP allowlists, since the office has a static IP"
+    ],
+    "answer": 1,
+    "explanation": "Modest bandwidth, no regulatory driver and a tight budget point to site-to-site VPN: encrypted, up in a day and around $140 a month. ExpressRoute earns its cost and lead time with sustained bandwidth, latency needs or policy. Point-to-site suits individuals, not a whole office, and public endpoints defeat the goal."
+  },
+  {
+    "id": "4.3-q7",
+    "topic": "pipelines and private resources",
+    "scenario": "After public access is disabled on the database and storage account, the GitHub Actions deployment fails at the steps that run database migrations and upload static files, while the steps that update App Service settings still work.",
+    "stem": "Why do only those steps fail?",
+    "options": [
+      "GitHub Actions cannot deploy to Azure once any private endpoint exists",
+      "The hosted runners are on the internet, so data-plane calls to the private database and storage are refused, while Azure Resource Manager calls still work",
+      "The managed identity lost its permissions when public access was disabled",
+      "Migrations require ExpressRoute"
+    ],
+    "answer": 1,
+    "explanation": "Changing App Service settings goes through Azure Resource Manager, the public control plane, which is unaffected. Migrations and uploads talk to the database and storage themselves - the data plane - which now only answers privately. The fix is a self-hosted runner inside the network, or moving those steps inside Azure."
+  },
+  {
+    "id": "4.3-q8",
+    "topic": "exfiltration",
+    "scenario": "The security team asks why the design uses private endpoints for storage instead of the free service endpoint, given both keep traffic on Microsoft's backbone.",
+    "stem": "What is the strongest answer?",
+    "options": [
+      "Service endpoints are deprecated",
+      "Service endpoints only work for Azure SQL",
+      "A service endpoint trusts the whole storage service, so a compromised VM could copy data to any storage account; a private endpoint reaches only our account",
+      "Private endpoints are faster"
+    ],
+    "answer": 2,
+    "explanation": "A private endpoint maps to one named resource, which limits where data can be sent from the network. A service endpoint opens the route to the whole service, including attackers' accounts in the same region, unless service endpoint policies are added. Service endpoints are not deprecated, cover many services, and are not meaningfully slower."
+  }
+]
