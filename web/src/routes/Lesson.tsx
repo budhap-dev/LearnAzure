@@ -122,7 +122,13 @@ export function Lesson() {
 
       <nav className="pager" aria-label="Lesson navigation">
         {prev ? <Link to={`/lesson/${prev.id}`} className="pager-link prev"><span className="small muted">Previous</span>{prev.id} {prev.title}</Link> : <span />}
-        {next ? <Link to={`/lesson/${next.id}`} className="pager-link next"><span className="small muted">Next</span>{next.id} {next.title}</Link> : <Link to={`/module/${module.number}/test`} className="pager-link next"><span className="small muted">Finished the module?</span>Take the module test</Link>}
+        {next ? (
+          <Link to={`/lesson/${next.id}`} className="pager-link next"><span className="small muted">Next</span>{next.id} {next.title}</Link>
+        ) : module.status === 'ready' ? (
+          <Link to={`/module/${module.number}/test`} className="pager-link next"><span className="small muted">Finished the module?</span>Take the module test</Link>
+        ) : (
+          <Link to={`/module/${module.number}`} className="pager-link next"><span className="small muted">That is the latest lesson</span>More of Module {module.number} is on the way</Link>
+        )}
       </nav>
     </article>
   );

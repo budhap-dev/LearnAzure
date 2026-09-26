@@ -31,7 +31,7 @@ lesson quizzes, timed, graded). A **final learning test** draws from the whole c
 | 1 | Cloud and Azure foundations ✅ | 8 | What cloud is, how Azure is organised, cost, SLAs |
 | 2 | Compute and hosting ✅ | 7 | VMs, App Service, Static Web Apps, Functions, containers, AKS |
 | 3 | Storage and data ✅ | 7 | Storage accounts, Azure SQL, Cosmos DB, Redis, choosing a store |
-| 4 | Networking, identity and security | 8 | VNets, load balancing, private endpoints, Entra ID, RBAC, Key Vault, Defender |
+| 4 | Networking, identity and security 🚧 | 8 | VNets, load balancing, private endpoints, Entra ID, RBAC, Key Vault, Defender |
 | 5 | Integration and messaging | 6 | Service Bus, Event Grid, Event Hubs, API Management, Logic Apps |
 | 6 | Observability and reliability | 6 | Monitor, Log Analytics, App Insights, alerts, Well-Architected, HA/DR |
 | 7 | DevOps on Azure | 8 | Azure DevOps vs GitHub, pipelines, GitHub Actions, IaC with Bicep/Terraform, environments, release strategies |
@@ -92,6 +92,34 @@ design reviews.
 Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
 at random from the lesson quizzes. 88 new glossary terms (249 in total).
 
+### Module 4 — Networking, identity and security — **in progress, one lesson per PR**
+
+| Id | Lesson | Status |
+|----|--------|--------|
+| 4.1 | Virtual networks, subnets and network security groups | shipped |
+| 4.2 | Load Balancer, Application Gateway, Front Door and Traffic Manager | planned |
+| 4.3 | Private endpoints, DNS and hybrid connectivity | planned |
+| 4.4 | Microsoft Entra ID - the identity backbone | planned |
+| 4.5 | Role-based access control and managed identities | planned |
+| 4.6 | Key Vault, secrets and App Configuration | planned |
+| 4.7 | Defender for Cloud, Sentinel and the security baseline | planned |
+| 4.8 | Zero trust and securing a web workload end to end | planned |
+
+Glossary term ownership, so each lesson PR defines its own terms and no others:
+
+- **4.1**: Virtual network, Subnet, CIDR notation, Network security group, Service tag,
+  Application security group, VNet peering, Hub-and-spoke, User-defined route, NAT gateway,
+  Public IP address, Azure Bastion, Azure Firewall.
+- **4.2**: Load balancing, Azure Load Balancer, Application Gateway, Web application firewall,
+  Azure Front Door, Traffic Manager, Health probe, Layer 4 and layer 7, TLS termination,
+  DDoS Protection.
+- **4.3**: Private endpoint, Private Link, Private DNS zone, Service endpoint, VPN Gateway,
+  ExpressRoute.
+- **4.4-4.8**: assigned when 4.4 starts. Existing terms to extend rather than duplicate:
+  Microsoft Entra ID, Tenant, Role-based access control, Managed identity, Key Vault.
+
+The module test is written with 4.8.
+
 ## App architecture
 
 ```
@@ -144,6 +172,9 @@ package version is bumped in every pull request; the build number and sha are in
 - A module is "done" when: every lesson renders, every quiz passes verification, the module
   test exists, glossary terms and diagrams are in place, and a full read-through has been
   done for clarity.
+- From Module 4, lessons can ship one per PR while the module is `in-progress` (see
+  CONTENT-GUIDE.md, "Releasing one lesson at a time"). Each lesson PR bumps the patch
+  version; completing a module bumps the minor version.
 
 ## Azure icons — terms
 

@@ -407,6 +407,7 @@ main { flex: 1; width: 100%; max-width: var(--max); margin: 0 auto; padding: 1.4
 .btn.small { padding: 0.35rem 0.7rem; font-size: 0.88rem; }
 .pill { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 999px; font-size: 0.78rem; font-weight: 700; background: var(--surface-2); color: var(--muted); }
 .pill.soon { background: var(--warn-bg); color: var(--warn); }
+.lesson-link.soon { color: var(--muted); border-bottom: 1px dotted currentColor; cursor: help; }
 .pill.state.done { background: var(--good-bg); color: var(--good); }
 .pill.state.needs-review { background: var(--warn-bg); color: var(--warn); }
 .pill.state.in-progress { background: var(--info-bg); color: var(--info); }

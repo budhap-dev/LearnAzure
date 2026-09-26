@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ProgressRing } from '../components/ProgressRing';
 import { LessonRow } from '../components/Cards';
-import { LESSONS, MODULES, READY_MODULES } from '../lib/syllabus';
+import { LESSONS, MODULES, OPEN_MODULES } from '../lib/syllabus';
 import { useProgress } from '../lib/useProgress';
 import { exportJson, importJson, reset, streak } from '../lib/progress';
 
@@ -51,7 +51,7 @@ export function ProgressPage() {
 
       <h2>By module</h2>
       <div className="module-progress">
-        {READY_MODULES.map((m) => {
+        {OPEN_MODULES.map((m) => {
           const d = m.lessons.filter((l) => progress.lessons[l.id] === 'done').length;
           const best = progress.tests.filter((t) => t.module === m.number).sort((a, b) => b.percent - a.percent)[0];
           return (
@@ -62,7 +62,7 @@ export function ProgressPage() {
             </Link>
           );
         })}
-        {MODULES.length > READY_MODULES.length && <p className="muted small">{MODULES.length - READY_MODULES.length} more modules are on the way.</p>}
+        {MODULES.length > OPEN_MODULES.length && <p className="muted small">{MODULES.length - OPEN_MODULES.length} more modules are on the way.</p>}
       </div>
 
       {review.length > 0 && (

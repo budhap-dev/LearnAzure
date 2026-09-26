@@ -140,6 +140,19 @@ One file per lesson that introduces terms (3-10 entries each). Each entry:
 - Terms are unique across all files. Check `grep -ri '"term": "X"' web/src/data/glossary` before adding.
 - `icon` optional; only when there is an obvious Azure icon.
 
+## Releasing one lesson at a time
+
+A module can ship lesson by lesson. In `syllabus.json` set the module's `status` to
+`"in-progress"` and give each shipped lesson `"status": "ready"`. The app then shows those
+lessons, lists the rest as coming soon, and keeps the module test closed. Links to lessons
+or modules that have not shipped render as plain text, so a lesson can point ahead safely.
+The verifier checks each ready lesson as if its module were complete. With the last lesson,
+add the module test, set the module to `"ready"` and remove the per-lesson statuses.
+
+Every lesson PR still needs: the lesson, its quiz, its glossary file (terms from the
+module's ownership list in PLAN.md), final syllabus summary, objectives and icons, and the
+visual checks.
+
 ## Definition of done for a module
 
 - `npm run verify`, `npx tsc -b`, `npm run lint`, `npm run build` all pass.

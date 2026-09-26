@@ -7,6 +7,7 @@ import { CodeBlock } from './CodeBlock';
 import { Diagram, parseDiagram } from './Diagram';
 import { remarkLessonSyntax } from '../lib/remarkLessonSyntax';
 import { slugify } from '../lib/lessons';
+import { lessonById, moduleByNumber } from '../lib/syllabus';
 
 /** Text content of a hast node, for heading ids. */
 function textOf(node: unknown): string {
@@ -46,8 +47,15 @@ const components: Components = {
     const h = href ?? '';
     if (h === 'hl:' || h.startsWith('hl:')) return <mark>{children}</mark>;
     if (h.startsWith('gl:')) return <Link className="term-link" to={`/glossary?term=${h.slice(3)}`}>{children}</Link>;
-    if (h.startsWith('lesson:')) return <Link className="lesson-link" to={`/lesson/${h.slice(7)}`}>{children}</Link>;
-    if (h.startsWith('module:')) return <Link className="lesson-link" to={`/module/${h.slice(7)}`}>{children}</Link>;
+    // A link to a lesson or module that has not shipped yet reads as text, not a dead link.
+    if (h.startsWith('lesson:')) {
+      if (!lessonById(h.slice(7))) return <span className="lesson-link soon" title="Coming soon">{children}</span>;
+      return <Link className="lesson-link" to={`/lesson/${h.slice(7)}`}>{children}</Link>;
+    }
+    if (h.startsWith('module:')) {
+      if ((moduleByNumber(Number(h.slice(7)))?.status ?? 'planned') === 'planned') return <span className="lesson-link soon" title="Coming soon">{children}</span>;
+      return <Link className="lesson-link" to={`/module/${h.slice(7)}`}>{children}</Link>;
+    }
     if (h.startsWith('#')) return <a href={h}>{children}</a>;
     return (
       <a href={h} target="_blank" rel="noreferrer noopener">
