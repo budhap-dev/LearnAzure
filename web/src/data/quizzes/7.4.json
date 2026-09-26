@@ -1,0 +1,113 @@
+[
+  {
+    "id": "7.4-q1",
+    "topic": "signing in without secrets",
+    "scenario": "A workflow deploys to App Service using a publish profile stored as a repository secret.",
+    "stem": "What is the better approach?",
+    "options": [
+      "Rotate the publish profile monthly",
+      "Use azure/login with OIDC: grant id-token: write and configure a federated credential on an Azure identity scoped to the target",
+      "Store the publish profile in an environment variable instead",
+      "Use the owner's personal Azure credentials"
+    ],
+    "answer": 1,
+    "explanation": "OIDC federation lets the job exchange a GitHub-signed token for an Azure token, so no long-lived credential is stored anywhere. Rotating or relocating a secret keeps the problem, and personal credentials tie deployments to one person."
+  },
+  {
+    "id": "7.4-q2",
+    "topic": "binding identities to environments",
+    "scenario": "The production deployment identity's federated credential trusts any workflow in the shop-api repository.",
+    "stem": "Why should its subject be repo:shop/shop-api:environment:production instead?",
+    "options": [
+      "It makes deployments faster",
+      "Only jobs running in the production environment - after its protection rules pass - can obtain the production identity, not pull requests or feature branches",
+      "It is required for staging",
+      "It removes the need for an Azure subscription ID"
+    ],
+    "answer": 1,
+    "explanation": "The subject is what Entra checks before issuing a token. Tying it to the production environment means the environment's reviewers and branch rules gate access to production credentials. A repository-wide subject lets any job in any branch act as production."
+  },
+  {
+    "id": "7.4-q3",
+    "topic": "deployment branches",
+    "scenario": "The production environment requires a reviewer, but someone triggered the workflow manually from a feature branch and the reviewer approved without noticing the branch.",
+    "stem": "Which setting would have blocked it?",
+    "options": [
+      "A longer wait timer",
+      "Deployment branch rules on the production environment allowing only main (or release tags)",
+      "More reviewers",
+      "A different runner"
+    ],
+    "answer": 1,
+    "explanation": "Deployment branch rules stop jobs from other branches using the environment at all, regardless of how the workflow was triggered. Reviewers and timers still depend on a person noticing."
+  },
+  {
+    "id": "7.4-q4",
+    "topic": "pinning actions",
+    "scenario": "A workflow uses a popular third-party action referenced as @v4. The action's maintainer account is compromised and the v4 tag is moved to malicious code.",
+    "stem": "What would have protected the workflow?",
+    "options": [
+      "Using @master instead",
+      "Pinning the action to a full commit SHA and updating it deliberately, for example with Dependabot",
+      "Running the workflow less often",
+      "Using a Windows runner"
+    ],
+    "answer": 1,
+    "explanation": "Tags and branches can be moved to different code; a commit SHA cannot. Pinning means the workflow runs exactly the reviewed code, and updates arrive as reviewable pull requests. This happened for real in 2025, leaking secrets from thousands of repositories."
+  },
+  {
+    "id": "7.4-q5",
+    "topic": "token permissions",
+    "stem": "What should a workflow's top-level permissions usually be?",
+    "options": [
+      "write-all, so every step can do what it needs",
+      "contents: read, with additional permissions such as id-token: write granted only to the jobs that need them",
+      "No permissions block, since the defaults are always safe",
+      "admin"
+    ],
+    "answer": 1,
+    "explanation": "The GITHUB_TOKEN can push code, create releases and more if allowed. Least privilege at the top, widened per job, limits what a compromised or misbehaving step can do. Defaults vary by organisation settings and should not be relied on."
+  },
+  {
+    "id": "7.4-q6",
+    "topic": "script injection",
+    "scenario": "A workflow step runs: echo \"Building ${{ github.event.pull_request.title }}\". An attacker opens a pull request whose title contains shell commands.",
+    "stem": "What is the problem and the fix?",
+    "options": [
+      "No problem; titles are escaped automatically",
+      "The title is inserted into the script and executed; pass untrusted values through environment variables and treat them as data",
+      "Pull request titles cannot contain special characters",
+      "Use a macOS runner"
+    ],
+    "answer": 1,
+    "explanation": "Expressions are substituted into the script text before the shell runs it, so a crafted title becomes code. Assigning it to an environment variable and referencing the variable keeps it as data. This is a well-known Actions pitfall."
+  },
+  {
+    "id": "7.4-q7",
+    "topic": "sharing logic",
+    "scenario": "Four repositories contain nearly identical 150-line deploy workflows that have slowly drifted apart.",
+    "stem": "What should the platform team provide?",
+    "options": [
+      "A wiki page with the recommended YAML",
+      "A reusable workflow in a platform repository that each repository calls with workflow_call",
+      "A fifth copy with the latest changes",
+      "One workflow file shared by symbolic link"
+    ],
+    "answer": 1,
+    "explanation": "Reusable workflows keep deploy logic in one place, so fixes and security improvements reach every caller. Documentation and copies drift, and Git repositories cannot share files by link."
+  },
+  {
+    "id": "7.4-q8",
+    "topic": "runners and public repositories",
+    "scenario": "An open-source repository from the shop wants faster builds using a self-hosted runner on the office network.",
+    "stem": "Why is this dangerous?",
+    "options": [
+      "Self-hosted runners cannot run Node",
+      "Anyone can open a pull request to a public repository, so their code could run on a machine inside the office network",
+      "Self-hosted runners cost more minutes",
+      "Public repositories cannot use runners"
+    ],
+    "answer": 1,
+    "explanation": "Workflows triggered by pull requests run the contributor's code on the runner. On a public repository that means strangers executing code inside your network. Use GitHub-hosted or larger runners for public repositories."
+  }
+]

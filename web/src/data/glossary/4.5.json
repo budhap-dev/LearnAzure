@@ -63,7 +63,7 @@
     "aliases": ["federated credential", "OIDC federation", "federated identity credential"],
     "definition": "Lets code outside Azure - GitHub Actions, another cloud, a Kubernetes pod - exchange its own platform's signed OIDC token for an Entra ID token, with no secret stored anywhere. Entra trusts only the issuer and subject you specify, such as one repository and environment.",
     "example": "The GitHub workflow for environment prod gets an Azure token for id-deploy-prod without any secret in GitHub.",
-    "lessons": ["4.5", "7.3"],
+    "lessons": ["4.5", "7.3", "7.4"],
     "related": ["User-assigned managed identity", "App registration", "OAuth 2.0 and OpenID Connect"]
   }
 ]
