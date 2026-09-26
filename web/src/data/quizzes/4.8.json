@@ -1,0 +1,112 @@
+[
+  {
+    "id": "4.8-q1",
+    "topic": "zero trust principles",
+    "stem": "Which set is zero trust's three principles?",
+    "options": [
+      "Encrypt everything, use a firewall, patch monthly",
+      "Verify explicitly, use least privilege, assume breach",
+      "Trust the internal network, verify external users, log everything",
+      "Buy a zero-trust product, enable MFA, run a pen test"
+    ],
+    "answer": 1,
+    "explanation": "Zero trust verifies every request with every signal, gives just enough access just in time, and designs as if an attacker is already inside. Trusting the internal network is precisely the perimeter model it replaces, and it is a set of design rules rather than a product."
+  },
+  {
+    "id": "4.8-q2",
+    "topic": "trusting the network",
+    "scenario": "A design note says: 'The reporting database needs no authentication hardening because it is only reachable from inside the VNet.'",
+    "stem": "What is the zero-trust response?",
+    "options": [
+      "Agree: the VNet is the security boundary",
+      "Agree, as long as NSGs are in place",
+      "Being on the network earns nothing: callers must still authenticate with their own identities and hold only the roles they need",
+      "Move the database to a public endpoint with an IP allowlist"
+    ],
+    "answer": 2,
+    "explanation": "The competitor's breach went exactly this way: an attacker inside the network found a database that trusted location. Private networking narrows exposure, but identity and least privilege must still apply to every caller. An IP allowlist is location-based trust with a wider door."
+  },
+  {
+    "id": "4.8-q3",
+    "topic": "pivoting from dev",
+    "scenario": "An attacker controls a VM in the dev environment.",
+    "stem": "Which design most limits what they can reach in production?",
+    "options": [
+      "Dev and prod peered together so monitoring sees both",
+      "Dev and prod as separate spokes with no peering between them, and dev identities holding no production roles",
+      "A shared Key Vault so dev secrets can be rotated with prod",
+      "A single subscription with naming conventions for dev and prod"
+    ],
+    "answer": 1,
+    "explanation": "Assume breach means a dev foothold should stay in dev: no network path to production and no identity with production roles. Peering, shared vaults and a single subscription all create exactly the bridges the attacker needs."
+  },
+  {
+    "id": "4.8-q4",
+    "topic": "defence in depth",
+    "stem": "What makes a set of controls defence in depth rather than just several controls?",
+    "options": [
+      "They are all bought from one vendor",
+      "Each layer works independently, so one failing does not disable the others",
+      "They are all network controls",
+      "They are applied only to production"
+    ],
+    "answer": 1,
+    "explanation": "The value is independence: if MFA is bypassed, least privilege still limits reach and monitoring still raises an alert. Controls that all depend on one thing - one network perimeter, one vendor console - fail together."
+  },
+  {
+    "id": "4.8-q5",
+    "topic": "threat modelling",
+    "scenario": "The team is about to build a partner API that receives orders from a wholesaler's system.",
+    "stem": "When and how should they threat model it?",
+    "options": [
+      "After launch, based on the first incidents",
+      "At the design review: draw the data flows and trust boundaries, ask STRIDE questions at each crossing, and record a mitigation and owner per threat",
+      "Only if the API handles card data",
+      "By running a vulnerability scanner once it is deployed"
+    ],
+    "answer": 1,
+    "explanation": "Threat modelling is cheapest before anything is built: mitigations become design choices, not retrofits. Every new trust boundary - here, a partner calling into the shop - deserves one. Scanners find known vulnerabilities in what exists; they do not find design flaws such as missing authorisation."
+  },
+  {
+    "id": "4.8-q6",
+    "topic": "application layer",
+    "scenario": "The shop has Front Door with WAF, private endpoints, managed identities and Defender. A tester changes an order ID in the URL and sees another customer's order.",
+    "stem": "What does this show?",
+    "options": [
+      "The WAF rules need tightening",
+      "The private endpoint is misconfigured",
+      "Authorisation in the application code is missing; no platform control checks whether this user may see that order",
+      "Defender for Cloud should have blocked the request"
+    ],
+    "answer": 2,
+    "explanation": "Broken object-level authorisation is an application bug. The WAF sees a well-formed request from a signed-in user, the network path is legitimate, and the API's identity is allowed to read orders. Only the code can check that the order belongs to the caller - the OWASP Top 10 remains the team's job."
+  },
+  {
+    "id": "4.8-q7",
+    "topic": "backups under attack",
+    "scenario": "Ransomware operators typically delete backups before encrypting data.",
+    "stem": "Which combination best protects the shop's recovery?",
+    "options": [
+      "Backups stored in the same resource group as production for faster restore",
+      "No standing Owner (PIM), vault soft delete with multi-user authorisation, purge protection on keys, and backups outside the production blast radius",
+      "More frequent backups with the same permissions",
+      "A strong password on the admin account"
+    ],
+    "answer": 1,
+    "explanation": "Assume breach applies to backups: the attacker who gets admin rights should still not be able to destroy them. PIM removes standing power, soft delete and multi-user authorisation stop a single identity deleting backups, purge protection keeps encryption keys recoverable, and separation limits blast radius."
+  },
+  {
+    "id": "4.8-q8",
+    "topic": "making security usable",
+    "scenario": "Teams complain that getting a private endpoint and a Key Vault set up takes three weeks of tickets, and some have started deploying public databases in a sandbox subscription 'temporarily'.",
+    "stem": "What is the best response?",
+    "options": [
+      "Add more approval steps so nobody can bypass the process",
+      "Make the secure path the easy one: templates or a landing zone that deploy private, identity-based infrastructure by default, with policy to catch drift",
+      "Allow public databases for internal apps",
+      "Stop using private endpoints"
+    ],
+    "answer": 1,
+    "explanation": "When the secure route is slow, people route around it, and the exceptions become permanent. Pre-built templates and landing zones make secure defaults the fastest option, and Azure Policy catches what slips through. More approvals widen the gap; relaxing the rules gives up the protection."
+  }
+]

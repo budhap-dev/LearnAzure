@@ -386,9 +386,9 @@
       "number": 4,
       "title": "Networking, identity and security",
       "tagline": "Virtual networks, load balancing, private endpoints, Entra ID, RBAC, managed identities, Key Vault and Defender.",
-      "description": "The two things that make or break an Azure estate: how traffic flows and who is allowed to do what. Learn the network building blocks, the four front doors for HTTP traffic, and the identity model that replaces connection strings with managed identities.",
+      "description": "The two things that make or break an Azure estate: how traffic flows and who is allowed to do what. Virtual networks and NSGs, the four ways to balance load, private endpoints and the DNS behind them, Entra ID, RBAC and managed identities, Key Vault, and Defender for Cloud - ending with zero trust and the whole shop walked through by an attacker.",
       "icon": "virtual-network",
-      "status": "in-progress",
+      "status": "ready",
       "lessons": [
         {
           "id": "4.1",
@@ -404,8 +404,7 @@
             "virtual-network",
             "subnet",
             "nsg"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "4.2",
@@ -421,8 +420,7 @@
             "front-door",
             "application-gateway",
             "load-balancer"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "4.3",
@@ -438,8 +436,7 @@
             "private-endpoint",
             "dns-zones",
             "vpn-gateway"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "4.4",
@@ -455,8 +452,7 @@
             "entra-id",
             "conditional-access",
             "app-registrations"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "4.5",
@@ -472,8 +468,7 @@
             "roles",
             "managed-identity",
             "pim"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "4.6",
@@ -489,8 +484,7 @@
             "key-vault",
             "app-configuration",
             "managed-identity"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "4.7",
@@ -506,17 +500,22 @@
             "defender",
             "sentinel",
             "policy"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "4.8",
           "title": "Zero trust and securing a web workload end to end",
-          "summary": "",
+          "summary": "Zero trust's three principles, defence in depth, the whole shop walked through by an attacker, threat modelling, and a minimum bar for every workload.",
           "minutes": 14,
-          "objectives": [],
+          "objectives": [
+            "Explain zero trust and defence in depth, and spot designs that trust the network",
+            "Walk an attacker through a workload and name the control that stops each step",
+            "Run a threat model at a design review and hold every workload to a minimum bar"
+          ],
           "icons": [
-            "waf"
+            "conditional-access",
+            "defender",
+            "front-door"
           ]
         }
       ]
