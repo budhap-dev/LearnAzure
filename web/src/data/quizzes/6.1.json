@@ -1,0 +1,112 @@
+[
+  {
+    "id": "6.1-q1",
+    "topic": "logs you did not collect",
+    "scenario": "During an incident, the team wants Azure SQL's timeout and deadlock records from the last two hours, but the database has never had a diagnostic setting.",
+    "stem": "What can they get?",
+    "options": [
+      "Everything; Azure keeps resource logs for 30 days by default",
+      "Only platform metrics such as CPU and DTU; resource logs that were never exported do not exist",
+      "The logs, by enabling a diagnostic setting now with backfill",
+      "The logs, through a support request"
+    ],
+    "answer": 1,
+    "explanation": "Platform metrics are collected automatically, but resource logs are only kept if a diagnostic setting sends them somewhere. Enabling one now collects from now on; it cannot recover the past. That is why diagnostic settings are part of the baseline, enforced by policy."
+  },
+  {
+    "id": "6.1-q2",
+    "topic": "signals",
+    "stem": "Which signal is best for finding where time is spent when one checkout request passes through the API, SQL and the payment provider?",
+    "options": [
+      "A CPU metric on the App Service plan",
+      "A distributed trace following the request across each service",
+      "The activity log",
+      "A daily cost report"
+    ],
+    "answer": 1,
+    "explanation": "Traces follow one request across services and show the duration and outcome of each hop. Metrics show aggregates without the path, and the activity log records control-plane changes such as deployments, not individual requests."
+  },
+  {
+    "id": "6.1-q3",
+    "topic": "what is automatic",
+    "stem": "Which of these does Azure collect without any configuration?",
+    "options": [
+      "Windows event logs from a VM",
+      "Key Vault audit events",
+      "Platform metrics such as App Service requests and SQL CPU, and the subscription's activity log",
+      "Application exceptions from the Node API"
+    ],
+    "answer": 2,
+    "explanation": "Platform metrics and the activity log arrive automatically. Guest OS logs need the Azure Monitor Agent and a data collection rule, resource logs such as Key Vault audit events need a diagnostic setting, and application telemetry needs Application Insights instrumentation."
+  },
+  {
+    "id": "6.1-q4",
+    "topic": "workspace design",
+    "scenario": "Each of five teams created its own Log Analytics workspace. During an outage nobody could correlate Front Door, API and database logs quickly.",
+    "stem": "What is the better default?",
+    "options": [
+      "One workspace per resource, for isolation",
+      "One workspace per environment, with resource-context access so teams see their own resources' logs",
+      "No workspace; use each resource's portal blade",
+      "One workspace per team, with daily exports to Excel"
+    ],
+    "answer": 1,
+    "explanation": "A workspace per environment lets a single query join every service during an incident, while resource-context access keeps each team to its own resources. Split only for real reasons such as data residency or a separate security operation."
+  },
+  {
+    "id": "6.1-q5",
+    "topic": "VM logs",
+    "scenario": "Warehouse VM event logs disappear whenever autoscale replaces an instance, so crashes cannot be investigated.",
+    "stem": "What is the fix?",
+    "options": [
+      "Disable autoscale",
+      "Install the Azure Monitor Agent with a data collection rule that ships the event logs to the workspace",
+      "Copy the logs to a file share each night",
+      "Increase the OS disk size"
+    ],
+    "answer": 1,
+    "explanation": "Logs that live only on the machine die with it. The agent sends them off as they are written, and one data collection rule applied to all instances makes every replacement report the same way. Nightly copies lose everything since the last copy."
+  },
+  {
+    "id": "6.1-q6",
+    "topic": "enforcing diagnostics",
+    "scenario": "Diagnostic settings are configured by hand, and new resources are regularly missed.",
+    "stem": "How should the baseline be enforced?",
+    "options": [
+      "A monthly checklist",
+      "Azure Policy with built-in deploy-if-not-exists initiatives that add the diagnostic settings to every new resource",
+      "A resource lock on the workspace",
+      "Only allow one person to create resources"
+    ],
+    "answer": 1,
+    "explanation": "Deploy-if-not-exists policies create the diagnostic setting automatically when a resource is created or found without one, so the baseline does not depend on memory. Checklists drift, locks prevent deletion rather than enforce configuration, and gatekeeping one person slows everyone."
+  },
+  {
+    "id": "6.1-q7",
+    "topic": "daily cap",
+    "scenario": "To control cost, someone set a 2 GB daily cap on the production workspace. During a traffic spike and an incident, the investigation finds no logs after 11:20.",
+    "stem": "What went wrong, and what is better?",
+    "options": [
+      "The workspace was deleted; restore it",
+      "The cap stopped ingestion when volume spiked, exactly when logs were needed; remove the cap in production and use a cost alert plus deliberate log category choices instead",
+      "Logs are delayed by 24 hours",
+      "The cap should be set on metrics instead"
+    ],
+    "answer": 1,
+    "explanation": "A daily cap stops collecting data for the rest of the day once reached, and incidents are when volume spikes. Controlling cost by choosing categories and table plans, with a budget alert to notice growth, keeps production data flowing."
+  },
+  {
+    "id": "6.1-q8",
+    "topic": "change as a signal",
+    "scenario": "Checkout started failing at 14:02. Metrics show no resource under strain.",
+    "stem": "What is the most useful first question?",
+    "options": [
+      "Which resource has the highest CPU?",
+      "What changed at or just before 14:02 - deployments, configuration or rule updates - as recorded in the activity log and resource logs?",
+      "How many users are online?",
+      "Which region is closest to the users?"
+    ],
+    "answer": 1,
+    "explanation": "Most incidents follow a change. The activity log records control-plane changes, and resource logs such as Front Door's WAF log show what the platform did. With both in one workspace, the question is a single query rather than forty-five minutes of clicking through blades."
+  }
+]

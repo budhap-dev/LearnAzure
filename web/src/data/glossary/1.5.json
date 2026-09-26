@@ -114,7 +114,7 @@
     "definition": "The audit trail of the control plane: every operation that went through Azure Resource Manager, with who called it, what they changed, when, from which IP address and whether it succeeded. It is the first place to look when something changed unexpectedly. It keeps only ninety days by default and records nothing about the data plane, so export it to a workspace if you need longer or need blob and query access too.",
     "example": "It answers 'who created this virtual machine, from where?' for clicks and scripts alike.",
     "icon": "activity-log",
-    "lessons": ["1.5", "4.7"],
+    "lessons": ["1.5", "4.7", "6.1"],
     "related": ["Control plane", "Data plane", "Azure Resource Manager", "Role-based access control"]
   }
 ]

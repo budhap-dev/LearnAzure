@@ -1,0 +1,62 @@
+[
+  {
+    "term": "Observability",
+    "aliases": ["monitoring", "three pillars of observability"],
+    "definition": "Being able to answer new questions about a running system - why only one payment provider is failing since 14:02 - from telemetry you already collect, rather than only checking thresholds you set in advance. It rests on metrics, logs, traces and a record of changes, collected before the incident.",
+    "example": "One query across Front Door's WAF log and the activity log shows a managed-rule update blocking the payment callback.",
+    "lessons": ["6.1"],
+    "related": ["Azure Monitor", "Metric", "Resource log", "Application Insights"]
+  },
+  {
+    "term": "Azure Monitor",
+    "aliases": ["Monitor"],
+    "definition": "Azure's umbrella service for observability: it collects metrics, logs and traces from Azure resources, operating systems and applications, stores them in a metrics database and Log Analytics workspaces, and provides queries, workbooks, dashboards, alerts and automated responses on top.",
+    "example": "Azure Monitor gathers the shop's App Service, SQL, Front Door and VM telemetry into law-shop-prod.",
+    "icon": "monitor",
+    "lessons": ["6.1"],
+    "related": ["Log Analytics workspace", "Application Insights", "Diagnostic setting", "Metric"]
+  },
+  {
+    "term": "Metric",
+    "aliases": ["metrics", "platform metric", "custom metric"],
+    "definition": "A number sampled at regular intervals, such as CPU percentage, requests per second or queue length. Azure collects platform metrics automatically and free, typically every minute and kept for 93 days. Metrics are cheap and quick to alert on but cannot explain why something happened.",
+    "example": "A metric alert fires when the order-events subscription holds more than 1,000 messages.",
+    "icon": "metrics",
+    "lessons": ["6.1"],
+    "related": ["Azure Monitor", "Observability", "Resource log"]
+  },
+  {
+    "term": "Resource log",
+    "aliases": ["resource logs", "diagnostic logs", "platform logs"],
+    "definition": "Detailed records a resource produces about its own operation - SQL errors and timeouts, Key Vault reads, WAF blocks, HTTP requests. Unlike platform metrics, they are not collected until a diagnostic setting sends them somewhere, so they must be switched on before they are needed.",
+    "example": "Front Door's WAF log shows exactly which rule blocked the payment provider's callback.",
+    "lessons": ["6.1"],
+    "related": ["Diagnostic setting", "Log Analytics workspace", "Metric"]
+  },
+  {
+    "term": "Diagnostic setting",
+    "aliases": ["diagnostic settings", "diagnostics"],
+    "definition": "The per-resource configuration that chooses which resource log categories and metrics to export, and where: a Log Analytics workspace, a storage account or Event Hubs. Built-in Azure Policy initiatives can deploy them automatically so no resource is forgotten.",
+    "example": "Every production Key Vault gets a diagnostic setting sending AuditEvent logs to law-shop-prod, enforced by policy.",
+    "icon": "diagnostic-settings",
+    "lessons": ["6.1"],
+    "related": ["Resource log", "Azure Policy", "Log Analytics workspace"]
+  },
+  {
+    "term": "Azure Monitor Agent",
+    "aliases": ["AMA", "Log Analytics agent", "MMA"],
+    "definition": "The agent installed on virtual machines and servers to collect operating-system data - Windows event logs, Linux syslog, performance counters - and send it to Azure Monitor. What it collects is defined by data collection rules. It replaces the retired Log Analytics agent.",
+    "example": "The warehouse VM's event logs reach the workspace through the agent, so they survive the VM being replaced.",
+    "icon": "monitor",
+    "lessons": ["6.1"],
+    "related": ["Data collection rule", "Azure Monitor"]
+  },
+  {
+    "term": "Data collection rule",
+    "aliases": ["DCR", "data collection rules"],
+    "definition": "A reusable definition of what telemetry to collect, how to filter or transform it, and where to send it - applied to many machines or sources at once. Filtering in the rule is also the main way to keep ingestion costs down.",
+    "example": "One rule collects Warning-and-above events and five counters from every VM tagged workload=shop.",
+    "lessons": ["6.1"],
+    "related": ["Azure Monitor Agent", "Log Analytics workspace"]
+  }
+]
