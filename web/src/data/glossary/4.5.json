@@ -1,0 +1,69 @@
+[
+  {
+    "term": "Security principal",
+    "aliases": ["principal", "identity"],
+    "definition": "Anything that can be granted access: a user, a group, a service principal or a managed identity. Grant roles to groups for people and to identities for code, so access follows membership rather than names.",
+    "example": "grp-shop-devs and the Node API's managed identity are both security principals with role assignments in rg-shop-prod.",
+    "lessons": ["4.5"],
+    "related": ["Role assignment", "Service principal", "Managed identity"]
+  },
+  {
+    "term": "Role assignment",
+    "aliases": ["Azure role assignment"],
+    "definition": "The single object behind Azure RBAC: a security principal holds a role at a scope. Permissions flow down from the scope to everything beneath it. New assignments can take several minutes to take effect everywhere.",
+    "example": "id-deploy-prod holds Contributor at rg-shop-prod - one role assignment.",
+    "icon": "roles",
+    "lessons": ["4.5"],
+    "related": ["Security principal", "Built-in role", "Scope", "Role-based access control"]
+  },
+  {
+    "term": "Built-in role",
+    "aliases": ["Owner", "Contributor", "Reader", "User Access Administrator", "Storage Blob Data Reader", "Key Vault Secrets User"],
+    "definition": "A role definition Microsoft maintains. Owner, Contributor and Reader govern the control plane; service-specific data roles such as Storage Blob Data Contributor or Key Vault Secrets User govern the data. Owner and Contributor can still list storage account keys, which read everything.",
+    "example": "The API needs Storage Blob Data Contributor on one container, not Owner on the storage account.",
+    "lessons": ["4.5"],
+    "related": ["Role assignment", "Custom role", "Control plane", "Data plane"]
+  },
+  {
+    "term": "Custom role",
+    "aliases": ["custom role definition"],
+    "definition": "A role you define by listing exactly the actions allowed (and optionally denied), for when no built-in role is narrow enough. Each one is something to maintain as services add actions, so use them sparingly.",
+    "example": "A custom Support Operator role can restart App Service apps and read logs but not change settings.",
+    "lessons": ["4.5"],
+    "related": ["Built-in role", "Least privilege"]
+  },
+  {
+    "term": "Least privilege",
+    "aliases": ["principle of least privilege", "PoLP"],
+    "definition": "Every person and every piece of code holds the smallest role, at the smallest scope, for the shortest time that lets it do its job. On Azure: groups not individuals, resource-group scope for pipelines, data roles only on what an app touches, and no standing admin rights.",
+    "example": "The pipeline can deploy to rg-shop-prod but cannot touch the backup vault in another resource group.",
+    "lessons": ["4.5"],
+    "related": ["Privileged Identity Management", "Role assignment", "Built-in role"]
+  },
+  {
+    "term": "Privileged Identity Management",
+    "aliases": ["PIM", "just-in-time access", "eligible assignment"],
+    "definition": "An Entra ID P2 feature that makes powerful roles eligible rather than permanent: a user activates the role for a few hours with MFA and a justification, optionally after approval, and it expires by itself. Every activation is logged and can be reviewed.",
+    "example": "Priya activates Owner on sub-shop-prod for two hours to change a network setting; the audit log records why.",
+    "icon": "pim",
+    "lessons": ["4.5"],
+    "related": ["Least privilege", "Role assignment", "Conditional Access"]
+  },
+  {
+    "term": "User-assigned managed identity",
+    "aliases": ["user-assigned identity", "UAMI", "system-assigned managed identity"],
+    "definition": "A managed identity created as its own resource rather than tied to one resource's lifecycle. It can be shared by several apps, granted roles before the app exists, and survives the app being rebuilt. A system-assigned identity, by contrast, is created and deleted with its resource.",
+    "example": "id-deploy-prod is user-assigned, so its federation and Contributor role survive any rebuild of the pipeline's resources.",
+    "icon": "managed-identity",
+    "lessons": ["4.5"],
+    "related": ["Managed identity", "Workload identity federation"]
+  },
+  {
+    "term": "Workload identity federation",
+    "aliases": ["federated credential", "OIDC federation", "federated identity credential"],
+    "definition": "Lets code outside Azure - GitHub Actions, another cloud, a Kubernetes pod - exchange its own platform's signed OIDC token for an Entra ID token, with no secret stored anywhere. Entra trusts only the issuer and subject you specify, such as one repository and environment.",
+    "example": "The GitHub workflow for environment prod gets an Azure token for id-deploy-prod without any secret in GitHub.",
+    "lessons": ["4.5"],
+    "related": ["User-assigned managed identity", "App registration", "OAuth 2.0 and OpenID Connect"]
+  }
+]

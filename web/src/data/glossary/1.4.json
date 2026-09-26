@@ -47,7 +47,7 @@
     "term": "Scope",
     "definition": "Any level of the Azure tree - management group, subscription, resource group or resource - at which access or policy can be assigned. Assignments flow down to everything beneath, so put each rule at the highest scope where it is true for everyone below.",
     "example": "Assign Reader at the management group and every subscription and resource group beneath inherits it.",
-    "lessons": ["1.4"],
+    "lessons": ["1.4", "4.5"],
     "related": ["Role-based access control", "Azure Policy", "Management group"]
   },
   {
@@ -56,7 +56,7 @@
     "definition": "Azure's authorisation system: a role (such as Reader, Contributor or Owner) is assigned to a user, group or identity at a scope, and the permission is inherited downwards. It answers 'who can do what, where'. Assign roles to groups, not individuals, and at the highest true scope.",
     "example": "Developers get Contributor on sub-nonprod and Reader on sub-prod; only the pipeline identity can change prod.",
     "icon": "roles",
-    "lessons": ["1.4"],
+    "lessons": ["1.4", "4.5"],
     "related": ["Scope", "Microsoft Entra ID", "Azure Policy"]
   },
   {
