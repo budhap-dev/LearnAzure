@@ -23,7 +23,7 @@
     "example": "The warehouse-onprem pool is one self-hosted agent in the office, making outbound HTTPS connections only.",
     "icon": "managed-devops-pools",
     "lessons": ["7.3"],
-    "related": ["Azure Pipelines", "Deployment environment"]
+    "related": ["Azure Pipelines", "Deployment environment", "Runner"]
   },
   {
     "term": "Pipeline stage",
@@ -40,7 +40,7 @@
     "example": "warehouse-prod requires an operations approval, runs only from main and only in business hours.",
     "icon": "deployment-environments",
     "lessons": ["7.3"],
-    "related": ["Pipeline stage", "Service connection"]
+    "related": ["Pipeline stage", "Service connection", "GitHub environment"]
   },
   {
     "term": "Service connection",
@@ -57,6 +57,6 @@
     "example": "Every shop pipeline extends the platform template, so dependency scanning runs everywhere without being copied.",
     "icon": "templates",
     "lessons": ["7.3"],
-    "related": ["YAML pipeline", "Azure Pipelines"]
+    "related": ["YAML pipeline", "Azure Pipelines", "Reusable workflow"]
   }
 ]

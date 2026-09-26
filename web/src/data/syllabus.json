@@ -794,12 +794,19 @@
         {
           "id": "7.4",
           "title": "GitHub Actions for Azure",
-          "summary": "",
+          "summary": "Workflows, jobs, runners and actions; OIDC sign-in bound to environments; protection rules; pinned actions and least-privilege tokens; and the map from Azure Pipelines.",
           "minutes": 14,
-          "objectives": [],
+          "objectives": [
+            "Write a GitHub Actions workflow that builds once and deploys through environments",
+            "Sign in to Azure with OIDC, binding each identity to a protected GitHub environment",
+            "Harden workflows with least-privilege tokens, pinned actions and safe handling of untrusted input"
+          ],
           "icons": [
-            "workflow"
-          ]
+            "workflow",
+            "deployment-environments",
+            "managed-identity"
+          ],
+          "status": "ready"
         },
         {
           "id": "7.5",

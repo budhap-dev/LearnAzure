@@ -1,0 +1,45 @@
+[
+  {
+    "term": "GitHub Actions",
+    "aliases": ["Actions", "action", "GITHUB_TOKEN"],
+    "definition": "GitHub's CI/CD and automation service. Workflows in .github/workflows/ run jobs on runners, and each job's steps run commands or use actions - reusable building blocks from GitHub's marketplace, such as azure/login and azure/webapps-deploy. Workflows are privileged code: least-privilege tokens, pinned actions and reviewed changes.",
+    "example": "The shop-api workflow builds once, deploys to staging, and swaps to production after an operations review.",
+    "icon": "workflow",
+    "lessons": ["7.4"],
+    "related": ["GitHub Actions workflow", "Runner", "GitHub environment", "Azure Pipelines"]
+  },
+  {
+    "term": "GitHub Actions workflow",
+    "aliases": ["workflow file", ".github/workflows", "needs", "concurrency"],
+    "definition": "A YAML file in .github/workflows/ that defines triggers (push, pull request, manual, schedule), jobs that run in parallel unless ordered with needs, and steps. Top-level permissions set what the GITHUB_TOKEN can do; concurrency groups stop overlapping deployments.",
+    "example": ".github/workflows/deploy.yml runs on pushes to main with contents: read by default and id-token: write only in deploy jobs.",
+    "icon": "workflow",
+    "lessons": ["7.4"],
+    "related": ["GitHub Actions", "Reusable workflow", "YAML pipeline"]
+  },
+  {
+    "term": "Runner",
+    "aliases": ["GitHub-hosted runner", "self-hosted runner", "larger runner", "Actions Runner Controller", "ARC"],
+    "definition": "The machine that runs a GitHub Actions job. GitHub-hosted runners are fresh VMs per job; larger runners add capacity, static IPs and Azure private networking; self-hosted runners run on your own machines or Kubernetes. Windows minutes count double and macOS ten times. Never attach self-hosted runners to public repositories.",
+    "example": "The API builds on ubuntu-latest; the iOS app builds on a macOS runner, which uses minutes ten times faster.",
+    "lessons": ["7.4"],
+    "related": ["GitHub Actions", "Pipeline agent"]
+  },
+  {
+    "term": "Reusable workflow",
+    "aliases": ["workflow_call", "composite action", "required workflow"],
+    "definition": "A workflow that other workflows call with workflow_call, so build and deploy logic lives in one place - typically a platform repository - instead of being copied. Composite actions package groups of steps; organisation rulesets can require specific workflows on every repository.",
+    "example": "shop-web, shop-api and shop-infra all call the deploy workflow in shop/platform.",
+    "lessons": ["7.4"],
+    "related": ["GitHub Actions workflow", "Pipeline template"]
+  },
+  {
+    "term": "GitHub environment",
+    "aliases": ["environment protection rules", "required reviewers", "deployment branches"],
+    "definition": "A named deployment target in a GitHub repository with its own variables and secrets and protection rules - required reviewers, allowed deployment branches or tags, wait timers and custom checks - that must pass before a job using it runs. Binding each Azure federated identity to an environment keeps production credentials out of every other job.",
+    "example": "The production environment requires an operations reviewer and only accepts deployments from main.",
+    "icon": "deployment-environments",
+    "lessons": ["7.4"],
+    "related": ["Deployment environment", "Workload identity federation", "GitHub Actions"]
+  }
+]
