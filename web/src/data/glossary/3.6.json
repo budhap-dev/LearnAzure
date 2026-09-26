@@ -55,7 +55,7 @@
     "definition": "A recycle bin for the cloud: a deleted blob, file share, database or vault recovery point is retained for a set period and can be undeleted. Blob soft delete is configurable from 1 to 365 days; Recovery Services vault soft delete holds recovery points for 14 days at no cost. It is off for blobs until you enable it, and it costs the storage of whatever it keeps.",
     "example": "A blob deleted by the clean-up job was undeleted from the portal because soft delete was set to 30 days.",
     "icon": "blob",
-    "lessons": ["3.6", "3.1"],
+    "lessons": ["3.6", "3.1", "4.6"],
     "related": ["Immutable storage", "Retention period", "Blob storage", "Recovery Services vault"]
   },
   {
@@ -115,7 +115,7 @@
     "definition": "Encrypting a service's data at rest with a key you hold in Key Vault instead of one Microsoft manages. It gives auditors control and revocation, and gives you a new failure mode: if the key is deleted or expires, the data and every backup encrypted with it become unreadable. Turn on Key Vault soft delete and purge protection before enabling it.",
     "example": "Azure SQL TDE uses a key in kv-shop-prod; purge protection means nobody can permanently delete it.",
     "icon": "key-vault",
-    "lessons": ["3.6"],
+    "lessons": ["3.6", "4.6"],
     "related": ["Key Vault", "Transparent data encryption", "Azure SQL Database"]
   }
 ]
