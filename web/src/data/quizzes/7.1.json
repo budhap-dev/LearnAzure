@@ -1,0 +1,110 @@
+[
+  {
+    "id": "7.1-q1",
+    "topic": "the one rule",
+    "scenario": "A Friday fix deployed from a developer's laptop included an uncommitted change and took checkout down for two hours. Nobody could tell what had been deployed.",
+    "stem": "Which rule most directly prevents a repeat?",
+    "options": [
+      "Only senior developers may deploy from their laptops",
+      "The pipeline is the only way to production, and engineers hold read-only access to production except through an emergency process",
+      "Deployments are banned on Fridays",
+      "Every developer keeps a deployment log in a spreadsheet"
+    ],
+    "answer": 1,
+    "explanation": "A pipeline deploys only committed, built and tested code and records exactly what ran and when. Seniority, calendars and manual logs all still allow unrecorded, unreviewed changes from a laptop."
+  },
+  {
+    "id": "7.1-q2",
+    "topic": "CI and CD",
+    "stem": "What distinguishes continuous delivery from continuous deployment?",
+    "options": [
+      "Continuous delivery skips testing",
+      "Continuous delivery keeps every passing change deployable at the push of a button; continuous deployment ships every passing change to production automatically",
+      "Continuous deployment is only for containers",
+      "They are different names for continuous integration"
+    ],
+    "answer": 1,
+    "explanation": "Both depend on continuous integration producing a tested artefact. The difference is the final step: a human decision, or none. Many teams use continuous delivery with an approval for production."
+  },
+  {
+    "id": "7.1-q3",
+    "topic": "what DevOps is",
+    "scenario": "Leadership proposes hiring a 'DevOps team' to own all pipelines, so developers can focus on features.",
+    "stem": "What is the main risk?",
+    "options": [
+      "DevOps engineers are expensive",
+      "It creates a new silo between building and running software, which is the problem DevOps exists to remove",
+      "Pipelines cannot be shared",
+      "Azure does not support dedicated DevOps teams"
+    ],
+    "answer": 1,
+    "explanation": "DevOps is a way of working in which the people who build software also ship and run it. A central team can provide platforms and templates, but if it owns every pipeline, developers lose sight of production and hand-offs return."
+  },
+  {
+    "id": "7.1-q4",
+    "topic": "choosing a toolchain",
+    "scenario": "The API's code is in Azure DevOps, the mobile app in GitHub, and the team prefers GitHub. An on-premises deployment runs reliably in Azure Pipelines.",
+    "stem": "What is the most pragmatic plan?",
+    "options": [
+      "Move everything, including work item history and the on-premises pipeline, to GitHub this quarter",
+      "Move everything back into Azure DevOps",
+      "Consolidate application code and CI/CD on GitHub, keep the working Azure Pipeline and Boards for now, and give each tool a clear job",
+      "Keep two copies of every repository, one in each"
+    ],
+    "answer": 2,
+    "explanation": "Start where the code and the team already are, and migrate only when running both costs more than moving. A working pipeline and a business backlog can stay put with clear boundaries. Duplicate repositories are the worst of both."
+  },
+  {
+    "id": "7.1-q5",
+    "topic": "infrastructure as code",
+    "scenario": "The pipeline deploys the API, but engineers still change App Service settings in the portal during incidents. The next deployment keeps reverting their fixes.",
+    "stem": "What is the underlying problem?",
+    "options": [
+      "The pipeline is too slow",
+      "The pipeline is not the only way in, so the portal and the code disagree; changes belong in code and flow through the pipeline",
+      "Portal changes are always overwritten by Azure",
+      "App Service does not support settings"
+    ],
+    "answer": 1,
+    "explanation": "When portal edits continue alongside a pipeline, environments drift and deployments undo unrecorded fixes. Defining configuration as code and making the pipeline the single path keeps them consistent."
+  },
+  {
+    "id": "7.1-q6",
+    "topic": "Azure DevOps services",
+    "stem": "Which Azure DevOps service would host a private npm package shared by several of the shop's services?",
+    "options": [
+      "Azure Boards",
+      "Azure Test Plans",
+      "Azure Artifacts",
+      "Azure Repos"
+    ],
+    "answer": 2,
+    "explanation": "Azure Artifacts provides private package feeds for npm, NuGet, Maven and Python. Boards tracks work, Test Plans manages testing, and Repos stores Git repositories."
+  },
+  {
+    "id": "7.1-q7",
+    "topic": "feedback",
+    "stem": "Which practice closes the DevOps loop?",
+    "options": [
+      "Deploying more often regardless of outcomes",
+      "Feeding production signals - SLOs, alerts, incidents - back into the backlog so they shape the next changes",
+      "Writing longer release notes",
+      "Adding more approval steps"
+    ],
+    "answer": 1,
+    "explanation": "Speed without feedback just breaks things faster. Monitoring and incident learnings turned into work items are what make the next change better informed."
+  },
+  {
+    "id": "7.1-q8",
+    "topic": "mixing tools",
+    "stem": "Which combination is a supported, sensible mix?",
+    "options": [
+      "Azure Boards work items linked to pull requests in GitHub repositories",
+      "Two copies of each repository kept in sync by hand",
+      "Separate backlogs in both tools for the same product",
+      "Deploying half the environments from each tool with different artefacts"
+    ],
+    "answer": 0,
+    "explanation": "Azure Boards integrates with GitHub, so planning can stay in Boards while code lives on GitHub. The other options duplicate sources of truth or build artefacts differently per environment, which undermines repeatability."
+  }
+]

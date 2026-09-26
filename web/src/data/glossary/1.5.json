@@ -88,7 +88,7 @@
     "definition": "Defining your cloud environment in files kept in source control and applied by a pipeline, rather than by clicking or by ad-hoc scripts. It makes environments reviewable, repeatable and rebuildable, which is what ends drift between test and production. It has a real learning curve and only pays off once a pipeline, not a person, is the thing that changes production.",
     "example": "Anything that will live longer than a week, or exist in more than one environment, comes from a file.",
     "icon": "code",
-    "lessons": ["1.5"],
+    "lessons": ["1.5", "7.1"],
     "related": ["Bicep", "ARM template", "Terraform", "Idempotent", "Azure portal"]
   },
   {

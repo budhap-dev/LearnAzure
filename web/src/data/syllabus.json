@@ -738,17 +738,24 @@
       "tagline": "Azure DevOps and GitHub, pipelines, infrastructure as code, environments and release strategies.",
       "description": "Shipping software to Azure repeatably: the two toolchains, YAML pipelines and GitHub Actions, Bicep and Terraform, secrets and identities in CI, deployment slots, blue-green and canary releases, and the gates that make a pipeline trustworthy.",
       "icon": "azure-devops",
-      "status": "planned",
+      "status": "in-progress",
       "lessons": [
         {
           "id": "7.1",
           "title": "DevOps on Azure - the landscape and the two toolchains",
-          "summary": "",
+          "summary": "What DevOps really is, CI and CD, the pipeline as the only way to production, and choosing between Azure DevOps and GitHub - or using both with clear jobs.",
           "minutes": 12,
-          "objectives": [],
+          "objectives": [
+            "Explain DevOps, continuous integration and continuous delivery in practical terms",
+            "Compare Azure DevOps and GitHub and decide where each kind of work should live",
+            "Make the pipeline the only way to production"
+          ],
           "icons": [
-            "azure-devops"
-          ]
+            "azure-devops",
+            "builds",
+            "branch"
+          ],
+          "status": "ready"
         },
         {
           "id": "7.2",
