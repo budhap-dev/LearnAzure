@@ -495,12 +495,19 @@
         {
           "id": "4.7",
           "title": "Defender for Cloud, Sentinel and the security baseline",
-          "summary": "",
+          "summary": "Prevent, assess, detect, respond: Azure Policy, Defender for Cloud and its secure score, Defender plans, and when Sentinel is worth running.",
           "minutes": 12,
-          "objectives": [],
+          "objectives": [
+            "Match Azure Policy, Defender for Cloud, Defender plans and Sentinel to the jobs they do",
+            "Use the security benchmark and secure score to prioritise, and produce compliance evidence",
+            "Route alerts to people and decide when a SIEM is worth running"
+          ],
           "icons": [
-            "defender"
-          ]
+            "defender",
+            "sentinel",
+            "policy"
+          ],
+          "status": "ready"
         },
         {
           "id": "4.8",
