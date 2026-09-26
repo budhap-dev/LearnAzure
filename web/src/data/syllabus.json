@@ -410,12 +410,19 @@
         {
           "id": "4.2",
           "title": "Load Balancer, Application Gateway, Front Door and Traffic Manager",
-          "summary": "",
+          "summary": "Layer 4 or layer 7, regional or global: which of the four to use, health probes that tell the truth, and locking the origin behind the WAF.",
           "minutes": 15,
-          "objectives": [],
+          "objectives": [
+            "Choose between Load Balancer, Application Gateway, Front Door and Traffic Manager from two questions",
+            "Design a health probe that moves traffic for the right reasons",
+            "Make sure a WAF cannot be bypassed and nothing personal is cached at the edge"
+          ],
           "icons": [
-            "front-door"
-          ]
+            "front-door",
+            "application-gateway",
+            "load-balancer"
+          ],
+          "status": "ready"
         },
         {
           "id": "4.3",

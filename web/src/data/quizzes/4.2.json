@@ -1,0 +1,113 @@
+[
+  {
+    "id": "4.2-q1",
+    "topic": "choosing for a public web app",
+    "scenario": "The shop's React front end and Node API are public, on App Service in UK South. Shoppers are in the UK, Ireland and Australia, and the business wants the site to survive a UK South outage.",
+    "stem": "Which service should sit in front of the shop?",
+    "options": [
+      "Azure Load Balancer, because it is the cheapest way to spread traffic",
+      "Application Gateway in UK South, because it has a WAF",
+      "Azure Front Door, which terminates TLS at the edge, caches, and fails over between regions on health probes",
+      "Traffic Manager, because it is global and costs cents per million queries"
+    ],
+    "answer": 2,
+    "explanation": "The requirements are HTTP, users in several countries and surviving a region outage - global layer 7, which is Front Door. Load Balancer is layer 4 and regional, Application Gateway is regional so it goes down with UK South, and Traffic Manager is DNS only: no caching, no WAF, and failover waits for DNS caches to expire."
+  },
+  {
+    "id": "4.2-q2",
+    "topic": "layer 4 traffic",
+    "scenario": "Two warehouse VMs run a legacy stock service over a custom TCP protocol on port 9000. The team wants connections spread across both and moved away from a VM that stops responding.",
+    "stem": "What fits best?",
+    "options": [
+      "An internal Azure Load Balancer with a health probe on port 9000",
+      "Application Gateway with path-based routing",
+      "Azure Front Door with both VMs as origins",
+      "A WAF policy with a rate limit"
+    ],
+    "answer": 0,
+    "explanation": "The traffic is not HTTP, so the layer 7 services cannot handle it at all; a layer 4 balancer is required, and an internal one keeps it private. Application Gateway and Front Door only proxy HTTP and HTTPS, and a WAF inspects HTTP requests."
+  },
+  {
+    "id": "4.2-q3",
+    "topic": "WAF bypass",
+    "scenario": "Front Door Premium with a WAF now fronts the API, but the logs still show the credential-stuffing botnet hitting /login - on shop-api.azurewebsites.net, not the shop's domain.",
+    "stem": "What is missing?",
+    "options": [
+      "A stricter WAF rule set, since the default rules miss this botnet",
+      "The origin still accepts traffic directly; restrict App Service to the AzureFrontDoor.Backend service tag and check the X-Azure-FDID header, or use Private Link",
+      "DDoS Network Protection on the App Service's public IP",
+      "A Traffic Manager profile in front of Front Door"
+    ],
+    "answer": 1,
+    "explanation": "A WAF only protects traffic that passes through it. Attackers skip Front Door by calling the App Service's own host name, so the origin must accept only Front Door - the service tag narrows it to Front Door's addresses and the header check to your own instance. More rules or DDoS plans do nothing for requests that never reach them."
+  },
+  {
+    "id": "4.2-q4",
+    "topic": "DNS failover timing",
+    "scenario": "A partner feed uses Traffic Manager with priority routing between UK South and UK West. During a drill, UK South is stopped and some clients keep failing for several minutes after Traffic Manager marks it unhealthy.",
+    "stem": "Why do those clients keep failing?",
+    "options": [
+      "Traffic Manager only checks health once an hour",
+      "Traffic Manager proxies connections and must drain existing ones first",
+      "Clients and resolvers keep the cached DNS answer pointing at UK South until its TTL expires",
+      "Priority routing does not support failover; performance routing is needed"
+    ],
+    "answer": 2,
+    "explanation": "Traffic Manager works purely through DNS, so failover changes only new lookups; anyone holding a cached answer keeps using the old address until it expires. Its probes run every 10 to 30 seconds, it never proxies traffic, and priority routing is the failover method."
+  },
+  {
+    "id": "4.2-q5",
+    "topic": "health probe design",
+    "scenario": "Front Door probes / on the API. During a database outage in UK South, the home page still returns 200 from a cached template, and shoppers keep being sent to UK South where every order fails.",
+    "stem": "What is the best fix?",
+    "options": [
+      "Probe a /health endpoint that returns an error when this instance cannot reach its database",
+      "Probe every downstream dependency, including the payment provider and email service",
+      "Increase the probe interval so transient errors are ignored",
+      "Remove health probes and fail over manually"
+    ],
+    "answer": 0,
+    "explanation": "A probe should check what makes the instance useless - here, losing its own database - so traffic moves to the healthy region. Checking every third party means one hiccup at the email provider takes the whole region out. A longer interval only delays detection, and manual failover defeats the point."
+  },
+  {
+    "id": "4.2-q6",
+    "topic": "caching personal data",
+    "stem": "After Front Door caching is switched on for /api/*, a shopper reports seeing someone else's basket. What went wrong?",
+    "options": [
+      "Front Door's WAF blocked the shopper's session cookie",
+      "A personal API response was cached at the edge and served to the next request; cache only static and anonymous content and mark personal responses Cache-Control: private",
+      "Front Door does not support cookies, so all sessions are shared",
+      "The health probe routed the shopper to the other region's database"
+    ],
+    "answer": 1,
+    "explanation": "An edge cache serves the same stored response to everyone whose request matches the cache key. Personal responses must never be cached there: scope caching rules to static paths and have the API send Cache-Control: private. Front Door handles cookies normally, and region routing does not mix up baskets."
+  },
+  {
+    "id": "4.2-q7",
+    "topic": "when Application Gateway fits",
+    "scenario": "An internal HR portal runs on VMs with no public IPs. The security team requires a web application firewall inside the company's own VNet in UK South, and users reach it over the office VPN.",
+    "stem": "Which service fits?",
+    "options": [
+      "Azure Front Door Standard",
+      "Traffic Manager with performance routing",
+      "Azure Load Balancer with a WAF policy",
+      "Application Gateway WAF_v2 in a dedicated subnet, with the VMs as a private backend pool"
+    ],
+    "answer": 3,
+    "explanation": "Private backends, a single region and an inspection point inside the VNet are Application Gateway's use case. Front Door is a public, global edge service; Traffic Manager is DNS; and Load Balancer is layer 4, so it cannot host a WAF."
+  },
+  {
+    "id": "4.2-q8",
+    "topic": "stacking",
+    "scenario": "A contractor's design puts Front Door in front of Application Gateway, in front of an Azure Load Balancer, in front of App Service - 'defence in depth'.",
+    "stem": "What should Priya challenge?",
+    "options": [
+      "Nothing; more layers always mean more security",
+      "Only the Load Balancer, which should be replaced with Traffic Manager",
+      "Only Front Door, since Application Gateway already provides a WAF",
+      "Each layer adds cost, latency and a place for 502s to hide; App Service needs no Load Balancer, and Application Gateway is justified only by a regional requirement Front Door cannot meet"
+    ],
+    "answer": 3,
+    "explanation": "App Service balances across its own instances, so a Load Balancer in front of it does nothing useful. Application Gateway behind Front Door earns its place only for something regional, such as private backends. Otherwise the stack is three bills and three hops, and replacing one layer with Traffic Manager or dropping the global one misses the point."
+  }
+]
