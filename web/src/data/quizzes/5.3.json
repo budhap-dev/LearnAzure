@@ -1,0 +1,112 @@
+[
+  {
+    "id": "5.3-q1",
+    "topic": "push instead of poll",
+    "scenario": "A timer function lists the uploads container every minute to find new product images, adding a minute's delay and constant storage transactions.",
+    "stem": "What is the better design?",
+    "options": [
+      "Run the timer every ten seconds",
+      "Subscribe to the storage account's BlobCreated events through Event Grid and trigger the resize function when an upload arrives",
+      "Move the images to a Service Bus queue",
+      "Have the React app call the resize function directly after uploading"
+    ],
+    "answer": 1,
+    "explanation": "Storage already announces new blobs through an Event Grid system topic, so the function can be called within a second of each upload and never runs for nothing. Polling faster costs more, a Service Bus queue is not where images live, and coupling the browser to the resize step makes uploads fail when resizing does."
+  },
+  {
+    "id": "5.3-q2",
+    "topic": "system versus custom topics",
+    "stem": "The shipping API wants to announce OrderShipped to partners. Which Event Grid topic type fits?",
+    "options": [
+      "A system topic, because shipping is part of the shop's Azure estate",
+      "A custom topic, which the application publishes its own events to",
+      "No topic is needed; partners subscribe to the API directly",
+      "A partner topic"
+    ],
+    "answer": 1,
+    "explanation": "System topics carry events raised by Azure services about themselves; the shop's own business events are published by its code to a custom topic. Partner topics bring events from SaaS providers into Azure, which is the opposite direction."
+  },
+  {
+    "id": "5.3-q3",
+    "topic": "dead-lettering",
+    "scenario": "A partner's webhook was down from Friday night to Monday morning. On Monday they ask for the weekend's OrderShipped events.",
+    "stem": "What determines whether the shop can send them?",
+    "options": [
+      "Nothing: Event Grid keeps undelivered events for 30 days automatically",
+      "Whether the event subscription had a dead-letter destination; after about 24 hours of retries, events without one are dropped",
+      "Whether the partner used CloudEvents",
+      "Whether the topic was on the Premium tier"
+    ],
+    "answer": 1,
+    "explanation": "Event Grid retries delivery for up to 24 hours by default. After that, events are written to the subscription's dead-letter blob container if one is configured - and lost if not. With the container, the weekend's events can be replayed to the partner."
+  },
+  {
+    "id": "5.3-q4",
+    "topic": "the loop",
+    "scenario": "The resize function subscribes to BlobCreated for the product-images container and writes the resized image back into product-images. Costs spike and the function never stops running.",
+    "stem": "What is happening, and the fix?",
+    "options": [
+      "Event Grid is misconfigured and resending events; lower the retry count",
+      "Each resized image raises its own BlobCreated event and triggers the function again; watch an uploads container and write to a different one, or filter by path or suffix",
+      "The function is too slow; give it more memory",
+      "BlobCreated fires every minute; switch to a timer"
+    ],
+    "answer": 1,
+    "explanation": "Writing output where the trigger is watching creates a feedback loop: every output is a new input. Separate the input and output locations, or filter the subscription so outputs do not match. Retry settings and memory have nothing to do with it."
+  },
+  {
+    "id": "5.3-q5",
+    "topic": "event payloads",
+    "scenario": "A developer proposes putting the whole order - items, address and payment summary - in every OrderShipped event 'so partners never need to call back'.",
+    "stem": "What is the better design?",
+    "options": [
+      "Agree; bigger events mean fewer API calls",
+      "Send the order ID, carrier, tracking number and a URL; let each handler fetch only what it is allowed to see",
+      "Send the whole order but encrypt it",
+      "Send no data at all, only the event type"
+    ],
+    "answer": 1,
+    "explanation": "Events fan out to every subscriber, so a full order leaks personal data to all of them and becomes a contract that breaks when the order shape changes. A small notification with identifiers keeps events cheap and lets each receiver fetch data under its own permissions. An event with no identifiers is useless."
+  },
+  {
+    "id": "5.3-q6",
+    "topic": "Event Grid or Service Bus",
+    "scenario": "An internal service must process every OrderShipped event, even if it is down for three days during a migration.",
+    "stem": "How should it receive them?",
+    "options": [
+      "A direct Event Grid webhook to the service",
+      "An Event Grid subscription that pushes into a Service Bus queue, which the service reads at its own pace",
+      "Polling the shipping API",
+      "Event Grid with a longer webhook timeout"
+    ],
+    "answer": 1,
+    "explanation": "Event Grid retries for about a day, while a Service Bus queue holds messages until they are read, with locks and dead-lettering. Pushing into a queue combines Event Grid's reach with Service Bus's durability. A direct webhook would exhaust its retries, and polling brings back the problem Event Grid removed."
+  },
+  {
+    "id": "5.3-q7",
+    "topic": "webhook security",
+    "stem": "A partner asks how they can be sure a call to their webhook really comes from the shop. What should the shop offer?",
+    "options": [
+      "Nothing is needed, because Event Grid only calls validated endpoints",
+      "Deliver with an Entra ID token, or a secret header, that the partner verifies on every call",
+      "A fixed source IP address the partner can trust",
+      "Send the events over HTTP instead of HTTPS"
+    ],
+    "answer": 1,
+    "explanation": "Endpoint validation proves the receiver asked for events; it does not stop someone else calling the same URL. An Entra token or a shared secret header lets the receiver check each call. IP-based trust is fragile, and plain HTTP would expose the events."
+  },
+  {
+    "id": "5.3-q8",
+    "topic": "ordering",
+    "scenario": "A partner's system sometimes receives OrderShipped before OrderPacked for the same order and rejects it.",
+    "stem": "What should the shop tell them?",
+    "options": [
+      "It is a bug in Event Grid that will be fixed",
+      "Event Grid delivery is not ordered; handlers must cope with events arriving in either order, for example by checking the order's current state",
+      "Enable sessions on the Event Grid topic",
+      "Switch to Traffic Manager"
+    ],
+    "answer": 1,
+    "explanation": "Event Grid guarantees at-least-once delivery, not order, and it has no sessions. Handlers should treat events as signals to look at current state, or tolerate out-of-order arrival. Where strict per-key ordering is essential, the events belong on a Service Bus queue with sessions."
+  }
+]

@@ -1,0 +1,54 @@
+[
+  {
+    "term": "Azure Event Grid",
+    "aliases": ["Event Grid", "EG"],
+    "definition": "A push-based event service: sources publish small notifications to topics, and event subscriptions filter them and push each match to a handler - a function, webhook, Service Bus queue or Logic App - usually within a second. Delivery is at least once and unordered, retried for up to 24 hours. The first 100,000 operations a month are free, then about $0.60 per million.",
+    "example": "A BlobCreated event on the uploads container triggers the resize function instead of a timer listing the container every minute.",
+    "icon": "event-grid",
+    "lessons": ["5.3"],
+    "related": ["Event subscription", "System topic", "Custom topic", "Azure Service Bus"]
+  },
+  {
+    "term": "Event subscription",
+    "aliases": ["Event Grid subscription", "event filter", "dead-letter destination"],
+    "definition": "The Event Grid object that decides which events from a topic go where: it filters by event type, subject prefix or suffix, or data values, names the handler, and sets retry and dead-letter behaviour. Without a dead-letter container, events that cannot be delivered within the retry period are dropped.",
+    "example": "A subscription on the storage system topic sends only BlobCreated events under /containers/uploads/ to the resize function, and dead-letters to a blob container.",
+    "icon": "event-grid-subscription",
+    "lessons": ["5.3"],
+    "related": ["Azure Event Grid", "Webhook", "Dead-letter queue"]
+  },
+  {
+    "term": "System topic",
+    "aliases": ["Event Grid system topic", "Azure service events"],
+    "definition": "An Event Grid topic that represents events raised by an Azure service about itself - blobs created, secrets nearing expiry, resources changed, images pushed. You subscribe to it; Azure publishes to it.",
+    "example": "Key Vault's system topic raises SecretNearExpiry, which triggers the rotation function.",
+    "icon": "system-topic",
+    "lessons": ["5.3"],
+    "related": ["Azure Event Grid", "Custom topic"]
+  },
+  {
+    "term": "Custom topic",
+    "aliases": ["Event Grid custom topic", "Event Grid domain"],
+    "definition": "An Event Grid topic for your own application's events, which your code publishes over HTTPS, ideally with a managed identity. Subscribers attach to it exactly as they would to an Azure service's system topic.",
+    "example": "The shipping API publishes OrderShipped to the shop-events custom topic, which pushes it to partner webhooks.",
+    "icon": "event-grid",
+    "lessons": ["5.3"],
+    "related": ["Azure Event Grid", "System topic", "Event"]
+  },
+  {
+    "term": "CloudEvents",
+    "aliases": ["CloudEvents schema", "CNCF CloudEvents"],
+    "definition": "An open standard, from the Cloud Native Computing Foundation, for describing an event with common fields - id, source, type, subject, time and data. Event Grid supports it alongside its older proprietary schema; using it keeps events readable by any tool that speaks the standard.",
+    "example": "OrderShipped is published as a CloudEvent with type shop.order.shipped and the order ID in data.",
+    "lessons": ["5.3"],
+    "related": ["Azure Event Grid", "Event"]
+  },
+  {
+    "term": "Webhook",
+    "aliases": ["web hook", "HTTP callback", "endpoint validation"],
+    "definition": "An HTTPS endpoint that another system calls to push an event, instead of being polled. Safe webhooks need two checks: the sender validates that the endpoint's owner asked for the events, and the receiver verifies each call is genuine, for example with an Entra token or a shared secret header.",
+    "example": "Each delivery partner registers a webhook that receives OrderShipped, replacing 200,000 polling requests a day.",
+    "lessons": ["5.3"],
+    "related": ["Event subscription", "Azure Event Grid"]
+  }
+]

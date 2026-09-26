@@ -565,12 +565,19 @@
         {
           "id": "5.3",
           "title": "Event Grid - reacting to what happens",
-          "summary": "",
+          "summary": "Push instead of poll: system and custom topics, filtered subscriptions, retries and dead-lettering, webhooks to partners, and when Service Bus is the better home.",
           "minutes": 12,
-          "objectives": [],
+          "objectives": [
+            "Replace polling with Event Grid system and custom topics",
+            "Configure event subscriptions with filters, retries and a dead-letter destination",
+            "Choose between Event Grid and Service Bus, and combine them when a reaction must not be lost"
+          ],
           "icons": [
-            "event-grid"
-          ]
+            "event-grid",
+            "system-topic",
+            "function-apps"
+          ],
+          "status": "ready"
         },
         {
           "id": "5.4",
