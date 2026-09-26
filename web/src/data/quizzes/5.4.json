@@ -1,0 +1,114 @@
+[
+  {
+    "id": "5.4-q1",
+    "topic": "stream or queue",
+    "scenario": "Marketing wants every click from the shop at 20,000 events a second on sale days, read live by a dashboard and also archived for the data team.",
+    "stem": "Which service fits?",
+    "options": [
+      "A Service Bus queue, because it guarantees delivery",
+      "A table in the orders database",
+      "Event Hubs, with a consumer group per reader and Capture for the archive",
+      "Event Grid custom topic"
+    ],
+    "answer": 2,
+    "explanation": "High-volume facts read by several independent readers, with replay and archiving, are an event stream. A queue delivers each message to one reader and is not built for this volume, a database table fights the checkout for locks, and Event Grid pushes discrete notifications rather than retaining a stream."
+  },
+  {
+    "id": "5.4-q2",
+    "topic": "consumer groups",
+    "scenario": "The dashboard job and the fraud function both read the clickstream using the $Default consumer group. Each seems to see only about half the events.",
+    "stem": "Why, and what is the fix?",
+    "options": [
+      "Event Hubs drops half the events under load; add throughput units",
+      "They are splitting the partitions within one consumer group; give each application its own consumer group",
+      "The retention period is too short",
+      "The partition key is wrong"
+    ],
+    "answer": 1,
+    "explanation": "Within a consumer group, partitions are shared among readers, so two different applications in one group each get part of the stream. A consumer group per application gives each its own complete view and position."
+  },
+  {
+    "id": "5.4-q3",
+    "topic": "partition count",
+    "scenario": "A hub on the Standard tier was created with 2 partitions. The fraud function now needs 8 parallel instances to keep up.",
+    "stem": "What is the constraint?",
+    "options": [
+      "Nothing; add instances and they will share the load",
+      "Only 2 instances in the consumer group can read in parallel, and on Standard the partition count cannot be changed; a new hub with more partitions is needed",
+      "Add throughput units to create more partitions",
+      "Change the partition key"
+    ],
+    "answer": 1,
+    "explanation": "Parallelism within a consumer group is capped by the number of partitions, and on Standard that number is fixed at creation. Extra instances would sit idle. Throughput units add capacity, not partitions. That is why partitions are chosen generously up front."
+  },
+  {
+    "id": "5.4-q4",
+    "topic": "partition key",
+    "scenario": "Every event is sent with the partition key 'shop'. Producers receive ServerBusy errors although total traffic is well under the namespace's capacity.",
+    "stem": "What is causing the errors?",
+    "options": [
+      "A constant key sends every event to one partition, which becomes hot; use a high-cardinality key such as the session ID, or no key",
+      "The namespace needs Premium tier",
+      "Retention is too long",
+      "The consumers are checkpointing too often"
+    ],
+    "answer": 0,
+    "explanation": "The key decides the partition, so one value means one partition doing all the work while the others idle. A key with many distinct values, such as sessionId, spreads the load and still keeps each session in order."
+  },
+  {
+    "id": "5.4-q5",
+    "topic": "checkpoints",
+    "scenario": "After a redeploy, the fraud function processes a burst of events it has already seen.",
+    "stem": "Is this expected?",
+    "options": [
+      "No; Event Hubs guarantees exactly-once delivery",
+      "Yes: consumers resume from their last checkpoint and re-read everything since, so processing must be idempotent",
+      "No; it means retention is misconfigured",
+      "Yes, but only on the Basic tier"
+    ],
+    "answer": 1,
+    "explanation": "Checkpoints are saved periodically, not per event, so a restart replays events since the last checkpoint. That is normal at-least-once behaviour; the consumer must tolerate it. Checkpointing more often reduces the replay but costs storage operations."
+  },
+  {
+    "id": "5.4-q6",
+    "topic": "retention and archive",
+    "scenario": "A consumer was down for four days during an incident. The hub keeps events for three days.",
+    "stem": "What would have protected the missing day?",
+    "options": [
+      "More partitions",
+      "Event Hubs Capture writing the stream to the data lake, so older events can be reprocessed from files",
+      "A second consumer group",
+      "Auto-inflate"
+    ],
+    "answer": 1,
+    "explanation": "Events older than the retention period are gone from the hub. Capture keeps a complete copy in storage, which can be replayed or analysed later. Partitions, consumer groups and auto-inflate do not extend how long events are kept."
+  },
+  {
+    "id": "5.4-q7",
+    "topic": "streams are not commands",
+    "scenario": "A developer suggests sending ReserveStock commands through the clickstream event hub, since it is already there and fast.",
+    "stem": "What is the problem?",
+    "options": [
+      "Event Hubs cannot carry JSON",
+      "Event Hubs has no per-message acknowledgement, locks or dead-lettering; commands that must each be processed belong on a Service Bus queue",
+      "Commands are too large for Event Hubs",
+      "Event Hubs is only for Azure services' own events"
+    ],
+    "answer": 1,
+    "explanation": "A stream is a log of facts that consumers read by position. There is no way to say 'this particular command failed, retry it or dead-letter it'. Service Bus provides exactly those per-message guarantees for work that matters."
+  },
+  {
+    "id": "5.4-q8",
+    "topic": "producers",
+    "scenario": "The React team proposes sending click events straight from the browser to Event Hubs using a connection string in the front-end code.",
+    "stem": "What is the better design?",
+    "options": [
+      "Use the connection string but mark it read-only",
+      "Send events to a small telemetry API that batches them and publishes to Event Hubs with its managed identity",
+      "Send each click as a separate HTTP request directly to Event Hubs",
+      "Store clicks in local storage and upload them weekly"
+    ],
+    "answer": 1,
+    "explanation": "Anything in the front-end bundle is public, so an Event Hubs key there lets anyone flood or pollute the stream. A backend collector validates, batches and publishes with a managed identity. Per-click requests waste capacity, and a send key is never read-only in the sense that would help."
+  }
+]
