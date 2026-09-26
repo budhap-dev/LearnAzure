@@ -40,7 +40,7 @@
     "definition": "An identity in Microsoft Entra ID that Azure creates and manages for a resource, so the resource can authenticate to other Azure services without any credential in configuration. Azure rotates the underlying credential for you and there is nothing to leak. It only works against services that accept Entra tokens, and you still have to grant the identity a role on the target.",
     "example": "The API's managed identity is granted Key Vault Secrets User and a database role, so no password exists anywhere.",
     "icon": "managed-identity",
-    "lessons": ["1.8", "4.5", "5.5"],
+    "lessons": ["1.8", "4.5", "5.5", "5.6"],
     "related": ["Key Vault", "Microsoft Entra ID", "Role-based access control", "Connection string"]
   },
   {

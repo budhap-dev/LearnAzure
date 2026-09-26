@@ -32,7 +32,7 @@ lesson quizzes, timed, graded). A **final learning test** draws from the whole c
 | 2 | Compute and hosting ✅ | 7 | VMs, App Service, Static Web Apps, Functions, containers, AKS |
 | 3 | Storage and data ✅ | 7 | Storage accounts, Azure SQL, Cosmos DB, Redis, choosing a store |
 | 4 | Networking, identity and security ✅ | 8 | VNets, load balancing, private endpoints, Entra ID, RBAC, Key Vault, Defender |
-| 5 | Integration and messaging 🚧 | 6 | Service Bus, Event Grid, Event Hubs, API Management, Logic Apps |
+| 5 | Integration and messaging ✅ | 6 | Service Bus, Event Grid, Event Hubs, API Management, Logic Apps |
 | 6 | Observability and reliability | 6 | Monitor, Log Analytics, App Insights, alerts, Well-Architected, HA/DR |
 | 7 | DevOps on Azure | 8 | Azure DevOps vs GitHub, pipelines, GitHub Actions, IaC with Bicep/Terraform, environments, release strategies |
 | 8 | Azure AI | 8 | Azure OpenAI and AI Foundry, AI Services, AI Search, RAG, agents, responsible AI, cost and security of AI |
@@ -113,33 +113,25 @@ attacker through the finished design and sets a minimum bar for every workload.
 Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
 at random from the lesson quizzes. 64 new glossary terms (313 in total).
 
-### Module 5 — Integration and messaging — **in progress, one lesson per PR**
+### Module 5 — Integration and messaging — **shipped**
 
-| Id | Lesson | Status |
-|----|--------|--------|
-| 5.1 | Messaging patterns - queues, topics, events and streams | shipped |
-| 5.2 | Service Bus - enterprise messaging | shipped |
-| 5.3 | Event Grid - reacting to what happens | shipped |
-| 5.4 | Event Hubs - high-volume streaming | shipped |
-| 5.5 | API Management - one front door for your APIs | shipped |
-| 5.6 | Logic Apps and low-code integration | planned |
+| Id | Lesson |
+|----|--------|
+| 5.1 | Messaging patterns - queues, topics, events and streams |
+| 5.2 | Service Bus - enterprise messaging |
+| 5.3 | Event Grid - reacting to what happens |
+| 5.4 | Event Hubs - high-volume streaming |
+| 5.5 | API Management - one front door for your APIs |
+| 5.6 | Logic Apps and low-code integration |
 
-Glossary term ownership, so each lesson PR defines its own terms and no others:
+How the shop's systems talk without being tied together, released one lesson per PR (#13-#18).
+It starts from a Black Friday checkout that did five things in line and ends with one call plus
+events: Service Bus for business messages with the outbox and dead-letter ownership, Event Grid
+for reactions and partner webhooks, Event Hubs for the clickstream, API Management in front of
+every API, and Logic Apps replacing a nightly manual job.
 
-- **5.1**: Asynchronous messaging, Message, Event, Event stream, Message broker,
-  Publish-subscribe, Competing consumers, At-least-once delivery.
-- **5.2**: Azure Service Bus, Service Bus topic, Dead-letter queue, Peek-lock, Message session,
-  Duplicate detection, Transactional outbox.
-- **5.3**: Azure Event Grid, Event subscription, System topic, Custom topic, CloudEvents, Webhook.
-- **5.4**: Azure Event Hubs, Event Hubs partition, Consumer group, Checkpoint, Throughput unit,
-  Event Hubs Capture, Apache Kafka.
-- **5.5**: Azure API Management, API gateway, API Management policy, API product, Subscription
-  key, Rate limiting, Developer portal, OpenAPI.
-- **5.6**: Azure Logic Apps, Connector, Logic Apps Standard, Power Automate, Low-code.
-- Existing terms are extended, never redefined: Idempotent, Transient fault, Trigger, Binding,
-  Durable Functions, Queue storage, Change feed, Azure Front Door, Managed identity.
-
-The module test is written with 5.6.
+Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
+at random from the lesson quizzes. 41 new glossary terms (354 in total).
 
 ## App architecture
 
