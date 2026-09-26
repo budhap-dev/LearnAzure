@@ -1,0 +1,80 @@
+[
+  {
+    "term": "Identity provider",
+    "aliases": ["IdP", "IDP"],
+    "definition": "A service that holds identities, proves who someone or something is, and hands the app a signed token saying so. Apps trust the provider instead of storing passwords themselves, so one account, one policy and one leaver switch cover every app.",
+    "example": "Entra ID is the identity provider for the admin portal; the portal stores no passwords at all.",
+    "lessons": ["4.4"],
+    "related": ["Microsoft Entra ID", "OAuth 2.0 and OpenID Connect", "Microsoft Entra External ID"]
+  },
+  {
+    "term": "OAuth 2.0 and OpenID Connect",
+    "aliases": ["OAuth", "OAuth 2.0", "OpenID Connect", "OIDC", "access token", "ID token", "JWT"],
+    "definition": "The two standards apps use to talk to an identity provider. OpenID Connect signs a user in and returns an ID token for the app that asked. OAuth 2.0 issues access tokens - signed JWTs - that the app sends to an API, which must check the signature, issuer and audience before trusting any claim.",
+    "example": "The React admin portal gets an ID token for itself and an access token whose audience is the Node API.",
+    "lessons": ["4.4"],
+    "related": ["Identity provider", "App registration", "Microsoft Entra ID"]
+  },
+  {
+    "term": "App registration",
+    "aliases": ["application registration", "client ID", "app roles", "client secret"],
+    "definition": "An application's definition in Entra ID: its client ID, redirect URIs, credentials, requested permissions and app roles. Client secrets on it expire after at most two years and are the classic cause of 3am outages; prefer certificates, and better still managed identities or workload identity federation.",
+    "example": "The admin portal's app registration defines the app roles Catalogue.Editor and Orders.Refund.",
+    "icon": "app-registrations",
+    "lessons": ["4.4"],
+    "related": ["Service principal", "OAuth 2.0 and OpenID Connect", "Managed identity"]
+  },
+  {
+    "term": "Service principal",
+    "aliases": ["enterprise application", "SPN"],
+    "definition": "An application's identity inside one tenant, created from its app registration: the object you assign users and groups to, grant permissions and roles to, and disable. Shown in the portal as an enterprise application. A managed identity is a service principal whose credentials Azure manages for you.",
+    "example": "The CI pipeline's service principal holds Contributor on rg-shop-dev only.",
+    "icon": "enterprise-applications",
+    "lessons": ["4.4", "4.5"],
+    "related": ["App registration", "Managed identity", "Role-based access control"]
+  },
+  {
+    "term": "Multifactor authentication",
+    "aliases": ["MFA", "2FA", "two-factor authentication", "passkey", "phishing-resistant MFA"],
+    "definition": "Requiring something beyond a password to sign in, such as the Authenticator app, a passkey or a hardware key. It blocks the great majority of account takeovers and is now required for the Azure portal. Admins should use phishing-resistant methods such as passkeys and FIDO2 keys rather than texts or push approvals.",
+    "example": "The finance director's reused password is useless to the attacker once MFA is required.",
+    "icon": "mfa",
+    "lessons": ["4.4"],
+    "related": ["Conditional Access", "Microsoft Entra ID"]
+  },
+  {
+    "term": "Conditional Access",
+    "aliases": ["CA policy", "Conditional Access policy", "security defaults"],
+    "definition": "Entra ID rules of the form: if this user, app, location, device or risk, then require MFA, require a managed device, or block. Needs Entra ID P1 (about $6 per user per month). Test new policies in report-only mode and always exclude the emergency access accounts. Security defaults are the free, one-switch alternative for small tenants.",
+    "example": "Admins must use a passkey from a managed device to open the Azure portal; everyone else needs MFA.",
+    "icon": "conditional-access",
+    "lessons": ["4.4"],
+    "related": ["Multifactor authentication", "Emergency access account", "Microsoft Entra ID"]
+  },
+  {
+    "term": "Emergency access account",
+    "aliases": ["break-glass account", "break glass account"],
+    "definition": "A cloud-only admin account excluded from Conditional Access, with a long random password or FIDO2 key kept offline, used only when normal admin sign-in is broken - for example by a bad policy. Keep two, and alert on every sign-in.",
+    "example": "When a new policy locks out every admin, Priya uses the break-glass account from the safe to roll it back.",
+    "lessons": ["4.4"],
+    "related": ["Conditional Access", "Multifactor authentication"]
+  },
+  {
+    "term": "Guest user",
+    "aliases": ["guest", "B2B guest", "B2B collaboration", "external user"],
+    "definition": "A person from another organisation invited into your tenant who signs in with their own organisation's account. You control what they can reach; access reviews or an expiry date remove them when the work ends. Contractors should be guests, not accounts you create and forget.",
+    "example": "The contractor is invited as a guest to the dev subscription with access that expires at the end of the engagement.",
+    "icon": "users",
+    "lessons": ["4.4"],
+    "related": ["Microsoft Entra ID", "Tenant"]
+  },
+  {
+    "term": "Microsoft Entra External ID",
+    "aliases": ["External ID", "CIAM", "customer identity", "Azure AD B2C", "B2C"],
+    "definition": "Microsoft's customer identity service: a separate external tenant for consumers to sign up and sign in with email one-time codes or Google and Apple accounts, with your branding and self-service password reset. The first 50,000 monthly active users are free. The successor to Azure AD B2C, which no longer takes new customers.",
+    "example": "Shoppers sign in to the React Native app through the shop's External ID tenant; staff never share it.",
+    "icon": "external-identities",
+    "lessons": ["4.4"],
+    "related": ["Identity provider", "Tenant", "OAuth 2.0 and OpenID Connect"]
+  }
+]

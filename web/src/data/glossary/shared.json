@@ -4,8 +4,8 @@
     "aliases": ["Entra ID", "Azure Active Directory", "Azure AD", "AAD"],
     "definition": "Microsoft's cloud identity service: the directory of users, groups and applications that Azure, Microsoft 365 and thousands of other apps sign in against. Every Azure subscription trusts exactly one Entra ID tenant. Formerly called Azure Active Directory.",
     "icon": "entra-id",
-    "lessons": ["1.4"],
-    "related": ["Tenant", "Subscription"]
+    "lessons": ["1.4", "4.4"],
+    "related": ["Tenant", "Subscription", "Identity provider", "Conditional Access"]
   },
   {
     "term": "Virtual machine",

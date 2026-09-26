@@ -444,12 +444,19 @@
         {
           "id": "4.4",
           "title": "Microsoft Entra ID - the identity backbone",
-          "summary": "",
+          "summary": "Identities, tokens and app registrations, MFA and Conditional Access, break-glass accounts, and why customers and contractors live somewhere else.",
           "minutes": 15,
-          "objectives": [],
+          "objectives": [
+            "Explain how Entra ID signs users in and what an API must check in a token",
+            "Set up app registrations and app roles without secrets that expire at 3am",
+            "Choose MFA and Conditional Access settings, and where staff, contractors and customers sign in"
+          ],
           "icons": [
-            "entra-id"
-          ]
+            "entra-id",
+            "conditional-access",
+            "app-registrations"
+          ],
+          "status": "ready"
         },
         {
           "id": "4.5",
