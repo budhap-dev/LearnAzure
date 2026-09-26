@@ -1,0 +1,112 @@
+[
+  {
+    "id": "7.5-q1",
+    "topic": "choosing a tool",
+    "scenario": "The shop runs only on Azure and wants new Azure features as soon as they ship, without managing a state file. It also wants to manage its GitHub organisation's repositories as code.",
+    "stem": "Which combination fits?",
+    "options": [
+      "Terraform for everything, including Azure",
+      "Bicep for the Azure estate, and a small Terraform configuration for the GitHub organisation, with no resource managed by both",
+      "Exported ARM templates for Azure and manual GitHub settings",
+      "Bicep for both Azure and GitHub"
+    ],
+    "answer": 1,
+    "explanation": "Bicep fits Azure-only estates with day-one feature support and no state; Terraform reaches SaaS such as GitHub, which Bicep cannot. Using each where it fits is fine as long as the same resources are never managed by both."
+  },
+  {
+    "id": "7.5-q2",
+    "topic": "idempotency",
+    "stem": "Why is it safe to run a declarative Bicep deployment on every merge, even when nothing changed?",
+    "options": [
+      "Because it deletes and recreates everything cleanly",
+      "Because it computes the difference between the declared and actual state and changes only what differs; when nothing differs, it does nothing",
+      "Because Azure ignores repeated deployments",
+      "It is not safe; run it only when infrastructure changes"
+    ],
+    "answer": 1,
+    "explanation": "Declarative, idempotent deployments converge on the declared state. Re-running changes nothing if reality already matches, which is what makes deploying on every merge - and nightly drift checks - practical."
+  },
+  {
+    "id": "7.5-q3",
+    "topic": "renames",
+    "scenario": "A pull request renames the production database resource in Bicep to follow a new naming convention. The pipeline would apply it on merge.",
+    "stem": "What will happen, and what should catch it?",
+    "options": [
+      "Azure renames the database in place",
+      "The old database is deleted and a new empty one created; the what-if output on the pull request shows the Delete, and reviewers must stop it",
+      "Nothing happens until the next region failover",
+      "Bicep refuses all renames automatically"
+    ],
+    "answer": 1,
+    "explanation": "Resources are identified by name, so a new name means a new resource and removal of the old one if the deployment manages it. Reading what-if or plan output, especially Delete lines, is the control that prevents data loss."
+  },
+  {
+    "id": "7.5-q4",
+    "topic": "drift",
+    "scenario": "During an incident an engineer opened an NSG rule in the portal. Two months later it is still open and nobody remembers why.",
+    "stem": "Which combination addresses this class of problem?",
+    "options": [
+      "Ban incidents",
+      "Read-only production access with PIM for emergencies, a nightly what-if that alerts on drift, and resolving each drift by updating code or re-applying it",
+      "Export the NSG to a new template",
+      "Delete the NSG"
+    ],
+    "answer": 1,
+    "explanation": "Prevention limits who can change production outside the pipeline, detection surfaces changes quickly, and resolution brings code and reality back into agreement. Exporting a template captures the drift instead of resolving it."
+  },
+  {
+    "id": "7.5-q5",
+    "topic": "Terraform state",
+    "scenario": "A team's Terraform state for production lives on one engineer's laptop. Two engineers ran apply at the same time last week and the state is now inconsistent.",
+    "stem": "What should they set up?",
+    "options": [
+      "Email the state file to each other before running",
+      "A remote backend in a private, versioned Azure Storage account with state locking, one state per environment and layer, and access limited because the state may hold secrets",
+      "Commit the state file to the Git repository",
+      "Stop using state"
+    ],
+    "answer": 1,
+    "explanation": "Remote state with locking stops concurrent applies, versioning allows recovery, and restricted access protects secrets inside it. Committing state to Git exposes those secrets and still allows conflicts, and Terraform cannot work without state."
+  },
+  {
+    "id": "7.5-q6",
+    "topic": "environments from one template",
+    "scenario": "Dev and production were clicked together separately and now differ in SKU, TLS settings and diagnostics. A DR copy took two days.",
+    "stem": "What structure prevents this?",
+    "options": [
+      "One template per environment, each edited separately",
+      "One template (built from modules) with a parameter file per environment, so every environment - including a DR region - has the same shape",
+      "A checklist for manual builds",
+      "Screenshots of production settings"
+    ],
+    "answer": 1,
+    "explanation": "Shared code with per-environment parameters keeps environments consistent by construction, and a new region is just new parameter values. Separate templates drift the same way separate portal builds do."
+  },
+  {
+    "id": "7.5-q7",
+    "topic": "modules",
+    "stem": "What is the main benefit of starting from Azure Verified Modules?",
+    "options": [
+      "They are required for Bicep to compile",
+      "Microsoft maintains them with Well-Architected defaults, so teams avoid writing and maintaining the same resource definitions themselves",
+      "They remove the need for parameters",
+      "They work without Azure Resource Manager"
+    ],
+    "answer": 1,
+    "explanation": "Verified modules encode good defaults - diagnostics, identity, zone options - and are kept current, which saves every organisation re-implementing them. They are optional, still take parameters, and deploy through Resource Manager like everything else."
+  },
+  {
+    "id": "7.5-q8",
+    "topic": "layers",
+    "scenario": "One Bicep template deploys the hub network, Log Analytics, Front Door and every workload. A mistake in a workload change once removed a hub route.",
+    "stem": "What is the better structure?",
+    "options": [
+      "Keep one template but review it more carefully",
+      "Separate platform and workload layers into their own deployments with their own owners and pipelines",
+      "Stop deploying the hub from code",
+      "Deploy the whole template only once a year"
+    ],
+    "answer": 1,
+    "explanation": "Splitting by layer and lifecycle limits the blast radius of each change and matches ownership: the platform team owns shared infrastructure, product teams own their workloads. One giant template means every change risks everything."
+  }
+]
