@@ -33,7 +33,7 @@ lesson quizzes, timed, graded). A **final learning test** draws from the whole c
 | 3 | Storage and data ✅ | 7 | Storage accounts, Azure SQL, Cosmos DB, Redis, choosing a store |
 | 4 | Networking, identity and security ✅ | 8 | VNets, load balancing, private endpoints, Entra ID, RBAC, Key Vault, Defender |
 | 5 | Integration and messaging ✅ | 6 | Service Bus, Event Grid, Event Hubs, API Management, Logic Apps |
-| 6 | Observability and reliability 🚧 | 6 | Monitor, Log Analytics, App Insights, alerts, Well-Architected, HA/DR |
+| 6 | Observability and reliability ✅ | 6 | Monitor, Log Analytics, App Insights, alerts, Well-Architected, HA/DR |
 | 7 | DevOps on Azure | 8 | Azure DevOps vs GitHub, pipelines, GitHub Actions, IaC with Bicep/Terraform, environments, release strategies |
 | 8 | Azure AI | 8 | Azure OpenAI and AI Foundry, AI Services, AI Search, RAG, agents, responsible AI, cost and security of AI |
 | 9 | Architecture and leading a team | 5 | Reference architectures, landing zones, migration, governance, certification map, capstone scenarios |
@@ -133,35 +133,25 @@ every API, and Logic Apps replacing a nightly manual job.
 Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
 at random from the lesson quizzes. 41 new glossary terms (354 in total).
 
-### Module 6 — Observability and reliability — **in progress, one lesson per PR**
+### Module 6 — Observability and reliability — **shipped**
 
-| Id | Lesson | Status |
-|----|--------|--------|
-| 6.1 | Azure Monitor - metrics, logs and the data platform | shipped |
-| 6.2 | Log Analytics and just enough KQL | shipped |
-| 6.3 | Application Insights for web apps and APIs | shipped |
-| 6.4 | Alerts, action groups and on-call that works | shipped |
-| 6.5 | High availability and disaster recovery patterns | shipped |
-| 6.6 | The Well-Architected review in practice | planned |
+| Id | Lesson |
+|----|--------|
+| 6.1 | Azure Monitor - metrics, logs and the data platform |
+| 6.2 | Log Analytics and just enough KQL |
+| 6.3 | Application Insights for web apps and APIs |
+| 6.4 | Alerts, action groups and on-call that works |
+| 6.5 | High availability and disaster recovery patterns |
+| 6.6 | The Well-Architected review in practice |
 
-Glossary term ownership, so each lesson PR defines its own terms and no others:
+Seeing what the shop is doing and keeping it running, released one lesson per PR (#19-#24).
+It starts from forty-five minutes of clicking through portal blades and ends with one
+workspace per environment, end-to-end traces, a handful of symptom alerts on SLOs, a drilled
+22-minute regional failover, and a quarterly Well-Architected review that produces owned risks
+and decision records.
 
-- **6.1**: Observability, Azure Monitor, Metric, Resource log, Diagnostic setting, Azure Monitor
-  Agent, Data collection rule.
-- **6.2**: KQL, Log table plan, Log retention, Commitment tier, Azure Workbook.
-- **6.3**: OpenTelemetry, Distributed tracing, Application map, Sampling, Availability test.
-- **6.4**: Alert rule, Action group, Alert processing rule, Azure Service Health, Service level
-  objective, Service level indicator, Error budget, Runbook.
-- **6.5**: Active-active, Active-passive, Circuit breaker, Retry with exponential backoff,
-  Bulkhead, Chaos engineering, Load testing.
-- **6.6**: Well-Architected Review, Azure Advisor, Architecture decision record, Failure mode
-  analysis.
-- Existing terms are extended, never redefined: Application Insights, Log Analytics workspace,
-  Activity log, SLA, Composite SLA, RPO, RTO, High availability, Disaster recovery, Resiliency,
-  Well-Architected Framework, Transient fault, Health probe, Availability zone, Region pair,
-  Failover group, Cost alert.
-
-The module test is written with 6.6.
+Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
+at random from the lesson quizzes. 35 new glossary terms (389 in total).
 
 ## App architecture
 

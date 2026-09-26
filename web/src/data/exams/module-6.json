@@ -1,0 +1,203 @@
+{
+  "module": 6,
+  "minutes": 25,
+  "poolFromLessons": 10,
+  "questions": [
+    {
+      "id": "m6-q1",
+      "topic": "collect before you need it",
+      "scenario": "After an outage, the team wants Front Door's WAF log and Azure SQL's error log from the incident window. Neither resource had a diagnostic setting.",
+      "stem": "What is the lesson for the platform baseline?",
+      "options": [
+        "Request the logs from Microsoft support",
+        "Resource logs only exist if exported; enforce diagnostic settings on every production resource with Azure Policy",
+        "Increase platform metric retention",
+        "Enable a daily cap so logs are kept longer"
+      ],
+      "answer": 1,
+      "explanation": "Platform metrics are automatic, but resource logs are only collected when a diagnostic setting sends them somewhere. Enforcing that by policy makes the data exist before the next incident. Support cannot recreate logs that were never collected."
+    },
+    {
+      "id": "m6-q2",
+      "topic": "workspace design",
+      "scenario": "Five teams each run their own Log Analytics workspace for the same production system. Incident investigations take hours because nobody can query across them.",
+      "stem": "What is the better design?",
+      "options": [
+        "One workspace per environment, with resource-context access so teams see their own resources",
+        "One workspace per resource",
+        "Keep five workspaces but export them all to Excel daily",
+        "Stop collecting logs and rely on metrics"
+      ],
+      "answer": 0,
+      "explanation": "A single workspace per environment lets one KQL query join every service, which is what incidents need, while resource-context permissions keep access appropriate. Splitting further should be driven by residency, billing or separate security operations."
+    },
+    {
+      "id": "m6-q3",
+      "topic": "log cost",
+      "scenario": "The workspace bill tripled. A Usage query shows HTTP logs duplicating what Application Insights already records, and verbose access logs read only in rare investigations.",
+      "stem": "Which changes reduce cost without losing what matters?",
+      "options": [
+        "A daily cap on the production workspace",
+        "Stop the duplicate HTTP log category, move rarely read access logs to the Basic plan, and keep alerted data on Analytics",
+        "Delete Application Insights",
+        "Reduce retention to seven days everywhere"
+      ],
+      "answer": 1,
+      "explanation": "The cheapest data is data not collected twice; cheaper table plans suit high-volume logs that are rarely queried; alerted tables must stay on Analytics. A daily cap drops data during incidents, and blanket short retention breaks investigations and audits."
+    },
+    {
+      "id": "m6-q4",
+      "topic": "KQL",
+      "scenario": "Checkout feels slow and the team suspects one of its dependencies. They want the worst offenders from the last hour, judged by what the slowest calls experience.",
+      "stem": "Which KQL finds the slowest dependencies by their 95th percentile duration over the last hour?",
+      "options": [
+        "AppDependencies | where TimeGenerated > ago(1h) | summarize p95 = percentile(DurationMs, 95) by Target | top 10 by p95 desc",
+        "SELECT TOP 10 * FROM AppDependencies ORDER BY DurationMs",
+        "AppDependencies | summarize avg(DurationMs) | take 10",
+        "AzureActivity | where DurationMs > 1000"
+      ],
+      "answer": 0,
+      "explanation": "The query filters on time first, uses a percentile rather than an average to expose the slow tail, groups by the dependency target and ranks the results. The others are SQL, use averages without grouping, or query the wrong table."
+    },
+    {
+      "id": "m6-q5",
+      "topic": "distributed tracing",
+      "scenario": "Each microservice has its own Application Insights resource, and browser calls never join the API's server traces.",
+      "stem": "Which two changes restore end-to-end traces?",
+      "options": [
+        "More sampling and a longer retention",
+        "One Application Insights resource per environment for every component, and CORS allowing the trace context headers from the browser",
+        "A separate workspace for the front end",
+        "Disabling dependency tracking"
+      ],
+      "answer": 1,
+      "explanation": "Traces and the application map span the components reporting to the same resource, and browser correlation needs the trace headers to reach the API. Sampling, retention and extra workspaces do not reconnect a broken trace."
+    },
+    {
+      "id": "m6-q6",
+      "topic": "release regressions",
+      "scenario": "A release doubled checkout's p95 latency, noticed four days later through complaints.",
+      "stem": "What would have caught it within the hour?",
+      "options": [
+        "More debug logging",
+        "Release annotations on the charts and an alert on checkout latency against its SLO",
+        "A bigger App Service plan",
+        "Weekly manual performance reviews"
+      ],
+      "answer": 1,
+      "explanation": "Annotations make before-and-after comparisons obvious, and an SLO-based latency alert makes the regression impossible to miss. More logs add cost without attention, and bigger plans do not detect anything."
+    },
+    {
+      "id": "m6-q7",
+      "topic": "symptom alerting",
+      "scenario": "On-call receives about 20 CPU and DTU alerts a day and has started ignoring all alerts.",
+      "stem": "What should the paging alerts be based on instead?",
+      "options": [
+        "Memory usage",
+        "User-facing symptoms - checkout SLO burn, availability test failures, message age in queues - with causes moved to dashboards",
+        "Every exception logged",
+        "The number of deployments"
+      ],
+      "answer": 1,
+      "explanation": "Paging on symptoms means every page reflects real user impact; causes like CPU help diagnosis but are not emergencies on their own. Paging on every exception or on resource counters produces the fatigue that got the alerts ignored."
+    },
+    {
+      "id": "m6-q8",
+      "topic": "error budgets",
+      "scenario": "Checkout's SLO is 99.5% over 30 days. Two incidents have used 90% of this month's error budget by the 12th.",
+      "stem": "What does an error budget policy suggest?",
+      "options": [
+        "Continue shipping features as planned",
+        "Prioritise reliability work until the budget recovers, and review what spent it",
+        "Lower the SLO to 99% for this month",
+        "Stop monitoring checkout until next month"
+      ],
+      "answer": 1,
+      "explanation": "The budget is the agreed room for failure; spending it early is the signal to favour reliability over new features. Lowering the target after missing it removes the point of having one."
+    },
+    {
+      "id": "m6-q9",
+      "topic": "Service Health",
+      "scenario": "The shop runs in UK South with a standby in UK West. The last Azure incident notice went to an inbox nobody reads.",
+      "stem": "Who should receive Azure Service Health alerts for the shop's services in UK South and UK West?",
+      "options": [
+        "The person who created the subscription",
+        "The on-call rotation, through the same action group used for other Sev2 alerts",
+        "Nobody; Azure incidents are Microsoft's problem",
+        "Finance"
+      ],
+      "answer": 1,
+      "explanation": "Azure incidents become your incidents. Routing Service Health to on-call means someone who can fail over or communicate hears about it in minutes. Subscription creators move on, and ignoring platform incidents leaves the team blind during them."
+    },
+    {
+      "id": "m6-q10",
+      "topic": "retry storms",
+      "scenario": "After a brief SQL failover, every API instance retries immediately in a tight loop, and the database stays overloaded for minutes.",
+      "stem": "Which patterns prevent this?",
+      "options": [
+        "Unlimited retries with no delay",
+        "Retries with exponential backoff and jitter, a cap on attempts, and a circuit breaker",
+        "No retries at all",
+        "A larger database"
+      ],
+      "answer": 1,
+      "explanation": "Spreading and limiting retries, and pausing calls to a failing dependency, let it recover. No retries would turn every transient fault into an error, and a larger database still collapses under synchronised retries."
+    },
+    {
+      "id": "m6-q11",
+      "topic": "DR strategy",
+      "scenario": "Checkout needs an RTO of 30 minutes and an RPO under a minute. Orders are in Azure SQL. Reporting can tolerate a day.",
+      "stem": "Which strategies fit?",
+      "options": [
+        "Active-active for both",
+        "Warm standby with a SQL failover group for checkout; backup and restore for reporting",
+        "Backup and restore for both",
+        "No DR; rely on zone redundancy"
+      ],
+      "answer": 1,
+      "explanation": "A running scaled-down copy with asynchronous database replication meets minutes of RTO and seconds of RPO; reporting's relaxed targets are met far more cheaply by restoring from backups. Active-active needs multi-write data, and zones do not cover a region loss."
+    },
+    {
+      "id": "m6-q12",
+      "topic": "whole-stack failover",
+      "scenario": "A DR drill shows the UK West API cannot start because its Key Vault, Service Bus namespace and private DNS records exist only in UK South.",
+      "stem": "What must the DR plan add?",
+      "options": [
+        "More compute in UK West",
+        "A regional plan for every dependency - secrets, messaging, config, cache and DNS - not just compute and data",
+        "A longer RTO",
+        "Nothing; drills are expected to fail"
+      ],
+      "answer": 1,
+      "explanation": "Failover succeeds only if every component the workload needs exists and is reachable in the second region. Walking the whole stack, as the drill did, is how those gaps are found and closed."
+    },
+    {
+      "id": "m6-q13",
+      "topic": "proving resilience",
+      "scenario": "The next Black Friday is six weeks away. Checkout has circuit breakers and fallbacks that have never been exercised, and last year peaked at 1,200 checkouts a minute.",
+      "stem": "Which combination gives the most confidence that checkout will survive both a dependency failure and Black Friday traffic?",
+      "options": [
+        "A detailed architecture diagram and SLAs",
+        "Chaos experiments that inject dependency faults, plus load tests at well above expected peak, both before the event",
+        "Scaling everything to maximum on the day",
+        "Watching dashboards during the sale"
+      ],
+      "answer": 1,
+      "explanation": "Chaos experiments show whether fallbacks and circuit breakers actually work, and load tests find the breaking point while there is time to fix it. Diagrams describe intent, and watching dashboards only reveals problems as they hurt customers."
+    },
+    {
+      "id": "m6-q14",
+      "topic": "Well-Architected review",
+      "scenario": "Azure Advisor lists 212 recommendations, and leadership wants to know whether the shop is well-architected.",
+      "stem": "What is the most useful next step?",
+      "options": [
+        "Implement all 212 recommendations",
+        "Run a Well-Architected review of one workload with its team: triage Advisor for it, analyse failure modes, record trade-offs as ADRs, and leave with owned top risks and a next review date",
+        "Report the Advisor score to leadership",
+        "Fill in the online assessment for the entire estate"
+      ],
+      "answer": 1,
+      "explanation": "A scoped review turns scattered findings into decisions and owned actions. Implementing everything ignores fit and cost, a score answers nothing about risk, and estate-wide questionnaires produce generic findings nobody owns."
+    }
+  ]
+}

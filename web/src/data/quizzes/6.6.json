@@ -1,0 +1,110 @@
+[
+  {
+    "id": "6.6-q1",
+    "topic": "scope",
+    "scenario": "A new CTO asks whether the company is well-architected. The team proposes answering Microsoft's assessment for the entire Azure estate.",
+    "stem": "What is the better approach?",
+    "options": [
+      "Complete the assessment for the whole estate in one sitting",
+      "Review one workload at a time - such as checkout - with the people who run it, and repeat for others",
+      "Implement every Azure Advisor recommendation first",
+      "Hire an external auditor instead"
+    ],
+    "answer": 1,
+    "explanation": "A workload is small enough to reason about in detail and has owners who can act. Estate-wide questionnaires produce generic findings nobody owns. Advisor is an input to a review, and outside help can add value but does not replace the team's own review."
+  },
+  {
+    "id": "6.6-q2",
+    "topic": "Advisor triage",
+    "scenario": "Azure Advisor shows 212 recommendations and an Advisor score of 61%.",
+    "stem": "How should the team treat them?",
+    "options": [
+      "Implement all 212 to reach 100%",
+      "Triage them for the workload under review: act on the relevant ones, dismiss the rest with a recorded reason",
+      "Ignore Advisor, since it is automated",
+      "Act only on cost recommendations"
+    ],
+    "answer": 1,
+    "explanation": "Advisor finds real issues, but not every recommendation fits every workload. Triage turns a long list into a few actions and records why others were declined, which is itself useful when the question comes up again."
+  },
+  {
+    "id": "6.6-q3",
+    "topic": "trade-offs",
+    "stem": "Why do Well-Architected reviews spend time on trade-offs between pillars?",
+    "options": [
+      "Because every pillar should be maximised independently",
+      "Because improving one pillar often costs another - standby regions cost money, private endpoints add complexity - so the team must choose deliberately",
+      "Because Microsoft requires it for support",
+      "Because trade-offs only affect cost"
+    ],
+    "answer": 1,
+    "explanation": "The pillars pull against each other, and a workload cannot max them all. The review makes those choices explicit and records them, so they are not accidental or re-argued later."
+  },
+  {
+    "id": "6.6-q4",
+    "topic": "failure mode analysis",
+    "stem": "Which row belongs in a failure mode analysis for checkout?",
+    "options": [
+      "The payment provider is down: shoppers cannot pay; detected by the SLO burn alert; mitigated by a circuit breaker and a retry message; residual risk is lost sales during the outage",
+      "The checkout page uses React",
+      "Azure SQL costs about $370 a month",
+      "The team uses GitHub"
+    ],
+    "answer": 0,
+    "explanation": "Failure mode analysis describes, per component, what can fail, the user impact, how it is detected, how the damage is limited and what risk remains. Technology choices and costs are context, not failure modes."
+  },
+  {
+    "id": "6.6-q5",
+    "topic": "accepted risk",
+    "scenario": "The team concludes there is no practical mitigation for a global Front Door incident.",
+    "stem": "What should the review do with this?",
+    "options": [
+      "Leave it out, since nothing can be done",
+      "Record it as an accepted risk with its impact and rationale, so it is a known decision rather than an oversight",
+      "Remove Front Door",
+      "Add a second global CDN immediately without analysis"
+    ],
+    "answer": 1,
+    "explanation": "Writing down accepted risks is as important as mitigating others: it tells the business and future reviewers that the risk was considered, and why. Silently omitting it looks the same as never having thought about it."
+  },
+  {
+    "id": "6.6-q6",
+    "topic": "decision records",
+    "scenario": "Every six months, someone asks why Service Bus is not on Premium, and the same debate runs again.",
+    "stem": "What would prevent this?",
+    "options": [
+      "A longer meeting",
+      "An architecture decision record in the repository with the context, decision, consequences and the triggers or date for revisiting it",
+      "Moving to Premium to end the debate",
+      "Banning the question"
+    ],
+    "answer": 1,
+    "explanation": "An ADR preserves the reasoning and states when the decision should be reopened, so newcomers can read it instead of rerunning the debate. Changing tier just to stop discussion spends money without a reason."
+  },
+  {
+    "id": "6.6-q7",
+    "topic": "outputs",
+    "stem": "What should a Well-Architected review produce?",
+    "options": [
+      "A score to share with leadership",
+      "A short list of top risks with owners and dates in the backlog, decision records for accepted trade-offs, and the date of the next review",
+      "A complete list of every possible improvement",
+      "A new architecture diagram only"
+    ],
+    "answer": 1,
+    "explanation": "Reviews exist to change the workload. Owned, dated risks get worked on; decision records keep the reasoning; a booked follow-up keeps the review from being a one-off. Scores and exhaustive lists rarely lead to action."
+  },
+  {
+    "id": "6.6-q8",
+    "topic": "cadence",
+    "stem": "When should a workload be reviewed again?",
+    "options": [
+      "Never; one review is enough",
+      "Regularly, for example quarterly, and after any major change such as a new region, a new dependency or a large traffic increase",
+      "Only after an outage",
+      "Only when Advisor score drops"
+    ],
+    "answer": 1,
+    "explanation": "Architectures drift as features, traffic and team change. A regular cadence plus reviews after significant change keeps risks current. Waiting for an outage means learning in the worst way."
+  }
+]

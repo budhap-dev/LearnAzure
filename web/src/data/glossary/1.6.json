@@ -83,7 +83,7 @@
     "definition": "A free service that analyses your resources and recommends actions across cost, reliability, security, performance and operational excellence. Cost recommendations include idle VMs, unattached disks and resources that would be cheaper reserved.",
     "example": "Advisor flagged that the load-test VM had averaged 2% CPU for a fortnight and suggested shutting it down.",
     "icon": "advisor",
-    "lessons": ["1.6", "1.7"],
+    "lessons": ["1.6", "1.7", "6.6"],
     "related": ["Cost Management", "Right-sizing", "Well-Architected Framework"]
   },
   {

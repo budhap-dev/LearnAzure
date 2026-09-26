@@ -630,9 +630,9 @@
       "number": 6,
       "title": "Observability and reliability",
       "tagline": "Azure Monitor, Log Analytics, Application Insights, alerts, and designing for failure.",
-      "description": "Seeing what is happening and staying up when things break: metrics and logs, the query language, distributed tracing for a React-and-Node app, alerting that people actually respond to, and high availability and disaster recovery patterns.",
+      "description": "Seeing what a system is doing and keeping it running: Azure Monitor and what it collects only if asked, Log Analytics and just enough KQL, Application Insights and distributed tracing, alerts that page on symptoms with SLOs and error budgets, high availability and disaster recovery patterns proven by drills, and the Well-Architected review that ties it together.",
       "icon": "monitor",
-      "status": "in-progress",
+      "status": "ready",
       "lessons": [
         {
           "id": "6.1",
@@ -648,8 +648,7 @@
             "monitor",
             "log-analytics",
             "diagnostic-settings"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "6.2",
@@ -665,8 +664,7 @@
             "log-analytics",
             "workbooks",
             "application-insights"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "6.3",
@@ -682,8 +680,7 @@
             "application-insights",
             "app-service",
             "static-web-apps"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "6.4",
@@ -699,8 +696,7 @@
             "alerts",
             "service-health",
             "application-insights"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "6.5",
@@ -716,17 +712,22 @@
             "site-recovery",
             "chaos-studio",
             "load-testing"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "6.6",
           "title": "The Well-Architected review in practice",
-          "summary": "",
+          "summary": "Reviewing one workload against the five pillars: Advisor triage, failure mode analysis, trade-offs recorded as decision records, and a short list of owned risks.",
           "minutes": 12,
-          "objectives": [],
+          "objectives": [
+            "Scope and run a Well-Architected review of one workload with the team that runs it",
+            "Carry out failure mode analysis, including the risks you accept",
+            "Record trade-offs as architecture decision records and leave with owned, dated actions"
+          ],
           "icons": [
-            "advisor"
+            "advisor",
+            "workbooks",
+            "users"
           ]
         }
       ]
