@@ -46,7 +46,7 @@
     "aliases": ["feature toggle", "feature switch"],
     "definition": "A named switch the code checks at run time to turn behaviour on or off, optionally for a percentage of users, named groups or a time window. It separates deploying code from releasing a feature, so a problem is fixed by flipping a switch rather than rolling back a deploy.",
     "example": "The new checkout is live for 10% of shoppers through the NewCheckout flag and can be switched off in seconds.",
-    "lessons": ["4.6"],
+    "lessons": ["4.6", "7.2"],
     "related": ["Azure App Configuration"]
   }
 ]

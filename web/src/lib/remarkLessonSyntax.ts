@@ -30,18 +30,35 @@ function tagCallout(quote: Node) {
   if (text.value.trim() === '' && first?.children?.length === 1) quote.children!.shift();
 }
 
+/**
+ * Wraps ==...== in a mark. A highlight may span sibling nodes - `inline code`, links, bold -
+ * because only the == markers themselves have to sit in plain text. An unclosed == is left
+ * as literal text.
+ */
 function splitHighlights(parent: Node) {
   if (!parent.children) return;
   const out: Node[] = [];
+  let mark: Node | null = null;
+  const push = (node: Node) => (mark ? mark.children! : out).push(node);
   for (const child of parent.children) {
-    if (child.type === 'text' && child.value && child.value.includes('==')) {
-      const parts = child.value.split(/==([^=\n]+)==/);
-      parts.forEach((part, i) => {
-        if (part === '') return;
-        if (i % 2 === 1) out.push({ type: 'strong', children: [{ type: 'text', value: part }], data: { hName: 'mark' } });
-        else out.push({ type: 'text', value: part });
-      });
-    } else out.push(child);
+    if (child.type !== 'text' || !child.value?.includes('==')) {
+      push(child);
+      continue;
+    }
+    child.value.split('==').forEach((part, i) => {
+      if (i > 0) {
+        if (mark) mark = null;
+        else {
+          mark = { type: 'strong', children: [], data: { hName: 'mark' } };
+          out.push(mark);
+        }
+      }
+      if (part !== '') push({ type: 'text', value: part });
+    });
+  }
+  if (mark) {
+    const open: Node = mark;
+    out.splice(out.indexOf(open), 1, { type: 'text', value: '==' }, ...open.children!);
   }
   parent.children = out;
 }

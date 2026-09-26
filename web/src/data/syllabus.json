@@ -760,12 +760,19 @@
         {
           "id": "7.2",
           "title": "Repos, branching and pull-request policies",
-          "summary": "",
+          "summary": "Trunk-based development versus GitFlow, pull requests worth reviewing, branch policies and protection rules, CODEOWNERS, and semantic versions that say what is running.",
           "minutes": 12,
-          "objectives": [],
+          "objectives": [
+            "Choose a branching strategy that fits how the software is deployed",
+            "Enforce pull requests, approvals, required checks and code owners with branch policies",
+            "Version releases so anyone can tell exactly what is running"
+          ],
           "icons": [
-            "branch"
-          ]
+            "branch",
+            "code",
+            "builds"
+          ],
+          "status": "ready"
         },
         {
           "id": "7.3",

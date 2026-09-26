@@ -1,0 +1,112 @@
+[
+  {
+    "id": "7.2-q1",
+    "topic": "branching strategy",
+    "scenario": "The API is deployed to production several times a week. Its repository uses develop, release, hotfix and long-lived feature branches, with a painful merge day every two weeks.",
+    "stem": "Which strategy fits better?",
+    "options": [
+      "Add more release branches so work is isolated longer",
+      "Trunk-based development: short-lived branches merged into main within a day or two, main always releasable, unfinished work behind feature flags",
+      "One branch per developer, merged monthly",
+      "Commit directly to main without pull requests"
+    ],
+    "answer": 1,
+    "explanation": "A continuously deployed API has one production version, so GitFlow's parallel release lines add cost without benefit. Small, frequent integration keeps conflicts small, and feature flags let unfinished work merge safely. Committing directly to main drops review and checks entirely."
+  },
+  {
+    "id": "7.2-q2",
+    "topic": "pull request size",
+    "stem": "Why do small pull requests (a few hundred lines) get better reviews than 3,000-line ones?",
+    "options": [
+      "GitHub limits pull request size",
+      "Reviewers can understand small changes and find real problems; very large ones get skimmed and approved",
+      "Small pull requests skip the build",
+      "Large pull requests cannot be squash-merged"
+    ],
+    "answer": 1,
+    "explanation": "Attention is the limiting factor in review. Small changes can be understood in one sitting, so reviewers catch design and logic issues; huge ones become rubber stamps. There is no platform limit that forces this."
+  },
+  {
+    "id": "7.2-q3",
+    "topic": "protection for admins",
+    "scenario": "Branch protection on main requires a pull request and a passing build, but administrators are exempt. An admin pushes a 'quick fix' directly and breaks the build for a day.",
+    "stem": "What should change?",
+    "options": [
+      "Remove the build check",
+      "Apply the protection rules to administrators too, with any emergency bypass logged and reviewed",
+      "Give everyone admin rights",
+      "Require two approvals for non-admins only"
+    ],
+    "answer": 1,
+    "explanation": "Rules that the most privileged people can skip fail exactly when pressure is highest. Including administrators, with a logged emergency path, keeps main protected. Removing the check or widening admin rights makes it worse."
+  },
+  {
+    "id": "7.2-q4",
+    "topic": "CODEOWNERS",
+    "scenario": "A developer changed a GitHub Actions workflow to deploy with broader permissions, and it merged with a routine approval from a teammate.",
+    "stem": "Which control would have routed it to the right reviewers?",
+    "options": [
+      "A CODEOWNERS entry making the platform team required reviewers for /.github/workflows/, enforced by branch protection",
+      "A longer pull request description",
+      "Squash merging",
+      "A semantic version bump"
+    ],
+    "answer": 0,
+    "explanation": "Workflow files control what is deployed and with what permissions, so changes to them deserve specific reviewers. CODEOWNERS with required code-owner review enforces that. Descriptions, merge style and versions do not change who must approve."
+  },
+  {
+    "id": "7.2-q5",
+    "topic": "flaky checks",
+    "scenario": "One integration test fails randomly about one run in ten. Developers have started asking admins to override the required check.",
+    "stem": "What is the right response?",
+    "options": [
+      "Make the check optional permanently",
+      "Fix or quarantine the flaky test quickly, so the required check stays trustworthy",
+      "Retry the pipeline until it passes, every time",
+      "Remove all integration tests"
+    ],
+    "answer": 1,
+    "explanation": "A check people routinely override stops protecting anything, and the habit spreads to real failures. Fixing or quarantining the flaky test restores trust. Blind retries hide the problem, and deleting tests removes coverage."
+  },
+  {
+    "id": "7.2-q6",
+    "topic": "mobile releases",
+    "scenario": "The mobile app follows trunk-based development, but each app-store review takes several days, during which main keeps moving.",
+    "stem": "What is a sensible approach?",
+    "options": [
+      "Stop merging to main during store review",
+      "Cut a short-lived release branch from main for each store submission, and cherry-pick only fixes onto it",
+      "Switch the whole team to GitFlow",
+      "Submit main to the store every day"
+    ],
+    "answer": 1,
+    "explanation": "A brief release branch isolates the submitted build while trunk-based work continues. It is a narrow, time-limited exception rather than a return to long-lived branching. Freezing main blocks everyone, and daily submissions do not fit store review times."
+  },
+  {
+    "id": "7.2-q7",
+    "topic": "semantic versioning",
+    "stem": "The order API changes a response field from a string to an object, breaking existing clients. Under semantic versioning, which version follows 2.4.3?",
+    "options": [
+      "2.4.4",
+      "2.5.0",
+      "3.0.0",
+      "2.4.3-b"
+    ],
+    "answer": 2,
+    "explanation": "A breaking change increments MAJOR. MINOR is for compatible features and PATCH for fixes, so 2.5.0 or 2.4.4 would tell clients the change is safe when it is not."
+  },
+  {
+    "id": "7.2-q8",
+    "topic": "what is running",
+    "scenario": "The app store asks which build of the mobile app contains a particular fix, and support asks which API version is in production. Nobody knows.",
+    "stem": "What practice answers both?",
+    "options": [
+      "A wiki page updated after each release",
+      "Tag releases in Git with semantic versions and stamp the version and commit into every build, exposed by the app and the API",
+      "Only deploy on Mondays",
+      "Keep one long-lived release branch"
+    ],
+    "answer": 1,
+    "explanation": "Tags and build-time version stamps make the running version discoverable from the system itself, with a direct link to the commit and the pull requests it contains. Manual wiki pages drift, and schedules or branches do not identify builds."
+  }
+]
