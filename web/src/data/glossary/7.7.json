@@ -1,0 +1,51 @@
+[
+  {
+    "term": "Blue-green deployment",
+    "aliases": ["blue/green", "blue green", "slot swap"],
+    "definition": "Running the new version alongside the old one, fully warmed up, and then switching all traffic to it at once - with an equally quick switch back if something is wrong. On Azure: an App Service slot swap, moving Container Apps revision traffic, or switching Front Door origins.",
+    "example": "v42 runs in the staging slot, passes smoke tests and swaps into production; v41 waits in staging for an instant swap-back.",
+    "icon": "web-slots",
+    "lessons": ["7.7"],
+    "related": ["Deployment slot", "Canary release", "Rollback"]
+  },
+  {
+    "term": "Canary release",
+    "aliases": ["canary", "canary deployment", "traffic splitting", "progressive delivery"],
+    "definition": "Sending a small share of real traffic to a new version while most users stay on the old one, comparing error rates and latency, and increasing the share only if the new version holds up. On Azure: App Service traffic routing to a slot, Container Apps revision weights, or Front Door weighted origins. The share must be large enough to judge.",
+    "example": "5% of checkout traffic goes to v42 for 30 minutes; an automated gate compares its error rate and p95 with v41.",
+    "lessons": ["7.7"],
+    "related": ["Blue-green deployment", "Ring-based deployment", "Service level objective"]
+  },
+  {
+    "term": "Rolling deployment",
+    "aliases": ["rolling update", "rolling upgrade"],
+    "definition": "Replacing a service's instances with the new version a few at a time, so capacity stays up throughout. Both versions serve traffic during the rollout, so they must be compatible. The default for VM scale sets and Kubernetes deployments.",
+    "example": "An AKS deployment replaces two of its ten pods at a time, waiting for each new pod to pass its readiness check.",
+    "lessons": ["7.7"],
+    "related": ["Virtual machine scale set", "Blue-green deployment"]
+  },
+  {
+    "term": "Ring-based deployment",
+    "aliases": ["deployment rings", "staged rollout", "phased release"],
+    "definition": "Releasing to successively larger groups of users - staff, then early adopters, then everyone - and stopping at the current ring if problems appear. Often done with feature flag targeting on the server and staged rollouts in the app stores for mobile.",
+    "example": "The new checkout goes to staff for two days, then 10% of shoppers, then all shoppers.",
+    "lessons": ["7.7"],
+    "related": ["Canary release", "Feature flag", "Dark launch"]
+  },
+  {
+    "term": "Rollback",
+    "aliases": ["roll back", "swap back", "expand and contract", "parallel change"],
+    "definition": "Returning users to the previous working version: swapping slots back or shifting traffic back (seconds), turning a feature flag off (instant), or redeploying the previous artefact (minutes). It only works if data changes are compatible with the old version, which is why schema changes use expand and contract across releases.",
+    "example": "The canary's error rate jumps, the gate shifts its traffic back to zero, and v41 carries on serving everyone.",
+    "lessons": ["7.7"],
+    "related": ["Blue-green deployment", "Canary release", "Deployment slot"]
+  },
+  {
+    "term": "Dark launch",
+    "aliases": ["dark launching", "kill switch"],
+    "definition": "Deploying a feature to production switched off, then enabling it for chosen audiences with a feature flag. The flag doubles as a kill switch that disables the feature instantly without a deployment. Flags should be removed once the feature is fully released.",
+    "example": "Wish lists ship dark on Monday, go live for staff on Tuesday and for everyone on Thursday; the flag is removed the following sprint.",
+    "lessons": ["7.7"],
+    "related": ["Feature flag", "Ring-based deployment", "Azure App Configuration"]
+  }
+]

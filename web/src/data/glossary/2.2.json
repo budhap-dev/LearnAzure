@@ -32,7 +32,7 @@
     "definition": "An app setting or connection string marked to stay with its deployment slot rather than travel with the code during a swap. Anything environment-specific - database connection strings, feature flags, external endpoints - must be marked sticky. Forgetting is the classic cause of production writing to the staging database after a swap.",
     "example": "ORDERS_DB is a slot setting, so after the swap production keeps the production database.",
     "icon": "web-slots",
-    "lessons": ["2.2"],
+    "lessons": ["2.2", "7.7"],
     "related": ["App setting", "Deployment slot", "App Service"]
   },
   {

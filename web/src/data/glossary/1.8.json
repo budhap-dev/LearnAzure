@@ -58,7 +58,7 @@
     "definition": "A second, fully running copy of an App Service app on the same plan, with its own hostname, used to deploy and smoke-test a build before it takes live traffic. Swapping exchanges the warmed instances with production so there is no cold start and no downtime, and swapping back is your rollback. Slots share the plan's compute, so a busy staging slot competes with production for the same instances.",
     "example": "Thursday's release is deployed to the staging slot, tested, then swapped into production in seconds.",
     "icon": "web-slots",
-    "lessons": ["1.8"],
+    "lessons": ["1.8", "7.7"],
     "related": ["App Service", "App Service plan"]
   },
   {

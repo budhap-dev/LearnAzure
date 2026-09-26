@@ -57,7 +57,7 @@
     "definition": "An immutable snapshot of a container app - this image, these environment variables, this scale rule. Deploying creates a new revision rather than replacing the old one, so you can send a percentage of traffic to it and shift the rest when it looks healthy. It is the deployment slot idea done by percentage instead of by swap.",
     "example": "Revision 13 takes 10% of traffic for an hour; if error rates hold, it goes to 100%.",
     "icon": "container-apps",
-    "lessons": ["2.5"],
+    "lessons": ["2.5", "7.7"],
     "related": ["Azure Container Apps", "Deployment slot", "Ingress"]
   },
   {

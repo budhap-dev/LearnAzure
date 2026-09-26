@@ -1,0 +1,111 @@
+[
+  {
+    "id": "7.7-q1",
+    "topic": "deploy versus release",
+    "stem": "What does it mean to separate deploying from releasing?",
+    "options": [
+      "Deploying on weekends and releasing on weekdays",
+      "Getting new code running in production where few or no users see it, then exposing it gradually - by traffic share, audience or feature flag - so it can be withdrawn quickly",
+      "Keeping the code in a release branch until it is approved",
+      "Deploying only infrastructure, never application code"
+    ],
+    "answer": 1,
+    "explanation": "When deploying and releasing are the same moment, every deployment is a bet on all users. Slots, canaries, rings and flags let new code run and be observed first, and make withdrawing it fast."
+  },
+  {
+    "id": "7.7-q2",
+    "topic": "fast rollback",
+    "scenario": "Rolling back last Tuesday's release meant rebuilding the previous commit and redeploying it, which took 40 minutes.",
+    "stem": "Which approach makes rollback take seconds for the API on App Service?",
+    "options": [
+      "Keep a zip of the last build on a laptop",
+      "Deploy to a staging slot and swap; the previous version stays in the staging slot, so swapping back is the rollback",
+      "Deploy directly to production faster",
+      "Scale out before each release"
+    ],
+    "answer": 1,
+    "explanation": "After a swap, the previous version is still running, warm, in the other slot. Swapping back restores it in seconds, with no rebuild or cold start."
+  },
+  {
+    "id": "7.7-q3",
+    "topic": "canary",
+    "stem": "What distinguishes a canary release from a blue-green switch?",
+    "options": [
+      "A canary uses a different region",
+      "A canary sends a small share of real traffic to the new version first and increases it only if metrics hold; blue-green switches all traffic at once",
+      "A canary needs no monitoring",
+      "Blue-green cannot be rolled back"
+    ],
+    "answer": 1,
+    "explanation": "Canaries limit how many users are exposed while the new version proves itself on real traffic. Blue-green gives an instant, complete switch with an instant switch back. They combine well: canary on the staging slot, then swap."
+  },
+  {
+    "id": "7.7-q4",
+    "topic": "gating on metrics",
+    "scenario": "The team routes 5% of traffic to a new version for 30 minutes, but nobody checks anything before swapping.",
+    "stem": "What makes the canary meaningful?",
+    "options": [
+      "A longer canary with no checks",
+      "An automated gate comparing the new version's error rate and latency with the old version's, pausing or rolling back if they are worse",
+      "Swapping immediately to save time",
+      "Asking a tester to click through the site"
+    ],
+    "answer": 1,
+    "explanation": "The point of a canary is to measure. Comparing SLIs by version in Application Insights, wired into an environment check or protection rule, turns observation into an automatic decision."
+  },
+  {
+    "id": "7.7-q5",
+    "topic": "expand and contract",
+    "scenario": "Version 42 renames the CustomerEmail column to Email in the same release. After a problem, the team swaps back to version 41, which fails because the column no longer exists.",
+    "stem": "What should they have done?",
+    "options": [
+      "Never roll back",
+      "Expand and contract: add the new column first, have the code write both and read the new one, and remove the old column only in a later release",
+      "Rename columns only on weekends",
+      "Keep the database in the staging slot"
+    ],
+    "answer": 1,
+    "explanation": "Code can swap back in seconds, but data cannot. Keeping each schema change compatible with the previous version means a rollback always meets a database it understands. Slots do not include the database."
+  },
+  {
+    "id": "7.7-q6",
+    "topic": "slot settings",
+    "scenario": "After a swap, production traffic starts writing to the test database.",
+    "stem": "What was misconfigured?",
+    "options": [
+      "The swap happened too quickly",
+      "The database connection string was not marked as a slot setting, so it travelled with the code during the swap",
+      "The staging slot had too few instances",
+      "The canary share was too small"
+    ],
+    "answer": 1,
+    "explanation": "Settings that belong to an environment - connection strings, endpoints - must be slot settings so they stay with the slot. Unmarked settings move with the swap, taking staging's configuration into production."
+  },
+  {
+    "id": "7.7-q7",
+    "topic": "feature flags",
+    "scenario": "A new recommendations feature is ready in code but the team wants staff to try it for two days, then 10% of shoppers, with a way to turn it off instantly.",
+    "stem": "What is the most suitable approach?",
+    "options": [
+      "A separate deployment for staff",
+      "A dark launch: deploy with the feature behind an App Configuration flag, target staff and then 10%, and use the flag as a kill switch",
+      "A long-lived branch merged later",
+      "A second production environment"
+    ],
+    "answer": 1,
+    "explanation": "Flags separate the feature's release from the deployment and allow ring-by-ring exposure and instant disabling. Separate deployments or branches are slower and harder to withdraw."
+  },
+  {
+    "id": "7.7-q8",
+    "topic": "mobile clients",
+    "stem": "Why must the API stay compatible with older mobile app versions even when the API can be rolled back instantly?",
+    "options": [
+      "Because mobile apps call a different API",
+      "Because installed apps on shoppers' phones cannot be rolled back or forced to update, so the API must keep serving the versions still in use",
+      "Because app stores forbid API changes",
+      "It does not need to"
+    ],
+    "answer": 1,
+    "explanation": "Server-side releases can be withdrawn; installed clients cannot. API contracts must stay backward compatible, or be versioned, for as long as older app versions are in use."
+  }
+]
