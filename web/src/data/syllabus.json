@@ -526,17 +526,24 @@
       "tagline": "Service Bus, Event Grid, Event Hubs, API Management and Logic Apps - decoupling systems the Azure way.",
       "description": "How systems talk to each other without being tied together: queues and topics, events and streams, an API gateway in front of everything, and low-code workflows for the glue.",
       "icon": "service-bus",
-      "status": "planned",
+      "status": "in-progress",
       "lessons": [
         {
           "id": "5.1",
           "title": "Messaging patterns - queues, topics, events and streams",
-          "summary": "",
+          "summary": "What must happen now and what can happen after; messages, events and streams; queues, pub/sub, at-least-once delivery, and which Azure broker fits.",
           "minutes": 12,
-          "objectives": [],
+          "objectives": [
+            "Decide which steps must be synchronous and which belong on a message",
+            "Tell messages, events and streams apart and pick the Azure service for each",
+            "Design consumers for at-least-once delivery, dead-lettering and eventual consistency"
+          ],
           "icons": [
-            "storage-queue"
-          ]
+            "service-bus",
+            "storage-queue",
+            "event-grid"
+          ],
+          "status": "ready"
         },
         {
           "id": "5.2",

@@ -1,0 +1,67 @@
+[
+  {
+    "term": "Asynchronous messaging",
+    "aliases": ["async messaging", "temporal decoupling", "decoupling"],
+    "definition": "Sending work or news through a broker instead of calling another service and waiting. The sender carries on straight away and the receiver processes when it can, so a slow or failed receiver no longer slows or breaks the sender. The price is at-least-once delivery, idempotent consumers and eventual consistency.",
+    "example": "Checkout publishes OrderPlaced and answers the shopper; email, loyalty and the warehouse catch up in the next few seconds.",
+    "lessons": ["5.1"],
+    "related": ["Message broker", "Publish-subscribe", "At-least-once delivery"]
+  },
+  {
+    "term": "Message",
+    "aliases": ["command", "command message"],
+    "definition": "A request for one specific consumer to do something, such as ReserveStock for order 1042. The sender cares that it is carried out, so failures must be retried or dead-lettered. Contrast with an event, which only reports that something happened.",
+    "example": "The API sends ReserveStock to the warehouse queue; exactly one warehouse worker handles it.",
+    "lessons": ["5.1"],
+    "related": ["Event", "Message broker", "Competing consumers"]
+  },
+  {
+    "term": "Event",
+    "aliases": ["domain event", "integration event", "event notification"],
+    "definition": "A fact about something that has already happened, named in the past tense, such as OrderPlaced. The publisher does not know or care who listens, and a subscriber cannot refuse it - only react. Adding a new reaction means adding a subscriber, not changing the publisher.",
+    "example": "OrderPlaced 1042 is delivered to the warehouse, email and loyalty subscribers, each of which decides what to do.",
+    "lessons": ["5.1"],
+    "related": ["Message", "Publish-subscribe", "Event stream"]
+  },
+  {
+    "term": "Event stream",
+    "aliases": ["stream", "streaming", "telemetry stream"],
+    "definition": "A high-volume, ordered sequence of events that is kept for a period and can be replayed. Readers keep track of their own position rather than removing what they read, so many consumers can read the same stream independently. Clickstreams, logs and IoT telemetry are streams.",
+    "example": "Every page view on the shop is appended to a stream that both the live dashboard and the nightly analytics job read.",
+    "lessons": ["5.1"],
+    "related": ["Event", "Message broker"]
+  },
+  {
+    "term": "Message broker",
+    "aliases": ["broker", "message queue", "MQ"],
+    "definition": "The service between senders and receivers that holds messages safely until they are processed and enforces delivery rules such as retries, ordering and dead-lettering. On Azure: Queue storage, Service Bus, Event Grid and Event Hubs, each suited to a different kind of traffic.",
+    "example": "Service Bus holds OrderPlaced events while the warehouse system is down and delivers them when it recovers.",
+    "icon": "service-bus",
+    "lessons": ["5.1"],
+    "related": ["Asynchronous messaging", "Queue storage", "Publish-subscribe"]
+  },
+  {
+    "term": "Publish-subscribe",
+    "aliases": ["pub/sub", "pub-sub", "fan-out", "topic"],
+    "definition": "A pattern where a publisher sends each event to a topic and every subscriber receives its own copy to process independently. The publisher knows nothing about subscribers, so new consumers can be added without changing it.",
+    "example": "A fraud-check service starts receiving OrderPlaced by adding a subscription; the checkout code is untouched.",
+    "lessons": ["5.1"],
+    "related": ["Event", "Message broker", "Competing consumers"]
+  },
+  {
+    "term": "Competing consumers",
+    "aliases": ["worker pool", "competing consumer pattern"],
+    "definition": "Several instances of the same worker reading one queue, each message going to exactly one of them. Throughput grows with the number of workers, a slow worker only slows itself, and a crashed worker's message is redelivered to another.",
+    "example": "Three Functions instances drain the resize-images queue on a busy morning and scale back to one at night.",
+    "lessons": ["5.1"],
+    "related": ["Message", "Publish-subscribe", "Event-driven scaling"]
+  },
+  {
+    "term": "At-least-once delivery",
+    "aliases": ["at least once", "redelivery", "exactly-once processing"],
+    "definition": "The guarantee almost every broker gives: a message will be delivered, but possibly more than once - for example when a consumer finishes the work but crashes before confirming it. Consumers must therefore be idempotent. Exactly-once processing is achieved by idempotency, not promised by the broker.",
+    "example": "The loyalty service records the order ID with the points it adds, so a redelivered OrderPlaced changes nothing.",
+    "lessons": ["5.1"],
+    "related": ["Idempotent", "Asynchronous messaging", "Transient fault"]
+  }
+]

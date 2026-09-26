@@ -98,7 +98,7 @@
     "aliases": ["transient error"],
     "definition": "A short-lived failure - a dropped connection, a throttled request, a database failing over - that succeeds if retried a moment later. Cloud services expect them; applications must retry with back-off rather than treat every error as fatal.",
     "example": "The Node API retries a SQL connection three times with increasing delays before returning an error.",
-    "lessons": ["1.7"],
+    "lessons": ["1.7", "5.1"],
     "related": ["Resiliency", "High availability"]
   }
 ]

@@ -1,0 +1,113 @@
+[
+  {
+    "id": "5.1-q1",
+    "topic": "what stays synchronous",
+    "scenario": "The checkout API takes payment, reserves stock, sends a confirmation email, adds loyalty points and records analytics, all before answering the shopper.",
+    "stem": "Which step should the shopper actually wait for?",
+    "options": [
+      "All five, so the confirmation page is complete",
+      "The payment authorisation; the rest can follow from an OrderPlaced event",
+      "Only the confirmation email, because shoppers expect it",
+      "None; the whole checkout should be asynchronous"
+    ],
+    "answer": 1,
+    "explanation": "The shopper needs to know the payment went through; everything else can happen seconds later without changing their experience. Making all five synchronous ties checkout to the slowest and least available step, and making payment asynchronous leaves the shopper unsure whether they have bought anything."
+  },
+  {
+    "id": "5.1-q2",
+    "topic": "message or event",
+    "stem": "Which of these is an event rather than a command message?",
+    "options": [
+      "ReserveStock for order 1042",
+      "SendConfirmationEmail to ana@example.com",
+      "OrderPlaced for order 1042",
+      "RefundPayment for order 1042"
+    ],
+    "answer": 2,
+    "explanation": "OrderPlaced reports a fact that has already happened and is addressed to nobody in particular; any number of services may react. The others are instructions for one specific consumer to do something, which can fail and must be handled."
+  },
+  {
+    "id": "5.1-q3",
+    "topic": "duplicates",
+    "scenario": "The loyalty service occasionally awards double points. Logs show the same OrderPlaced message processed twice after a worker restart.",
+    "stem": "What is the right fix?",
+    "options": [
+      "Configure the broker for exactly-once delivery",
+      "Make the loyalty service idempotent, for example by recording the order ID with the points and ignoring repeats",
+      "Stop restarting workers",
+      "Switch from a topic to a synchronous HTTP call"
+    ],
+    "answer": 1,
+    "explanation": "Brokers deliver at least once: a worker that finishes the work but crashes before confirming will see the message again. Idempotent consumers make duplicates harmless. Restarts cannot be prevented, and a synchronous call has its own retries and duplicates, with the coupling added back."
+  },
+  {
+    "id": "5.1-q4",
+    "topic": "competing consumers",
+    "scenario": "Product image resizing falls hours behind after a large catalogue import. One worker reads the queue.",
+    "stem": "What is the simplest way to catch up?",
+    "options": [
+      "Add more workers reading the same queue; each message goes to exactly one of them",
+      "Create one queue per worker and split images between them by hand",
+      "Switch to a topic so every worker gets every image",
+      "Make the queue larger"
+    ],
+    "answer": 0,
+    "explanation": "Competing consumers scale throughput by adding workers to one queue, with the broker handing each message to one of them. A topic would give every worker a copy of every image, doing the work several times, and manual partitioning or a larger queue does not add processing capacity."
+  },
+  {
+    "id": "5.1-q5",
+    "topic": "publish-subscribe",
+    "scenario": "The fraud team wants to check every new order. Today the checkout API publishes OrderPlaced to a Service Bus topic with three subscriptions.",
+    "stem": "What change is needed in the checkout API?",
+    "options": [
+      "Add a call to the fraud service after payment",
+      "Publish a second event specifically for fraud",
+      "None: the fraud service adds its own subscription to the topic",
+      "Replace the topic with a queue the fraud service reads"
+    ],
+    "answer": 2,
+    "explanation": "In publish-subscribe the publisher does not know its subscribers, so adding a consumer is a new subscription, not a code change. Calling fraud directly reintroduces coupling, a dedicated event duplicates the contract, and a queue would let only one service receive each order."
+  },
+  {
+    "id": "5.1-q6",
+    "topic": "choosing a service",
+    "scenario": "The shop wants to capture every click from the website and mobile app - around 20,000 events a second at peak - for a live dashboard and for nightly analysis that may need to reprocess a day's data.",
+    "stem": "Which Azure service fits?",
+    "options": [
+      "Queue storage",
+      "Service Bus queue",
+      "Event Hubs",
+      "A Logic App"
+    ],
+    "answer": 2,
+    "explanation": "High-volume, ordered telemetry read by several consumers and replayable is an event stream, which is Event Hubs' job. Queues remove messages as they are read, so two consumers and replay do not fit, and a workflow engine is not built for tens of thousands of events a second."
+  },
+  {
+    "id": "5.1-q7",
+    "topic": "poison messages",
+    "scenario": "One malformed order message fails every time the warehouse worker processes it, and the worker keeps retrying it while other orders wait.",
+    "stem": "What should happen to it?",
+    "options": [
+      "Retry it indefinitely until it succeeds",
+      "Delete it silently so the queue keeps moving",
+      "After a few attempts, move it to a dead-letter queue that someone monitors and investigates",
+      "Stop the worker until a developer fixes the message"
+    ],
+    "answer": 2,
+    "explanation": "A message that can never succeed must not block the rest. Dead-lettering sets it aside with its failure reason for a person to investigate, while other orders flow. Deleting it loses an order, and retrying forever or stopping the worker blocks everyone."
+  },
+  {
+    "id": "5.1-q8",
+    "topic": "eventual consistency",
+    "scenario": "After moving the confirmation email to an event, a shopper refreshes the order page one second after paying and sees no email sent yet.",
+    "stem": "How should the design handle this?",
+    "options": [
+      "Make the email synchronous again",
+      "Accept it as eventual consistency and say so in the UI: 'Order confirmed - your email is on its way'",
+      "Delay the confirmation page by ten seconds",
+      "Poll the email service until it confirms"
+    ],
+    "answer": 1,
+    "explanation": "Asynchronous systems are briefly inconsistent by design; the honest fix is a UI that describes what is true now. Making the email synchronous brings back the outage risk, and artificial delays or polling make every checkout slower to hide a few seconds of normal behaviour."
+  }
+]
