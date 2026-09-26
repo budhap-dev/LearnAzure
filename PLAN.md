@@ -97,7 +97,7 @@ at random from the lesson quizzes. 88 new glossary terms (249 in total).
 | Id | Lesson | Status |
 |----|--------|--------|
 | 4.1 | Virtual networks, subnets and network security groups | shipped |
-| 4.2 | Load Balancer, Application Gateway, Front Door and Traffic Manager | planned |
+| 4.2 | Load Balancer, Application Gateway, Front Door and Traffic Manager | shipped |
 | 4.3 | Private endpoints, DNS and hybrid connectivity | planned |
 | 4.4 | Microsoft Entra ID - the identity backbone | planned |
 | 4.5 | Role-based access control and managed identities | planned |

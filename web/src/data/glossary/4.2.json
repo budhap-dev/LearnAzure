@@ -1,0 +1,88 @@
+[
+  {
+    "term": "Load balancing",
+    "aliases": ["load balancer"],
+    "definition": "Spreading requests across several healthy backends so no single one is overwhelmed and a failed one stops receiving traffic. On Azure the choice between services comes down to two questions: does it understand HTTP (layer 7) or only TCP and UDP (layer 4), and does it run in one region or globally.",
+    "example": "Front Door balances shoppers across two regions; App Service balances each region's requests across its instances by itself.",
+    "lessons": ["4.2"],
+    "related": ["Layer 4 and layer 7", "Health probe", "Azure Load Balancer", "Azure Front Door"]
+  },
+  {
+    "term": "Layer 4 and layer 7",
+    "aliases": ["layer 4", "layer 7", "L4", "L7", "OSI layers"],
+    "definition": "Shorthand from the OSI network model. A layer 4 balancer sees TCP and UDP connections - addresses and ports only. A layer 7 balancer understands HTTP, so it can route by path or host, terminate TLS, cache and block malicious requests. The first question when choosing a load balancer.",
+    "example": "SQL Server traffic needs a layer 4 balancer; routing /api and /img to different origins needs layer 7.",
+    "lessons": ["4.2"],
+    "related": ["Load balancing", "Azure Load Balancer", "Application Gateway"]
+  },
+  {
+    "term": "Azure Load Balancer",
+    "aliases": ["Load Balancer", "ALB", "internal load balancer", "ILB"],
+    "definition": "A regional layer 4 load balancer that forwards TCP and UDP connections to VMs or scale sets passing a health probe. Public or internal, zone-redundant, and inexpensive. It cannot read URLs or stop application attacks, and App Service and Container Apps never need one in front.",
+    "example": "An internal Load Balancer spreads connections across two warehouse VMs on a private address.",
+    "icon": "load-balancer",
+    "lessons": ["4.2", "2.1"],
+    "related": ["Layer 4 and layer 7", "Health probe", "Virtual machine scale set"]
+  },
+  {
+    "term": "Application Gateway",
+    "aliases": ["App Gateway", "AppGW", "Azure Application Gateway"],
+    "definition": "A regional layer 7 reverse proxy deployed in a dedicated subnet of your VNet. It routes by path and host name, terminates TLS and, in the WAF_v2 tier, runs a web application firewall. Suited to private backends; it does nothing for a region outage and costs roughly $320 a month with WAF before capacity.",
+    "example": "An Application Gateway with WAF fronts internal VMs that have no public address.",
+    "icon": "application-gateway",
+    "lessons": ["4.2"],
+    "related": ["Web application firewall", "TLS termination", "Layer 4 and layer 7", "Subnet"]
+  },
+  {
+    "term": "Azure Front Door",
+    "aliases": ["Front Door", "AFD"],
+    "definition": "A global layer 7 entry point running at Microsoft's edge: users connect to the nearest point of presence, TLS ends there, cacheable content is served from the edge, and requests travel over Microsoft's backbone to the healthiest origin in any region. Combines CDN, global load balancing and, in Premium, a managed-rule WAF. The default front door for a public web app.",
+    "example": "Front Door Premium serves the shop's images from the edge and fails the API over from UK South to UK West.",
+    "icon": "front-door",
+    "lessons": ["4.2", "1.3"],
+    "related": ["Point of presence", "Web application firewall", "Health probe", "Edge cache"]
+  },
+  {
+    "term": "Traffic Manager",
+    "aliases": ["Azure Traffic Manager", "DNS load balancing"],
+    "definition": "DNS-based global traffic routing: it answers each DNS lookup with a healthy endpoint chosen by priority, weight, performance or geography, and is never in the request path. Cheap and protocol-agnostic, but it cannot terminate TLS, cache or filter, and failover waits for clients' cached DNS answers to expire.",
+    "example": "Traffic Manager steers a non-HTTP partner feed between UK South and UK West by priority.",
+    "icon": "traffic-manager",
+    "lessons": ["4.2"],
+    "related": ["Load balancing", "Health probe", "Azure Front Door"]
+  },
+  {
+    "term": "Health probe",
+    "aliases": ["health check", "probe"],
+    "definition": "A regular request a load balancer sends to each backend to decide whether it should receive traffic. It must check what makes that instance useless - such as losing its database - and nothing further, or it either keeps a broken region live or takes a healthy one out.",
+    "example": "Front Door probes /health on each API origin every 30 seconds and fails over after repeated failures.",
+    "lessons": ["4.2"],
+    "related": ["Load balancing", "Azure Front Door", "Azure Load Balancer"]
+  },
+  {
+    "term": "TLS termination",
+    "aliases": ["SSL offload", "TLS offload", "SSL termination"],
+    "definition": "Decrypting HTTPS at a proxy such as Front Door or Application Gateway so it can read, route, cache and inspect requests. The proxy can re-encrypt to the backend (end-to-end TLS), which regulated workloads usually require.",
+    "example": "TLS ends at Front Door's edge in Sydney; the request continues to UK South re-encrypted over Microsoft's backbone.",
+    "lessons": ["4.2"],
+    "related": ["Application Gateway", "Azure Front Door", "Free managed certificate"]
+  },
+  {
+    "term": "Web application firewall",
+    "aliases": ["WAF", "Azure WAF"],
+    "definition": "A layer 7 filter that inspects HTTP requests and blocks common attacks such as SQL injection, cross-site scripting and abusive bots, using managed rule sets (OWASP) plus your own rate limits and rules. Runs on Front Door or Application Gateway, and protects only traffic that passes through it.",
+    "example": "A WAF rate-limit rule on /login stops a credential-stuffing botnet at the edge.",
+    "icon": "waf",
+    "lessons": ["4.2"],
+    "related": ["Azure Front Door", "Application Gateway", "DDoS Protection"]
+  },
+  {
+    "term": "DDoS Protection",
+    "aliases": ["Azure DDoS Protection", "DDoS Network Protection", "DDoS IP Protection"],
+    "definition": "Defence against floods of traffic meant to knock a service offline. Every Azure public IP gets basic infrastructure protection free, and Front Door absorbs attacks at the edge. The paid Network Protection plan, around $2,900 a month for up to 100 public IPs, adds tuned mitigation, cost protection and rapid-response support.",
+    "example": "The shop relies on Front Door's edge protection; the paid plan is for estates with many public IPs of their own.",
+    "icon": "ddos",
+    "lessons": ["4.2"],
+    "related": ["Web application firewall", "Public IP address", "Azure Front Door"]
+  }
+]
