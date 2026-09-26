@@ -1,0 +1,115 @@
+[
+  {
+    "term": "Virtual network",
+    "aliases": ["VNet", "Azure virtual network", "address space"],
+    "definition": "Your own private network in one Azure region, with an address space of private IPs that you divide into subnets. It is free and is a boundary and an address plan rather than a device. Resources inside reach each other by default; nothing outside reaches in unless you allow it.",
+    "example": "vnet-shop-prod uses 10.20.0.0/16 in UK South; vnet-shop-dev uses 10.21.0.0/16 so the two can be peered later.",
+    "icon": "virtual-network",
+    "lessons": ["4.1"],
+    "related": ["Subnet", "CIDR notation", "VNet peering", "Network security group"]
+  },
+  {
+    "term": "Subnet",
+    "aliases": ["subnetwork", "delegated subnet"],
+    "definition": "A slice of a VNet's address space that resources are placed in. Azure keeps five addresses in every subnet, and some services need a subnet delegated to them alone and of a minimum size. Size subnets for the busiest day, not for today.",
+    "example": "snet-app-int (10.20.1.0/26) is delegated to App Service; the Bastion subnet must be called AzureBastionSubnet and be at least a /26.",
+    "icon": "subnet",
+    "lessons": ["4.1"],
+    "related": ["Virtual network", "CIDR notation", "VNet integration"]
+  },
+  {
+    "term": "CIDR notation",
+    "aliases": ["CIDR", "CIDR block", "prefix length"],
+    "definition": "The way IP ranges are written: a base address and a prefix length, such as 10.20.0.0/16. The smaller the number after the slash, the bigger the range - a /16 holds 65,536 addresses, a /24 holds 256. Ranges that might ever be connected must not overlap.",
+    "example": "10.20.0.0/16 for prod, 10.21.0.0/16 for dev and 192.168.0.0/16 for the office never overlap, so any of them can be joined up.",
+    "lessons": ["4.1"],
+    "related": ["Virtual network", "Subnet"]
+  },
+  {
+    "term": "Network security group",
+    "aliases": ["NSG", "security rule"],
+    "definition": "A stateful list of allow and deny rules on source, destination, port and protocol, attached to a subnet or a network card and evaluated by priority, lowest number first. Inbound traffic from outside the VNet is denied by default. It filters addresses and ports, not HTTP content.",
+    "example": "nsg-snet-vm allows RDP only from the Bastion subnet and ends with an explicit deny-all rule.",
+    "icon": "nsg",
+    "lessons": ["4.1"],
+    "related": ["Service tag", "Application security group", "Subnet"]
+  },
+  {
+    "term": "Service tag",
+    "aliases": ["service tags"],
+    "definition": "A named group of IP ranges that Microsoft maintains, such as Internet, VirtualNetwork, AzureLoadBalancer or Sql.UKSouth, used in NSG and firewall rules instead of raw addresses. The ranges update themselves, so rules do not go stale.",
+    "example": "An outbound rule allows Sql.UKSouth on port 1433 rather than a list of Azure SQL gateway IPs.",
+    "lessons": ["4.1"],
+    "related": ["Network security group", "Azure Firewall"]
+  },
+  {
+    "term": "Application security group",
+    "aliases": ["ASG"],
+    "definition": "A label you attach to VMs' network cards so NSG rules can name roles instead of addresses - from web servers to database servers. New VMs pick up the rules by joining the group.",
+    "example": "asg-web may reach asg-sql on 1433; a new web VM joins asg-web and needs no rule change.",
+    "lessons": ["4.1"],
+    "related": ["Network security group"]
+  },
+  {
+    "term": "VNet peering",
+    "aliases": ["peering", "virtual network peering", "global VNet peering"],
+    "definition": "A direct link between two VNets over Microsoft's backbone, at close to local latency and charged per GB in each direction. Peering is not transitive: A peered with B and B with C does not let A reach C. Peered ranges must not overlap.",
+    "example": "vnet-shop-prod and vnet-shop-dev each peer with the hub, not with each other.",
+    "icon": "peerings",
+    "lessons": ["4.1"],
+    "related": ["Virtual network", "Hub-and-spoke", "CIDR notation"]
+  },
+  {
+    "term": "Hub-and-spoke",
+    "aliases": ["hub and spoke", "hub-spoke topology", "hub VNet"],
+    "definition": "A network design where one hub VNet holds shared services - the VPN gateway, a firewall, Bastion - and each workload or environment is a spoke peered only to the hub. User-defined routes send spoke traffic through the hub's firewall. Worth its cost from the second workload, not the first.",
+    "example": "The shop's hub holds the office VPN and Azure Firewall; prod and dev are spokes that can only reach each other through the firewall.",
+    "lessons": ["4.1"],
+    "related": ["VNet peering", "Azure Firewall", "User-defined route"]
+  },
+  {
+    "term": "User-defined route",
+    "aliases": ["UDR", "route table", "custom route"],
+    "definition": "A route you add to a route table and attach to a subnet, overriding Azure's default routing - most often to send all traffic through a firewall. A wrong route blackholes traffic silently, so routes are reviewed like code.",
+    "example": "A route table on every spoke subnet sends 0.0.0.0/0 to the hub firewall at 10.0.1.4.",
+    "icon": "route-table",
+    "lessons": ["4.1"],
+    "related": ["Hub-and-spoke", "Azure Firewall"]
+  },
+  {
+    "term": "NAT gateway",
+    "aliases": ["Azure NAT Gateway", "outbound NAT"],
+    "definition": "Gives a subnet explicit outbound internet access through one or more static public IPs, so partners can allowlist you and outbound connections do not run short. About $32 a month plus a charge per GB processed. It handles outbound only; nothing can connect in through it.",
+    "example": "The payment provider allowlists the NAT gateway's two IPs, which every API instance uses for outbound calls.",
+    "icon": "nat-gateway",
+    "lessons": ["4.1"],
+    "related": ["Public IP address", "Subnet"]
+  },
+  {
+    "term": "Public IP address",
+    "aliases": ["public IP", "PIP"],
+    "definition": "An internet-routable address you attach to a resource such as a VM, load balancer or NAT gateway. Anything with one can be found by scanners within minutes, so only front doors and outbound gateways should carry one.",
+    "example": "The warehouse VM's public IP is removed; admins reach it through Bastion instead.",
+    "icon": "public-ip",
+    "lessons": ["4.1"],
+    "related": ["NAT gateway", "Azure Bastion"]
+  },
+  {
+    "term": "Azure Bastion",
+    "aliases": ["Bastion", "bastion host"],
+    "definition": "A managed service that gives RDP and SSH to VMs through the Azure portal over HTTPS, so VMs need no public IP and no management port is open to the internet. It lives in its own subnet, AzureBastionSubnet. Basic is roughly $140 a month; a free Developer tier suits dev and test.",
+    "example": "Dev opens the warehouse VM's desktop from the portal; port 3389 is reachable only from the Bastion subnet.",
+    "icon": "bastion",
+    "lessons": ["4.1"],
+    "related": ["Public IP address", "Network security group"]
+  },
+  {
+    "term": "Azure Firewall",
+    "aliases": ["firewall"],
+    "definition": "A managed, stateful network firewall, usually placed in a hub VNet, that filters and logs traffic between spokes, to the internet and to on-premises, with rules by address, port and fully qualified domain name. Standard costs roughly $900 a month before traffic, so it is a deliberate choice.",
+    "example": "All outbound traffic from the shop's spokes goes through Azure Firewall, which only allows the payment provider and package registries.",
+    "icon": "firewall",
+    "lessons": ["4.1"],
+    "related": ["Hub-and-spoke", "User-defined route", "Service tag"]
+  }
+]

@@ -1,0 +1,113 @@
+[
+  {
+    "id": "4.1-q1",
+    "topic": "overlapping address space",
+    "scenario": "Dev built the dev VNet on 10.0.0.0/16 last year. The new prod VNet is also 10.0.0.0/16, and so is the office network. Now the team wants to peer dev and prod and connect the office by VPN.",
+    "stem": "What is the honest assessment?",
+    "options": [
+      "Peering and the VPN will work, because Azure translates overlapping ranges automatically",
+      "None of these networks can be connected while their ranges overlap; at least two must be renumbered, which means rebuilding what is in them",
+      "Peering will work between the two VNets; only the VPN needs the office to change its range",
+      "Add a NAT gateway to each VNet so the overlapping addresses are hidden from each other"
+    ],
+    "answer": 1,
+    "explanation": "Peering and site-to-site VPN both need unique, non-overlapping address ranges; Azure does not translate between them, and a NAT gateway only handles outbound internet traffic. Renumbering a subnet full of resources is a rebuild, which is why the address plan comes before the first VNet."
+  },
+  {
+    "id": "4.1-q2",
+    "topic": "reserved addresses",
+    "stem": "A subnet is created as a /27. How many addresses can resources use?",
+    "options": [
+      "32",
+      "30",
+      "27",
+      "16"
+    ],
+    "answer": 2,
+    "explanation": "A /27 holds 32 addresses and Azure reserves five in every subnet - the network address, three for its own services and the broadcast address - leaving 27. The on-premises habit of subtracting two gives 30, which is why subnets sized by that rule run out early."
+  },
+  {
+    "id": "4.1-q3",
+    "topic": "NSG rule evaluation",
+    "scenario": "The warehouse subnet's NSG has a rule at priority 200 denying all inbound traffic from the internet, and a rule at priority 300 allowing HTTPS from the internet to the VM.",
+    "stem": "What happens to an HTTPS request from the internet?",
+    "options": [
+      "It is allowed, because allow rules always override deny rules",
+      "It is allowed, because the more specific rule wins regardless of priority",
+      "It is denied, because rules are evaluated from the lowest priority number up and the first match wins",
+      "It is denied only if the default rules are also set to deny"
+    ],
+    "answer": 2,
+    "explanation": "NSG rules are processed in priority order, lowest number first, and processing stops at the first match. The deny at 200 matches before the allow at 300 is ever read. Specificity and allow-over-deny are how some other firewalls work, which is exactly why this catches people out."
+  },
+  {
+    "id": "4.1-q4",
+    "topic": "admin access",
+    "scenario": "The penetration test found RDP open to 'Any' on the warehouse VM's public IP, with forty thousand failed logins a day. Dev suggests changing the RDP port from 3389 to 43389.",
+    "stem": "What is the better fix?",
+    "options": [
+      "Change the port and add account lockout, since scanners only try 3389",
+      "Remove the public IP, reach the VM through Azure Bastion, and allow RDP in the NSG only from the Bastion subnet",
+      "Keep the public IP but add an NSG rule allowing RDP only from the office's IP address",
+      "Put the VM behind a NAT gateway so the internet can no longer see its address"
+    ],
+    "answer": 1,
+    "explanation": "Bastion gives RDP through the portal over HTTPS, so the VM needs no public IP and no management port is exposed at all. Moving the port only slows scanners down, and an office-IP allowlist still leaves a public management port that breaks for anyone working from home. A NAT gateway handles outbound traffic only; it does not hide an inbound public IP."
+  },
+  {
+    "id": "4.1-q5",
+    "topic": "peering is not transitive",
+    "scenario": "vnet-shop-prod is peered with vnet-hub, and vnet-shop-dev is also peered with vnet-hub. A developer tries to reach a test VM in dev from a VM in prod, and the connection times out.",
+    "stem": "Why does the connection fail?",
+    "options": [
+      "Peering is not transitive: prod and dev each reach the hub, but not each other, unless traffic is routed through something in the hub such as a firewall",
+      "Peered VNets can only exchange traffic on port 443",
+      "Peering only works between VNets in different regions",
+      "The hub VNet needs a NAT gateway to forward traffic between spokes"
+    ],
+    "answer": 0,
+    "explanation": "A peering connects exactly two VNets. Spoke-to-spoke traffic in hub-and-spoke goes through a firewall or network appliance in the hub, sent there by user-defined routes, which is also where it gets inspected and logged. Peering carries any protocol, works within a region or across regions, and a NAT gateway only handles outbound internet traffic."
+  },
+  {
+    "id": "4.1-q6",
+    "topic": "two NSGs",
+    "scenario": "Dev added an NSG rule on snet-vm allowing port 8080 from the office VPN range. The port still times out. The VM's network card was created with its own NSG by the VM wizard.",
+    "stem": "What is the most likely cause?",
+    "options": [
+      "NSG changes take up to 24 hours to apply",
+      "The subnet NSG overrides the NIC NSG, so the NIC rule is ignored",
+      "Traffic must be allowed by both the subnet NSG and the NIC NSG, and the NIC's NSG still denies 8080",
+      "Port 8080 is reserved by Azure and cannot be opened"
+    ],
+    "answer": 2,
+    "explanation": "When a subnet and a network card both have an NSG, inbound traffic is checked against the subnet's rules and then the NIC's, and must pass both. The wizard's NIC-level NSG is the classic forgotten second gate. NSG changes apply in seconds, neither NSG overrides the other, and 8080 is an ordinary port."
+  },
+  {
+    "id": "4.1-q7",
+    "topic": "when a hub is justified",
+    "scenario": "The shop runs one workload in one region: App Service, Azure SQL and a single VM. A contractor proposes hub-and-spoke with Azure Firewall 'to follow best practice'.",
+    "stem": "What should Priya say?",
+    "options": [
+      "Agree, since hub-and-spoke is required for any production workload on Azure",
+      "Agree, but use peering between every VNet instead of a hub so traffic does not need a firewall",
+      "One VNet with NSGs on every subnet is enough today; adopt a hub when a second workload, an office connection or mandatory traffic inspection arrives",
+      "Refuse VNets entirely, since PaaS services do not need them"
+    ],
+    "answer": 2,
+    "explanation": "A hub earns its place when there is something to share: several workloads, a VPN or ExpressRoute link, or a rule that all traffic is inspected. Azure Firewall alone costs roughly $900 a month before traffic. Full-mesh peering grows unmanageable and skips inspection, and the shop's VM and private endpoints do need a VNet."
+  },
+  {
+    "id": "4.1-q8",
+    "topic": "VNet integration is outbound",
+    "scenario": "After turning on VNet integration for the Node API, Ana says the API and the Azure SQL database are now 'private and inside the VNet'.",
+    "stem": "Is she right about what changed?",
+    "options": [
+      "Yes: VNet integration moves both the App Service and anything it connects to into the VNet",
+      "No: VNet integration lets the API make outbound calls into the VNet, but the API and the database keep their public endpoints until private endpoints are added",
+      "Yes for the API, which loses its public endpoint, but not for the database",
+      "No: VNet integration only works for virtual machines"
+    ],
+    "answer": 1,
+    "explanation": "VNet integration is outbound only: the app's calls can reach addresses inside the VNet. It does not give the app a private inbound address or change the database at all. Private endpoints, covered in lesson 4.3, are what put a PaaS service on a private IP and let its public endpoint be closed."
+  }
+]

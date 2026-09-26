@@ -1,7 +1,8 @@
 /**
  * Content checks that run before every build. Fails (exit 1) if anything is broken:
  *
- *  - every "ready" lesson in the syllabus has a Markdown file, and its frontmatter agrees
+ *  - every ready lesson has a Markdown file, and its frontmatter agrees. A lesson is ready when
+ *    its module is "ready", or its module is "in-progress" and the lesson is marked "ready"
  *  - every lesson file has the expected sections and a real-life scenario
  *  - every Azure icon referenced (az:slug, diagram nodes, syllabus, glossary) exists
  *  - every ```diagram block is valid JSON with resolvable edges and groups
@@ -32,8 +33,10 @@ const iconFiles = new Set((await readdir(join(ROOT, 'public/azure-icons'))).filt
 for (const id of iconIds) if (!iconFiles.has(id)) fail(`icons.ts lists "${id}" but public/azure-icons/${id}.svg is missing`);
 
 const allLessonIds = new Set(syllabus.modules.flatMap((m) => m.lessons.map((l) => l.id)));
+const MODULE_STATUSES = ['ready', 'in-progress', 'planned'];
+const isLessonReady = (m, l) => m.status === 'ready' || (m.status === 'in-progress' && l.status === 'ready');
 const readyModules = syllabus.modules.filter((m) => m.status === 'ready');
-const readyLessons = readyModules.flatMap((m) => m.lessons);
+const readyLessons = syllabus.modules.flatMap((m) => m.lessons.filter((l) => isLessonReady(m, l)));
 
 const glossaryFiles = (await readdir(join(ROOT, 'src/data/glossary'))).filter((f) => f.endsWith('.json')).sort((a, b) => a.localeCompare(b, undefined, { numeric: true }));
 const glossary = [];
@@ -56,11 +59,15 @@ const checkIcon = (id, where) => {
 // Syllabus icons
 for (const m of syllabus.modules) {
   checkIcon(m.icon, `syllabus module ${m.number}`);
+  if (!MODULE_STATUSES.includes(m.status)) fail(`syllabus: module ${m.number} has unknown status "${m.status}"`);
+  if (m.status === 'in-progress' && !m.lessons.some((l) => l.status === 'ready')) fail(`syllabus: module ${m.number} is in-progress but has no ready lesson`);
   for (const l of m.lessons) {
+    if (l.status !== undefined && !['ready', 'planned'].includes(l.status)) fail(`syllabus: lesson ${l.id} has unknown status "${l.status}"`);
+    if (l.status !== undefined && m.status !== 'in-progress') fail(`syllabus: lesson ${l.id} has a status, but only lessons in an in-progress module take one`);
     if (!/^\d+\.\d+$/.test(l.id)) fail(`syllabus: bad lesson id "${l.id}"`);
     if (Number(l.id.split('.')[0]) !== m.number) fail(`syllabus: lesson ${l.id} is under module ${m.number}`);
     for (const i of l.icons ?? []) checkIcon(i, `syllabus lesson ${l.id}`);
-    if (m.status === 'ready') {
+    if (isLessonReady(m, l)) {
       if (!l.summary) fail(`syllabus: ready lesson ${l.id} has no summary`);
       if (!(l.objectives?.length >= 2)) fail(`syllabus: ready lesson ${l.id} needs at least two objectives`);
     }

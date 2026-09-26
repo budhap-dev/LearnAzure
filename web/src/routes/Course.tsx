@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { LessonRow } from '../components/Cards';
 import { AzureIcon } from '../components/AzureIcon';
 import { ProgressRing } from '../components/ProgressRing';
-import { MODULES, READY_MODULES, totalMinutes } from '../lib/syllabus';
+import { MODULES, READY_MODULES, isLessonReady, readyLessons, totalMinutes } from '../lib/syllabus';
 import { useProgress } from '../lib/useProgress';
 import { bestTest } from '../lib/progress';
 
@@ -22,26 +22,31 @@ export function Course() {
       )}
       {MODULES.map((m) => {
         const ready = m.status === 'ready';
+        const open = m.status !== 'planned';
         const done = m.lessons.filter((l) => progress.lessons[l.id] === 'done').length;
         const best = bestTest(m.number);
         return (
-          <section key={m.number} className={`module-section m${m.number} ${ready ? '' : 'planned'}`} id={`module-${m.number}`}>
+          <section key={m.number} className={`module-section m${m.number} ${open ? '' : 'planned'}`} id={`module-${m.number}`}>
             <div className="module-head">
               <span className={`module-num m${m.number}`}>{m.number}</span>
               <AzureIcon id={m.icon} size={40} />
               <div className="module-head-text">
-                <h2>{ready ? <Link to={`/module/${m.number}`}>{m.title}</Link> : m.title}</h2>
+                <h2>{open ? <Link to={`/module/${m.number}`}>{m.title}</Link> : m.title}</h2>
                 <p className="muted">{m.tagline}</p>
                 <p className="small muted">
-                  {m.lessons.length} lessons{ready ? ` · about ${totalMinutes(m)} min` : ' · coming soon'}
+                  {ready
+                    ? `${m.lessons.length} lessons · about ${totalMinutes(m)} min`
+                    : open
+                      ? `${readyLessons(m).length} of ${m.lessons.length} lessons out · more coming`
+                      : `${m.lessons.length} lessons · coming soon`}
                   {best && ` · best test ${best.percent}% (${best.grade})`}
                 </p>
               </div>
-              {ready && <ProgressRing value={done / m.lessons.length} size={52} stroke={6} />}
+              {open && <ProgressRing value={done / m.lessons.length} size={52} stroke={6} />}
             </div>
             <div className="lesson-list">
               {m.lessons.map((l) => (
-                <LessonRow key={l.id} lesson={l} state={progress.lessons[l.id] ?? 'not-started'} ready={ready} />
+                <LessonRow key={l.id} lesson={l} state={progress.lessons[l.id] ?? 'not-started'} ready={isLessonReady(m, l)} />
               ))}
             </div>
             {ready && (

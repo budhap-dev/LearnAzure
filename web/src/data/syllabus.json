@@ -388,17 +388,24 @@
       "tagline": "Virtual networks, load balancing, private endpoints, Entra ID, RBAC, managed identities, Key Vault and Defender.",
       "description": "The two things that make or break an Azure estate: how traffic flows and who is allowed to do what. Learn the network building blocks, the four front doors for HTTP traffic, and the identity model that replaces connection strings with managed identities.",
       "icon": "virtual-network",
-      "status": "planned",
+      "status": "in-progress",
       "lessons": [
         {
           "id": "4.1",
           "title": "Virtual networks, subnets and network security groups",
-          "summary": "",
+          "summary": "Address spaces and subnets, network security groups, Bastion instead of open RDP, peering, and when hub-and-spoke earns its cost.",
           "minutes": 15,
-          "objectives": [],
+          "objectives": [
+            "Plan a non-overlapping address space and size subnets for the services that need them",
+            "Write NSG rules that deny by default, using service tags and priorities correctly",
+            "Say when one VNet is enough and when hub-and-spoke with a firewall is justified"
+          ],
           "icons": [
-            "virtual-network"
-          ]
+            "virtual-network",
+            "subnet",
+            "nsg"
+          ],
+          "status": "ready"
         },
         {
           "id": "4.2",

@@ -67,8 +67,8 @@
     "definition": "An App Service feature that routes the app's outbound traffic through a subnet in your virtual network, so it can reach private databases, internal APIs and on-premises systems. It handles outbound only - making the app itself private needs a private endpoint. Available from Standard upwards, and the subnet must be delegated to App Service.",
     "example": "The API reaches Azure SQL over a private endpoint because the app is integrated with snet-app-prod.",
     "icon": "virtual-network",
-    "lessons": ["2.2"],
-    "related": ["App Service Environment", "App Service plan", "App Service"]
+    "lessons": ["2.2", "4.1"],
+    "related": ["App Service Environment", "App Service plan", "App Service", "Virtual network", "Subnet"]
   },
   {
     "term": "App Service Environment",

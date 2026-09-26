@@ -2,7 +2,7 @@ import { Link, useParams } from 'react-router-dom';
 import { LessonRow } from '../components/Cards';
 import { AzureIcon } from '../components/AzureIcon';
 import { ProgressRing } from '../components/ProgressRing';
-import { moduleByNumber, totalMinutes } from '../lib/syllabus';
+import { isLessonReady, moduleByNumber, readyLessons, totalMinutes } from '../lib/syllabus';
 import { useProgress } from '../lib/useProgress';
 import { testHistory } from '../lib/progress';
 import { GLOSSARY, moduleOf } from '../lib/glossary';
@@ -12,12 +12,14 @@ export function ModulePage() {
   const { n } = useParams();
   const module = moduleByNumber(Number(n));
   const progress = useProgress();
-  if (!module || module.status !== 'ready') return <NotFound />;
+  if (!module || module.status === 'planned') return <NotFound />;
 
+  const complete = module.status === 'ready';
+  const released = readyLessons(module);
   const done = module.lessons.filter((l) => progress.lessons[l.id] === 'done').length;
   const history = testHistory(module.number);
   const terms = GLOSSARY.filter((e) => moduleOf(e) === module.number);
-  const firstUnfinished = module.lessons.find((l) => progress.lessons[l.id] !== 'done') ?? module.lessons[0];
+  const firstUnfinished = released.find((l) => progress.lessons[l.id] !== 'done') ?? released[0];
 
   return (
     <div className={`module-page m${module.number}`}>
@@ -34,23 +36,29 @@ export function ModulePage() {
       <p>{module.description}</p>
       <div className="row wrap">
         <Link className="btn primary" to={`/lesson/${firstUnfinished.id}`}>
-          {done === 0 ? 'Start the module →' : done === module.lessons.length ? 'Revisit from the start' : `Continue with ${firstUnfinished.id} →`}
+          {done === 0 ? 'Start the module →' : done === released.length ? 'Revisit from the start' : `Continue with ${firstUnfinished.id} →`}
         </Link>
-        <Link className="btn" to={`/module/${module.number}/test`}>Module test</Link>
-        <span className="muted small">{module.lessons.length} lessons · about {totalMinutes(module)} min</span>
+        {complete && <Link className="btn" to={`/module/${module.number}/test`}>Module test</Link>}
+        <span className="muted small">
+          {complete
+            ? `${module.lessons.length} lessons · about ${totalMinutes(module)} min`
+            : `${released.length} of ${module.lessons.length} lessons out · more coming`}
+        </span>
       </div>
 
       <h2>Lessons</h2>
       <div className="lesson-list">
         {module.lessons.map((l) => (
-          <LessonRow key={l.id} lesson={l} state={progress.lessons[l.id] ?? 'not-started'} />
+          <LessonRow key={l.id} lesson={l} state={progress.lessons[l.id] ?? 'not-started'} ready={isLessonReady(module, l)} />
         ))}
       </div>
 
       <div className="two-col">
         <section className="card">
           <h2>Module test</h2>
-          {history.length === 0 ? (
+          {!complete ? (
+            <p className="muted">The module test opens once every lesson in this module is out.</p>
+          ) : history.length === 0 ? (
             <p className="muted">Not attempted yet. Finish the lessons first, then test yourself against timed scenario questions.</p>
           ) : (
             <ul className="history">
@@ -62,7 +70,7 @@ export function ModulePage() {
               ))}
             </ul>
           )}
-          <Link className="btn" to={`/module/${module.number}/test`}>{history.length ? 'Take it again' : 'Take the test'}</Link>
+          {complete && <Link className="btn" to={`/module/${module.number}/test`}>{history.length ? 'Take it again' : 'Take the test'}</Link>}
         </section>
         <section className="card">
           <h2>Terms in this module</h2>

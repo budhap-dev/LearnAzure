@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { AzureIcon } from './AzureIcon';
 import { ProgressRing } from './ProgressRing';
-import type { LessonMeta, ModuleMeta } from '../lib/syllabus';
+import { readyLessons, type LessonMeta, type ModuleMeta } from '../lib/syllabus';
 import type { LessonState } from '../lib/progress';
 
 export const STATE_LABEL: Record<LessonState, string> = {
@@ -12,14 +12,15 @@ export const STATE_LABEL: Record<LessonState, string> = {
 };
 
 export function ModuleCard({ module, lessonStates }: { module: ModuleMeta; lessonStates: Record<string, LessonState> }) {
-  const ready = module.status === 'ready';
+  const open = module.status !== 'planned';
+  const released = readyLessons(module).length;
   const done = module.lessons.filter((l) => lessonStates[l.id] === 'done').length;
   const inner = (
     <>
       <div className="module-card-head">
         <span className={`module-num m${module.number}`}>{module.number}</span>
         <AzureIcon id={module.icon} size={40} />
-        {ready ? (
+        {open ? (
           <ProgressRing value={done / module.lessons.length} size={48} stroke={5} label={`${done} of ${module.lessons.length} lessons learned`} />
         ) : (
           <span className="pill soon">Coming soon</span>
@@ -27,10 +28,13 @@ export function ModuleCard({ module, lessonStates }: { module: ModuleMeta; lesso
       </div>
       <h3>{module.title}</h3>
       <p className="muted">{module.tagline}</p>
-      <p className="small muted">{module.lessons.length} lessons{ready ? ` · ${done} learned` : ''}</p>
+      <p className="small muted">
+        {module.status === 'in-progress' ? `${released} of ${module.lessons.length} lessons out` : `${module.lessons.length} lessons`}
+        {open ? ` · ${done} learned` : ''}
+      </p>
     </>
   );
-  return ready ? (
+  return open ? (
     <Link to={`/module/${module.number}`} className={`card module-card lift m${module.number}`}>
       {inner}
     </Link>

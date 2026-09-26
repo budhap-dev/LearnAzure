@@ -75,7 +75,7 @@ export function Home() {
           ))}
         </div>
         {READY_MODULES.length < MODULES.length && (
-          <p className="muted small">Modules are released one at a time; each is fully verified before the next starts.</p>
+          <p className="muted small">Lessons are released one at a time, each verified before it ships; a module's test opens once all its lessons are out.</p>
         )}
       </section>
     </div>
