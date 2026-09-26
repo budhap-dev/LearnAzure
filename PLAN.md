@@ -158,7 +158,7 @@ at random from the lesson quizzes. 35 new glossary terms (389 in total).
 | Id | Lesson | Status |
 |----|--------|--------|
 | 7.1 | DevOps on Azure - the landscape and the two toolchains | shipped |
-| 7.2 | Repos, branching and pull-request policies | planned |
+| 7.2 | Repos, branching and pull-request policies | shipped |
 | 7.3 | Azure Pipelines - YAML, agents, stages and environments | planned |
 | 7.4 | GitHub Actions for Azure | planned |
 | 7.5 | Infrastructure as code - Bicep and Terraform | planned |

@@ -1,0 +1,44 @@
+[
+  {
+    "term": "Pull request",
+    "aliases": ["PR", "merge request", "code review", "squash merge"],
+    "definition": "A proposal to merge a branch into another, where automated checks and people review the change first. Good pull requests are small, explain why, link to the work item, pass checks before humans look, and are reviewed the same day. Squash-merging turns each into one clear commit on main.",
+    "example": "Ana's 180-line pull request adds the new checkout behind a feature flag; the checks pass and a code owner approves it within two hours.",
+    "icon": "code",
+    "lessons": ["7.2"],
+    "related": ["Branch policy", "CODEOWNERS", "Trunk-based development"]
+  },
+  {
+    "term": "Branch policy",
+    "aliases": ["branch protection", "branch protection rule", "ruleset", "required status check"],
+    "definition": "Platform-enforced rules on a branch such as main: changes only through pull requests, a minimum number of approvals, required build and test checks, resolved comments, and no force pushes or deletion. Azure Repos calls them branch policies; GitHub calls them branch protection rules or rulesets. They should apply to administrators too.",
+    "example": "main in every shop repository accepts only pull requests with a passing build and one approval - two for infrastructure.",
+    "lessons": ["7.2"],
+    "related": ["Pull request", "CODEOWNERS"]
+  },
+  {
+    "term": "Trunk-based development",
+    "aliases": ["trunk-based", "GitHub flow", "short-lived branches", "GitFlow"],
+    "definition": "A branching strategy in which everyone integrates small changes into main (the trunk) at least daily through short-lived branches, main stays releasable, and unfinished work merges behind feature flags. It replaces long-lived branch models such as GitFlow for software deployed continuously.",
+    "example": "Branches in shop-api live under two days, and merge day no longer exists.",
+    "icon": "branch",
+    "lessons": ["7.2"],
+    "related": ["Pull request", "Feature flag", "Continuous integration"]
+  },
+  {
+    "term": "CODEOWNERS",
+    "aliases": ["code owners", "CODEOWNERS file", "automatically included reviewers"],
+    "definition": "A file in a repository that maps paths to the people or teams who must review changes to them. Combined with branch protection, sensitive areas such as infrastructure, pipeline definitions and authentication code cannot change without the right reviewers. Azure Repos achieves the same with automatically included reviewers.",
+    "example": "Changes under /.github/workflows/ require approval from the platform team, because a workflow change can alter what is deployed and with what permissions.",
+    "lessons": ["7.2"],
+    "related": ["Branch policy", "Pull request"]
+  },
+  {
+    "term": "Semantic versioning",
+    "aliases": ["SemVer", "semver", "release tag", "MAJOR.MINOR.PATCH"],
+    "definition": "Numbering releases MAJOR.MINOR.PATCH so the number says what changed: PATCH for fixes, MINOR for compatible features, MAJOR for breaking changes. Tag releases in Git and stamp the version and commit into every build, so any running system can say exactly what it is.",
+    "example": "v2.5.0 adds wish lists without breaking clients; v3.0.0 changes the order API's response shape.",
+    "lessons": ["7.2"],
+    "related": ["Trunk-based development", "Continuous delivery"]
+  }
+]
