@@ -54,7 +54,7 @@
     "definition": "Running realistic traffic at and beyond expected peak to find how a system behaves and where it breaks, before real users find out. Azure Load Testing runs JMeter or Locust scripts at scale from Azure and correlates results with Azure Monitor metrics.",
     "example": "A month before Black Friday, the checkout journey is load-tested at three times last year's peak.",
     "icon": "load-testing",
-    "lessons": ["6.5", "7.8"],
+    "lessons": ["6.5", "7.8", "9.5"],
     "related": ["Chaos engineering", "Scalability"]
   }
 ]

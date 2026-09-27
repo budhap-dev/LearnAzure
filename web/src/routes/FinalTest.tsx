@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Exam } from '../components/Exam';
 import { FINAL_TEST, buildFinalTest, type Question } from '../lib/quiz';
-import { READY_MODULES } from '../lib/syllabus';
+import { MODULES, READY_MODULES } from '../lib/syllabus';
 
 export function FinalTest() {
   const [round, setRound] = useState(0);
@@ -18,8 +18,14 @@ export function FinalTest() {
       <p className="crumbs"><Link to="/course">Course</Link> / Final learning test</p>
       <h1>Final learning test</h1>
       <p className="lede">
-        Up to {FINAL_TEST.questions} questions drawn evenly across every released module ({READY_MODULES.length} so far),
-        {' '}{FINAL_TEST.minutes} minutes on the clock. It grows as modules are released.
+        {READY_MODULES.length === MODULES.length ? (
+          <>Up to {FINAL_TEST.questions} questions drawn evenly across all {MODULES.length} modules, {FINAL_TEST.minutes} minutes on the clock.</>
+        ) : (
+          <>
+            Up to {FINAL_TEST.questions} questions drawn evenly across every released module ({READY_MODULES.length} so far),
+            {' '}{FINAL_TEST.minutes} minutes on the clock. It grows as modules are released.
+          </>
+        )}
       </p>
       {questions === null ? (
         <p className="muted">Preparing your questions…</p>

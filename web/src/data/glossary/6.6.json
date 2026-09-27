@@ -4,7 +4,7 @@
     "aliases": ["WAR", "Azure Well-Architected Review", "architecture review", "workload"],
     "definition": "A structured review of one workload - the components that together deliver one business capability - against the five Well-Architected pillars, with the people who build and run it. Microsoft's online assessment and Azure Advisor are inputs; the output is a short, owned list of risks and recorded decisions. Repeat it quarterly and after major changes.",
     "example": "The checkout review took a morning and produced ten owned risks, four ADRs and a documented accepted single point of failure.",
-    "lessons": ["6.6"],
+    "lessons": ["6.6", "9.5"],
     "related": ["Well-Architected Framework", "Azure Advisor", "Failure mode analysis", "Architecture decision record"]
   },
   {
@@ -12,7 +12,7 @@
     "aliases": ["ADR", "decision record"],
     "definition": "A short document kept in the repository that records one architectural decision: its context, the decision, the consequences, and what would make you revisit it. It preserves the reasoning behind trade-offs so they are not re-argued every few months.",
     "example": "ADR-014 records why Service Bus stays on Standard and names the date and triggers for revisiting it.",
-    "lessons": ["6.6", "9.1"],
+    "lessons": ["6.6", "9.1", "9.5"],
     "related": ["Well-Architected Review", "Failure mode analysis"]
   },
   {

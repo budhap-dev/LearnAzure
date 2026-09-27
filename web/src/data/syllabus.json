@@ -1019,9 +1019,9 @@
       "number": 9,
       "title": "Architecture and leading a team",
       "tagline": "Reference architectures, landing zones, migration, governance and the certification map.",
-      "description": "Pulling it together: the reference architectures you will meet most, enterprise landing zones, moving an existing estate to Azure, governance with Policy and Cost Management, and capstone scenarios to test your judgement.",
+      "description": "Pulling it together as a lead: starting designs from reference architectures and choosing structures that fit the team, landing zones with policy, subscription vending and FinOps, moving an existing estate with a strategy per workload, certifications by role and habits that keep a team current, and running design reviews that produce better, recorded decisions.",
       "icon": "landing-zone",
-      "status": "in-progress",
+      "status": "ready",
       "lessons": [
         {
           "id": "9.1",
@@ -1038,8 +1038,7 @@
             "guide",
             "app-service",
             "front-door"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "9.2",
@@ -1056,8 +1055,7 @@
             "landing-zone",
             "policy",
             "management-group"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "9.3",
@@ -1074,8 +1072,7 @@
             "azure-migrate",
             "azure-arc",
             "sql-managed-instance"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "9.4",
@@ -1092,17 +1089,23 @@
             "learn",
             "guide",
             "users"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "9.5",
           "title": "Capstone scenarios - design reviews you can run",
-          "summary": "",
+          "summary": "How to run a design review that improves a design - numbers not adjectives, the Well-Architected pillars, a pre-mortem, named trade-offs and recorded decisions - and four capstone scenarios to practise on.",
           "minutes": 20,
-          "objectives": [],
+          "objectives": [
+            "Run a design review with a short document, a timed walk through the pillars and a pre-mortem",
+            "State non-functional requirements as numbers and name the trade-offs a design makes",
+            "Record decisions, actions, verdicts and deliberate technical debt so they stick",
+            "Apply the whole course to realistic review scenarios"
+          ],
           "icons": [
-            "guide"
+            "guide",
+            "users",
+            "compliance"
           ]
         }
       ]

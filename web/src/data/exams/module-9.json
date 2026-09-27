@@ -1,0 +1,203 @@
+{
+  "module": 9,
+  "minutes": 25,
+  "poolFromLessons": 10,
+  "questions": [
+    {
+      "id": "m9-q1",
+      "topic": "starting a design",
+      "scenario": "A team starts designing a new customer portal from a blank page, and the first review is expected to take three weeks.",
+      "stem": "What would shorten the review and improve the design?",
+      "options": [
+        "Starting from the closest Azure Architecture Center reference architecture and reviewing only the deviations, each recorded in an ADR",
+        "Adding more reviewers",
+        "Skipping the review for internal portals",
+        "Copying the last project's design exactly"
+      ],
+      "answer": 0,
+      "explanation": "A maintained baseline answers most questions already; the review focuses on where and why this design differs. Copying an old project carries its unexamined assumptions."
+    },
+    {
+      "id": "m9-q2",
+      "topic": "team-shaped architecture",
+      "scenario": "One team of six will build the wholesale portal. A proposal splits it into nine microservices on AKS.",
+      "stem": "What is the recommended default?",
+      "options": [
+        "Nine microservices, to be ready for scale",
+        "A modular monolith with strict module boundaries on App Service or Container Apps, extracting a service only when another team needs to own it",
+        "One large project with no internal structure",
+        "Serverless functions for every endpoint"
+      ],
+      "answer": 1,
+      "explanation": "Microservices pay off when several teams must ship independently. For one team, a modular monolith keeps operations simple and keeps the option to split later."
+    },
+    {
+      "id": "m9-q3",
+      "topic": "landing zone",
+      "scenario": "Workload teams create their own subscriptions, networks and logging, and the security team finds a different configuration every time.",
+      "stem": "What structural change fixes this?",
+      "options": [
+        "A monthly security audit",
+        "One subscription for everything",
+        "An Azure landing zone: a platform team owns the hub, identity, logging and policy, and workloads get vended subscriptions as spokes that inherit it",
+        "A wiki page of recommended settings"
+      ],
+      "answer": 2,
+      "explanation": "Shared concerns built once and inherited through management groups and vending make every new subscription consistent. Audits and wikis find drift after it happens instead of preventing it."
+    },
+    {
+      "id": "m9-q4",
+      "topic": "policy rollout",
+      "scenario": "The platform team wants to require private endpoints on all SQL databases across 30 existing subscriptions.",
+      "stem": "How should it roll this out?",
+      "options": [
+        "Deny immediately so nothing new slips through",
+        "Ask teams to comply by the end of the quarter",
+        "Apply it to new subscriptions only",
+        "Assign the policy in Audit at the management group, fix the findings with owners and dates, then switch to Deny, with time-limited exemptions for real exceptions"
+      ],
+      "answer": 3,
+      "explanation": "Audit reveals the impact without breaking live deployments; Deny then keeps the estate compliant. Denying first blocks teams and pushes them to work around the platform."
+    },
+    {
+      "id": "m9-q5",
+      "topic": "cost visibility",
+      "scenario": "The monthly Azure bill has grown 60% and nobody can say which products caused it.",
+      "stem": "What is the foundation for answering?",
+      "options": [
+        "Required tags such as app, owner and cost-centre enforced by policy, budgets per subscription with anomaly alerts, and a monthly showback per team from Cost Management",
+        "Cutting every team's budget by 60%",
+        "Buying reservations for everything",
+        "Moving to a cheaper region"
+      ],
+      "answer": 0,
+      "explanation": "FinOps starts with allocation: consistent tags and per-subscription budgets show who spends what, so the right team can act. Blanket cuts and blind commitments do not explain the growth."
+    },
+    {
+      "id": "m9-q6",
+      "topic": "migration strategy",
+      "scenario": "A data-centre exit is due in twelve months. The estate includes 60 VMs, 10 SQL Server instances and 12 IIS web apps.",
+      "stem": "Which plan is most likely to meet the date and cut running cost?",
+      "options": [
+        "Rewrite every app as microservices, then migrate",
+        "Rehost everything exactly as specified on site and review costs in a few years",
+        "Assess with Azure Migrate, retire what is unused, rehost most VMs right-sized, replatform web apps to App Service and SQL to Managed Instance, and modernise selectively after the move",
+        "Migrate only the databases and keep the apps on site"
+      ],
+      "answer": 2,
+      "explanation": "A strategy per workload meets the deadline while capturing cheap wins. Rewrites miss dates, and unchanged rehosting from on-site specifications usually costs more than the data centre did."
+    },
+    {
+      "id": "m9-q7",
+      "topic": "dependencies and waves",
+      "scenario": "The first migration wave moved an app, which then failed because it relied on a file share that was still on site.",
+      "stem": "What should the next waves do differently?",
+      "options": [
+        "Move everything in one weekend",
+        "Group workloads by dependency analysis so things that talk to each other move together, and test-migrate each wave in an isolated network before cutover",
+        "Keep file shares on site permanently",
+        "Skip test migrations to save time"
+      ],
+      "answer": 1,
+      "explanation": "Dependency data shows what must move together, and test migrations catch missing pieces before users do. A big-bang weekend multiplies the blast radius."
+    },
+    {
+      "id": "m9-q8",
+      "topic": "modernising safely",
+      "scenario": "A migrated monolith needs its pricing engine rebuilt, but the business cannot accept a risky cut-over.",
+      "stem": "Which approach fits?",
+      "options": [
+        "The strangler fig pattern: route pricing through a façade, build the new service alongside, switch the route, and roll back by switching it back",
+        "A full rewrite of the monolith first",
+        "Freeze the monolith for a year",
+        "Run both systems and let users choose"
+      ],
+      "answer": 0,
+      "explanation": "Replacing one capability at a time behind a façade delivers value early and keeps every step reversible."
+    },
+    {
+      "id": "m9-q9",
+      "topic": "what stays on site",
+      "scenario": "Store tills and the warehouse system must stay on site, but compliance wants them patched and monitored like Azure resources.",
+      "stem": "What provides that?",
+      "options": [
+        "A separate management tool per site",
+        "Moving them to Azure anyway",
+        "Azure Arc, bringing them under Azure Policy, Defender for Cloud, Azure Monitor and update management",
+        "A VPN to each site"
+      ],
+      "answer": 2,
+      "explanation": "Arc extends Azure's management plane to machines outside Azure. A VPN connects networks but governs nothing."
+    },
+    {
+      "id": "m9-q10",
+      "topic": "certification plan",
+      "scenario": "A lead wants to certify a team of developers, platform engineers and two future architects in the coming year.",
+      "stem": "Which plan fits?",
+      "options": [
+        "Everyone takes AZ-900 and stops there",
+        "Everyone takes AZ-305 directly",
+        "Certifications by role - AZ-204 for developers, AZ-104 then AZ-700 or AZ-500 for platform engineers, AZ-104 then AZ-305 for the architects - studied by building in sandbox subscriptions",
+        "Whichever exam has the best pass rate on dump sites"
+      ],
+      "answer": 2,
+      "explanation": "Role-matched certifications reflect the work people do; AZ-305 requires AZ-104. Building in sandboxes produces real skill, and dumps can get certifications revoked."
+    },
+    {
+      "id": "m9-q11",
+      "topic": "keeping current",
+      "scenario": "Twice this year the team learnt about a service retirement from a production failure.",
+      "stem": "Which practice prevents a third time?",
+      "options": [
+        "Recertifying everyone",
+        "Watching Service Health, Advisor and Azure Updates retirement notices, and a monthly 'what changed that affects us' session with owned actions",
+        "Avoiding new services",
+        "Reading documentation once a year"
+      ],
+      "answer": 1,
+      "explanation": "Retirements are announced well in advance; a regular, owned habit turns notices into planned work."
+    },
+    {
+      "id": "m9-q12",
+      "topic": "requirements as numbers",
+      "scenario": "A design for the partner API says it will be 'enterprise-grade and scalable'.",
+      "stem": "What should the review require first?",
+      "options": [
+        "A premium tier for every component",
+        "A list of the partners",
+        "Numbers: availability target, RTO and RPO, p95 latency at a stated peak, per-partner rate limits, data residency and a monthly cost ceiling",
+        "An AKS cluster"
+      ],
+      "answer": 2,
+      "explanation": "Non-functional requirements as numbers make a design testable. Without them, reviews become arguments about adjectives."
+    },
+    {
+      "id": "m9-q13",
+      "topic": "trade-offs and debt",
+      "scenario": "To launch on time, the team will skip zone redundancy for its database. The review agrees.",
+      "stem": "What must also happen?",
+      "options": [
+        "Record the decision and trade-off in an ADR and the technical debt register, with the accepted risk and the trigger for adding zone redundancy",
+        "Nothing; the review agreed",
+        "Tell only the database administrator",
+        "Add zone redundancy anyway after launch without telling anyone"
+      ],
+      "answer": 0,
+      "explanation": "An agreed shortcut is still a risk the business carries. Recording it, with what forces repayment, keeps it a decision rather than a forgotten gap."
+    },
+    {
+      "id": "m9-q14",
+      "topic": "running reviews",
+      "scenario": "Design reviews at Northline run long, are dominated by one senior engineer, and leave no record.",
+      "stem": "Which changes fix this?",
+      "options": [
+        "Let the senior engineer approve designs alone",
+        "Replace reviews with a checklist email",
+        "Hold reviews only for failed projects",
+        "A short design document read beforehand; 60 minutes walking the Well-Architected pillars plus a pre-mortem; ADRs, owned actions and a verdict recorded; chairing rotated across leads"
+      ],
+      "answer": 3,
+      "explanation": "Structure - pillars, a timebox and a pre-mortem - moves the conversation from volume to evidence; records and owned actions make it stick; rotating the chair spreads the skill."
+    }
+  ]
+}

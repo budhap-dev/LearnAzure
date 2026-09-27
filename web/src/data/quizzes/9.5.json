@@ -1,0 +1,110 @@
+[
+  {
+    "id": "9.5-q1",
+    "topic": "numbers not adjectives",
+    "scenario": "A design document says the new service will be 'highly available, fast and secure'.",
+    "stem": "What should the reviewer ask for before the review goes ahead?",
+    "options": [
+      "A longer document",
+      "Non-functional requirements as numbers: availability target, RTO and RPO, p95 latency at a stated load, data residency and a cost ceiling",
+      "More diagrams",
+      "A list of every Azure service considered"
+    ],
+    "answer": 1,
+    "explanation": "Adjectives cannot be tested against a design; numbers can. They also turn arguments about taste into checks about whether the design meets an agreed target."
+  },
+  {
+    "id": "9.5-q2",
+    "topic": "timing",
+    "stem": "When is a design review most valuable?",
+    "options": [
+      "After go-live, to document what was built",
+      "The week before release, as a final gate",
+      "When the design is a short document and changing it is cheap, before significant build work",
+      "Only after an incident"
+    ],
+    "answer": 2,
+    "explanation": "Late reviews can only accept or throw away work. Early ones change the design while it is still words and a diagram."
+  },
+  {
+    "id": "9.5-q3",
+    "topic": "outputs",
+    "stem": "Which outputs show that a design review did its job?",
+    "options": [
+      "An ADR for each significant decision, actions with owners and dates, and a clear verdict: go, go with conditions, or not yet",
+      "A slide deck",
+      "Everyone's approval in a chat thread",
+      "A recording of the meeting"
+    ],
+    "answer": 0,
+    "explanation": "Recorded decisions stop the same argument recurring, owned actions make change happen, and a verdict tells the team where they stand. Recordings and chat approvals are not decisions."
+  },
+  {
+    "id": "9.5-q4",
+    "topic": "pre-mortem",
+    "stem": "What does a pre-mortem add to a review?",
+    "options": [
+      "A cost estimate",
+      "A list of who is to blame if it fails",
+      "A performance benchmark",
+      "Imagining the system has failed a year from now and listing why, which surfaces risks people hesitate to raise and turns them into changes, actions or accepted risks"
+    ],
+    "answer": 3,
+    "explanation": "Framing failure as already having happened makes it easier to name uncomfortable risks. It is about the design, not blame."
+  },
+  {
+    "id": "9.5-q5",
+    "topic": "never down",
+    "scenario": "The board asks for the shop to 'never go down' after another retailer's regional outage.",
+    "stem": "What is the reviewer's first job?",
+    "options": [
+      "Approve active-active across three regions",
+      "Translate 'never' into agreed numbers - the cost of an hour of downtime, RTO and RPO per journey - and then compare the cost of the options against them",
+      "Explain that outages are Microsoft's responsibility",
+      "Promise 100% availability in the SLA"
+    ],
+    "answer": 1,
+    "explanation": "Requirements drive architecture. Once the business agrees an RTO and sees the cost difference, active-passive with tested failover is often the right answer, recorded in an ADR."
+  },
+  {
+    "id": "9.5-q6",
+    "topic": "trade-offs",
+    "stem": "Adding a Redis cache in front of the product catalogue is an example of which trade-off?",
+    "options": [
+      "Security for cost",
+      "Reliability for simplicity",
+      "Performance bought with staleness and another component to operate",
+      "No trade-off; caches are free"
+    ],
+    "answer": 2,
+    "explanation": "Every choice spends something. The cache makes reads fast but can serve old data and adds operational work. A good review names that and agrees how stale is acceptable."
+  },
+  {
+    "id": "9.5-q7",
+    "topic": "technical debt",
+    "scenario": "To meet the launch date, the loyalty programme will run in one region and one partner will use an API key instead of OAuth.",
+    "stem": "How should these shortcuts be handled?",
+    "options": [
+      "Record them in a technical debt register, each with its ongoing cost or risk and the trigger that forces repayment",
+      "Don't mention them, so launch is not delayed",
+      "Refuse to launch until both are fixed",
+      "Fix them when someone has spare time"
+    ],
+    "answer": 0,
+    "explanation": "Deliberate debt is a legitimate decision when it is visible and has a repayment trigger. Hidden debt becomes a surprise, and refusing all debt can cost more than it saves."
+  },
+  {
+    "id": "9.5-q8",
+    "topic": "running the practice",
+    "scenario": "Every change, from a new tag to a new product, now waits two weeks for a full review. Teams have started skipping the process.",
+    "stem": "What fixes this?",
+    "options": [
+      "Enforce the process more strictly",
+      "Abolish reviews",
+      "Only the CTO reviews designs",
+      "Weight reviews by risk: full reviews for new systems, boundary-crossing or personal-data changes, and a written ADR with one reviewer for small ones, with chairing rotated across leads"
+    ],
+    "answer": 3,
+    "explanation": "A process that treats everything the same becomes a queue people route around. Proportionate reviews keep attention on real risk, and rotating the chair spreads the skill."
+  }
+]
