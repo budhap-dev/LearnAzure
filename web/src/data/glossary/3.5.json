@@ -92,7 +92,7 @@
     "definition": "A managed service that copies databases into Azure - SQL Server, PostgreSQL, MySQL and others - as a one-off bulk load or as a continuous sync that keeps source and target aligned until you cut over. It moves schema and data; between different engines it does not translate stored procedures or T-SQL, which remain a rewrite. Plan the cutover window around the final sync.",
     "example": "DMS kept the on-premises PostgreSQL in sync with pg-shop-reviews-prod for a week before the Saturday cutover.",
     "icon": "database-migration",
-    "lessons": ["3.5"],
+    "lessons": ["3.5", "9.3"],
     "related": ["Lift and shift", "Flexible Server", "Azure SQL Database"]
   }
 ]

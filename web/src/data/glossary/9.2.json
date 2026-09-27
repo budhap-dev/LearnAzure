@@ -6,7 +6,7 @@
     "example": "Northline's platform work follows CAF's Ready and Govern guidance; each workload is still reviewed against Well-Architected.",
     "icon": "guide",
     "lessons": ["9.2", "9.3"],
-    "related": ["Azure landing zone", "Well-Architected Framework"]
+    "related": ["Azure landing zone", "Well-Architected Framework", "Migration strategy"]
   },
   {
     "term": "Azure landing zone",

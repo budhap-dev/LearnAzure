@@ -1,0 +1,112 @@
+[
+  {
+    "id": "9.3-q1",
+    "topic": "strategy under a deadline",
+    "scenario": "The data-centre lease ends in fourteen months. Dev proposes rewriting every application as cloud-native services before moving anything.",
+    "stem": "What is the better plan?",
+    "options": [
+      "Rewrite everything first; it saves moving twice",
+      "Choose a strategy per workload - retire, retain, rehost, replatform where cheap - migrate first, and modernise the valuable systems afterwards",
+      "Rehost everything and never change it",
+      "Extend the lease indefinitely"
+    ],
+    "answer": 1,
+    "explanation": "Rewrites are where exits miss their dates. Migrating first meets the deadline; replatforming where it is cheap and modernising afterwards captures the benefits without betting the date on them."
+  },
+  {
+    "id": "9.3-q2",
+    "topic": "discovery",
+    "stem": "Why should Azure Migrate discovery run for several weeks before sizing decisions are made?",
+    "options": [
+      "The appliance needs weeks to install",
+      "Microsoft requires it",
+      "Performance-based sizing needs real utilisation across normal cycles - month-end, peaks - and dependency analysis needs time to see every connection",
+      "Discovery is free only after a month"
+    ],
+    "answer": 2,
+    "explanation": "Sizing from the on-site specification copies years of over-provisioning, and a week of data misses month-end jobs. Weeks of data give right-sized targets and a complete dependency map."
+  },
+  {
+    "id": "9.3-q3",
+    "topic": "dependencies",
+    "scenario": "After cutover, the order system fails every morning at 06:00. It turns out to call a licence server that is still on site and was not in any plan.",
+    "stem": "What would have caught this?",
+    "options": [
+      "Dependency analysis during discovery, grouping the licence server into the same wave",
+      "A larger VM in Azure",
+      "Moving the order system first on its own",
+      "A longer hypercare period"
+    ],
+    "answer": 0,
+    "explanation": "Dependency data shows who talks to whom from real traffic, including rare scheduled calls, so dependent servers move together. Hypercare only finds the problem after it has happened."
+  },
+  {
+    "id": "9.3-q4",
+    "topic": "waves and cutover",
+    "stem": "Which sequence describes a sound cutover for a workload?",
+    "options": [
+      "Copy it on Friday night and switch DNS",
+      "Rewrite it, then deploy",
+      "Move every workload the same weekend",
+      "Replicate, test-migrate into an isolated network with the app owner's sign-off, cut over in an agreed window with go/no-go criteria and a rollback plan, hypercare, then decommission"
+    ],
+    "answer": 3,
+    "explanation": "Each step reduces risk: test migration proves the app works in Azure, the rollback plan bounds the downside, and decommissioning stops you paying for two estates."
+  },
+  {
+    "id": "9.3-q5",
+    "topic": "strangler fig",
+    "scenario": "The old order-management monolith has moved to Azure unchanged. The team wants to modernise it without a risky big-bang replacement.",
+    "stem": "Which approach fits?",
+    "options": [
+      "Strangler fig: put a façade such as API Management in front, rebuild one capability at a time as a new service, and switch its route - rollback is a routing change",
+      "Freeze all changes until a full rewrite is ready",
+      "Copy the monolith into microservices line by line",
+      "Move it back on site"
+    ],
+    "answer": 0,
+    "explanation": "The strangler fig delivers value incrementally and keeps each step reversible. Full rewrites carry all the risk at the end and usually overrun."
+  },
+  {
+    "id": "9.3-q6",
+    "topic": "what stays",
+    "scenario": "Warehouse systems must stay on site for latency and to keep working when the internet link drops. Security wants them patched, monitored and governed like everything in Azure.",
+    "stem": "What provides that?",
+    "options": [
+      "Rehosting them to Azure anyway",
+      "Azure Arc: the servers appear in Azure and get Azure Policy, Defender for Cloud, Azure Monitor and update management",
+      "A separate on-site tool for each concern",
+      "A site-to-site VPN only"
+    ],
+    "answer": 1,
+    "explanation": "Arc brings non-Azure servers under the same management plane. A VPN connects networks but governs nothing, and rehosting ignores the reason they stay."
+  },
+  {
+    "id": "9.3-q7",
+    "topic": "cost after migration",
+    "scenario": "Three months after rehosting 80 VMs, the Azure bill is higher than the data centre's running costs.",
+    "stem": "What is the most likely cause and fix?",
+    "options": [
+      "Azure is always more expensive; accept it",
+      "Move everything to Kubernetes",
+      "VMs were sized from the on-site specifications; right-size from real utilisation, apply Azure Hybrid Benefit, buy reservations for the steady baseline, and switch off the old servers",
+      "Turn off monitoring"
+    ],
+    "answer": 2,
+    "explanation": "Lift and shift copies over-provisioning. Right-sizing, existing licences, commitments on proven usage and decommissioning the source are what make the migration cheaper."
+  },
+  {
+    "id": "9.3-q8",
+    "topic": "database target",
+    "scenario": "Twenty-two SQL Server instances use SQL Agent jobs and cross-database queries heavily.",
+    "stem": "Which target is the sensible replatform?",
+    "options": [
+      "Cosmos DB",
+      "Azure SQL Database single databases, rewriting the jobs first",
+      "SQL Server on VMs, one per instance, unchanged",
+      "Azure SQL Managed Instance, consolidating instances, moved with the Database Migration Service or the Managed Instance link"
+    ],
+    "answer": 3,
+    "explanation": "Managed Instance keeps instance-level features such as SQL Agent and cross-database queries while removing the patching and backups. SQL Database would need rework first, and VMs keep all the operational work."
+  }
+]

@@ -1062,12 +1062,20 @@
         {
           "id": "9.3",
           "title": "Migrating an existing estate",
-          "summary": "",
+          "summary": "Leaving a data centre on a deadline: a strategy per workload from retire to replace, Azure Migrate discovery, assessment and dependency analysis, waves and cutovers, the strangler fig after the move, and Azure Arc for what stays.",
           "minutes": 14,
-          "objectives": [],
+          "objectives": [
+            "Choose a migration strategy per workload and plan to migrate first, modernise second",
+            "Use Azure Migrate to discover, assess, right-size and map dependencies",
+            "Plan dependency-grouped waves with test migrations, cutover criteria and rollback",
+            "Modernise with the strangler fig pattern and govern retained systems with Azure Arc"
+          ],
           "icons": [
-            "azure-migrate"
-          ]
+            "azure-migrate",
+            "azure-arc",
+            "sql-managed-instance"
+          ],
+          "status": "ready"
         },
         {
           "id": "9.4",
