@@ -42,6 +42,8 @@ const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 
 const buildNumber = process.env.VITE_BUILD_NUMBER || process.env.GITHUB_RUN_NUMBER || (process.env.VERCEL ? 'vercel' : 'dev');
 
 export default defineConfig({
+  // GitHub Pages serves the site under /LearnAzure/; CI sets BASE_PATH. Locally and on Vercel it is /.
+  base: process.env.BASE_PATH || '/',
   plugins: [react()],
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
