@@ -1,0 +1,65 @@
+[
+  {
+    "term": "Microsoft Learn",
+    "aliases": ["Learn", "learning path", "Learn module", "practice assessment", "exam sandbox"],
+    "definition": "Microsoft's free learning platform: modules and learning paths with hands-on sandboxes, product documentation, the Azure Architecture Center, a free official practice assessment for each certification exam, and the exam and renewal pages themselves. Role-based exams let you open Learn during the exam.",
+    "example": "Each engineer follows the Learn path for their exam, deploys everything in a sandbox subscription, then takes the free practice assessment.",
+    "icon": "learn",
+    "lessons": ["9.4"],
+    "related": ["Role-based certification", "Applied Skills", "Azure Architecture Center"]
+  },
+  {
+    "term": "Role-based certification",
+    "aliases": ["Microsoft certification", "associate certification", "expert certification", "specialty certification", "skills measured"],
+    "definition": "Microsoft's certifications organised by job and level: fundamentals (concepts, no expiry), associate (doing the job), expert (designing and leading) and specialty (a narrow product). Associate and expert exams are scenario-based with case studies. Each exam's skills-measured page is its real syllabus, and exams are revised and retired regularly.",
+    "example": "Leads take AZ-104 then AZ-305; developers take AZ-204; platform engineers take AZ-104 then AZ-700.",
+    "icon": "learn",
+    "lessons": ["9.4", "1.8"],
+    "related": ["AZ-900", "AZ-104", "AZ-305", "AZ-400", "Certification renewal"]
+  },
+  {
+    "term": "Certification renewal",
+    "aliases": ["renewal assessment", "recertification"],
+    "definition": "The yearly renewal of associate, expert and specialty certifications through a free, unproctored online assessment on Microsoft Learn, available in the six months before expiry and focused on what changed in the past year. Letting it lapse means taking the full exam again.",
+    "example": "Renewal dates sit in the team calendar, with a reminder five months before each one.",
+    "icon": "learn",
+    "lessons": ["9.4"],
+    "related": ["Role-based certification", "Microsoft Learn"]
+  },
+  {
+    "term": "Applied Skills",
+    "aliases": ["Microsoft Applied Skills", "applied skills credential", "lab assessment"],
+    "definition": "Short Microsoft credentials earned by completing a real task in a live lab environment - one scenario such as securing storage or deploying containers - rather than answering exam questions. They complement role-based certifications as evidence of hands-on ability.",
+    "example": "Dev adds an Applied Skills credential for deploying to Container Apps alongside his AZ-204 study.",
+    "icon": "learn",
+    "lessons": ["9.4"],
+    "related": ["Role-based certification", "Microsoft Learn"]
+  },
+  {
+    "term": "AZ-104",
+    "aliases": ["Azure Administrator", "Azure Administrator Associate"],
+    "definition": "The Azure Administrator Associate exam: identities and governance, storage, compute, virtual networking, and monitoring and backup - the hands-on operation of Azure. It is the required prerequisite for AZ-305 and one route into AZ-400, which makes it the natural first associate exam for leads and platform engineers.",
+    "example": "Priya's two senior engineers take AZ-104 in the spring and AZ-305 in the autumn.",
+    "icon": "learn",
+    "lessons": ["9.4", "1.8"],
+    "related": ["AZ-305", "AZ-400", "Role-based certification"]
+  },
+  {
+    "term": "AZ-305",
+    "aliases": ["Azure Solutions Architect Expert", "Designing Microsoft Azure Infrastructure Solutions"],
+    "definition": "The Azure Solutions Architect Expert exam: designing identity, governance and monitoring, data storage, business continuity and infrastructure solutions - trade-offs and judgement across the whole platform, largely through case studies. It requires the AZ-104 certification and matches Modules 1-6 and 9 of this course closely.",
+    "example": "The architect exam asks which design meets an RTO of one hour at the lowest cost - exactly the reasoning of lesson 6.5.",
+    "icon": "learn",
+    "lessons": ["9.4", "1.8"],
+    "related": ["AZ-104", "Well-Architected Framework", "Role-based certification"]
+  },
+  {
+    "term": "AZ-400",
+    "aliases": ["DevOps Engineer Expert", "Designing and Implementing Microsoft DevOps Solutions"],
+    "definition": "The DevOps Engineer Expert exam: processes and communication, source control, pipelines, security and compliance in delivery, and instrumentation, across both Azure DevOps and GitHub. It requires the AZ-104 or AZ-204 certification and matches Module 7 of this course.",
+    "example": "The engineering manager who owns the delivery pipeline takes AZ-204 and then AZ-400.",
+    "icon": "learn",
+    "lessons": ["9.4", "7.1"],
+    "related": ["AZ-104", "DevOps", "Role-based certification"]
+  }
+]

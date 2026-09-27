@@ -67,7 +67,7 @@
     "definition": "Microsoft's Azure Fundamentals certification: cloud concepts, the core Azure services, and how identity, governance, cost and SLAs work. It is the natural first exam and covers most of what this module teaches. It is deliberately broad and shallow, so passing it proves vocabulary and judgement rather than hands-on skill.",
     "example": "Finish module 1, revise the pricing and SLA lessons, and AZ-900 is within reach.",
     "icon": "learn",
-    "lessons": ["1.8"],
+    "lessons": ["1.8", "9.4"],
     "related": ["SLA", "Well-Architected Framework"]
   },
   {
