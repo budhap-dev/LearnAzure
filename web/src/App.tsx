@@ -17,6 +17,7 @@ const Lesson = lazy(() => import('./routes/Lesson').then((m) => ({ default: m.Le
 const QuizPage = lazy(() => import('./routes/QuizPage').then((m) => ({ default: m.QuizPage })));
 const ModuleTest = lazy(() => import('./routes/ModuleTest').then((m) => ({ default: m.ModuleTest })));
 const FinalTest = lazy(() => import('./routes/FinalTest').then((m) => ({ default: m.FinalTest })));
+const Review = lazy(() => import('./routes/Review').then((m) => ({ default: m.Review })));
 
 const lazyRoute = (node: React.ReactNode, label: string) => (
   <Suspense fallback={<p className="muted">Loading {label}…</p>}>{node}</Suspense>
@@ -38,6 +39,7 @@ const router = createHashRouter([
       { path: 'quiz/:id', element: lazyRoute(<QuizPage />, 'quiz') },
       { path: 'final-test', element: lazyRoute(<FinalTest />, 'test') },
       { path: 'glossary', element: <Glossary /> },
+      { path: 'glossary/review', element: lazyRoute(<Review />, 'review') },
       { path: 'search', element: <Search /> },
       { path: 'progress', element: <ProgressPage /> },
       { path: 'status', element: <BuildStatus /> },

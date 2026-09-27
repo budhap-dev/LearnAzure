@@ -5,6 +5,7 @@ import { LessonRow } from '../components/Cards';
 import { LESSONS, MODULES, OPEN_MODULES } from '../lib/syllabus';
 import { useProgress } from '../lib/useProgress';
 import { exportJson, importJson, reset, streak } from '../lib/progress';
+import { deckStats, termsInScope } from '../lib/review';
 
 export function ProgressPage() {
   const progress = useProgress();
@@ -14,6 +15,8 @@ export function ProgressPage() {
   const started = LESSONS.filter((l) => progress.lessons[l.id] === 'in-progress');
   const quizzes = Object.values(progress.quizzes).reduce((n, a) => n + a.length, 0);
   const days = streak();
+  const terms = deckStats(termsInScope('all', progress), progress);
+  const termsSeen = Object.keys(progress.reviews).length;
 
   async function copyExport() {
     try {
@@ -63,6 +66,16 @@ export function ProgressPage() {
           );
         })}
         {MODULES.length > OPEN_MODULES.length && <p className="muted small">{MODULES.length - OPEN_MODULES.length} more modules are on the way.</p>}
+      </div>
+
+      <h2>Glossary review</h2>
+      <div className="card row wrap space">
+        <span>
+          {termsSeen === 0
+            ? 'Flashcards for the glossary terms, spaced so the ones you miss come back sooner.'
+            : `${terms.learned} of ${terms.total} terms learned · ${termsSeen} seen · ${terms.due} due now`}
+        </span>
+        <Link to="/glossary/review" className="btn primary">{terms.due > 0 ? 'Review due terms' : 'Review terms'}</Link>
       </div>
 
       {review.length > 0 && (

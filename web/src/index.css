@@ -773,3 +773,29 @@ p.callout { padding: 0.8rem 1rem; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
   html { scroll-behavior: auto; }
 }
+
+/* ---------- Glossary review ---------- */
+.review { max-width: 46rem; margin: 0 auto; }
+.review-card { display: grid; gap: 1rem; padding: 1.4rem 1.5rem; animation: page-in 0.3s ease both; }
+.review-card > .row { margin: 0; flex-wrap: wrap; }
+.review-front { display: grid; justify-items: center; gap: 0.4rem; padding: 0.8rem 0 0.2rem; text-align: center; }
+.review-front h2 { margin: 0; font-size: 1.8rem; }
+.review-front p { margin: 0; }
+.review-prompt { display: grid; justify-items: center; gap: 0.4rem; text-align: center; }
+.review-back { display: grid; animation: page-in 0.25s ease both; }
+.review-grades { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.6rem; margin-top: 0.4rem; }
+.review-grade { flex-direction: column; justify-content: center; gap: 0.15rem; padding: 0.7rem 0.4rem; }
+.review-grade small { font-weight: 400; font-size: 0.8rem; color: var(--muted); }
+.review-grade.again { border-color: color-mix(in srgb, var(--warn) 50%, var(--border)); }
+.review-grade.good { border-color: color-mix(in srgb, var(--good) 50%, var(--border)); }
+.review-grade.easy { border-color: color-mix(in srgb, var(--info) 50%, var(--border)); }
+.stat-grid.review-stats { grid-template-columns: repeat(3, 1fr); margin-bottom: 1rem; }
+.review-stats .stat { padding: 0.8rem 0.6rem; }
+kbd { display: inline-block; font: 600 0.72rem var(--mono); line-height: 1.5; padding: 0 0.35rem; border: 1px solid var(--border); border-bottom-width: 2px; border-radius: 5px; background: var(--surface-2); color: var(--muted); }
+.btn.primary kbd { background: transparent; color: inherit; border-color: color-mix(in srgb, currentColor 45%, transparent); }
+@media (max-width: 720px) {
+  .review-card { padding: 1.1rem 1rem; }
+  .review-grades { gap: 0.4rem; }
+  .review-grade kbd, .review-prompt kbd { display: none; }
+  .review-stats .big { font-size: 1.5rem; }
+}
