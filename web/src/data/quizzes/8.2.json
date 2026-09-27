@@ -1,0 +1,110 @@
+[
+  {
+    "id": "8.2-q1",
+    "topic": "provider",
+    "scenario": "Legal asks whether customers' messages to the planned shopping assistant could be used to train someone else's model, and where they are processed.",
+    "stem": "Which setup answers both concerns?",
+    "options": [
+      "OpenAI's public API with a company card instead of a personal one",
+      "An Azure OpenAI deployment in the company's subscription, on a Data Zone (EU) deployment type, where prompts and outputs are not used for training",
+      "Any model, as long as the system prompt tells it not to store data",
+      "A Global Standard deployment, because it has the most quota"
+    ],
+    "answer": 1,
+    "explanation": "Azure's contract excludes training on your data, and a Data Zone deployment keeps processing inside the EU. A system prompt cannot change where data goes, and Global Standard may process requests in any region."
+  },
+  {
+    "id": "8.2-q2",
+    "topic": "model choice",
+    "stem": "What is the best rule for choosing a model for a new task?",
+    "options": [
+      "Use the largest model available, so quality is never the problem",
+      "Use a reasoning model for everything, since it thinks harder",
+      "Fine-tune a model first, then choose a size",
+      "Start with the smallest model that passes your evaluation, and move up only where it fails"
+    ],
+    "answer": 3,
+    "explanation": "Flagship and reasoning models cost many times more per token and are slower. Many tasks, such as extraction, classification and short drafting, pass evaluation on a small model, and you only know that by testing."
+  },
+  {
+    "id": "8.2-q3",
+    "topic": "quota and 429",
+    "scenario": "A job generating 40,000 descriptions fails after 2,000 with HTTP 429 errors.",
+    "stem": "What is the right first response?",
+    "options": [
+      "Retry with backoff that honours retry-after, and move the bulk job to a Batch deployment; raise quota only if real usage needs it",
+      "Switch to the largest model, because it has more capacity",
+      "Buy provisioned throughput units immediately",
+      "Run the job from several laptops in parallel"
+    ],
+    "answer": 0,
+    "explanation": "A 429 means the deployment's tokens-per-minute share is used up. Well-behaved retries and a half-price batch deployment suit a job that can wait. PTUs are for steady, heavy traffic, and parallel laptops just hit the same quota faster."
+  },
+  {
+    "id": "8.2-q4",
+    "topic": "tokens and chat history",
+    "stem": "Why does each message in a long chat cost more than the one before?",
+    "options": [
+      "Azure charges a premium for long sessions",
+      "The model stores the conversation and bills for storage",
+      "The model is stateless, so the app resends the whole history on each turn, and every resent token is billed again",
+      "Output tokens get more expensive as the conversation goes on"
+    ],
+    "answer": 2,
+    "explanation": "Chat 'memory' is the app resending history. Trimming or summarising older turns keeps both the cost and the context size under control."
+  },
+  {
+    "id": "8.2-q5",
+    "topic": "deployment types",
+    "scenario": "Two workloads: a nightly job rewriting product descriptions from supplier data, and a live assistant where customers type their names and addresses.",
+    "stem": "Which deployment types fit best?",
+    "options": [
+      "Provisioned for both, for predictable latency",
+      "Regional Standard for the job, and Global Standard for the assistant for the highest quota",
+      "Global Standard for both",
+      "Global Batch for the job, since it can wait and holds no personal data; Data Zone Standard for the assistant, to keep personal data in the chosen zone"
+    ],
+    "answer": 3,
+    "explanation": "Batch costs about half as much and suits work that can wait up to a day. Personal data belongs on a Data Zone or regional type. Global Standard for the assistant would let requests be processed anywhere in the world."
+  },
+  {
+    "id": "8.2-q6",
+    "topic": "fine-tuning",
+    "scenario": "Ana proposes fine-tuning a model on the product catalogue so the assistant 'knows' every product.",
+    "stem": "What is the strongest objection?",
+    "options": [
+      "Fine-tuning is not available on Azure",
+      "Fine-tuning teaches style and format, not reliable facts. The catalogue changes weekly, so the model would be stale and still invent details. Retrieving current product data is the right tool.",
+      "Fine-tuned models cannot use a system prompt",
+      "It would make the model larger and slower"
+    ],
+    "answer": 1,
+    "explanation": "Facts belong in retrieval, which is always current and can be cited. Fine-tuning helps with a consistent style or a narrow format. It also adds training and hourly hosting costs."
+  },
+  {
+    "id": "8.2-q7",
+    "topic": "provisioned throughput",
+    "stem": "When do provisioned throughput units (PTUs) make sense?",
+    "options": [
+      "Steady, heavy traffic that needs predictable latency, where reserved capacity costs less than the same tokens pay-as-you-go",
+      "Any new prototype, to avoid 429 errors",
+      "Bulk jobs that can wait 24 hours",
+      "Whenever data must stay in the EU"
+    ],
+    "answer": 0,
+    "explanation": "PTUs are paid for whether they are used or not, so they suit a steady baseline, often with overflow spilling to a Standard deployment. Bulk work belongs on Batch, and residency comes from the deployment type, which exists for both pay-per-token and provisioned deployments."
+  },
+  {
+    "id": "8.2-q8",
+    "topic": "context window",
+    "stem": "A model offers a context window of a million tokens. What should the team conclude?",
+    "options": [
+      "The whole catalogue and all customer history can go into every prompt at no extra cost",
+      "Retrieval is no longer needed",
+      "Every token sent is billed on every call, and material in the middle of long prompts gets less attention, so send only what the task needs",
+      "Output length is now unlimited"
+    ],
+    "answer": 2,
+    "explanation": "A large window is a limit, not free memory. Stuffing it raises cost and latency and can lower quality. Retrieval that selects the few relevant passages usually does better."
+  }
+]

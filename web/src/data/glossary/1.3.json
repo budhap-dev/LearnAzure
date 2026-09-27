@@ -50,7 +50,7 @@
     "definition": "The requirement that data physically stays within a given country or jurisdiction. Azure keeps customer data at rest inside the geography of the region you choose, so residency is decided by region choice, not by code or configuration. Edge caches hold no data at rest.",
     "example": "If Indian customers' data must stay in India, the retailer needs a second deployment in Central India rather than a setting on the UK one.",
     "icon": "compliance",
-    "lessons": ["1.3"],
+    "lessons": ["1.3", "8.2"],
     "related": ["Geography", "Region", "Sovereign cloud"]
   },
   {
