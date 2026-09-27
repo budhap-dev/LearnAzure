@@ -14,7 +14,7 @@
     "definition": "A PaaS deployment of a whole SQL Server instance with near-100% compatibility: SQL Agent, cross-database queries, linked servers, CLR, Service Broker and native restore from .bak, inside its own virtual network subnet. Microsoft patches and backs it up. It starts at around 4 vCores, roughly $700 a month at list price before Hybrid Benefit, and creating or resizing one takes minutes to hours rather than seconds.",
     "example": "The orders and reporting databases moved to one Managed Instance so the existing cross-database joins and Agent jobs kept working.",
     "icon": "sql-managed-instance",
-    "lessons": ["3.2"],
+    "lessons": ["3.2", "9.3"],
     "related": ["Azure SQL", "Azure SQL Database", "Failover group", "PaaS"]
   },
   {

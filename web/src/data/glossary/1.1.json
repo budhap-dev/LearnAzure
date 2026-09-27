@@ -76,13 +76,13 @@
     "aliases": ["rehost"],
     "definition": "Moving servers to the cloud as they are, typically one on-premises machine to one virtual machine. A common first step that keeps all the patching and most of the cost, and none of the platform benefits. Treat it as a stage, not a destination.",
     "icon": "azure-migrate",
-    "lessons": ["1.1"],
+    "lessons": ["1.1", "9.3"],
     "related": ["On-premises", "Virtual machine"]
   },
   {
     "term": "Azure Hybrid Benefit",
     "definition": "A licensing benefit that lets existing Windows Server and SQL Server licences with Software Assurance reduce the price of the equivalent Azure services. Often the single biggest saving for a Microsoft-shaped organisation.",
-    "lessons": ["1.1", "1.6"],
+    "lessons": ["1.1", "1.6", "9.3"],
     "related": ["Pay-as-you-go"]
   }
 ]

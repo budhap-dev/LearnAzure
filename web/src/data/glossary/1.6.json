@@ -100,7 +100,7 @@
     "aliases": ["rightsizing"],
     "definition": "Changing a resource to the smallest size or tier that meets its real demand, based on measured utilisation rather than the original guess. The most common cost saving after switching things off.",
     "example": "The API's App Service plan dropped from P2v3 to P1v3 after a month at 15% CPU, halving its cost.",
-    "lessons": ["1.6"],
+    "lessons": ["1.6", "9.3"],
     "related": ["Azure Advisor", "Scalability"]
   }
 ]

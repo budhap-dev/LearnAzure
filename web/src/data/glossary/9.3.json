@@ -1,0 +1,54 @@
+[
+  {
+    "term": "Azure Migrate",
+    "aliases": ["Azure Migrate appliance", "migration assessment", "business case", "server migration"],
+    "definition": "Azure's free hub for moving an estate: an on-site appliance discovers servers, databases and web apps and collects performance data; assessments give readiness, right-sized targets and cost estimates, plus a business case; dependency analysis maps connections; and built-in tools replicate and cut over servers, with database and web app migration alongside.",
+    "example": "Six weeks of Azure Migrate discovery found 30 unused VMs and showed the rest could run on about 40% less compute.",
+    "icon": "azure-migrate",
+    "lessons": ["9.3"],
+    "related": ["Migration strategy", "Dependency analysis", "Right-sizing"]
+  },
+  {
+    "term": "Migration strategy",
+    "aliases": ["6 Rs", "7 Rs", "retire", "retain", "rehost", "replatform", "refactor", "rearchitect", "replace"],
+    "definition": "The route chosen for each workload in a migration - retire, retain, rehost (lift and shift), replatform onto managed services, refactor or rearchitect, or replace with SaaS - trading speed against benefit. With a deadline, migrate first and modernise second, replatforming where it is cheap and refactoring only where the gain is proven.",
+    "example": "Web apps replatform to App Service, 80 VMs rehost, the warehouse is retained, and the ERP integration is replaced by a Logic Apps workflow.",
+    "icon": "azure-migrate",
+    "lessons": ["9.3"],
+    "related": ["Lift and shift", "Azure Migrate", "Strangler fig pattern", "Cloud Adoption Framework"]
+  },
+  {
+    "term": "Dependency analysis",
+    "aliases": ["dependency mapping", "dependency visualization", "application dependency map"],
+    "definition": "Discovering which servers and processes talk to which, on what ports, from real network data - agentless or agent-based in Azure Migrate. It groups servers that must move together and exposes hidden links such as hard-coded IP addresses, scheduled file transfers and licence servers before cutover rather than during it.",
+    "example": "Dependency data showed the order system calling a forgotten licence server every morning; it joined the same wave.",
+    "icon": "azure-migrate",
+    "lessons": ["9.3"],
+    "related": ["Azure Migrate", "Migration wave"]
+  },
+  {
+    "term": "Migration wave",
+    "aliases": ["wave", "move group", "cutover", "hypercare", "test migration"],
+    "definition": "A group of workloads that depend on each other and migrate together, following a repeatable routine: replicate, test-migrate into an isolated network, cut over in an agreed window with go/no-go criteria and a rollback plan, watch closely (hypercare), then decommission the source. The first wave is a low-risk pilot.",
+    "example": "Wave 1 moved three internal web apps and their shared SQL instance; wave 4 moved the order system with its licence server.",
+    "lessons": ["9.3"],
+    "related": ["Dependency analysis", "Azure Migrate"]
+  },
+  {
+    "term": "Strangler fig pattern",
+    "aliases": ["strangler pattern", "strangler fig", "incremental modernisation"],
+    "definition": "Replacing a legacy system gradually: a façade such as API Management or Front Door routes each capability to either the old system or new code, capabilities are rebuilt one at a time and their routes switched, and the old system shrinks until it can be retired. Rolling back is a routing change.",
+    "example": "Returns moved first from the old order system to a new service on Container Apps, by changing one API Management route.",
+    "lessons": ["9.3", "9.1"],
+    "related": ["Cloud design pattern", "Azure API Management", "Migration strategy"]
+  },
+  {
+    "term": "Azure Arc",
+    "aliases": ["Arc", "Arc-enabled servers", "Arc-enabled Kubernetes", "Arc-enabled SQL Server", "hybrid management"],
+    "definition": "Extends Azure management to servers, Kubernetes clusters and SQL Server instances running outside Azure - on site or in other clouds - so Azure Policy, Defender for Cloud, Azure Monitor, update management and RBAC apply to them too. It is how what is retained stays governed like everything else.",
+    "example": "The warehouse servers stay on site but appear in Azure as Arc-enabled servers, with the same policies and patching.",
+    "icon": "azure-arc",
+    "lessons": ["9.3"],
+    "related": ["Azure Policy", "Microsoft Defender for Cloud", "Migration strategy"]
+  }
+]
