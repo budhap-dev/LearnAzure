@@ -13,7 +13,7 @@
     "definition": "Azure's API gateway service: a gateway every call passes through, a management plane for APIs, products and policies, and a developer portal for consumers. Tiers run from pay-per-call Consumption to Premium; Developer has no SLA and is not for production.",
     "example": "apim-shop-prod on Standard v2 fronts the orders, catalogue and warehouse APIs behind Front Door.",
     "icon": "api-management",
-    "lessons": ["5.5"],
+    "lessons": ["5.5", "8.6"],
     "related": ["API gateway", "API Management policy", "API product", "Developer portal"]
   },
   {
@@ -61,7 +61,7 @@
     "aliases": ["Swagger", "OpenAPI specification", "OAS"],
     "definition": "The standard format for describing an HTTP API - its operations, parameters, request and response shapes and security - in JSON or YAML. Tools generate documentation, clients and tests from it, and API Management imports it to define an API.",
     "example": "The Node API generates its OpenAPI file at build time, and the pipeline imports it into API Management on every release.",
-    "lessons": ["5.5"],
+    "lessons": ["5.5", "8.6"],
     "related": ["Developer portal", "Azure API Management"]
   }
 ]

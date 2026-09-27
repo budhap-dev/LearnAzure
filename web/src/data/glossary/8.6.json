@@ -1,0 +1,61 @@
+[
+  {
+    "term": "AI agent",
+    "aliases": ["agent (AI)", "agentic AI", "agent loop", "copilot agent"],
+    "definition": "A model running in a loop with instructions and tools: at each step it either answers or asks to call a tool, your code runs the tool and returns the result, and the loop continues until the task is done. Its power and its risk both come from the tools - each call needs the user's authorisation, server-side validation and limits.",
+    "example": "The shopping assistant looks up order 88213 with the shopper's token, sees it is delayed, and offers to start a return.",
+    "icon": "foundry-agent-service",
+    "lessons": ["8.6"],
+    "related": ["Tool calling", "Foundry Agent Service", "Human in the loop"]
+  },
+  {
+    "term": "Tool calling",
+    "aliases": ["function calling", "tool use", "tools", "tool schema"],
+    "definition": "The mechanism that lets a model use your code: each tool is described by a name, a description and a JSON schema, and the model returns a request to call one with specific arguments. The model never executes anything - your code decides whether to run the call, and must validate the arguments and authorise it like any API request.",
+    "example": "The model returns getOrder with orderId 88213; the Shop API calls the orders tool with the shopper's token and returns the status.",
+    "lessons": ["8.6"],
+    "related": ["AI agent", "Model Context Protocol", "OpenAPI"]
+  },
+  {
+    "term": "Foundry Agent Service",
+    "aliases": ["Azure AI Agent Service", "Agent Service", "Foundry agents", "thread"],
+    "definition": "Microsoft Foundry's managed runtime for agents: it keeps conversation state, runs the tool loop, and offers built-in tools - file search, AI Search, code interpreter, web grounding, OpenAPI, Functions, Logic Apps and MCP - with identity, content safety and tracing. The runtime has no separate charge; you pay for tokens and tools.",
+    "example": "The assistant agent lives in the assistant project, with three tools and its runs traced to Application Insights.",
+    "icon": "foundry-agent-service",
+    "lessons": ["8.6"],
+    "related": ["AI agent", "Microsoft Foundry", "Microsoft Agent Framework"]
+  },
+  {
+    "term": "Model Context Protocol",
+    "aliases": ["MCP", "MCP server", "MCP client"],
+    "definition": "An open standard for exposing tools and data to AI applications: an MCP server lists its tools with descriptions and schemas, and any MCP client - Foundry agents, GitHub Copilot, Copilot Studio - can discover and call them. Write a tool once and every agent can use it; Azure API Management can publish existing REST APIs as MCP servers with their policies intact.",
+    "example": "The orders API is exposed as an MCP server through API Management, so the assistant and the service team's Copilot use the same, rate-limited tool.",
+    "icon": "api-management",
+    "lessons": ["8.6"],
+    "related": ["Tool calling", "Azure API Management", "AI agent"]
+  },
+  {
+    "term": "Microsoft Agent Framework",
+    "aliases": ["Agent Framework", "Semantic Kernel", "AutoGen", "agent SDK"],
+    "definition": "Microsoft's open-source SDK for building agents and multi-agent workflows in .NET and Python, succeeding Semantic Kernel and AutoGen. Use it, or a framework such as LangGraph, when you want the agent loop in your own code - custom state, several model providers, or orchestration patterns - rather than fully managed by Foundry Agent Service.",
+    "example": "The returns team's internal tool runs a two-step Agent Framework workflow in its own API, calling a Foundry model.",
+    "lessons": ["8.6"],
+    "related": ["Foundry Agent Service", "Multi-agent orchestration"]
+  },
+  {
+    "term": "Multi-agent orchestration",
+    "aliases": ["multi-agent system", "multi-agent", "handoff", "orchestrator agent", "group chat pattern"],
+    "definition": "Splitting a task across several specialised agents coordinated in a pattern - sequential, concurrent, handoff, group chat or a manager agent. Worth it when one agent's instructions and tools grow too large or parts need different permissions; otherwise it multiplies cost, latency and failure modes. Start with one agent.",
+    "example": "A vendor's five-agent design is declined because one agent with three tools already passes the evaluation set.",
+    "lessons": ["8.6"],
+    "related": ["AI agent", "Microsoft Agent Framework", "Durable Functions"]
+  },
+  {
+    "term": "Human in the loop",
+    "aliases": ["HITL", "human-in-the-loop", "human approval", "approval step"],
+    "definition": "Designing an AI system so a person reviews or approves certain outputs or actions before they take effect - especially irreversible, costly or sensitive ones. The system prepares the action and pauses; the approval is logged. It is also how low-confidence extractions reach a reviewer.",
+    "example": "The agent prepares refunds over £100 and posts them to the service team's Teams queue for approval.",
+    "lessons": ["8.6", "8.4"],
+    "related": ["AI agent", "Document Intelligence"]
+  }
+]

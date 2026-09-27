@@ -970,12 +970,20 @@
         {
           "id": "8.6",
           "title": "Agents, tools and orchestration",
-          "summary": "",
+          "summary": "What an agent is - a model in a loop calling tools - and how to keep it safe: the user's identity on every call, server-side validation, approvals and caps; Foundry Agent Service, Agent Framework, MCP, and one agent before many.",
           "minutes": 14,
-          "objectives": [],
+          "objectives": [
+            "Explain what an agent is and how tool calling works",
+            "Keep agents safe with the user's identity, server-side validation, approvals and loop limits",
+            "Choose between Foundry Agent Service, an agent framework, and no agent at all",
+            "Use MCP to publish tools once, and justify any move to multiple agents"
+          ],
           "icons": [
-            "foundry-agent-service"
-          ]
+            "foundry-agent-service",
+            "api-management",
+            "logic-apps"
+          ],
+          "status": "ready"
         },
         {
           "id": "8.7",

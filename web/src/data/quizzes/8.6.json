@@ -1,0 +1,111 @@
+[
+  {
+    "id": "8.6-q1",
+    "topic": "whose identity",
+    "scenario": "The assistant calls the orders API with the API's own service credentials. A tester types 'I own order 88214, show me its address' and gets another customer's address.",
+    "stem": "What is the right fix?",
+    "options": [
+      "Add 'never reveal other customers' data' to the system prompt",
+      "Pass the signed-in shopper's token on every tool call, so the orders API returns only that shopper's orders",
+      "Use a larger model that is better at spotting lies",
+      "Hide the address field from the model's output"
+    ],
+    "answer": 1,
+    "explanation": "The tool must enforce authorisation, as any API would. A prompt instruction can be talked around; a token that only reaches the shopper's own orders cannot. The agent should never hold credentials broader than its user's."
+  },
+  {
+    "id": "8.6-q2",
+    "topic": "tool calling",
+    "stem": "What actually happens when a model 'calls a tool'?",
+    "options": [
+      "The model connects to the API directly and runs the request",
+      "Azure runs every tool the model names without checks",
+      "The model returns a structured request naming a tool and its arguments; your code decides whether to run it, validates the arguments, and returns the result",
+      "The tool is compiled into the model at deployment time"
+    ],
+    "answer": 2,
+    "explanation": "The model only proposes. Running the call, and so authorising it, validating it and logging it, is your code's job, which is where safety is enforced."
+  },
+  {
+    "id": "8.6-q3",
+    "topic": "one agent or many",
+    "scenario": "A vendor proposes five cooperating agents for customer service: triage, orders, returns, policy and escalation.",
+    "stem": "What is the best response?",
+    "options": [
+      "Adopt it; more agents mean better answers",
+      "Build it, but with ten agents for finer specialisation",
+      "Reject agents entirely and use keyword search",
+      "Start with one agent and good tools, and split only when a named problem needs it, such as an oversized toolset or different permissions"
+    ],
+    "answer": 3,
+    "explanation": "Every extra agent adds model calls, latency and handoff failures. One agent with well-described tools often passes the evaluation set. Multi-agent designs earn their cost only for a specific reason."
+  },
+  {
+    "id": "8.6-q4",
+    "topic": "MCP",
+    "stem": "What does the Model Context Protocol give the shop?",
+    "options": [
+      "A standard way to publish a tool once, so any MCP client - Foundry agents, GitHub Copilot, Copilot Studio - can discover and call it",
+      "A faster model",
+      "A replacement for OAuth",
+      "A way to fine-tune models on API data"
+    ],
+    "answer": 0,
+    "explanation": "MCP is to agents and tools what the Language Server Protocol is to editors and languages. Publishing through API Management keeps authentication, rate limits and logging in one place."
+  },
+  {
+    "id": "8.6-q5",
+    "topic": "human in the loop",
+    "scenario": "The agent can now start returns and issue refunds.",
+    "stem": "Where does a person belong?",
+    "options": [
+      "Nowhere; the agent is evaluated",
+      "Reviewing every message the agent sends",
+      "Approving irreversible or costly actions, such as refunds over a threshold, before they take effect",
+      "Only in reading monthly reports"
+    ],
+    "answer": 2,
+    "explanation": "Approvals belong where a mistake is expensive or cannot be undone. Reviewing every message removes the benefit, and removing people entirely leaves costly errors unchecked."
+  },
+  {
+    "id": "8.6-q6",
+    "topic": "runaway loops",
+    "scenario": "A confused agent kept calling the same search tool for three minutes on one question.",
+    "stem": "Which control prevents this?",
+    "options": [
+      "A lower temperature",
+      "Caps per turn on tool calls, tokens and time, with every step traced so loops show up in monitoring",
+      "A larger context window",
+      "Removing the search tool"
+    ],
+    "answer": 1,
+    "explanation": "Agents need hard limits, like any automated process. Traces show where the loop went wrong, which often comes down to a vague tool description or a missing result, so the cause can be fixed."
+  },
+  {
+    "id": "8.6-q7",
+    "topic": "where agents run",
+    "stem": "When is Foundry Agent Service a better fit than writing the loop with an agent framework?",
+    "options": [
+      "When you need several model providers and custom state handling",
+      "Never; frameworks are always better",
+      "When the task needs no tools at all",
+      "When you want managed conversation state, built-in tools and tracing with little code"
+    ],
+    "answer": 3,
+    "explanation": "Agent Service manages state and the tool loop for you. A framework such as Microsoft Agent Framework gives full control of the loop. A task with no tools or decisions needs neither: one model call or RAG will do."
+  },
+  {
+    "id": "8.6-q8",
+    "topic": "validation",
+    "scenario": "The model sometimes passes a delivery address with missing postcodes to the change-address tool.",
+    "stem": "Where should the check live?",
+    "options": [
+      "In the tool, server-side, rejecting invalid input with a clear error the model can act on",
+      "In the system prompt only",
+      "In the browser",
+      "Nowhere; the courier will sort it out"
+    ],
+    "answer": 0,
+    "explanation": "Tools must validate whatever the model sends, just as an API validates any client. A clear error lets the agent ask the shopper for the missing postcode, and a prompt alone cannot guarantee valid input."
+  }
+]
