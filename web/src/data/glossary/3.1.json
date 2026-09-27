@@ -5,7 +5,7 @@
     "definition": "The object-storage service inside a storage account: files of any size held as blobs in flat containers, addressed by URL. It is the default home for images, documents, backups, logs and static assets. It is not a file system - the slashes in a blob name are just characters unless hierarchical namespace is enabled.",
     "example": "https://stshopprod.blob.core.windows.net/product-images/sku-1234/main.jpg is one blob in the product-images container.",
     "icon": "blob",
-    "lessons": ["3.1"],
+    "lessons": ["3.1", "8.4"],
     "related": ["Storage account", "Storage container", "Block blob", "Access tier"]
   },
   {

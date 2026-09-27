@@ -5,7 +5,7 @@
     "definition": "Azure's workflow service: a trigger followed by actions, built in a visual designer and stored as JSON, with well over a thousand connectors and a recorded history of every run's inputs and outputs. The same engine powers Power Automate. Best for integration glue where connectors do most of the work.",
     "example": "A nightly workflow fetches the marketplace settlement file from SFTP, queues each refund and posts a summary to Teams.",
     "icon": "logic-apps",
-    "lessons": ["5.6"],
+    "lessons": ["5.6", "8.4"],
     "related": ["Connector", "Logic Apps Standard", "Power Automate", "Trigger"]
   },
   {

@@ -1,0 +1,65 @@
+[
+  {
+    "term": "Azure AI Services",
+    "aliases": ["AI Services", "Cognitive Services", "Foundry Tools", "multi-service resource"],
+    "definition": "Microsoft's pretrained models for well-defined tasks - documents, vision, speech, language, translation and content safety - called through REST APIs and SDKs, returning structured output with confidence scores and priced per page, hour, character or record. Formerly Cognitive Services; now reached through Microsoft Foundry with the same resource and identity as the models.",
+    "example": "Invoices go to Document Intelligence, call recordings to Speech then Language, and reviews to Translator - none of them through a prompt.",
+    "icon": "ai-services",
+    "lessons": ["8.4", "8.1"],
+    "related": ["Document Intelligence", "Azure AI Speech", "Azure AI Language", "Microsoft Foundry"]
+  },
+  {
+    "term": "Document Intelligence",
+    "aliases": ["Azure AI Document Intelligence", "Form Recognizer", "prebuilt invoice model", "layout model", "custom extraction model"],
+    "definition": "The Azure AI service that reads documents: text and layout, tables, and named fields from prebuilt models (invoices, receipts, IDs and more) or custom models trained on a handful of your labelled samples. Every field comes back with a confidence score and its position on the page, which makes review screens and automation thresholds possible. Also available as a container.",
+    "example": "The prebuilt invoice model reads supplier invoices at about $10 per thousand pages; fields above 0.9 confidence post to finance automatically.",
+    "icon": "document-intelligence",
+    "lessons": ["8.4", "8.1"],
+    "related": ["Azure AI Services", "Content Understanding"]
+  },
+  {
+    "term": "Azure AI Vision",
+    "aliases": ["Computer Vision", "Image Analysis", "Vision Read", "OCR", "Face API"],
+    "definition": "The Azure AI service for images: captions and tags, object detection, and reading printed and handwritten text in photos. Face detection and comparison is a related service, and recognising individuals is available only to approved customers under Microsoft's responsible AI rules.",
+    "example": "Product photos uploaded by suppliers are tagged automatically so merchandisers can filter them by colour and category.",
+    "icon": "computer-vision",
+    "lessons": ["8.4"],
+    "related": ["Azure AI Services", "Document Intelligence"]
+  },
+  {
+    "term": "Azure AI Speech",
+    "aliases": ["Speech service", "speech to text", "text to speech", "batch transcription", "neural voice", "speech translation"],
+    "definition": "The Azure AI service for audio: real-time and batch speech-to-text, text-to-speech with natural neural voices, and speech translation. Batch transcription is cheaper and suits recordings that can wait; real-time suits captions and voice assistants.",
+    "example": "Each night the week's service calls are transcribed in batch, then passed to Language for redaction and summaries.",
+    "icon": "speech",
+    "lessons": ["8.4"],
+    "related": ["Azure AI Services", "Azure AI Language"]
+  },
+  {
+    "term": "Azure AI Language",
+    "aliases": ["Language service", "Text Analytics", "sentiment analysis", "PII detection", "named entity recognition", "NER", "conversational language understanding", "CLU"],
+    "definition": "The Azure AI service for text: sentiment, key phrases, entities, detecting and redacting personal data, summarisation, language detection, and custom classification or intent models trained on your examples. PII redaction before storage is often its most valuable job.",
+    "example": "Call transcripts have card numbers and addresses redacted, are summarised in three lines, and tagged with sentiment before they are stored.",
+    "icon": "language",
+    "lessons": ["8.4"],
+    "related": ["Azure AI Services", "Azure AI Speech", "Azure AI Translator"]
+  },
+  {
+    "term": "Azure AI Translator",
+    "aliases": ["Translator", "document translation", "Custom Translator"],
+    "definition": "The Azure AI service that translates text and whole documents across more than 100 languages, keeping document formatting, with custom terminology or trained custom models for domain vocabulary. Priced per character.",
+    "example": "Reviews in five languages are translated into English for moderation, with product names protected from translation.",
+    "icon": "translator",
+    "lessons": ["8.4"],
+    "related": ["Azure AI Language", "Azure AI Services"]
+  },
+  {
+    "term": "Content Understanding",
+    "aliases": ["Azure AI Content Understanding", "analyzer"],
+    "definition": "An Azure AI service that uses generative models to extract fields you define from documents, images, audio and video, returning them to your schema with confidence scores and where each value was found. It sits between fixed prebuilt models and free-form prompting, for inputs too varied for one layout.",
+    "example": "Delivery notes from the long tail of small suppliers, each with its own layout, go through a Content Understanding analyzer with one shared schema.",
+    "icon": "ai-services",
+    "lessons": ["8.4"],
+    "related": ["Document Intelligence", "Generative AI"]
+  }
+]

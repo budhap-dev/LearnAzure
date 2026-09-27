@@ -1,0 +1,111 @@
+[
+  {
+    "id": "8.4-q1",
+    "topic": "service or LLM",
+    "scenario": "Finance processes 12,000 invoice pages a month. Dev proposes sending each page to a flagship model with vision and asking for the fields as JSON.",
+    "stem": "What is the strongest argument for Document Intelligence's prebuilt invoice model instead?",
+    "options": [
+      "Large models cannot read images",
+      "It is cheaper and predictable at volume, and it returns fixed fields with a confidence score and position for each, so thresholds and review screens are possible",
+      "It never makes mistakes",
+      "It needs no Azure subscription"
+    ],
+    "answer": 1,
+    "explanation": "Field-level confidence is what makes safe automation possible, and per-page pricing stays low at volume. The prebuilt model can still be wrong, which is why the threshold and review queue exist."
+  },
+  {
+    "id": "8.4-q2",
+    "topic": "confidence thresholds",
+    "stem": "How should confidence scores be used when automating extraction?",
+    "options": [
+      "Ignore them; the service is accurate enough",
+      "Send everything below 1.0 to a person",
+      "Set a threshold per field: values above it flow through automatically and the rest go to a review screen, and adjust the threshold as results prove themselves",
+      "Average them across the document and reject low-scoring suppliers"
+    ],
+    "answer": 2,
+    "explanation": "Per-field thresholds let the confident majority flow through while a person checks the uncertain minority. A threshold of 1.0 sends everything to review, and ignoring scores lets mistakes post silently."
+  },
+  {
+    "id": "8.4-q3",
+    "topic": "custom models",
+    "scenario": "Delivery notes from the five largest suppliers each use their own fixed layout, and the prebuilt models miss key fields.",
+    "stem": "What is the sensible next step?",
+    "options": [
+      "Train a custom Document Intelligence model on labelled samples from each of those suppliers",
+      "Fine-tune a large language model on the delivery notes",
+      "Ask suppliers to switch to the prebuilt invoice format",
+      "Go back to manual typing"
+    ],
+    "answer": 0,
+    "explanation": "Custom extraction models learn a fixed layout from a handful of labelled examples and keep field-level confidence. Train on samples from every supplier you expect, not just one."
+  },
+  {
+    "id": "8.4-q4",
+    "topic": "personal data",
+    "scenario": "Service calls are transcribed so that complaint trends can be analysed. Callers often read out card numbers and addresses.",
+    "stem": "What should happen before transcripts are stored?",
+    "options": [
+      "Nothing, because the storage account is encrypted",
+      "Translate them, so the data is harder to read",
+      "Store only the audio",
+      "Run Language's PII detection to redact card numbers, addresses and names, then store the redacted text and summary"
+    ],
+    "answer": 3,
+    "explanation": "Encryption at rest does not stop people who can read the store from seeing card numbers. Redacting before storage keeps personal data out of every downstream copy, and storing only audio keeps the problem."
+  },
+  {
+    "id": "8.4-q5",
+    "topic": "choosing the right tool",
+    "stem": "Which task most needs a generative model rather than a task-specific service?",
+    "options": [
+      "Reading totals from supplier invoices",
+      "Transcribing recorded calls",
+      "Summarising the themes across a week's reviews into a short note for the product team",
+      "Translating product pages into French"
+    ],
+    "answer": 2,
+    "explanation": "Finding and summarising themes needs judgement over varied text, which is what generative models are for. Reading fields, transcribing and translating are defined tasks with purpose-built, cheaper services."
+  },
+  {
+    "id": "8.4-q6",
+    "topic": "containers",
+    "scenario": "The warehouse must keep reading delivery notes when its internet link drops for hours.",
+    "stem": "Which option fits?",
+    "options": [
+      "Run Document Intelligence in a container on the warehouse server; connected containers still report usage for billing",
+      "Cache the cloud service's responses in the browser",
+      "Switch to a flagship model, which works offline",
+      "There is no option; all Azure AI Services are cloud-only"
+    ],
+    "answer": 0,
+    "explanation": "Several AI services ship as containers for on-premises and edge use. Connected containers need only occasional connectivity to report usage, and fully disconnected containers exist for approved cases."
+  },
+  {
+    "id": "8.4-q7",
+    "topic": "Content Understanding",
+    "stem": "Where does Content Understanding fit among the options?",
+    "options": [
+      "It is the new name for Azure AI Speech",
+      "It uses generative models to extract fields you define from varied documents, images, audio and video, returning them to your schema with confidence scores",
+      "It trains a custom language model on your content",
+      "It filters harmful content from model outputs"
+    ],
+    "answer": 1,
+    "explanation": "It suits inputs too varied for one fixed layout. Unlike free-form prompting, it keeps a schema, confidence scores and where each value was found. Harmful-content filtering belongs to Content Safety."
+  },
+  {
+    "id": "8.4-q8",
+    "topic": "availability and access",
+    "scenario": "A team plans to identify returning customers by face at store entrances, using a region chosen for its low price.",
+    "stem": "What should you point out first?",
+    "options": [
+      "Face identification is free",
+      "Nothing; any AI service is available in every region to every customer",
+      "Use Translator instead",
+      "Recognising individuals is available only to approved customers under Microsoft's responsible AI rules, raises serious privacy and legal questions, and features vary by region"
+    ],
+    "answer": 3,
+    "explanation": "Face identification is restricted for good reasons, and a use case like this needs legal and ethical review before any technical work starts. Regional availability varies for many AI features, so check it before choosing a region."
+  }
+]
