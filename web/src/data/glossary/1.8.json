@@ -5,7 +5,7 @@
     "definition": "The classic split of an application into a presentation tier (the browser or mobile client), an application tier (the API) and a data tier (the database). It is the shape most business systems already have, which is why it maps so cleanly onto managed Azure services. The tiers are logical, not physical, so a mobile app and a web app are two clients of the same middle tier rather than a fourth tier.",
     "example": "The shop's React bundle, its Node API and its orders database are the three tiers, hosted on Static Web Apps, App Service and Azure SQL Database.",
     "icon": "web-app-database",
-    "lessons": ["1.8", "1.1"],
+    "lessons": ["1.8", "1.1", "9.1"],
     "related": ["Static Web Apps", "App Service", "Azure SQL Database"]
   },
   {

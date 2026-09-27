@@ -1,0 +1,111 @@
+[
+  {
+    "id": "9.1-q1",
+    "topic": "starting point",
+    "scenario": "A new team plans to design its first Azure workload from a blank whiteboard, using a blog post from 2019 for inspiration.",
+    "stem": "What is the better starting point?",
+    "options": [
+      "The closest reference architecture in the Azure Architecture Center, with each deviation recorded as a decision",
+      "The newest blog post they can find",
+      "Whatever the most senior engineer used last time",
+      "A design with every Azure service that might be useful later"
+    ],
+    "answer": 0,
+    "explanation": "Reference architectures are maintained, reasoned and often deployable. Starting from one turns the review into a discussion of deviations. Old posts and habits carry outdated assumptions."
+  },
+  {
+    "id": "9.1-q2",
+    "topic": "microservices",
+    "scenario": "Five developers propose fourteen microservices on AKS for a product launching in four months.",
+    "stem": "What is the strongest argument against it?",
+    "options": [
+      "AKS cannot run fourteen services",
+      "Microservices are always slower",
+      "Microservices solve a many-teams problem and add distributed-systems work; one team is better served by a modular monolith that can be split later",
+      "Microservices cannot use Azure SQL"
+    ],
+    "answer": 2,
+    "explanation": "The benefit of microservices is independent delivery by separate teams. With one team, you pay the costs - network calls, consistency, contracts, operations - without that benefit."
+  },
+  {
+    "id": "9.1-q3",
+    "topic": "modular monolith",
+    "stem": "What makes a monolith 'modular' in a useful sense?",
+    "options": [
+      "It runs in containers",
+      "Strict internal boundaries: each module owns its logic and schema and talks to others only through defined interfaces, so it can be extracted later",
+      "It has one large shared database that every module writes to freely",
+      "It is split into several repositories"
+    ],
+    "answer": 1,
+    "explanation": "The boundaries are the point. They keep today's system simple to run while leaving the option to extract a service when a second team needs to own it. A shared, freely written schema removes that option."
+  },
+  {
+    "id": "9.1-q4",
+    "topic": "which reference architecture",
+    "scenario": "An ASP.NET application runs on two on-premises servers. The business wants it on Azure within three months, with better reliability, and no rewrite.",
+    "stem": "Which guidance fits best?",
+    "options": [
+      "Microservices on AKS",
+      "Baseline chat app",
+      "Multi-region active-active",
+      "The Reliable Web App pattern: managed PaaS services plus retries, circuit breakers, caching and managed identity with minimal code change"
+    ],
+    "answer": 3,
+    "explanation": "The Reliable Web App pattern is designed for exactly this move. A microservices rewrite would not fit three months, and multi-region is only justified by a requirement."
+  },
+  {
+    "id": "9.1-q5",
+    "topic": "deviations",
+    "stem": "Your design starts from the web app baseline but runs in one region instead of zone-redundant across zones and regions. What should happen?",
+    "options": [
+      "Record the deviation, the reason (such as an accepted RTO) and the trade-off in an architecture decision record",
+      "Nothing; reference architectures are only suggestions",
+      "Hide it from the review so it passes",
+      "Add a second region anyway, to match"
+    ],
+    "answer": 0,
+    "explanation": "Deviations are often right, but they are decisions with consequences. An ADR stops the next reviewer from re-arguing them and makes the risk visible to the business."
+  },
+  {
+    "id": "9.1-q6",
+    "topic": "patterns",
+    "scenario": "In a review, the design saves an order to SQL and then publishes an 'order placed' event in a separate call.",
+    "stem": "Which pattern should the reviewer ask about?",
+    "options": [
+      "Cache-aside",
+      "Valet key",
+      "Transactional outbox, so the event is written in the same transaction and published reliably afterwards",
+      "Strangler fig"
+    ],
+    "answer": 2,
+    "explanation": "Two separate writes can disagree when one fails. The outbox pattern keeps the data and the event consistent. Naming the pattern makes the review question short and precise."
+  },
+  {
+    "id": "9.1-q7",
+    "topic": "cost of baselines",
+    "stem": "Why does a baseline reference architecture cost much more than a starter design?",
+    "options": [
+      "Architecture Center designs use premium support plans",
+      "It is production-grade: WAF, zone redundancy, private endpoints and premium tiers, so use it for production and a cut-down version for dev, with the difference written down",
+      "Baselines always include AKS",
+      "Reference architectures require an Enterprise Agreement"
+    ],
+    "answer": 1,
+    "explanation": "Each baseline component buys reliability or security for production. Dev rarely needs all of it, so cut deliberately, and record the difference so it is not a surprise at go-live."
+  },
+  {
+    "id": "9.1-q8",
+    "topic": "web-queue-worker",
+    "scenario": "Awarding points and sending welcome emails makes the loyalty API's sign-up request take eight seconds.",
+    "stem": "Which architecture style addresses this?",
+    "options": [
+      "A bigger App Service plan",
+      "Microservices, one per email type",
+      "A second region",
+      "Web-queue-worker: the API puts the slow work on a queue and returns, and a worker processes it"
+    ],
+    "answer": 3,
+    "explanation": "Moving slow work off the request path makes the API responsive and lets the worker scale and retry on its own. A bigger plan makes the slow work only slightly faster."
+  }
+]

@@ -1,0 +1,54 @@
+[
+  {
+    "term": "Azure Architecture Center",
+    "aliases": ["Architecture Center", "AAC", "technology choice guide"],
+    "definition": "Microsoft's free library of architecture guidance on Microsoft Learn: reference architectures, architecture styles, technology choice guides, cloud design patterns and Well-Architected service guides. Maintained and updated, it is a better starting point for a design than blog posts or old diagrams.",
+    "example": "Both new product designs start from Architecture Center baselines, linked at the top of each design document.",
+    "icon": "guide",
+    "lessons": ["9.1"],
+    "related": ["Reference architecture", "Cloud design pattern", "Well-Architected Framework"]
+  },
+  {
+    "term": "Reference architecture",
+    "aliases": ["baseline architecture", "baseline", "reference implementation"],
+    "definition": "A proven design for a common workload, with a diagram, the reasoning behind each component, trade-offs per Well-Architected pillar and often deployable code. Baseline versions are production-grade. Starting from one turns a design review into a discussion of deviations, each recorded as a decision.",
+    "example": "The loyalty design is \"the web app baseline, single region, with a queue and worker\", and its ADRs explain those three differences.",
+    "icon": "guide",
+    "lessons": ["9.1"],
+    "related": ["Azure Architecture Center", "Architecture decision record", "Reliable Web App pattern"]
+  },
+  {
+    "term": "Reliable Web App pattern",
+    "aliases": ["RWA", "Modern Web App pattern", "MWA", "enterprise web app patterns"],
+    "definition": "Microsoft's guidance and reference implementations for moving an existing .NET or Java web app to Azure with minimal code change while adding cloud reliability: managed PaaS services, retries and circuit breakers, cache-aside, managed identity and infrastructure as code. Its sequel, the Modern Web App pattern, extracts parts into independently scaled services.",
+    "example": "The warehouse's ASP.NET app moves to App Service following the Reliable Web App pattern, not a rewrite.",
+    "icon": "app-service",
+    "lessons": ["9.1", "9.3"],
+    "related": ["Reference architecture", "Lift and shift", "Circuit breaker"]
+  },
+  {
+    "term": "Microservices",
+    "aliases": ["microservice", "microservices architecture", "service per team"],
+    "definition": "An architecture style in which a system is split into small services, each owned by one team, deployed independently and holding its own data. It solves the organisational problem of many teams shipping independently, at the cost of network calls, data consistency across services, versioned contracts, distributed tracing and a platform to run them.",
+    "example": "Fourteen microservices for five developers is declined; the loyalty programme starts as a modular monolith.",
+    "icon": "container-apps",
+    "lessons": ["9.1"],
+    "related": ["Modular monolith", "Azure Container Apps", "Kubernetes"]
+  },
+  {
+    "term": "Modular monolith",
+    "aliases": ["modular monolith architecture", "monolith", "majestic monolith"],
+    "definition": "One deployable application with strict internal module boundaries - each module owns its logic and its database schema and talks to others only through defined interfaces. Simple to run for one team, and a module can later be extracted into a service when a second team needs to own it.",
+    "example": "Points, rewards and members are separate modules and schemas inside one Loyalty API on App Service.",
+    "lessons": ["9.1"],
+    "related": ["Microservices", "Three-tier architecture"]
+  },
+  {
+    "term": "Cloud design pattern",
+    "aliases": ["design pattern", "cloud patterns", "architecture pattern", "valet key", "queue-based load leveling", "gateway offloading"],
+    "definition": "A named, reusable solution to a recurring problem in distributed cloud systems - such as cache-aside, valet key, competing consumers, transactional outbox, gateway offloading, retry, circuit breaker and strangler fig - catalogued with trade-offs in the Azure Architecture Center. Naming them makes design reviews faster.",
+    "example": "\"Where's the outbox?\" replaces ten minutes of explaining why saving an order and publishing its event can disagree.",
+    "lessons": ["9.1"],
+    "related": ["Azure Architecture Center", "Cache-aside pattern", "Transactional outbox", "Circuit breaker"]
+  }
+]
