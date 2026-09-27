@@ -13,7 +13,7 @@
     "definition": "Azure's API gateway service: a gateway every call passes through, a management plane for APIs, products and policies, and a developer portal for consumers. Tiers run from pay-per-call Consumption to Premium; Developer has no SLA and is not for production.",
     "example": "apim-shop-prod on Standard v2 fronts the orders, catalogue and warehouse APIs behind Front Door.",
     "icon": "api-management",
-    "lessons": ["5.5", "8.6"],
+    "lessons": ["5.5", "8.6", "8.8"],
     "related": ["API gateway", "API Management policy", "API product", "Developer portal"]
   },
   {
@@ -21,7 +21,7 @@
     "aliases": ["APIM policy", "policies", "validate-jwt", "rate-limit-by-key"],
     "definition": "An XML pipeline in API Management that runs on each call - inbound, backend, outbound and on-error - at global, product, API or operation scope. Policies validate tokens, apply rate limits and quotas, cache, rewrite URLs and headers, and authenticate to backends with a managed identity. Business logic belongs in the API, not in policies.",
     "example": "The Partners product policy validates an Entra token and allows ten calls a second per subscription.",
-    "lessons": ["5.5"],
+    "lessons": ["5.5", "8.8"],
     "related": ["Azure API Management", "Rate limiting", "OAuth 2.0 and OpenID Connect"]
   },
   {

@@ -21,7 +21,7 @@
     "definition": "The built-in, free Azure service for seeing and controlling spend: cost analysis with forecasts, budgets, cost alerts and exports. It reports what has run; it cannot stop resources by itself unless a budget alert triggers an automation.",
     "example": "Cost analysis grouped by the environment tag showed that the dev subscription was spending more than production.",
     "icon": "cost-management",
-    "lessons": ["1.6"],
+    "lessons": ["1.6", "8.8"],
     "related": ["Budget", "Cost alert", "Azure Advisor", "Chargeback"]
   },
   {
@@ -30,7 +30,7 @@
     "definition": "A spending amount set on a subscription, resource group or management group for a period, usually a month. A budget does not block spending; it raises cost alerts at the thresholds you choose. Every subscription should have one from the day it is created.",
     "example": "A £1,500 monthly budget on sub-shop-prod with alerts at 50%, 80% and 100%.",
     "icon": "cost-budgets",
-    "lessons": ["1.6"],
+    "lessons": ["1.6", "8.8"],
     "related": ["Cost alert", "Cost Management"]
   },
   {

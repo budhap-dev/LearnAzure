@@ -68,7 +68,7 @@ export function BuildStatus() {
       <div className="status-summary">
         <div><span className="eyebrow">Lessons shipped</span><strong>{shipped} <small>of {lessons} · {Math.round((100 * shipped) / lessons)}%</small></strong></div>
         <div><span className="eyebrow">Modules complete</span><strong>{complete.length} <small>of {MODULES.length}</small></strong></div>
-        <div><span className="eyebrow">Left to build</span><strong>{left} <small>lessons + {unfinished.length} tests</small></strong></div>
+        <div><span className="eyebrow">Left to build</span><strong>{left} <small>lessons + {unfinished.length} {unfinished.length === 1 ? 'test' : 'tests'}</small></strong></div>
         <div><span className="eyebrow">Reading time left</span><strong>{minutes - minutesShipped} <small>of {minutes} min</small></strong></div>
       </div>
 

@@ -1,0 +1,45 @@
+[
+  {
+    "term": "AI gateway",
+    "aliases": ["GenAI gateway", "LLM gateway", "llm-token-limit", "llm-emit-token-metric", "token limit policy"],
+    "definition": "Azure API Management placed in front of every model endpoint so applications never call models directly. Its AI policies enforce token limits per consumer, record token usage per app for chargeback, cache answers semantically, load-balance across deployments and regions with priorities and circuit breakers, and apply content safety checks - with managed identities on both sides and no model keys in apps.",
+    "example": "The batch job is capped at 30% of tokens per minute at the gateway, so it can no longer starve the shopping assistant.",
+    "icon": "ai-gateway",
+    "lessons": ["8.8"],
+    "related": ["Azure API Management", "Semantic caching", "Tokens per minute", "API Management policy"]
+  },
+  {
+    "term": "Semantic caching",
+    "aliases": ["semantic cache", "LLM cache", "prompt caching"],
+    "definition": "Storing model responses and returning a stored one when a new question means the same as an earlier one, judged by embedding similarity - usually at the AI gateway, backed by Redis. It cuts cost and latency for repeated questions, but is only safe for answers that are not personal and not time-sensitive. Separate from prompt caching, where the model service bills a repeated prompt prefix at a discount.",
+    "example": "\"How long do I have to return something?\" and \"what's your returns window?\" get the same cached answer; order questions are never cached.",
+    "icon": "managed-redis",
+    "lessons": ["8.8"],
+    "related": ["AI gateway", "Embedding", "Azure Managed Redis"]
+  },
+  {
+    "term": "Model retirement",
+    "aliases": ["model deprecation", "model lifecycle", "model version upgrade", "version upgrade policy"],
+    "definition": "The scheduled end of a model version's availability. When a version retires, deployments still using it stop working or move to a newer version - either way behaviour changes - so teams keep an inventory of deployments and versions, choose each deployment's upgrade policy deliberately, and evaluate the replacement well before the date.",
+    "example": "A retirement notice creates a backlog item; the replacement model runs against the 300-question evaluation set 90 days before the date.",
+    "icon": "versions",
+    "lessons": ["8.8"],
+    "related": ["Model deployment", "AI evaluation", "GenAIOps"]
+  },
+  {
+    "term": "GenAIOps",
+    "aliases": ["LLMOps", "AIOps for generative AI", "MLOps"],
+    "definition": "DevOps and MLOps practices applied to generative AI: prompts, model versions, tools and indexes are versioned together, evaluated in the pipeline, deployed through it, and monitored in production for cost, latency, errors, safety and quality - with an inventory of what runs where and a fallback when things go wrong.",
+    "example": "A prompt change, a new index schema and a model upgrade each go through the same pull request, evaluation gate and dashboard.",
+    "lessons": ["8.8"],
+    "related": ["AI evaluation", "Model retirement", "DevOps"]
+  },
+  {
+    "term": "Abuse monitoring",
+    "aliases": ["modified abuse monitoring", "data retention for abuse monitoring"],
+    "definition": "Microsoft's monitoring of Azure OpenAI and Foundry model use for violations of its code of conduct: prompts and outputs flagged as potential abuse can be retained for up to 30 days for review by authorised Microsoft staff. Customers with approved use cases can apply for modified abuse monitoring; know which applies before promising where data goes.",
+    "example": "Legal's data-flow document for the assistant notes that flagged content may be retained for up to 30 days for abuse review.",
+    "lessons": ["8.8"],
+    "related": ["Azure OpenAI", "Data residency", "Content filter"]
+  }
+]

@@ -5,7 +5,7 @@
     "definition": "Azure's security posture and threat protection service. Its free foundational tier assesses every subscription against the Microsoft cloud security benchmark and produces the secure score; paid Defender plans, priced per resource, detect active threats against servers, storage, databases, Key Vault and more. Formerly Azure Security Center.",
     "example": "Defender for Storage raises an alert when product-images is read from a Tor exit node, and workflow automation pages the on-call engineer.",
     "icon": "defender",
-    "lessons": ["4.7", "7.6"],
+    "lessons": ["4.7", "7.6", "8.8"],
     "related": ["Secure score", "Cloud security posture management", "Microsoft Sentinel", "Microsoft cloud security benchmark"]
   },
   {

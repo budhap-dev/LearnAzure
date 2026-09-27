@@ -1,0 +1,203 @@
+{
+  "module": 8,
+  "minutes": 25,
+  "poolFromLessons": 10,
+  "questions": [
+    {
+      "id": "m8-q1",
+      "topic": "naming the kind",
+      "scenario": "The board wants 'AI' for three ideas: reading supplier invoices, a weekly demand forecast per store, and help drafting emails in Outlook.",
+      "stem": "Which mapping is right?",
+      "options": [
+        "All three in one Foundry agent",
+        "Document Intelligence for invoices, Azure Machine Learning for the forecast, Microsoft 365 Copilot for email drafting",
+        "Azure OpenAI for all three, because it is the most capable",
+        "Copilot Studio for invoices, Document Intelligence for forecasts, Azure OpenAI for email"
+      ],
+      "answer": 1,
+      "explanation": "Invoices are a prebuilt perception task, forecasting from your own history is classic machine learning, and email drafting is a finished product to buy. Naming the kind first picks the service, the price model and the risk."
+    },
+    {
+      "id": "m8-q2",
+      "topic": "provider and residency",
+      "scenario": "The assistant will receive customers' names, addresses and order details. The company must keep processing of personal data within the EU.",
+      "stem": "Which setup fits?",
+      "options": [
+        "A Global Standard deployment, for the highest quota",
+        "OpenAI's public API with an enterprise contract",
+        "A Data Zone Standard (EU) deployment in the company's own Foundry resource, called with managed identities",
+        "Any deployment, with a system prompt forbidding storage of personal data"
+      ],
+      "answer": 2,
+      "explanation": "The deployment type decides where requests are processed; Data Zone EU keeps them in the EU, and Azure's terms exclude training on your data. A system prompt cannot control where data is processed."
+    },
+    {
+      "id": "m8-q3",
+      "topic": "smallest model that passes",
+      "scenario": "Product descriptions are generated with the flagship model. A small model scores 4.4 against the flagship's 4.5 on the evaluation set, at a tenth of the price.",
+      "stem": "What should the team do?",
+      "options": [
+        "Keep the flagship; quality always wins",
+        "Fine-tune the flagship to reduce its cost",
+        "Switch to a reasoning model",
+        "Switch to the small model if 4.4 meets the agreed bar, on a Batch deployment, with human approval of descriptions continuing"
+      ],
+      "answer": 3,
+      "explanation": "The rule is the smallest model that passes the evaluation, and a bar agreed in advance turns the choice into a decision rather than an opinion. Batch pricing suits work that can wait."
+    },
+    {
+      "id": "m8-q4",
+      "topic": "facts: fine-tune or retrieve",
+      "scenario": "Ana wants the assistant to know current prices, stock and policies, and proposes fine-tuning monthly.",
+      "stem": "What is the better design?",
+      "options": [
+        "Retrieval: index products and policies in AI Search, retrieve the relevant passages per question, and answer only from them with citations",
+        "Fine-tune weekly instead of monthly",
+        "Put the whole catalogue in every prompt",
+        "Use a larger model that remembers more"
+      ],
+      "answer": 0,
+      "explanation": "Facts change; retrieval is always current and checkable, while fine-tuned facts go stale and are still hallucinated. Stuffing the catalogue into every prompt is expensive and hurts quality."
+    },
+    {
+      "id": "m8-q5",
+      "topic": "shared quota",
+      "scenario": "Dev load testing slowed production, although dev and prod have separate Foundry resources in the same subscription and region.",
+      "stem": "Why, and what is the fix?",
+      "options": [
+        "Separate resources always share models; merge them",
+        "Tokens-per-minute quota is per subscription, region and model, so both drew from one pool; put each environment in its own subscription",
+        "The playground was open; close it",
+        "Dev used a hub; switch to a project"
+      ],
+      "answer": 1,
+      "explanation": "Quota belongs to the subscription and region, not the resource. Separate subscriptions per environment, as the landing zone intends, keep dev experiments from consuming production capacity."
+    },
+    {
+      "id": "m8-q6",
+      "topic": "prompts as code",
+      "scenario": "The assistant's quality dropped after someone improved the system prompt in the playground and pasted it into production configuration.",
+      "stem": "Which practice would have caught it?",
+      "options": [
+        "Locking the playground",
+        "Keeping the prompt in the repository, changing it by pull request, and running the evaluation set in the pipeline so a lower score fails the build",
+        "Asking two people to read the new prompt",
+        "Changing prompts only on Mondays"
+      ],
+      "answer": 1,
+      "explanation": "A prompt is code: versioned, reviewed and gated by tests. Reading a prompt cannot predict its effect across hundreds of questions; an evaluation run can."
+    },
+    {
+      "id": "m8-q7",
+      "topic": "service or LLM",
+      "scenario": "The warehouse wants delivery notes from five large suppliers read automatically, and offline operation when the link drops.",
+      "stem": "What fits best?",
+      "options": [
+        "A flagship vision model called from the warehouse",
+        "Content Understanding in the cloud only",
+        "Staff photograph notes and paste them into a chatbot",
+        "Custom Document Intelligence models trained on each supplier's layout, run in a container on the warehouse server, with low-confidence fields sent for review"
+      ],
+      "answer": 3,
+      "explanation": "Fixed layouts suit custom extraction models, which keep field-level confidence for thresholds and review. Containers keep working offline. A flagship model costs more, gives no field confidence and needs the internet."
+    },
+    {
+      "id": "m8-q8",
+      "topic": "retrieval quality",
+      "scenario": "RAG answers are often wrong. The right passage appears in the top five results for only 60% of test questions.",
+      "stem": "Where should effort go first?",
+      "options": [
+        "Chunking by headings with metadata, hybrid search with the semantic ranker, and filters - then re-measure retrieval before touching the prompt",
+        "A stronger system prompt",
+        "A bigger chat model",
+        "More chunks in every prompt"
+      ],
+      "answer": 0,
+      "explanation": "If the answer is not retrieved, nothing downstream can fix it. Retrieval improvements are measurable against the test set and usually move answer quality most."
+    },
+    {
+      "id": "m8-q9",
+      "topic": "permissions in retrieval",
+      "scenario": "An internal staff assistant uses the same index as the public one. It holds HR guidance only managers may see.",
+      "stem": "How do you enforce who sees what?",
+      "options": [
+        "Tell the model which users are managers",
+        "Build a separate model for managers",
+        "Store the allowed groups on each chunk and filter every query by the signed-in user's groups",
+        "Remove HR content from search"
+      ],
+      "answer": 2,
+      "explanation": "Security trimming in the index means content the user may not see never reaches the prompt. Prompt instructions can be bypassed; filters cannot."
+    },
+    {
+      "id": "m8-q10",
+      "topic": "agent identity",
+      "scenario": "An agent that manages returns uses a service identity with write access to all orders. A crafted message makes it start a return on someone else's order.",
+      "stem": "What is the fundamental fix?",
+      "options": [
+        "Add a warning to the system prompt",
+        "Tool calls carry the signed-in user's identity and the tools enforce authorisation and validate inputs server-side, with approval for costly actions",
+        "Switch to a multi-agent design with a security agent",
+        "Log the incident and move on"
+      ],
+      "answer": 1,
+      "explanation": "The model decides but your code acts, and it must act with the user's permissions. Authorisation in the tool holds whatever the model is persuaded to request; a 'security agent' is just another model that can be fooled."
+    },
+    {
+      "id": "m8-q11",
+      "topic": "one agent or many",
+      "scenario": "A single agent with four tools passes the evaluation set. A proposal adds planner, researcher and critic agents to 'improve quality'.",
+      "stem": "What should you ask for before approving it?",
+      "options": [
+        "Nothing; more agents are more capable",
+        "A named problem the split solves, and evaluation evidence that it improves results enough to justify the extra cost and latency",
+        "A different framework",
+        "A larger context window"
+      ],
+      "answer": 1,
+      "explanation": "Each agent multiplies model calls, latency and failure points. Splitting is justified by a specific problem - too many tools, different permissions - and by measured gains, not by architecture diagrams."
+    },
+    {
+      "id": "m8-q12",
+      "topic": "prompt injection",
+      "scenario": "The assistant summarises supplier emails for buyers. One email contains hidden text telling the assistant to mark the supplier as approved.",
+      "stem": "Which approach limits the damage?",
+      "options": [
+        "Trust the content filter to stop it",
+        "Tell the model in the system prompt to ignore instructions in emails, and nothing more",
+        "Prompt Shields on documents, emails marked as untrusted data, no tool that can approve suppliers without a person, and output checks",
+        "Summarise only emails from known suppliers"
+      ],
+      "answer": 2,
+      "explanation": "Indirect injection cannot be fully prevented, so defence is layered: detect it, mark untrusted content, keep tools least-privileged, and put a person in front of consequential actions."
+    },
+    {
+      "id": "m8-q13",
+      "topic": "release gate",
+      "scenario": "A model version is retiring, and the replacement is ready to deploy.",
+      "stem": "What must happen before it serves shoppers?",
+      "options": [
+        "The replacement runs against the evaluation set, including adversarial cases, and ships only if quality, groundedness and safety meet the gate",
+        "Nothing; a newer model is always better",
+        "A week of manual chatting with it",
+        "Deploy it and watch thumbs-down feedback"
+      ],
+      "answer": 0,
+      "explanation": "A new model changes behaviour in ways no one can predict, so it goes through the same gate as a prompt change. Waiting for feedback lets users find the regressions."
+    },
+    {
+      "id": "m8-q14",
+      "topic": "cost and control",
+      "scenario": "The monthly AI bill has quadrupled. Five apps call models directly, each with its own key.",
+      "stem": "What is the most effective first step?",
+      "options": [
+        "Cut every app's quota by 75%",
+        "Switch everything to the smallest model",
+        "Ban new AI features until next quarter",
+        "Put an AI gateway in front of every model call, with managed identities, token limits and token metrics per app, so cost per conversation is visible and controllable"
+      ],
+      "answer": 3,
+      "explanation": "Without per-app metering nobody knows which app or feature drives the cost. The gateway adds limits, metrics, caching and failover in one place and removes keys from apps; then the right levers can be pulled per app."
+    }
+  ]
+}

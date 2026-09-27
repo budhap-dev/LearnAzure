@@ -1,0 +1,112 @@
+[
+  {
+    "id": "8.8-q1",
+    "topic": "noisy neighbour",
+    "scenario": "A new batch job used the whole tokens-per-minute quota at lunchtime, and the shopping assistant returned errors for forty minutes.",
+    "stem": "What prevents this structurally?",
+    "options": [
+      "Ask teams to run batch jobs at night",
+      "Route every app through an AI gateway with a token limit per consumer, and move the batch work to a Batch deployment",
+      "Buy more quota every time it happens",
+      "Give the assistant a larger model"
+    ],
+    "answer": 1,
+    "explanation": "Per-consumer token limits at the gateway stop one app starving another, and Batch deployments take bulk work off the live quota at half price. Asking nicely and buying quota reactively both leave the risk in place."
+  },
+  {
+    "id": "8.8-q2",
+    "topic": "cost drivers",
+    "stem": "Which change usually cuts the cost of a RAG assistant most without hurting quality, once proven by evaluation?",
+    "options": [
+      "Raising the temperature",
+      "Sending all retrieved chunks rather than the top few",
+      "Routing simple questions to a small model, sending fewer and better-ranked chunks, and summarising older turns",
+      "Disabling content filters"
+    ],
+    "answer": 2,
+    "explanation": "Cost is calls × tokens × price, so cheaper models for easy questions and smaller inputs attack two of the terms directly. Evaluation confirms quality holds. More chunks raise cost, and filters do not affect price."
+  },
+  {
+    "id": "8.8-q3",
+    "topic": "semantic caching",
+    "scenario": "The team enables semantic caching at the gateway for all assistant traffic.",
+    "stem": "What is the main risk?",
+    "options": [
+      "A shopper asking 'where is my order?' could receive another shopper's cached answer, or a stale one; cache only non-personal, non-time-sensitive answers",
+      "Caching increases token cost",
+      "Redis cannot store text",
+      "Cached answers bypass the model's context window"
+    ],
+    "answer": 0,
+    "explanation": "Semantically similar questions can need different answers when the answer depends on who is asking or when. FAQs such as the returns policy are safe to cache; order and account questions are not."
+  },
+  {
+    "id": "8.8-q4",
+    "topic": "security baseline",
+    "scenario": "A security review finds the dev Foundry resource reachable from the internet with key-based access enabled. The team says it is only dev.",
+    "stem": "What should the baseline be?",
+    "options": [
+      "Leave dev open; only prod matters",
+      "Rotate the keys monthly",
+      "Put the keys in Key Vault and keep public access",
+      "Managed identities with local auth disabled and private endpoints in every environment, with Azure Policy denying resources that break it"
+    ],
+    "answer": 3,
+    "explanation": "Dev often holds real data and valid keys, and attackers do not care which environment it is. Policy makes the baseline automatic rather than dependent on review findings."
+  },
+  {
+    "id": "8.8-q5",
+    "topic": "model retirement",
+    "scenario": "An email says a model version retires in 60 days. Nobody knows which apps use it.",
+    "stem": "What practice would have made this routine?",
+    "options": [
+      "Always use the newest model the day it launches",
+      "Never upgrade models",
+      "An inventory of deployments, models and versions in code, retirement dates tracked in the backlog, and the replacement evaluated against the test set well before the date",
+      "Let the deployment upgrade automatically and trust the new version"
+    ],
+    "answer": 2,
+    "explanation": "Retirement changes behaviour either way, so it needs the same evaluation as any other change. An inventory in Bicep answers 'who uses it', and early evaluation turns a deadline into a planned release."
+  },
+  {
+    "id": "8.8-q6",
+    "topic": "abuse monitoring",
+    "scenario": "Legal is writing the assistant's data-flow document and asks whether Microsoft could ever see prompts.",
+    "stem": "What is accurate to tell them?",
+    "options": [
+      "Prompts and outputs flagged as possible abuse can be retained for up to 30 days for review by authorised Microsoft staff, unless the organisation is approved for modified abuse monitoring",
+      "Microsoft uses all prompts to train future models",
+      "Nothing is ever stored anywhere",
+      "Prompts are shared with OpenAI for quality review"
+    ],
+    "answer": 0,
+    "explanation": "Azure does not train on your data or share it with OpenAI, but abuse monitoring is a real, documented exception that belongs in the data-flow document. Approved use cases can apply to change it."
+  },
+  {
+    "id": "8.8-q7",
+    "topic": "measuring cost",
+    "stem": "Why track cost per conversation, by app and feature, rather than the monthly AI bill?",
+    "options": [
+      "Monthly bills are not available for AI services",
+      "It shows why cost changed and which lever to pull, and it scales with usage so growth is not mistaken for waste",
+      "It is required by Azure Policy",
+      "It avoids the need for budgets"
+    ],
+    "answer": 1,
+    "explanation": "A bigger monthly bill might mean success or waste. Cost per conversation, split by app through gateway metrics and tags, separates the two. Budgets and alerts are still needed on top."
+  },
+  {
+    "id": "8.8-q8",
+    "topic": "kill switch",
+    "scenario": "The model provider has a regional incident and the assistant starts timing out.",
+    "stem": "What should already be in place?",
+    "options": [
+      "A support ticket template",
+      "A second assistant built on a different framework",
+      "Nothing; the assistant is not critical",
+      "A tested feature flag that falls back to plain search, plus gateway failover to another deployment or region where one exists"
+    ],
+    "answer": 3,
+    "explanation": "AI features need a graceful fallback, like any dependency. A tested kill switch keeps the shop usable, and gateway load balancing can route around a failing deployment before the switch is needed."
+  }
+]
