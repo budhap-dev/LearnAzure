@@ -187,7 +187,7 @@ web/                          Vite + React 19 + TypeScript (hash routing: works 
   src/data/glossary.json      every term the course uses, linked to the lessons that teach it
   src/lib/                    theme, progress (localStorage), search, quiz pooling, version
   src/components/             Layout, Markdown renderer, Diagram, AzureIcon, Quiz, Exam, ThemePicker
-  src/routes/                 Home, Syllabus, Module, Lesson, Quiz, ModuleTest, FinalTest, Glossary, Search, About
+  src/routes/                 Home, Syllabus, Module, Lesson, Quiz, ModuleTest, FinalTest, Glossary, Search, BuildStatus, About
   public/azure-icons/*.svg    the official Microsoft Azure architecture icons (see terms below)
   scripts/verify-content.mjs  fails the build if any lesson, quiz, icon, diagram or glossary link is broken
 ```
