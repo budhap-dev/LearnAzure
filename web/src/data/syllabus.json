@@ -873,20 +873,27 @@
     {
       "number": 8,
       "title": "Azure AI",
-      "tagline": "Azure OpenAI, AI Foundry, AI Services, AI Search, RAG, agents and responsible AI.",
+      "tagline": "Azure OpenAI, Microsoft Foundry, AI Services, AI Search, RAG, agents and responsible AI.",
       "description": "The Azure AI platform at the level a lead needs: which service does what, how retrieval-augmented generation works, what an agent is, how to keep AI workloads secure and affordable, and how to evaluate quality before shipping.",
       "icon": "ai-foundry",
-      "status": "planned",
+      "status": "in-progress",
       "lessons": [
         {
           "id": "8.1",
           "title": "The Azure AI landscape",
-          "summary": "",
+          "summary": "Sorting \"we need AI\" into five kinds of work - buy, configure, prebuilt, generative and custom - the Azure AI stack behind them, and why nearly all of it is inference you pay for per call.",
           "minutes": 12,
-          "objectives": [],
+          "objectives": [
+            "Sort AI ideas into buy, configure, prebuilt, generative and custom-model work",
+            "Describe the Azure AI stack: Foundry, Foundry Models, AI Services, AI Search and Azure Machine Learning",
+            "Explain inference and why an LLM call behaves like a stateless, non-deterministic function"
+          ],
           "icons": [
-            "ai-services"
-          ]
+            "ai-services",
+            "ai-foundry",
+            "machine-learning"
+          ],
+          "status": "ready"
         },
         {
           "id": "8.2",
@@ -900,7 +907,7 @@
         },
         {
           "id": "8.3",
-          "title": "Azure AI Foundry - projects, hubs and the developer loop",
+          "title": "Microsoft Foundry - projects, hubs and the developer loop",
           "summary": "",
           "minutes": 14,
           "objectives": [],
