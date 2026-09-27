@@ -1,0 +1,111 @@
+[
+  {
+    "id": "8.5-q1",
+    "topic": "why RAG",
+    "scenario": "The assistant says the returns window is 60 days. The policy says 30.",
+    "stem": "What is the most reliable fix?",
+    "options": [
+      "Tell the model in the system prompt to be more careful",
+      "Fine-tune the model on the returns policy",
+      "Retrieve the current returns-policy passage for each question, put it in the prompt, and instruct the model to answer only from it and cite it",
+      "Switch to a larger model, which knows more"
+    ],
+    "answer": 2,
+    "explanation": "The model knows nothing about Northline, so it fills gaps plausibly. Retrieval gives it the actual policy, keeps answers current when the policy changes, and makes them checkable. Fine-tuned facts go stale, and bigger models guess just as confidently."
+  },
+  {
+    "id": "8.5-q2",
+    "topic": "retrieval first",
+    "scenario": "RAG answers are often wrong. The team has spent two weeks rewording the system prompt.",
+    "stem": "What should they measure first?",
+    "options": [
+      "How often the passage that answers each test question is among the top few search results",
+      "The model's temperature",
+      "The number of tokens in the system prompt",
+      "User satisfaction scores"
+    ],
+    "answer": 0,
+    "explanation": "If the right passage never reaches the prompt, no wording fixes the answer. A retrieval test set shows whether the problem is search, through chunking, query type or ranking, or generation."
+  },
+  {
+    "id": "8.5-q3",
+    "topic": "hybrid search",
+    "stem": "Why is hybrid search the recommended starting point in Azure AI Search?",
+    "options": [
+      "It is the only query type that supports filters",
+      "It combines keyword matching, which finds exact codes and names, with vector matching, which finds meaning, in one ranked list",
+      "It avoids the need for embeddings",
+      "It is cheaper than keyword search"
+    ],
+    "answer": 1,
+    "explanation": "Vector-only search misses exact terms such as SKU NL-4471; keyword-only search misses synonyms such as kids and children. Hybrid gets both, and the semantic ranker then improves the order of the top results."
+  },
+  {
+    "id": "8.5-q4",
+    "topic": "chunking",
+    "scenario": "Help content is indexed one document per entry. Answers about returns are vague, even though the policy is in the index.",
+    "stem": "What is the likely problem?",
+    "options": [
+      "The embedding model is too small",
+      "The index needs more replicas",
+      "Search should be keyword-only",
+      "Documents are not chunked, so the relevant section is buried in a long document; split along headings, with overlap and metadata on each chunk"
+    ],
+    "answer": 3,
+    "explanation": "Retrieval works on passages. Whole documents dilute relevance and fill the prompt with noise. Chunking by structure lets search return the one section that answers the question."
+  },
+  {
+    "id": "8.5-q5",
+    "topic": "security trimming",
+    "scenario": "The help index contains both public guides and internal guidance on spotting returns fraud. The public assistant uses the same index.",
+    "stem": "How do you stop internal content reaching shoppers?",
+    "options": [
+      "Tell the model in the system prompt not to mention internal documents",
+      "Store an audience or groups field on each chunk and always filter the public assistant's queries to public content",
+      "Use a smaller model",
+      "Delete the internal guidance"
+    ],
+    "answer": 1,
+    "explanation": "Permissions must be enforced in retrieval, so internal chunks never reach the prompt. A prompt instruction can be ignored or bypassed. The same filter pattern handles per-user permissions in internal assistants."
+  },
+  {
+    "id": "8.5-q6",
+    "topic": "embeddings",
+    "stem": "Which statement about embeddings is correct?",
+    "options": [
+      "Chunks and questions must be embedded with the same model, and changing the model means re-embedding the content",
+      "Embeddings are only needed for keyword search",
+      "Each embedding costs about as much as a chat completion",
+      "Embeddings store the original text in compressed form"
+    ],
+    "answer": 0,
+    "explanation": "Vectors from different models are not comparable, so a model change means re-indexing. Embedding is cheap: the whole catalogue costs under a dollar. Embeddings represent meaning; they are not the text itself."
+  },
+  {
+    "id": "8.5-q7",
+    "topic": "where vectors live",
+    "scenario": "A small internal tool needs 'find similar reviews' over a reviews table that already lives in PostgreSQL.",
+    "stem": "What is a reasonable choice?",
+    "options": [
+      "A new Azure AI Search S3 service",
+      "Fine-tune a model on the reviews",
+      "pgvector on the existing PostgreSQL database; move to AI Search only if hybrid ranking, indexers over several sources or permission filtering become necessary",
+      "Cosmos DB, because vector search needs NoSQL"
+    ],
+    "answer": 2,
+    "explanation": "Simple similarity over data you already store fits the store you already run. AI Search earns its cost when you need hybrid and semantic ranking, several sources and security trimming."
+  },
+  {
+    "id": "8.5-q8",
+    "topic": "when nothing is found",
+    "stem": "What should the assistant do when retrieval finds nothing relevant to a question?",
+    "options": [
+      "Answer from the model's general knowledge",
+      "Return the closest product anyway",
+      "Retry with a larger model",
+      "Say plainly that it does not know, and offer a route to a person or a search page"
+    ],
+    "answer": 3,
+    "explanation": "Answering from general knowledge is exactly how confident wrong answers happen. A clear 'I don't know' with a way forward is safer, and those questions should be added to the test set and the content."
+  }
+]

@@ -74,6 +74,6 @@
     "definition": "Further training a model on your own examples so it adopts a style, format or narrow skill - often letting a small model match a large one on one task. It is poor at teaching facts, which go stale; improve the prompt and add retrieval first. Fine-tuned deployments carry an hourly hosting charge.",
     "example": "After 500 approved descriptions, a small model is fine-tuned to write in the house style without a long system prompt.",
     "lessons": ["8.2"],
-    "related": ["System prompt", "Large language model"]
+    "related": ["System prompt", "Retrieval-augmented generation"]
   }
 ]

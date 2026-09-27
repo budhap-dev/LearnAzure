@@ -57,7 +57,7 @@
     "definition": "A PostgreSQL extension that adds a vector column type, distance operators and approximate nearest-neighbour indexes, so embeddings can be stored and searched next to ordinary relational data. It turns an existing Postgres database into a small vector store without a separate service. It is fine for millions of vectors; beyond that, or for hybrid search features, a dedicated search service earns its place.",
     "example": "Product embeddings in a vector(1536) column power \"customers who liked this also liked\" in the reviews service.",
     "icon": "postgresql",
-    "lessons": ["3.5"],
+    "lessons": ["3.5", "8.5"],
     "related": ["PostgreSQL extension", "Vector database", "Azure Database for PostgreSQL"]
   },
   {

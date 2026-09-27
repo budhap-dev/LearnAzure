@@ -952,12 +952,20 @@
         {
           "id": "8.5",
           "title": "Azure AI Search and retrieval-augmented generation",
-          "summary": "",
+          "summary": "Retrieval-augmented generation and why its quality is mostly search quality: Azure AI Search indexes and indexers, keyword, vector and hybrid queries with the semantic ranker, chunking and embeddings, and security trimming.",
           "minutes": 15,
-          "objectives": [],
+          "objectives": [
+            "Explain retrieval-augmented generation and why retrieval quality decides answer quality",
+            "Design an Azure AI Search index with indexers, hybrid search and the semantic ranker",
+            "Chunk and embed content well, and choose between AI Search, pgvector and Cosmos DB for vectors",
+            "Enforce permissions in retrieval and handle questions the content cannot answer"
+          ],
           "icons": [
-            "ai-search"
-          ]
+            "ai-search",
+            "azure-openai",
+            "search"
+          ],
+          "status": "ready"
         },
         {
           "id": "8.6",
