@@ -19,11 +19,10 @@ npm run build      # production build in web/dist
 
 ## Deploy
 
-- **GitHub Pages (live):** every merge to `main` builds and deploys to
-  https://budhap-dev.github.io/LearnAzure/. The repository's Pages source is set to
-  *GitHub Actions*, and CI builds with `BASE_PATH=/LearnAzure/`.
-- **Vercel:** import the repo, set the root directory to `web`, framework Vite. No other
-  configuration is needed (the app uses hash routing, and the base path defaults to `/`).
+Every merge to `main` builds and deploys to GitHub Pages at
+https://budhap-dev.github.io/LearnAzure/. The repository's Pages source is set to
+*GitHub Actions*, and CI builds with `BASE_PATH=/LearnAzure/`. The app uses hash routing, so
+deep links work without a server-side fallback; locally the base path defaults to `/`.
 
 ## Icons
 

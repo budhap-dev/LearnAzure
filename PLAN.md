@@ -257,7 +257,7 @@ Azure (default), Midnight, Ocean, Sunset, Forest, Paper and High contrast. Anima
 
 The footer shows `v<package version> · build <CI run number> · <short sha> · <date>`. The
 package version is bumped in every pull request; the build number and sha are injected by CI
-(or by Vercel's environment) on every deployment.
+on every deployment.
 
 ## Delivery workflow
 
@@ -267,7 +267,7 @@ package version is bumped in every pull request; the build number and sha are in
   production build.
 - Merged branches are deleted automatically.
 - CI deploys `main` to GitHub Pages after the build passes; pull requests build and verify
-  only. Vercel can still be pointed at `web/` directly.
+  only.
 - A module is "done" when: every lesson renders, every quiz passes verification, the module
   test exists, glossary terms and diagrams are in place, and a full read-through has been
   done for clarity.
