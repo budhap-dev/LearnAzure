@@ -115,7 +115,7 @@
     "definition": "Encrypting a service's data at rest with a key you hold in Key Vault instead of one Microsoft manages. It gives auditors control and revocation, and gives you a new failure mode: if the key is deleted or expires, the data and every backup encrypted with it become unreadable. Turn on Key Vault soft delete and purge protection before enabling it.",
     "example": "Azure SQL TDE uses a key in kv-shop-prod; purge protection means nobody can permanently delete it.",
     "icon": "key-vault",
-    "lessons": ["3.6", "4.6"],
+    "lessons": ["3.6", "4.6", "8.8"],
     "related": ["Key Vault", "Transparent data encryption", "Azure SQL Database"]
   }
 ]

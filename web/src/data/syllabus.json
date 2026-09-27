@@ -874,9 +874,9 @@
       "number": 8,
       "title": "Azure AI",
       "tagline": "Azure OpenAI, Microsoft Foundry, AI Services, AI Search, RAG, agents and responsible AI.",
-      "description": "The Azure AI platform at the level a lead needs: which service does what, how retrieval-augmented generation works, what an agent is, how to keep AI workloads secure and affordable, and how to evaluate quality before shipping.",
+      "description": "The Azure AI platform at the level a lead needs: sorting AI ideas into buy, configure, prebuilt, generative and custom work; Azure OpenAI and Foundry Models with the right model and deployment type; Microsoft Foundry projects and the developer loop; prebuilt AI services with confidence thresholds; retrieval-augmented generation on Azure AI Search; agents that act with the user's permissions; responsible AI with layered safety and evaluation gates; and the gateway, security and operations that keep it affordable.",
       "icon": "ai-foundry",
-      "status": "in-progress",
+      "status": "ready",
       "lessons": [
         {
           "id": "8.1",
@@ -892,8 +892,7 @@
             "ai-services",
             "ai-foundry",
             "machine-learning"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "8.2",
@@ -910,8 +909,7 @@
             "azure-openai",
             "foundry-models",
             "quotas"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "8.3",
@@ -928,8 +926,7 @@
             "ai-foundry",
             "foundry-project",
             "connections"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "8.4",
@@ -946,8 +943,7 @@
             "document-intelligence",
             "speech",
             "language"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "8.5",
@@ -964,8 +960,7 @@
             "ai-search",
             "azure-openai",
             "search"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "8.6",
@@ -982,8 +977,7 @@
             "foundry-agent-service",
             "api-management",
             "logic-apps"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "8.7",
@@ -1000,17 +994,23 @@
             "content-safety",
             "ai-foundry",
             "application-insights"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "8.8",
           "title": "Cost, security and operations for AI workloads",
-          "summary": "",
+          "summary": "Running AI like production: where token cost comes from and the levers that cut it, an AI gateway in API Management, identity, network and data security, and GenAIOps with model retirements and a kill switch.",
           "minutes": 12,
-          "objectives": [],
+          "objectives": [
+            "Estimate and reduce cost per conversation with routing, trimming, caching, batch and PTUs",
+            "Put an AI gateway in front of every model call for limits, metering, caching and failover",
+            "Secure AI workloads with managed identity, private endpoints, data zones, Policy and Defender",
+            "Operate AI with an inventory, dashboards, model-retirement planning and a tested kill switch"
+          ],
           "icons": [
-            "ai-gateway"
+            "ai-gateway",
+            "api-management",
+            "cost-management"
           ]
         }
       ]

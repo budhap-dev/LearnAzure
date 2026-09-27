@@ -32,7 +32,7 @@
     "definition": "The newer Redis offering on Azure, built on Redis Enterprise in every tier - Memory Optimized, Balanced, Compute Optimized and Flash Optimized - with modules such as search and JSON included. It publishes 99.99% zone-redundant and up to 99.999% with active geo-replication, and starts smaller than the old Premium tier. Treat it as the default for new work; it is a separate resource type, not an upgrade of an existing cache.",
     "example": "A new shop picks a small Balanced Managed Redis instance rather than a Premium Azure Cache for Redis.",
     "icon": "managed-redis",
-    "lessons": ["3.4"],
+    "lessons": ["3.4", "8.8"],
     "related": ["Azure Cache for Redis", "Cache"]
   },
   {
