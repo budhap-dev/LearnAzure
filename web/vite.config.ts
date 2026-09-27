@@ -6,12 +6,12 @@ import { defineConfig } from 'vite';
 /**
  * The version shown in the footer is assembled at build time:
  *   package.json version (bumped in every pull request)
- *   + build number   (CI run number, or Vercel deployment id) - "dev" locally
- *   + short git sha  (CI, Vercel, or the local checkout)
+ *   + build number   (CI run number) - "dev" locally
+ *   + short git sha  (CI, or the local checkout)
  *   + build date
  */
 function gitSha(): string {
-  const fromEnv = process.env.VITE_BUILD_SHA || process.env.GITHUB_SHA || process.env.VERCEL_GIT_COMMIT_SHA;
+  const fromEnv = process.env.VITE_BUILD_SHA || process.env.GITHUB_SHA;
   if (fromEnv) return fromEnv.slice(0, 7);
   try {
     return execSync('git rev-parse --short HEAD', { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
@@ -39,10 +39,10 @@ function contentStats() {
 }
 
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as { version: string };
-const buildNumber = process.env.VITE_BUILD_NUMBER || process.env.GITHUB_RUN_NUMBER || (process.env.VERCEL ? 'vercel' : 'dev');
+const buildNumber = process.env.VITE_BUILD_NUMBER || process.env.GITHUB_RUN_NUMBER || 'dev';
 
 export default defineConfig({
-  // GitHub Pages serves the site under /LearnAzure/; CI sets BASE_PATH. Locally and on Vercel it is /.
+  // GitHub Pages serves the site under /LearnAzure/; CI sets BASE_PATH. Locally it is /.
   base: process.env.BASE_PATH || '/',
   plugins: [react()],
   define: {
