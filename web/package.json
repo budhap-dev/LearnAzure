@@ -1,14 +1,15 @@
 {
   "name": "learnazure-web",
   "private": true,
-  "version": "1.0.3",
+  "version": "1.0.4",
   "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "npm run verify && tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "verify": "node scripts/verify-content.mjs"
+    "verify": "node scripts/verify-content.mjs",
+    "check:retirements": "node scripts/check-azure-retirements.mjs"
   },
   "dependencies": {
     "react": "^19.2.8",

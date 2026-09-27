@@ -24,6 +24,13 @@ https://budhap-dev.github.io/LearnAzure/. The repository's Pages source is set t
 *GitHub Actions*, and CI builds with `BASE_PATH=/LearnAzure/`. The app uses hash routing, so
 deep links work without a server-side fallback; locally the base path defaults to `/`.
 
+## Keeping content current
+
+Every Monday a GitHub Action ([azure-retirements.yml](.github/workflows/azure-retirements.yml))
+reads Microsoft's [Azure Updates feed](https://www.microsoft.com/releasecommunications/api/v2/azure/rss)
+and opens an issue labelled `azure-retirements` when a retirement announcement names a service or
+runtime version a lesson mentions. Run it locally with `npm run check:retirements -- --days 30`.
+
 ## Icons
 
 The Azure icons are Microsoft's official architecture icons, used unmodified under

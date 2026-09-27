@@ -1,0 +1,48 @@
+name: Azure retirements check
+
+# Weekly: read Microsoft's Azure Updates feed and open an issue when a retirement announcement
+# names a service or runtime version the lessons mention. Free: no build, no AI, one feed fetch.
+on:
+  schedule:
+    - cron: '0 6 * * 1' # Mondays 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      days:
+        description: 'How many days of announcements to check'
+        default: '7'
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    name: Check Azure retirements
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Check the feed against the lessons
+        env:
+          DAYS: ${{ inputs.days || '7' }}
+        run: node scripts/check-azure-retirements.mjs --days "$DAYS" > "$RUNNER_TEMP/report.md"
+        working-directory: web
+
+      - name: Open an issue if anything touches the course
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cat "$RUNNER_TEMP/report.md" >> "$GITHUB_STEP_SUMMARY"
+          if head -1 "$RUNNER_TEMP/report.md" | grep -q '<!-- matches: 0 -->'; then
+            echo "No retirements touch the course."
+            exit 0
+          fi
+          gh label create azure-retirements --color B60205 --description "Azure retirement that touches a lesson" --force
+          gh issue create \
+            --title "Azure retirements that touch the course: week of $(date -u +%Y-%m-%d)" \
+            --label azure-retirements \
+            --body-file "$RUNNER_TEMP/report.md"
