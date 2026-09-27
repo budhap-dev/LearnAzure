@@ -3,7 +3,7 @@
     "term": "Container image",
     "aliases": ["image", "Docker image", "OCI image"],
     "definition": "The immutable package a container runs from: your application, its runtime and the operating-system libraries it needs, in layers. It is built once and run anywhere a container host exists. The layers you inherited from the base image are yours to patch, even though you did not write them.",
-    "example": "acrshopprod.azurecr.io/api:9f3c1ab holds the Node API, Node 20 and ImageMagick in one image.",
+    "example": "acrshopprod.azurecr.io/api:9f3c1ab holds the Node API, Node 24 and ImageMagick in one image.",
     "icon": "container-registry",
     "lessons": ["2.5"],
     "related": ["Container", "Dockerfile", "Image tag", "Azure Container Registry"]
@@ -11,7 +11,7 @@
   {
     "term": "Dockerfile",
     "definition": "The text file that describes how to build a container image: which base image to start from, what to copy in, what to install and what command to run. It is the build recipe, and it belongs in the application repository next to the code. The FROM line is the single most important security decision in it.",
-    "example": "FROM node:20-slim, apt-get install imagemagick, COPY the app, CMD node server.js.",
+    "example": "FROM node:24-slim, apt-get install imagemagick, COPY the app, CMD node server.js.",
     "icon": "code",
     "lessons": ["2.5"],
     "related": ["Container image", "Container", "Azure Container Registry"]
