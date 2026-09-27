@@ -36,7 +36,7 @@ lesson quizzes, timed, graded). A **final learning test** draws from the whole c
 | 6 | Observability and reliability ✅ | 6 | Monitor, Log Analytics, App Insights, alerts, Well-Architected, HA/DR |
 | 7 | DevOps on Azure ✅ | 8 | Azure DevOps vs GitHub, pipelines, GitHub Actions, IaC with Bicep/Terraform, environments, release strategies |
 | 8 | Azure AI ✅ | 8 | Azure OpenAI and Microsoft Foundry, AI Services, AI Search, RAG, agents, responsible AI, cost and security of AI |
-| 9 | Architecture and leading a team 🚧 | 5 | Reference architectures, landing zones, migration, governance, certification map, capstone scenarios |
+| 9 | Architecture and leading a team ✅ | 5 | Reference architectures, landing zones, migration, governance, certification map, capstone scenarios |
 
 Around 63 lessons. Modules are built one at a time; each is verified end-to-end before the
 next starts.
@@ -199,34 +199,26 @@ gateway that meters, limits and caches. 8.3 uses the product's current name, Mic
 Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
 at random from the lesson quizzes. 55 new glossary terms (490 in total).
 
-### Module 9 — Architecture and leading a team — **in progress, one lesson per PR**
+### Module 9 — Architecture and leading a team — **shipped**
 
-| Id | Lesson | Status |
-|----|--------|--------|
-| 9.1 | Reference architectures you will meet most | shipped |
-| 9.2 | Landing zones and governance at scale | shipped |
-| 9.3 | Migrating an existing estate | shipped |
-| 9.4 | Certifications and how to keep learning | shipped |
-| 9.5 | Capstone scenarios - design reviews you can run | planned |
+| Id | Lesson |
+|----|--------|
+| 9.1 | Reference architectures you will meet most |
+| 9.2 | Landing zones and governance at scale |
+| 9.3 | Migrating an existing estate |
+| 9.4 | Certifications and how to keep learning |
+| 9.5 | Capstone scenarios - design reviews you can run |
 
-Glossary term ownership, so each lesson PR defines its own terms and no others:
+Leading Azure work across an organisation, released one lesson per PR (#42-#46). It starts from
+fourteen microservices for five developers and ends with designs that start from reference
+architectures, a landing zone run by a platform team with audit-first policy, vending and
+FinOps, a data-centre exit planned per workload, certifications chosen by role, and design
+reviews that record their decisions.
 
-- **9.1**: Azure Architecture Center, Reference architecture, Reliable Web App pattern,
-  Microservices, Modular monolith, Cloud design pattern.
-- **9.2**: Cloud Adoption Framework, Azure landing zone, Platform team, Subscription vending,
-  Policy initiative, Policy effect, FinOps, Azure Resource Graph.
-- **9.3**: Azure Migrate, Migration strategy, Dependency analysis, Migration wave, Strangler fig
-  pattern, Azure Arc.
-- **9.4**: Microsoft Learn, Role-based certification, Certification renewal, Applied Skills,
-  AZ-104, AZ-305, AZ-400.
-- **9.5**: Design review, Non-functional requirements, Architecture trade-off, Pre-mortem,
-  Technical debt.
-- Existing terms are extended, never redefined: Well-Architected Framework, Well-Architected
-  Review, Architecture decision record, Three-tier architecture, Hub-and-spoke, Management group,
-  Subscription, Azure Policy, Tag, Chargeback, Cost Management, Budget, Lift and shift, Azure
-  Hybrid Benefit, Azure Database Migration Service, Azure Site Recovery, AZ-900.
+Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
+at random from the lesson quizzes. 32 new glossary terms (522 in total).
 
-The module test is written with 9.5.
+With Module 9 the planned course is complete: 9 modules, 63 lessons, v1.0.0.
 
 ## App architecture
 

@@ -1,0 +1,43 @@
+[
+  {
+    "term": "Design review",
+    "aliases": ["architecture review board", "ARB", "design document", "design doc", "RFC"],
+    "definition": "A structured conversation that tests a design against its requirements before it is expensive to change: a short design document with numbers, a timed walk through the Well-Architected pillars, a pre-mortem, and recorded outputs - ADRs, owned actions and a verdict of go, go with conditions or not yet. Weight it by risk and hold it early.",
+    "example": "The partner API review took 60 minutes, produced four ADRs and three actions, and ended \"go with conditions: per-partner identities first\".",
+    "icon": "users",
+    "lessons": ["9.5"],
+    "related": ["Architecture decision record", "Well-Architected Review", "Pre-mortem", "Non-functional requirements"]
+  },
+  {
+    "term": "Non-functional requirements",
+    "aliases": ["NFRs", "NFR", "quality attributes", "-ilities"],
+    "definition": "The requirements about how well a system works rather than what it does - availability, RTO and RPO, latency, peak load, security and compliance, data residency, cost ceiling, operability - stated as numbers so a design can be tested against them. \"Highly available\" cannot be reviewed; \"99.9% monthly with a one-hour RTO\" can.",
+    "example": "Checkout: 99.9% monthly, RTO one hour, RPO five minutes, p95 under 400 ms at 2,000 requests per second, EU data, under $6,000 a month.",
+    "lessons": ["9.5"],
+    "related": ["RTO", "RPO", "Service level objective", "Design review"]
+  },
+  {
+    "term": "Architecture trade-off",
+    "aliases": ["trade-off", "tradeoff", "trade-offs"],
+    "definition": "The deliberate spending of one quality to buy another - a second region buys reliability with cost and complexity, private endpoints buy security with operational effort, a cache buys speed with staleness. Good reviews make every significant trade-off explicit, agreed with the business where it matters, and recorded in an ADR.",
+    "example": "Active-active was declined: it would triple cost to cut an RTO the board had agreed at one hour.",
+    "lessons": ["9.5"],
+    "related": ["Well-Architected Framework", "Architecture decision record", "Design review"]
+  },
+  {
+    "term": "Pre-mortem",
+    "aliases": ["premortem", "pre-mortem exercise", "prospective hindsight"],
+    "definition": "A short exercise in a design review: imagine it is a year later and the system has failed badly, then list the reasons why. It surfaces risks people hesitate to raise, and each credible one becomes a design change, an action or an accepted risk in an ADR.",
+    "example": "The pre-mortem on the staff assistant produced \"HR documents leaked to all staff\", which led to group-based filtering in the index.",
+    "lessons": ["9.5"],
+    "related": ["Design review", "Threat modelling"]
+  },
+  {
+    "term": "Technical debt",
+    "aliases": ["tech debt", "technical debt register", "debt register"],
+    "definition": "The future cost of a shortcut taken now - deliberately, such as launching in one region, or accidentally, through neglect. Deliberate debt is recorded in a register with its interest (the ongoing cost or risk) and the trigger that forces repayment, so it is a decision rather than a surprise.",
+    "example": "\"Single region for launch; repay when revenue passes £2m a month or the board lowers the RTO\" sits in the loyalty programme's register.",
+    "lessons": ["9.5"],
+    "related": ["Architecture decision record", "Architecture trade-off"]
+  }
+]

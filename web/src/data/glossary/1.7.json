@@ -29,7 +29,7 @@
     "aliases": ["recovery point objective"],
     "definition": "The maximum amount of data loss a business can accept after a failure, expressed as time. An RPO of 15 minutes means replication or backups must never be more than 15 minutes behind. A nightly backup implies an RPO of 24 hours.",
     "example": "Azure SQL geo-replication keeps the secondary a few seconds behind, well inside the shop's 15-minute RPO.",
-    "lessons": ["1.7", "6.5"],
+    "lessons": ["1.7", "6.5", "9.5"],
     "related": ["RTO", "Disaster recovery", "Azure SQL Database"]
   },
   {
@@ -37,7 +37,7 @@
     "aliases": ["recovery time objective"],
     "definition": "The maximum time a service may be unavailable after a failure before it must be running again. Meeting an RTO depends less on the technology than on whether the failover has been rehearsed.",
     "example": "An RTO of 1 hour for the ordering API, tested by a quarterly failover to the paired region.",
-    "lessons": ["1.7", "6.5"],
+    "lessons": ["1.7", "6.5", "9.5"],
     "related": ["RPO", "Disaster recovery", "High availability"]
   },
   {
