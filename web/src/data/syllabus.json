@@ -934,12 +934,20 @@
         {
           "id": "8.4",
           "title": "Azure AI Services - vision, speech, language and documents",
-          "summary": "",
+          "summary": "The prebuilt services for documents, vision, speech, language and translation, when to use them instead of an LLM, custom models, confidence thresholds with human review, and Content Understanding in between.",
           "minutes": 14,
-          "objectives": [],
+          "objectives": [
+            "Match document, vision, speech, language and translation tasks to the right Azure AI service",
+            "Decide between a task-specific service, a custom model and a large language model",
+            "Automate extraction safely with confidence thresholds and a review queue",
+            "Handle personal data, regional availability and offline sites with redaction and containers"
+          ],
           "icons": [
-            "document-intelligence"
-          ]
+            "document-intelligence",
+            "speech",
+            "language"
+          ],
+          "status": "ready"
         },
         {
           "id": "8.5",
