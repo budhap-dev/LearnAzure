@@ -11,6 +11,7 @@ const NAV = [
   { to: '/course', label: 'Course' },
   { to: '/glossary', label: 'Glossary' },
   { to: '/progress', label: 'Progress' },
+  { to: '/status', label: 'Status' },
   { to: '/about', label: 'About' },
 ];
 

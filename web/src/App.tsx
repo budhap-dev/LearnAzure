@@ -8,6 +8,7 @@ import { Glossary } from './routes/Glossary';
 import { Search } from './routes/Search';
 import { ProgressPage } from './routes/ProgressPage';
 import { About } from './routes/About';
+import { BuildStatus } from './routes/BuildStatus';
 import { NotFound } from './routes/NotFound';
 
 // The lesson and test pages pull in the Markdown renderer and the quiz engine; loading them
@@ -39,6 +40,7 @@ const router = createHashRouter([
       { path: 'glossary', element: <Glossary /> },
       { path: 'search', element: <Search /> },
       { path: 'progress', element: <ProgressPage /> },
+      { path: 'status', element: <BuildStatus /> },
       { path: 'about', element: <About /> },
       { path: '*', element: <NotFound /> },
     ],

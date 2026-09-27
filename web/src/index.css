@@ -673,6 +673,39 @@ p.callout { padding: 0.8rem 1rem; }
 .lid { font-family: var(--mono); font-weight: 700; }
 .see-also { display: inline-flex; flex-wrap: wrap; gap: 0.3rem; align-items: center; }
 
+/* ---------- Build status ---------- */
+.build-status h2 { margin-top: 1.8rem; }
+.build-status .eyebrow { color: var(--muted); font-family: var(--mono); }
+.status-summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin: 1.2rem 0; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+.status-summary > div { display: grid; gap: 0.3rem; padding: 0.9rem 1rem; background: var(--surface); }
+.status-summary .eyebrow { margin: 0; }
+.status-summary strong { font-family: var(--mono); font-size: 1.6rem; font-variant-numeric: tabular-nums; }
+.status-summary small { font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.status-track { display: flex; gap: 6px; margin-bottom: 0.3rem; }
+.status-track > span { display: flex; flex-basis: 0; gap: 2px; }
+.status-track i { flex: 1; height: 14px; border-radius: 2px; background: var(--border); }
+.status-cells { display: inline-flex; gap: 2px; margin-right: 0.6rem; vertical-align: -2px; }
+.status-cells i { width: 9px; height: 14px; border-radius: 2px; background: var(--border); }
+.status-track .on, .status-cells .on { background: var(--mc); }
+.status-track .m1, .status-cells.m1 { --mc: var(--m1); } .status-track .m2, .status-cells.m2 { --mc: var(--m2); } .status-track .m3, .status-cells.m3 { --mc: var(--m3); }
+.status-track .m4, .status-cells.m4 { --mc: var(--m4); } .status-track .m5, .status-cells.m5 { --mc: var(--m5); } .status-track .m6, .status-cells.m6 { --mc: var(--m6); }
+.status-track .m7, .status-cells.m7 { --mc: var(--m7); } .status-track .m8, .status-cells.m8 { --mc: var(--m8); } .status-track .m9, .status-cells.m9 { --mc: var(--m9); }
+.status-table td { vertical-align: middle; }
+.status-table .num { font-family: var(--mono); font-size: 0.88rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.status-table .module-num { width: 1.8rem; height: 1.8rem; border-radius: 8px; font-size: 0.9rem; }
+.status-module { font-weight: 600; min-width: 12rem; }
+.status-table tr.pending td { background: var(--surface-2); }
+.status-table .pill { white-space: nowrap; }
+.status-table tfoot td { font-weight: 700; border-top: 2px solid var(--text); border-bottom: 0; }
+.status-module-list { margin-top: 0.5rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); }
+.status-module-list summary { display: flex; align-items: center; gap: 0.7rem; padding: 0.7rem 0.9rem; cursor: pointer; }
+.status-module-list summary .module-num { width: 1.8rem; height: 1.8rem; border-radius: 8px; font-size: 0.9rem; }
+.status-module-list summary .small { margin-left: auto; white-space: nowrap; }
+.status-module-list ul { list-style: none; margin: 0; padding: 0 0.9rem 0.5rem; }
+.status-module-list li { display: grid; grid-template-columns: 2.6rem 1fr auto; gap: 0.8rem; align-items: baseline; padding: 0.5rem 0; border-top: 1px solid var(--border); color: var(--muted); }
+.status-module-list li.on { color: var(--text); }
+.status-module-list li.on .small { color: var(--good); }
+
 /* ---------- About ---------- */
 .about section { margin-top: 1.4rem; }
 .about th { width: 10rem; }
@@ -692,12 +725,13 @@ p.callout { padding: 0.8rem 1rem; }
   .hero-art span { padding: 0.4rem; border-radius: 12px; }
   .hero-art img { width: 30px; height: 30px; }
   .how-grid, .module-grid { grid-template-columns: repeat(2, 1fr); }
-  .stat-grid { grid-template-columns: repeat(2, 1fr); }
+  .stat-grid, .status-summary { grid-template-columns: repeat(2, 1fr); }
   .two-col { grid-template-columns: 1fr; }
   .toc ol { columns: 1; }
 }
 
-@media (max-width: 720px) {
+/* The header collapses into the menu drawer before the six nav links run out of room. */
+@media (max-width: 1000px) {
   .main-nav, .header-right .header-search { display: none; }
   .menu-btn { display: block; }
   .theme-button-label { display: none; }
@@ -712,7 +746,12 @@ p.callout { padding: 0.8rem 1rem; }
   .drawer-search .search-suggest { left: 0; right: auto; width: 100%; }
   .drawer-stat { margin-top: 1rem; font-size: 0.85rem; color: var(--muted); }
   .drawer-backdrop { display: block; position: fixed; inset: var(--header-h) 0 0 0; background: rgba(0,0,0,0.35); z-index: 40; }
+}
+
+@media (max-width: 720px) {
   .how-grid, .module-grid, .stat-grid { grid-template-columns: 1fr; }
+  .status-cells { display: none; }
+  .status-summary small { display: block; }
   .lesson-row { grid-template-columns: auto auto 1fr; }
   .lesson-row .lesson-icons, .lesson-row .lesson-minutes { display: none; }
   .lesson-header { grid-template-columns: 1fr; }
