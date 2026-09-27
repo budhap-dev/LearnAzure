@@ -916,12 +916,20 @@
         {
           "id": "8.3",
           "title": "Microsoft Foundry - projects, hubs and the developer loop",
-          "summary": "",
+          "summary": "The Foundry resource and its projects, hubs as the older model, connections and access, one resource per environment in its own subscription, and the loop from playground to code, evaluation, tracing and the pipeline.",
           "minutes": 14,
-          "objectives": [],
+          "objectives": [
+            "Explain the Foundry resource, projects and hubs, and choose between them",
+            "Set up connections and access with managed identities and least privilege",
+            "Structure Foundry per environment and subscription, knowing that quota is shared per subscription and region",
+            "Follow the developer loop from playground to an evaluated, traced pipeline release"
+          ],
           "icons": [
-            "ai-foundry"
-          ]
+            "ai-foundry",
+            "foundry-project",
+            "connections"
+          ],
+          "status": "ready"
         },
         {
           "id": "8.4",

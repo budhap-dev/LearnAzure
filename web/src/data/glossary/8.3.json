@@ -1,0 +1,47 @@
+[
+  {
+    "term": "Microsoft Foundry",
+    "aliases": ["Azure AI Foundry", "AI Foundry", "Azure AI Studio", "Foundry resource", "Foundry portal"],
+    "definition": "Azure's platform for building AI applications and agents - models, prebuilt AI services, agents, evaluation, tracing and governance in one portal and SDK - formerly Azure AI Foundry and before that Azure AI Studio. Its top-level Azure resource holds model deployments, AI services, networking and the link to quota; projects beneath it hold each application's work.",
+    "example": "ai-shop-prod is the production Foundry resource, created by Bicep, with the assistant and catalogue projects beneath it.",
+    "icon": "ai-foundry",
+    "lessons": ["8.3", "8.1"],
+    "related": ["Foundry project", "Foundry Models", "Azure OpenAI"]
+  },
+  {
+    "term": "Foundry project",
+    "aliases": ["project", "project endpoint", "AI project"],
+    "definition": "A child of a Microsoft Foundry resource that acts as the working area for one application or team: its agents, files, evaluations, traces and connections, with its own managed identity, access control and endpoint. Projects in one resource share its model deployments. The recommended project type for new work.",
+    "example": "The assistant project holds the shopping agent, its evaluation runs and a connection to AI Search; the Shop API calls its endpoint with a managed identity.",
+    "icon": "foundry-project",
+    "lessons": ["8.3"],
+    "related": ["Microsoft Foundry", "Foundry connection", "Foundry hub"]
+  },
+  {
+    "term": "Foundry hub",
+    "aliases": ["hub", "AI hub", "hub-based project", "Azure AI hub"],
+    "definition": "The older way to organise Foundry work: a hub built on an Azure Machine Learning workspace, bringing its own storage account and key vault, with projects beneath it. Still needed for some Azure Machine Learning features such as prompt flow and training open models on managed compute; new work should use Foundry projects instead.",
+    "example": "Dev's hub from last spring is replaced by a Foundry project, and its storage account and key vault are deleted.",
+    "icon": "ai-studio",
+    "lessons": ["8.3"],
+    "related": ["Foundry project", "Azure Machine Learning"]
+  },
+  {
+    "term": "AI playground",
+    "aliases": ["playground", "chat playground", "agents playground", "View code"],
+    "definition": "The Foundry portal's interactive area for trying models, system prompts, agents and your own data in minutes, with View code to show the equivalent SDK call. It is for exploring; anything worth keeping moves into the repository, where it can be reviewed and evaluated.",
+    "example": "Ana compares two models on twenty tricky customer questions in the playground, then commits the winning prompt and adds the questions to the test set.",
+    "icon": "ai-foundry",
+    "lessons": ["8.3"],
+    "related": ["Microsoft Foundry", "System prompt"]
+  },
+  {
+    "term": "Foundry connection",
+    "aliases": ["connection", "connected resource"],
+    "definition": "A named, reusable link from a Foundry resource or project to another service - AI Search, storage, Application Insights, another model endpoint or Bing grounding. Code and agents use the connection by name, and it should authenticate with the project's managed identity wherever the target supports Microsoft Entra ID.",
+    "example": "The assistant project's product-search connection points at the AI Search service using the project's identity, with no key stored.",
+    "icon": "connections",
+    "lessons": ["8.3"],
+    "related": ["Foundry project", "Managed identity"]
+  }
+]

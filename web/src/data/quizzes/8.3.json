@@ -1,0 +1,110 @@
+[
+  {
+    "id": "8.3-q1",
+    "topic": "resource and project",
+    "stem": "How do responsibilities split between a Foundry resource and a Foundry project?",
+    "options": [
+      "The resource holds model deployments, networking, keys and the link to quota; a project is one app's working area with its own identity, access, connections, agents and evaluations",
+      "They are the same thing with different names in the portal and the SDK",
+      "Each project has its own copy of every model deployment",
+      "The project holds networking; the resource holds agents"
+    ],
+    "answer": 0,
+    "explanation": "The resource is the governance boundary, and projects share its deployments. Giving each app its own project keeps its files, agents and traces separate without duplicating models."
+  },
+  {
+    "id": "8.3-q2",
+    "topic": "shared quota",
+    "scenario": "Dev and prod traffic for the assistant slowed on the same afternoon while the team load-tested dev. Both Foundry resources are in the same subscription and region.",
+    "stem": "What is the most likely cause and fix?",
+    "options": [
+      "The playground was left open; close it",
+      "The prompt is too long; shorten it",
+      "Tokens-per-minute quota is per subscription, region and model, so dev's load test used prod's capacity; put each environment in its own subscription",
+      "Foundry projects can only serve one request at a time"
+    ],
+    "answer": 2,
+    "explanation": "Deployments share out the subscription's regional quota, so two environments in one subscription compete for it. Separate subscriptions per environment, as the landing zone already does, keep their quota apart."
+  },
+  {
+    "id": "8.3-q3",
+    "topic": "hubs",
+    "scenario": "A new team asks whether to create a hub or a Foundry project for a chat assistant with agents and evaluations.",
+    "stem": "What do you advise?",
+    "options": [
+      "A hub, because it includes a storage account and key vault",
+      "A Foundry project; keep hubs only for features that still need one, such as prompt flow",
+      "Both, one for dev and one for prod",
+      "Neither; call the model from code with a key"
+    ],
+    "answer": 1,
+    "explanation": "Foundry projects are the current model and get agents and SDK features first, with no extra resources to run. Hubs, built on Azure Machine Learning workspaces, remain for particular features."
+  },
+  {
+    "id": "8.3-q4",
+    "topic": "playground to production",
+    "scenario": "The assistant's system prompt was tuned in the playground and pasted into the code by hand, twice, with small differences. Nobody knows which one is live.",
+    "stem": "Which practice prevents this?",
+    "options": [
+      "Only one person may use the playground",
+      "Screenshot the playground settings into the wiki",
+      "Let production read the prompt from the playground directly",
+      "Keep prompts in the repository, change them through pull requests, and run evaluations in the pipeline so a worse prompt fails the build"
+    ],
+    "answer": 3,
+    "explanation": "A prompt is code. Version control shows what is live and who changed it, and an evaluation gate catches regressions. The playground is for exploring, not a source of truth."
+  },
+  {
+    "id": "8.3-q5",
+    "topic": "connections",
+    "stem": "What is the best way for a project's agent to reach Azure AI Search?",
+    "options": [
+      "A connection that authenticates with the project's managed identity, referenced by name in code",
+      "The AI Search admin key in an app setting",
+      "A key pasted into the system prompt",
+      "Make the search index public"
+    ],
+    "answer": 0,
+    "explanation": "Connections give code a stable name for a dependency, and managed identity removes the secret altogether. Admin keys grant full control of the service and leak easily."
+  },
+  {
+    "id": "8.3-q6",
+    "topic": "access",
+    "scenario": "Builders need to try models, run agents and evaluations in dev. Production must change only through the pipeline.",
+    "stem": "Which access model fits?",
+    "options": [
+      "Owner on the prod Foundry resource for everyone, to avoid blocking anyone",
+      "A shared account for the team",
+      "A role such as Azure AI User on the dev projects, Reader on prod, and the pipeline's identity deploying prod changes",
+      "Key-based access for builders, and Entra ID for apps"
+    ],
+    "answer": 2,
+    "explanation": "Least privilege with a single path to production is the Module 4 and Module 7 pattern, applied to AI. Owner on prod and shared accounts both defeat it, and keys are hard to trace and revoke."
+  },
+  {
+    "id": "8.3-q7",
+    "topic": "what it costs",
+    "stem": "What do you pay for in a Foundry setup?",
+    "options": [
+      "A monthly fee per project",
+      "Model tokens, AI service calls and connected resources such as AI Search, storage and Application Insights; the Foundry resource and projects themselves cost nothing",
+      "A licence per builder using the portal",
+      "Nothing, because Foundry is free"
+    ],
+    "answer": 1,
+    "explanation": "Costs follow usage and the resources you connect. Hubs add their own storage, key vault and any compute left running, which is one more reason to prefer Foundry projects."
+  },
+  {
+    "id": "8.3-q8",
+    "topic": "developer loop",
+    "stem": "Which order best describes Foundry's developer loop?",
+    "options": [
+      "Deploy, then evaluate if users complain",
+      "Fine-tune, then prototype, then deploy",
+      "Playground, then deploy straight from the portal",
+      "Explore in the playground, move to code, evaluate against a test set, trace, ship through the pipeline, and monitor production to improve the test set"
+    ],
+    "answer": 3,
+    "explanation": "The loop turns exploration into reviewed, evaluated, observable changes. Portal deployments and evaluating only after complaints skip the gates that make AI changes safe."
+  }
+]

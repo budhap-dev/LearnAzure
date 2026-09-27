@@ -21,7 +21,7 @@
     "aliases": ["Owner", "Contributor", "Reader", "User Access Administrator", "Storage Blob Data Reader", "Key Vault Secrets User"],
     "definition": "A role definition Microsoft maintains. Owner, Contributor and Reader govern the control plane; service-specific data roles such as Storage Blob Data Contributor or Key Vault Secrets User govern the data. Owner and Contributor can still list storage account keys, which read everything.",
     "example": "The API needs Storage Blob Data Contributor on one container, not Owner on the storage account.",
-    "lessons": ["4.5"],
+    "lessons": ["4.5", "8.3"],
     "related": ["Role assignment", "Custom role", "Control plane", "Data plane"]
   },
   {
