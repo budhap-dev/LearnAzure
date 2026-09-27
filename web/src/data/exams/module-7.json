@@ -1,0 +1,203 @@
+{
+  "module": 7,
+  "minutes": 25,
+  "poolFromLessons": 10,
+  "questions": [
+    {
+      "id": "m7-q1",
+      "topic": "the pipeline as the only way",
+      "scenario": "Engineers can still change production settings in the portal during incidents, and the next pipeline run keeps undoing their fixes.",
+      "stem": "What is the underlying fix?",
+      "options": [
+        "Run the pipeline less often",
+        "Make the pipeline the only way to production: configuration in code, engineers on Reader with PIM for emergencies, and emergency fixes committed back to code",
+        "Stop using infrastructure as code",
+        "Let the portal win whenever there is a conflict"
+      ],
+      "answer": 1,
+      "explanation": "Two ways into production guarantee drift. Keeping configuration in code and access read-only, with a controlled emergency path whose changes flow back into code, makes the pipeline the single source of truth."
+    },
+    {
+      "id": "m7-q2",
+      "topic": "toolchain choice",
+      "scenario": "A new product team's code is on GitHub. An older team runs a reliable Azure Pipeline to an on-premises server and tracks business work in Azure Boards.",
+      "stem": "What is the most pragmatic approach?",
+      "options": [
+        "Force both teams onto one tool immediately",
+        "Use GitHub and Actions for the new product, keep the working Azure Pipeline and Boards, and give each tool a clear job",
+        "Duplicate every repository in both tools",
+        "Move everything to a third tool"
+      ],
+      "answer": 1,
+      "explanation": "Start where the code and the team already are, and migrate only when running both costs more than moving. Both toolchains deploy to Azure well, and they integrate. Duplication creates two sources of truth."
+    },
+    {
+      "id": "m7-q3",
+      "topic": "branching",
+      "scenario": "A continuously deployed API uses long-lived feature branches merged every few weeks, with painful conflicts and big-bang releases.",
+      "stem": "What should replace this?",
+      "options": [
+        "GitFlow with more release branches",
+        "Trunk-based development: short-lived branches, small pull requests, main always releasable, and feature flags for unfinished work",
+        "Committing straight to main without review",
+        "One branch per environment"
+      ],
+      "answer": 1,
+      "explanation": "Frequent, small integration keeps conflicts small and main deployable, and flags let unfinished work merge safely. Branch-per-environment models make environments diverge, and skipping review removes the quality gate."
+    },
+    {
+      "id": "m7-q4",
+      "topic": "protecting main",
+      "scenario": "An administrator bypassed branch protection to push a hotfix, which broke the build for a day.",
+      "stem": "What should the protection rules include?",
+      "options": [
+        "An exemption for administrators",
+        "Rules that apply to administrators too, with required checks and approvals, and any emergency bypass logged and reviewed",
+        "Fewer required checks",
+        "Protection only on release branches"
+      ],
+      "answer": 1,
+      "explanation": "Controls the most privileged people can skip fail when pressure is highest. Applying them to everyone, with an auditable emergency path, keeps main protected."
+    },
+    {
+      "id": "m7-q5",
+      "topic": "build once",
+      "scenario": "A fix passed in test but failed in production because the pipeline rebuilt the code for each environment.",
+      "stem": "What should the pipeline do?",
+      "options": [
+        "Rebuild with pinned tool versions",
+        "Build once, publish the artefact, and deploy that same artefact to every environment",
+        "Skip test to avoid the difference",
+        "Build in production only"
+      ],
+      "answer": 1,
+      "explanation": "Promoting a single artefact guarantees production runs exactly what was tested. Separate builds can still differ in subtle ways, and skipping test removes the check."
+    },
+    {
+      "id": "m7-q6",
+      "topic": "deployment identity",
+      "scenario": "A GitHub Actions workflow deploys with a client secret stored in repository secrets, and any branch can use it.",
+      "stem": "What is the better setup?",
+      "options": [
+        "Rotate the secret monthly",
+        "OIDC federation with a separate Azure identity per GitHub environment, scoped to its resource group, and deployment branch rules on production",
+        "Store the secret in a variable file in the repository",
+        "Use one identity with Owner on the subscription for all environments"
+      ],
+      "answer": 1,
+      "explanation": "Federation removes the stored secret, binding identities to environments keeps production credentials out of other jobs, and branch rules stop feature branches reaching production. Rotation and broader scope keep or worsen the risk."
+    },
+    {
+      "id": "m7-q7",
+      "topic": "unbypassable approvals",
+      "scenario": "An Azure Pipelines production approval is implemented as a manual step in the YAML file, and a developer removes it in a pull request.",
+      "stem": "Where should the approval live?",
+      "options": [
+        "In a comment at the top of the YAML",
+        "On the production environment's approvals and checks, which the YAML cannot remove",
+        "In the pipeline's README",
+        "Nowhere; approvals slow delivery"
+      ],
+      "answer": 1,
+      "explanation": "Environment checks are enforced by the platform whenever a deployment targets the environment, so editing the pipeline file cannot bypass them. Controls in the file can be removed in the same change that needs them removed."
+    },
+    {
+      "id": "m7-q8",
+      "topic": "infrastructure preview",
+      "scenario": "A Bicep pull request renames the production SQL database to match a new naming convention.",
+      "stem": "What should stop the data loss?",
+      "options": [
+        "Nothing; Azure renames resources in place",
+        "The what-if output on the pull request showing a Delete for the old database, read by reviewers before approving",
+        "A faster pipeline",
+        "A larger database tier"
+      ],
+      "answer": 1,
+      "explanation": "Renaming a resource in code means deleting it and creating a new one. What-if or plan output on every infrastructure pull request exposes destructive changes, and reviewers must read the Delete lines."
+    },
+    {
+      "id": "m7-q9",
+      "topic": "drift",
+      "scenario": "Production no longer matches the Bicep in main after several portal changes during incidents.",
+      "stem": "How should drift be managed?",
+      "options": [
+        "Export the current state over the code",
+        "Prevent it with read-only access and policy, detect it with a scheduled what-if, and resolve each difference by updating code or re-applying it",
+        "Ignore it until the next deployment",
+        "Stop using infrastructure as code"
+      ],
+      "answer": 1,
+      "explanation": "Prevention, detection and deliberate resolution keep code and reality in agreement. Exporting state over code makes unreviewed changes permanent, and ignoring drift lets the next deployment undo fixes unpredictably."
+    },
+    {
+      "id": "m7-q10",
+      "topic": "leaked secret",
+      "scenario": "A production API key was committed three weeks ago; a developer removed it in a later commit.",
+      "stem": "What must happen first?",
+      "options": [
+        "Nothing; it is gone",
+        "Rotate the key immediately, then clean history and store the new key in Key Vault, with push protection to prevent a repeat",
+        "Make the repository private",
+        "Rename the variable"
+      ],
+      "answer": 1,
+      "explanation": "The key lives on in history, clones and forks, so it must be assumed compromised and replaced first. Push protection stops recognised secrets reaching the repository in future."
+    },
+    {
+      "id": "m7-q11",
+      "topic": "supply chain",
+      "scenario": "A workflow uses third-party actions by tag, the build job holds production deploy credentials, and production pulls images tagged latest.",
+      "stem": "Which changes reduce supply-chain risk most?",
+      "options": [
+        "Use @master for actions to get fixes faster",
+        "Pin actions to commit SHAs, keep production credentials only in the deploy job, and deploy images by digest with verified provenance",
+        "Run the workflow less often",
+        "Make the registry public"
+      ],
+      "answer": 1,
+      "explanation": "Pinned actions cannot be silently swapped, separating untrusted build code from credentials limits what a compromised dependency can reach, and digest-plus-provenance ensures production runs only what the pipeline built."
+    },
+    {
+      "id": "m7-q12",
+      "topic": "release strategy",
+      "scenario": "A checkout release to everyone at once failed 8% of payments, and rolling back by rebuilding took 40 minutes.",
+      "stem": "What release approach fits the API on App Service?",
+      "options": [
+        "Release less often",
+        "Deploy to a staging slot, smoke test, route a small canary share gated on SLO comparisons, then swap - keeping swap-back as a seconds-long rollback",
+        "Deploy directly to production at night",
+        "Rebuild faster"
+      ],
+      "answer": 1,
+      "explanation": "Slots and canaries separate deploying from releasing: few users see the new version first, metrics decide whether it proceeds, and swapping back restores the previous version instantly."
+    },
+    {
+      "id": "m7-q13",
+      "topic": "rollback and data",
+      "scenario": "After a swap back, the previous version fails because the new release had renamed a database column.",
+      "stem": "What practice prevents this?",
+      "options": [
+        "Never roll back",
+        "Expand and contract: add new structures first, migrate, and remove old ones in a later release, so each schema change works with the previous code",
+        "Keep the database in a deployment slot",
+        "Only change the database on weekends"
+      ],
+      "answer": 1,
+      "explanation": "Code rolls back in seconds; data does not. Keeping every schema change compatible with the previous version means rollbacks always meet a database they understand."
+    },
+    {
+      "id": "m7-q14",
+      "topic": "measuring improvement",
+      "scenario": "The CTO asks whether delivery is improving. The team reports story points completed per sprint.",
+      "stem": "What should they measure instead?",
+      "options": [
+        "Lines of code per developer",
+        "The DORA metrics - deployment frequency, lead time, change failure rate and time to restore - as trends for the team, alongside SLOs",
+        "Number of pipeline runs",
+        "Hours worked"
+      ],
+      "answer": 1,
+      "explanation": "The DORA metrics measure delivery outcomes, pairing speed with stability, and SLOs show the user's experience. Effort and activity measures say little about outcomes and are easily gamed."
+    }
+  ]
+}

@@ -46,7 +46,7 @@
     "aliases": ["SLO", "burn rate"],
     "definition": "An internal target for an SLI over a period, such as 99.5% of checkouts good over 30 days. It is set tighter than any external SLA so problems are caught before customers are owed credits, and alerts fire on how fast it is being missed.",
     "example": "Checkout's SLO is 99.5% over 30 days; a fast-burn alert pages when the last hour would exhaust the budget in two days.",
-    "lessons": ["6.4"],
+    "lessons": ["6.4", "7.8"],
     "related": ["Service level indicator", "Error budget", "SLA"]
   },
   {
@@ -54,7 +54,7 @@
     "aliases": ["error budget policy"],
     "definition": "The amount of unreliability an SLO allows - for 99.5% over 30 days, about 3.6 hours of bad checkouts a month. While budget remains, the team ships features; when it is spent, reliability work comes first. It turns 'reliable enough?' into a number.",
     "example": "Two incidents spend 80% of checkout's error budget by mid-month, so the next sprint goes on the payment retry logic.",
-    "lessons": ["6.4"],
+    "lessons": ["6.4", "7.8"],
     "related": ["Service level objective", "Service level indicator"]
   },
   {

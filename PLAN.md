@@ -34,7 +34,7 @@ lesson quizzes, timed, graded). A **final learning test** draws from the whole c
 | 4 | Networking, identity and security ✅ | 8 | VNets, load balancing, private endpoints, Entra ID, RBAC, Key Vault, Defender |
 | 5 | Integration and messaging ✅ | 6 | Service Bus, Event Grid, Event Hubs, API Management, Logic Apps |
 | 6 | Observability and reliability ✅ | 6 | Monitor, Log Analytics, App Insights, alerts, Well-Architected, HA/DR |
-| 7 | DevOps on Azure 🚧 | 8 | Azure DevOps vs GitHub, pipelines, GitHub Actions, IaC with Bicep/Terraform, environments, release strategies |
+| 7 | DevOps on Azure ✅ | 8 | Azure DevOps vs GitHub, pipelines, GitHub Actions, IaC with Bicep/Terraform, environments, release strategies |
 | 8 | Azure AI | 8 | Azure OpenAI and AI Foundry, AI Services, AI Search, RAG, agents, responsible AI, cost and security of AI |
 | 9 | Architecture and leading a team | 5 | Reference architectures, landing zones, migration, governance, certification map, capstone scenarios |
 
@@ -153,41 +153,28 @@ and decision records.
 Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
 at random from the lesson quizzes. 35 new glossary terms (389 in total).
 
-### Module 7 — DevOps on Azure — **in progress, one lesson per PR**
+### Module 7 — DevOps on Azure — **shipped**
 
-| Id | Lesson | Status |
-|----|--------|--------|
-| 7.1 | DevOps on Azure - the landscape and the two toolchains | shipped |
-| 7.2 | Repos, branching and pull-request policies | shipped |
-| 7.3 | Azure Pipelines - YAML, agents, stages and environments | shipped |
-| 7.4 | GitHub Actions for Azure | shipped |
-| 7.5 | Infrastructure as code - Bicep and Terraform | shipped |
-| 7.6 | Secrets, identities and security in the pipeline | shipped |
-| 7.7 | Release strategies - slots, blue-green, canary and feature flags | shipped |
-| 7.8 | Quality gates, testing and DevOps metrics | planned |
+| Id | Lesson |
+|----|--------|
+| 7.1 | DevOps on Azure - the landscape and the two toolchains |
+| 7.2 | Repos, branching and pull-request policies |
+| 7.3 | Azure Pipelines - YAML, agents, stages and environments |
+| 7.4 | GitHub Actions for Azure |
+| 7.5 | Infrastructure as code - Bicep and Terraform |
+| 7.6 | Secrets, identities and security in the pipeline |
+| 7.7 | Release strategies - slots, blue-green, canary and feature flags |
+| 7.8 | Quality gates, testing and DevOps metrics |
 
-Glossary term ownership, so each lesson PR defines its own terms and no others:
+Shipping the shop repeatably, released one lesson per PR (#25-#32). It starts from a Friday
+laptop deployment and ends with the pipeline as the only way to production: trunk-based
+branching behind protected main, YAML pipelines and Actions deploying through federated
+identities per environment, Bicep with what-if on every pull request, a scanned and attested
+supply chain, canary-then-swap releases that roll back in seconds, and DORA metrics that show
+the improvement. 7.2 also fixed `==highlight==` markers that contained inline code.
 
-- **7.1**: DevOps, Continuous integration, Continuous delivery, Azure DevOps, Azure Boards,
-  Azure Artifacts.
-- **7.2**: Pull request, Branch policy, Trunk-based development, CODEOWNERS, Semantic versioning.
-- **7.3**: Azure Pipelines, YAML pipeline, Pipeline agent, Pipeline stage, Deployment
-  environment, Service connection, Pipeline template.
-- **7.4**: GitHub Actions, GitHub Actions workflow, Runner, Reusable workflow, GitHub environment.
-- **7.5**: Terraform state, Bicep module, What-if, Configuration drift, Azure Verified Modules.
-- **7.6**: Secret scanning, Code scanning, Dependency scanning, Software bill of materials,
-  Supply chain attack, GitHub Advanced Security.
-- **7.7**: Blue-green deployment, Canary release, Rolling deployment, Ring-based deployment,
-  Rollback, Dark launch.
-- **7.8**: Quality gate, Test pyramid, Smoke test, DORA metrics, Change failure rate, Lead time
-  for changes.
-- Existing terms are extended, never redefined: Infrastructure as code, Bicep, Terraform, ARM
-  template, Azure Resource Manager, Azure CLI, Deployment slot, Slot setting, Preview
-  environment, Container image, Azure Container Registry, Image tag, Revision, Workload identity
-  federation, Service principal, Least privilege, Key Vault secret, Secret rotation, Feature
-  flag, Load testing, Service level objective, Error budget.
-
-The module test is written with 7.8.
+Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
+at random from the lesson quizzes. 46 new glossary terms (435 in total).
 
 ## App architecture
 
