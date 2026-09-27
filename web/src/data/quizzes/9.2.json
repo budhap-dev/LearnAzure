@@ -1,0 +1,112 @@
+[
+  {
+    "id": "9.2-q1",
+    "topic": "landing zone parts",
+    "stem": "How does an Azure landing zone divide responsibility?",
+    "options": [
+      "One subscription holds every workload, managed by one team",
+      "A platform landing zone of shared services owned by a platform team, and application landing zones - subscriptions per workload, as spokes - owned by workload teams and inheriting policy",
+      "Each team builds its own hub, identity and logging",
+      "Landing zones are only for migrated workloads"
+    ],
+    "answer": 1,
+    "explanation": "Shared concerns - hub, identity, logging, policy - are built once by the platform team. Workloads get isolated subscriptions that inherit the rules, which stops the drift that produced 23 inconsistent subscriptions."
+  },
+  {
+    "id": "9.2-q2",
+    "topic": "policy rollout",
+    "scenario": "The platform team wants to block public network access on storage accounts across 23 existing subscriptions.",
+    "stem": "What is the safest rollout?",
+    "options": [
+      "Assign the policy with the Deny effect today",
+      "Email teams and hope they comply",
+      "Assign it in Audit at the management group, fix what it finds, then switch to Deny, with time-limited exemptions for real exceptions",
+      "Apply it only to new subscriptions"
+    ],
+    "answer": 2,
+    "explanation": "Audit shows the impact without breaking anything; fixing findings first avoids blocking live deployments; Deny then keeps it fixed. Denying on day one breaks teams and drives them to shadow subscriptions."
+  },
+  {
+    "id": "9.2-q3",
+    "topic": "subscription vending",
+    "scenario": "New teams wait six weeks for a subscription through IT tickets, and each one is configured differently.",
+    "stem": "What fixes both problems?",
+    "options": [
+      "Subscription vending: a pull request with name, owner, budget and address range triggers a pipeline that creates a compliant, peered, tagged subscription with roles and budget in place",
+      "One shared subscription for all teams",
+      "A faster ticket queue",
+      "Letting teams create their own subscriptions in the portal"
+    ],
+    "answer": 0,
+    "explanation": "Automation makes it fast and identical every time. A shared subscription removes isolation, and self-service portal creation recreates the original sprawl."
+  },
+  {
+    "id": "9.2-q4",
+    "topic": "policy effects",
+    "stem": "Which policy effect ensures every new resource sends diagnostics to the central Log Analytics workspace without teams having to remember?",
+    "options": [
+      "Audit",
+      "Deny",
+      "Append",
+      "DeployIfNotExists, with remediation tasks for resources that already exist"
+    ],
+    "answer": 3,
+    "explanation": "DeployIfNotExists creates the missing diagnostic setting automatically. Audit only reports, Deny would block the resource, and Append only adds properties to the request itself."
+  },
+  {
+    "id": "9.2-q5",
+    "topic": "IP planning",
+    "scenario": "The loyalty and wholesale spokes both use 10.1.0.0/16 and now need to talk to each other through the hub.",
+    "stem": "What would have prevented this?",
+    "options": [
+      "A documented IP address plan owned by the platform team, with vending allocating non-overlapping ranges",
+      "Using public IP addresses everywhere",
+      "Putting both workloads in one virtual network",
+      "A larger hub"
+    ],
+    "answer": 0,
+    "explanation": "Peered networks cannot overlap. A central plan, such as a /16 per region and a /22 per spoke allocated by the vending pipeline, prevents a costly re-addressing later."
+  },
+  {
+    "id": "9.2-q6",
+    "topic": "FinOps",
+    "scenario": "Finance asks what each team spends on AI and data services each month. Nobody can answer.",
+    "stem": "What is the foundation of an answer?",
+    "options": [
+      "Buying reservations for everything",
+      "Required tags such as cost-centre and app, enforced by policy, with Cost Management exports feeding a monthly showback per team",
+      "A spreadsheet updated by each team lead",
+      "Moving all AI into one subscription"
+    ],
+    "answer": 1,
+    "explanation": "Allocation needs consistent tags, and policy makes them consistent. Showback builds accountability before any chargeback. Manual spreadsheets drift, and reservations reduce cost but do not allocate it."
+  },
+  {
+    "id": "9.2-q7",
+    "topic": "inventory",
+    "scenario": "An auditor asks for every storage account with public network access across all subscriptions, by this afternoon.",
+    "stem": "What is the fastest reliable way to answer?",
+    "options": [
+      "Open each subscription in the portal",
+      "Ask each team to check",
+      "One Azure Resource Graph query across every subscription",
+      "Export every subscription's ARM templates"
+    ],
+    "answer": 2,
+    "explanation": "Resource Graph queries configuration across the estate in seconds with KQL. Manual checks across 23 subscriptions are slow and miss things."
+  },
+  {
+    "id": "9.2-q8",
+    "topic": "platform team",
+    "scenario": "The new platform team requires a two-week design review before any subscription is created.",
+    "stem": "What risk does this create?",
+    "options": [
+      "None; slower is safer",
+      "Too many subscriptions",
+      "Higher Azure Policy costs",
+      "Teams route around a gatekeeper - with shadow subscriptions or other clouds - so the platform should be self-service with guardrails built in"
+    ],
+    "answer": 3,
+    "explanation": "A landing zone is a product for workload teams. Guardrails in policy and vending make the safe path the fast path; gates that slow everyone down push teams outside the governed platform."
+  }
+]

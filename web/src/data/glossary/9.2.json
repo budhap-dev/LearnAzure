@@ -1,0 +1,74 @@
+[
+  {
+    "term": "Cloud Adoption Framework",
+    "aliases": ["CAF", "Microsoft Cloud Adoption Framework for Azure"],
+    "definition": "Microsoft's guidance for adopting the cloud as an organisation: methodologies for strategy, planning, getting ready (landing zones), adopting (migrating and building), and governing, securing and managing what runs. It is the organisation-wide counterpart to the Well-Architected Framework, which focuses on one workload.",
+    "example": "Northline's platform work follows CAF's Ready and Govern guidance; each workload is still reviewed against Well-Architected.",
+    "icon": "guide",
+    "lessons": ["9.2", "9.3"],
+    "related": ["Azure landing zone", "Well-Architected Framework"]
+  },
+  {
+    "term": "Azure landing zone",
+    "aliases": ["landing zone", "ALZ", "platform landing zone", "application landing zone", "enterprise-scale", "landing zone accelerator"],
+    "definition": "A pre-built environment that workloads land in, with subscriptions already organised, networked, secured, monitored and governed. The platform landing zone holds shared services (hub network, identity, logging, policy) owned by a platform team; application landing zones are subscriptions per workload, as spokes, inheriting policy from their management group. Built from Microsoft's accelerators in Bicep or Terraform.",
+    "example": "loyalty-prod is an application landing zone under the Landing zones management group, peered to the platform's hub.",
+    "icon": "landing-zone",
+    "lessons": ["9.2", "9.1"],
+    "related": ["Management group", "Subscription vending", "Hub-and-spoke", "Platform team"]
+  },
+  {
+    "term": "Platform team",
+    "aliases": ["cloud platform team", "cloud centre of excellence", "CCoE", "paved road", "platform engineering"],
+    "definition": "The team that owns the landing zone as a product - hub networking, identity integration, shared logging, policy and subscription vending - for workload teams as its customers. Its success is measured by how quickly teams get a safe, compliant place to build; a platform team that acts as a gatekeeper gets routed around.",
+    "example": "A platform team of three runs Northline's landing zone and reviews vending pull requests within the hour.",
+    "icon": "users",
+    "lessons": ["9.2"],
+    "related": ["Azure landing zone", "Subscription vending"]
+  },
+  {
+    "term": "Subscription vending",
+    "aliases": ["subscription vending machine", "subscription factory", "self-service subscriptions"],
+    "definition": "Automated creation of new subscriptions from a short request - name, owner, budget, environment, address range - through a pipeline that places them under the right management group, peers the spoke to the hub, assigns roles, sets budgets and applies tags, so every subscription starts compliant. Replaces tickets that take weeks.",
+    "example": "The wholesale team's test subscription is vended from a ten-line pull request in under an hour.",
+    "icon": "subscription",
+    "lessons": ["9.2"],
+    "related": ["Azure landing zone", "Subscription", "Platform team"]
+  },
+  {
+    "term": "Policy initiative",
+    "aliases": ["initiative", "policy set definition", "policy assignment", "policy exemption", "policy as code", "EPAC"],
+    "definition": "A group of Azure Policy definitions managed and assigned together - usually at a management group, so every subscription beneath inherits it. Assignments can take parameters; exemptions handle real exceptions with an owner and an expiry. Keep initiatives as code in a repository and deploy them through a pipeline.",
+    "example": "The \"Northline baseline\" initiative, assigned at the root management group, holds 40 policies for regions, tags, private networking and diagnostics.",
+    "icon": "policy",
+    "lessons": ["9.2"],
+    "related": ["Azure Policy", "Policy effect", "Management group"]
+  },
+  {
+    "term": "Policy effect",
+    "aliases": ["Audit", "Deny", "DeployIfNotExists", "DINE", "Modify", "Append", "AuditIfNotExists", "remediation task"],
+    "definition": "What Azure Policy does when a resource does not comply: Audit reports it, Deny blocks the request, Modify and Append change the request, and DeployIfNotExists deploys a missing companion resource (with remediation tasks for existing ones). Roll out in Audit, fix what it finds, then switch security-critical policies to Deny.",
+    "example": "Public network access on storage was audited for 30 days, the eleven findings were fixed, then the policy moved to Deny.",
+    "icon": "policy",
+    "lessons": ["9.2"],
+    "related": ["Azure Policy", "Policy initiative"]
+  },
+  {
+    "term": "FinOps",
+    "aliases": ["cloud financial management", "FinOps Foundation", "FOCUS", "cost allocation", "unit economics"],
+    "definition": "The practice of making cloud cost a shared, continuous responsibility of engineering, finance and product, in three phases: inform (allocate and show who spends what), optimise (rightsizing, commitments, removing waste) and operate (budgets, reviews, accountability). On Azure it rests on enforced tags, Cost Management exports, budgets, anomaly alerts and centrally managed reservations and savings plans.",
+    "example": "Each team sees its monthly cloud and AI spend by app tag; commitments are bought centrally by the platform team.",
+    "icon": "cost-management",
+    "lessons": ["9.2"],
+    "related": ["Chargeback", "Cost Management", "Tag", "Budget"]
+  },
+  {
+    "term": "Azure Resource Graph",
+    "aliases": ["Resource Graph", "ARG", "Resource Graph Explorer"],
+    "definition": "A service for querying resources across every subscription you can see, in seconds, using KQL - for inventory, compliance questions and change history. It answers \"what exists and how is it configured?\" at estate scale, and underpins many portal views and governance tools.",
+    "example": "One Resource Graph query lists every storage account with public network access across all 23 subscriptions.",
+    "icon": "resource-graph",
+    "lessons": ["9.2"],
+    "related": ["KQL", "Azure Policy", "Subscription"]
+  }
+]

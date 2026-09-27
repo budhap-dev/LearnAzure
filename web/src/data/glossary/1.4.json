@@ -14,7 +14,7 @@
     "definition": "A container for subscriptions (and other management groups) used to apply policy and role assignments across many subscriptions at once. Rules set here are inherited by every subscription beneath. Every tenant has a root management group, even if nobody has looked at it.",
     "example": "mg-northline holds sub-prod and sub-nonprod, with a 'UK regions only' policy assigned once at the top.",
     "icon": "management-group",
-    "lessons": ["1.4"],
+    "lessons": ["1.4", "9.2"],
     "related": ["Subscription", "Scope", "Azure Policy"]
   },
   {
@@ -23,7 +23,7 @@
     "definition": "The billing, quota and policy boundary in Azure: one invoice line, its own service limits, and a natural scope for 'prod rules apply here'. Subscriptions are free to create and sit under a management group. Splitting prod from nonprod at this level is the minimum most teams should do.",
     "example": "sub-prod and sub-nonprod, so a contractor with Contributor on nonprod cannot touch production.",
     "icon": "subscription",
-    "lessons": ["1.4", "1.6"],
+    "lessons": ["1.4", "1.6", "9.2"],
     "related": ["Management group", "Resource group", "Tenant"]
   },
   {
@@ -65,7 +65,7 @@
     "definition": "A governance service that decides what is allowed to exist: deny resources outside approved regions, require a cost-centre tag, or audit anything without backup. Assigned at a scope and inherited, so new subscriptions are born compliant. It complements RBAC, which controls who, not what.",
     "example": "A policy on mg-northline denies any resource created outside UK South and UK West.",
     "icon": "policy",
-    "lessons": ["1.4", "4.7", "6.1"],
+    "lessons": ["1.4", "4.7", "6.1", "9.2"],
     "related": ["Scope", "Tag", "Role-based access control"]
   },
   {
@@ -81,7 +81,7 @@
     "definition": "A name-value label on a resource, resource group or subscription, such as owner, cost-centre or environment. Tags are what cost reports group by and what policies can filter on. They are not inherited, so use a policy to require them.",
     "example": "cost-centre: CC-4410 on every Tracking resource lets finance split the bill by team.",
     "icon": "tag",
-    "lessons": ["1.4", "1.6"],
+    "lessons": ["1.4", "1.6", "9.2"],
     "related": ["Naming convention", "Azure Policy", "Subscription"]
   },
   {

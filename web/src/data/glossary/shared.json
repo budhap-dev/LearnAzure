@@ -27,7 +27,7 @@
     "aliases": ["reserved instance", "Azure Reservations"],
     "definition": "A commitment to use a specific resource type (such as a VM size or a database tier) for one or three years in exchange for a large discount, often 30-70%. Worth it for steady workloads; wasted on anything you might switch off.",
     "icon": "reservations",
-    "lessons": ["1.6"],
+    "lessons": ["1.6", "9.2"],
     "related": ["Savings plan", "Pay-as-you-go"]
   }
 ]

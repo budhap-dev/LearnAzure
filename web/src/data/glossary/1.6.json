@@ -92,7 +92,7 @@
     "definition": "Attributing cloud spend to the team or product that caused it. Showback reports the figure to each team; chargeback actually bills their budget. Both depend on consistent tags, which is why tagging is enforced with policy rather than requested politely.",
     "example": "Each month finance bills the marketing team for everything tagged cost-centre:marketing.",
     "icon": "tags",
-    "lessons": ["1.6"],
+    "lessons": ["1.6", "9.2"],
     "related": ["Tag", "Cost Management", "Azure Policy"]
   },
   {
