@@ -31,7 +31,7 @@
     "definition": "Azure's platform for building, training, deploying and monitoring your own machine-learning models: workspaces, compute clusters, experiment tracking, a model registry, pipelines and managed online endpoints. Use it when the answer must be learnt from your own data - forecasts, churn, fraud - rather than called from a prebuilt or generative model.",
     "example": "A demand forecast per store, retrained weekly on three years of sales and served from a managed endpoint the replenishment job calls.",
     "icon": "machine-learning",
-    "lessons": ["8.1"],
+    "lessons": ["8.1", "8.3"],
     "related": ["Inference", "Generative AI"]
   },
   {

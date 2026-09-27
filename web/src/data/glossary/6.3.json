@@ -4,7 +4,7 @@
     "aliases": ["OTel", "Azure Monitor OpenTelemetry distro"],
     "definition": "The vendor-neutral, open-source standard for producing traces, metrics and logs from applications. Azure Monitor's OpenTelemetry distro packages it for Node, .NET, Java and Python: one call at start-up instruments incoming requests and common dependencies and sends the data to Application Insights. It must be initialised before other modules load.",
     "example": "The Node API calls useAzureMonitor() as its first line and immediately reports requests, SQL calls and Service Bus sends.",
-    "lessons": ["6.3"],
+    "lessons": ["6.3", "8.3"],
     "related": ["Application Insights", "Distributed tracing"]
   },
   {
