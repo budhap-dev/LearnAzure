@@ -228,13 +228,23 @@ web/                          Vite + React 19 + TypeScript (hash routing: works 
   src/data/syllabus.ts        modules and lessons: ids, titles, summaries, objectives, minutes
   src/data/quizzes/<id>.json  the lesson quiz (6-10 questions, each with an explanation)
   src/data/exams/module-N.json scenario questions for the module test
-  src/data/glossary.json      every term the course uses, linked to the lessons that teach it
-  src/lib/                    theme, progress (localStorage), search, quiz pooling, version
+  src/data/glossary/<id>.json the terms each lesson introduces, linked to the lessons that teach them
+  src/lib/                    theme, progress (localStorage), search, quiz pooling, glossary review scheduling, version
   src/components/             Layout, Markdown renderer, Diagram, AzureIcon, Quiz, Exam, ThemePicker
-  src/routes/                 Home, Syllabus, Module, Lesson, Quiz, ModuleTest, FinalTest, Glossary, Search, BuildStatus, About
+  src/routes/                 Home, Syllabus, Module, Lesson, Quiz, ModuleTest, FinalTest, Glossary, Review, Search, BuildStatus, About
   public/azure-icons/*.svg    the official Microsoft Azure architecture icons (see terms below)
   scripts/verify-content.mjs  fails the build if any lesson, quiz, icon, diagram or glossary link is broken
+  scripts/check-azure-retirements.mjs  weekly: flags Azure retirement announcements that touch a lesson
 ```
+
+### Glossary review
+
+`#/glossary/review` turns the glossary into flashcards with Leitner-style spaced repetition
+(`src/lib/review.ts`). A term moves up a box on "Good" (two on "Easy") and comes back after
+1, 3, 7, 16, 35 or 90 days; "Again" drops it to box 0 and repeats it later in the same session.
+Sessions hold up to 20 cards and introduce at most 10 new terms a day, taken in course order from
+the lessons the learner has opened, one module, or the whole glossary. The schedule is stored in
+the progress record, so it counts towards the streak and travels with export and import.
 
 ### Markdown conventions used in lessons
 

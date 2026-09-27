@@ -25,6 +25,18 @@ export interface TestAttempt {
   minutesTaken: number;
 }
 
+/** Where one glossary term sits in the review schedule (see lib/review.ts). */
+export interface ReviewCard {
+  /** 0 = relearning, higher = known for longer; picks the next interval. */
+  box: number;
+  /** yyyy-mm-dd the term is next due. */
+  due: string;
+  /** yyyy-mm-dd it was first reviewed - caps new terms per day. */
+  added: string;
+  reps: number;
+  lapses: number;
+}
+
 export interface Progress {
   version: 1;
   lessons: Record<string, LessonState>;
@@ -33,9 +45,11 @@ export interface Progress {
   lastLesson?: string;
   /** ISO dates (yyyy-mm-dd) on which something was learned - powers the streak. */
   days: string[];
+  /** Glossary review schedule, keyed by term slug. */
+  reviews: Record<string, ReviewCard>;
 }
 
-const empty = (): Progress => ({ version: 1, lessons: {}, quizzes: {}, tests: [], days: [] });
+const empty = (): Progress => ({ version: 1, lessons: {}, quizzes: {}, tests: [], days: [], reviews: {} });
 
 export function read(): Progress {
   try {
@@ -58,7 +72,7 @@ function write(progress: Progress): void {
   window.dispatchEvent(new Event('progress-changed'));
 }
 
-function today(): string {
+export function today(): string {
   return new Date().toISOString().slice(0, 10);
 }
 
@@ -134,6 +148,13 @@ export function streak(): number {
     cursor.setDate(cursor.getDate() - 1);
   }
   return count;
+}
+
+export function saveReview(slug: string, card: ReviewCard): void {
+  const progress = read();
+  progress.reviews = { ...progress.reviews, [slug]: card };
+  touchDay(progress);
+  write(progress);
 }
 
 export function reset(): void {

@@ -4,6 +4,8 @@ import { GLOSSARY, entryBySlug, letterOf, moduleOf, searchGlossary, slugOf, type
 import { MODULES, lessonById } from '../lib/syllabus';
 import { highlight } from '../components/Highlight';
 import { AzureIcon } from '../components/AzureIcon';
+import { deckStats, termsInScope } from '../lib/review';
+import { useProgress } from '../lib/useProgress';
 
 const LETTERS = ['#', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'];
 
@@ -17,6 +19,9 @@ export function Glossary() {
   const [module, setModule] = useState(0);
   const focusSlug = params.get('term');
   const inputRef = useRef<HTMLInputElement>(null);
+  const progress = useProgress();
+  const studied = termsInScope('studied', progress);
+  const review = studied.length ? deckStats(studied, progress) : null;
 
   useEffect(() => {
     if (!focusSlug) inputRef.current?.focus();
@@ -59,6 +64,12 @@ export function Glossary() {
       <p className="lede">
         Every term the course uses, in plain words, with the lesson that teaches it. {GLOSSARY.length} entries -
         search by name, alias or meaning.
+      </p>
+      <p className="row wrap">
+        <Link to="/glossary/review" className="btn primary">Review terms</Link>
+        <span className="small muted">
+          {review ? `Flashcards for the terms in lessons you have opened: ${review.due} due, ${review.newToday} new today.` : 'Flashcards with spaced repetition, by module or for everything you have studied.'}
+        </span>
       </p>
       <div className="glossary-controls">
         <input

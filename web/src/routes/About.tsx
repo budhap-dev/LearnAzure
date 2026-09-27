@@ -33,6 +33,7 @@ export function About() {
           <li>Take the lesson quiz. 80% marks it as learned; less flags it for review.</li>
           <li>After the last lesson, take the timed module test. 70% passes.</li>
           <li>Use the glossary and search whenever a term comes up at work. Everything links back to the lesson that teaches it.</li>
+          <li>Review the glossary as flashcards a few minutes a day. Terms you know come back less often; the ones you miss come back sooner.</li>
           <li>Pick a theme you like from the header. Progress and theme are stored on the device only.</li>
         </ol>
       </section>
