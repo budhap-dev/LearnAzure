@@ -186,7 +186,7 @@ at random from the lesson quizzes. 46 new glossary terms (435 in total).
 | 8.4 | Azure AI Services - vision, speech, language and documents | shipped |
 | 8.5 | Azure AI Search and retrieval-augmented generation | shipped |
 | 8.6 | Agents, tools and orchestration | shipped |
-| 8.7 | Responsible AI, content safety and evaluation | planned |
+| 8.7 | Responsible AI, content safety and evaluation | shipped |
 | 8.8 | Cost, security and operations for AI workloads | planned |
 
 8.3 was planned as "Azure AI Foundry"; the product is now Microsoft Foundry, so the title uses
