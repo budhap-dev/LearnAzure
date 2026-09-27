@@ -736,9 +736,9 @@
       "number": 7,
       "title": "DevOps on Azure",
       "tagline": "Azure DevOps and GitHub, pipelines, infrastructure as code, environments and release strategies.",
-      "description": "Shipping software to Azure repeatably: the two toolchains, YAML pipelines and GitHub Actions, Bicep and Terraform, secrets and identities in CI, deployment slots, blue-green and canary releases, and the gates that make a pipeline trustworthy.",
+      "description": "Shipping software to Azure repeatably: DevOps as a way of working and the two toolchains, trunk-based branching with protected main, Azure Pipelines and GitHub Actions with federated identities, Bicep and Terraform with what-if and drift control, securing the software supply chain, release strategies that roll back in seconds, and the tests and DORA metrics that show whether it is all working.",
       "icon": "azure-devops",
-      "status": "in-progress",
+      "status": "ready",
       "lessons": [
         {
           "id": "7.1",
@@ -754,8 +754,7 @@
             "azure-devops",
             "builds",
             "branch"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "7.2",
@@ -771,8 +770,7 @@
             "branch",
             "code",
             "builds"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "7.3",
@@ -788,8 +786,7 @@
             "builds",
             "deployment-environments",
             "templates"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "7.4",
@@ -805,8 +802,7 @@
             "workflow",
             "deployment-environments",
             "managed-identity"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "7.5",
@@ -822,8 +818,7 @@
             "templates",
             "resource-group",
             "workflow"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "7.6",
@@ -839,8 +834,7 @@
             "key-vault",
             "defender",
             "builds"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "7.7",
@@ -856,17 +850,22 @@
             "web-slots",
             "application-insights",
             "app-configuration"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "7.8",
           "title": "Quality gates, testing and DevOps metrics",
-          "summary": "",
+          "summary": "The test pyramid with real dependencies, smoke tests and quality gates people trust, and the four DORA metrics that show whether delivery is improving.",
           "minutes": 12,
-          "objectives": [],
+          "objectives": [
+            "Shape a test suite around the pyramid, using real dependencies where mocks would hide faults",
+            "Design quality gates that are fast and trustworthy, from pull request to production",
+            "Measure delivery with the DORA metrics and use them to improve, not to rank"
+          ],
           "icons": [
-            "load-testing"
+            "load-testing",
+            "builds",
+            "workbooks"
           ]
         }
       ]

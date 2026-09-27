@@ -37,7 +37,7 @@
     "aliases": ["standard test", "synthetic monitoring", "URL ping test", "web test"],
     "definition": "A synthetic check that Application Insights runs against your site from several locations worldwide every few minutes, checking the response and the TLS certificate. Standard tests replace the retiring URL ping tests; custom tests reported from a function cover multi-step journeys.",
     "example": "A standard test from five regions alerts when the home page fails from two or more of them.",
-    "lessons": ["6.3"],
+    "lessons": ["6.3", "7.8"],
     "related": ["Application Insights", "Health probe"]
   }
 ]

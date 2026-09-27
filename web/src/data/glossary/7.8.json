@@ -1,0 +1,50 @@
+[
+  {
+    "term": "Test pyramid",
+    "aliases": ["testing pyramid", "ice-cream cone", "contract test", "integration test"],
+    "definition": "A guide to the balance of automated tests: many fast unit tests, fewer integration and contract tests that use real dependencies, and a few slow end-to-end tests of critical journeys. The inverted shape - mostly slow browser tests - is the ice-cream cone: slow, flaky and poor at locating failures.",
+    "example": "The shop runs 1,200 unit tests in 40 seconds, 90 integration tests against real SQL in 4 minutes, and 8 end-to-end journeys on the staging slot.",
+    "lessons": ["7.8"],
+    "related": ["Smoke test", "Quality gate", "Load testing"]
+  },
+  {
+    "term": "Quality gate",
+    "aliases": ["gate", "required check", "flaky test", "coverage gate"],
+    "definition": "A check a change must pass before it moves forward - build and tests on a pull request, smoke tests after deployment, a canary SLO comparison before full release. Gates must be fast enough not to be bypassed and reliable enough to be believed, so flaky tests are fixed or quarantined quickly.",
+    "example": "A pull request cannot merge unless unit, integration and contract tests pass and coverage on changed lines does not fall.",
+    "lessons": ["7.8"],
+    "related": ["Test pyramid", "Branch policy", "Canary release"]
+  },
+  {
+    "term": "Smoke test",
+    "aliases": ["smoke tests", "post-deployment test", "sanity check"],
+    "definition": "A short set of checks run straight after a deployment to confirm the new version is basically alive - health endpoint, sign-in, a critical journey - before it receives real traffic. Run against the staging slot, a failed smoke test stops the release before any user is affected.",
+    "example": "After deploying to staging, the pipeline checks /health, signs in, adds to basket and completes a test-card checkout.",
+    "lessons": ["7.8"],
+    "related": ["Deployment slot", "Quality gate", "Availability test"]
+  },
+  {
+    "term": "DORA metrics",
+    "aliases": ["DORA", "four key metrics", "deployment frequency", "time to restore service", "failed deployment recovery time"],
+    "definition": "Four measures of software delivery performance from the DevOps Research and Assessment programme: deployment frequency, lead time for changes, change failure rate and time to restore service. They pair speed with stability; the best teams improve both together. Use them to improve a team's system, not to rank people.",
+    "example": "The shop's DORA workbook shows deployments rising from weekly to several a day while change failure rate falls to about one in twenty.",
+    "lessons": ["7.8"],
+    "related": ["Lead time for changes", "Change failure rate", "Service level objective"]
+  },
+  {
+    "term": "Lead time for changes",
+    "aliases": ["lead time", "commit to production time"],
+    "definition": "The time from a change being committed to it running in production. Short lead times come from small changes, fast pipelines and few manual hand-offs, and they shorten the feedback loop between writing code and learning how it behaves.",
+    "example": "Lead time fell from nine days, waiting for the weekly batch release, to under a day with continuous delivery.",
+    "lessons": ["7.8"],
+    "related": ["DORA metrics", "Continuous delivery"]
+  },
+  {
+    "term": "Change failure rate",
+    "aliases": ["CFR", "deployment failure rate"],
+    "definition": "The share of deployments to production that cause a failure needing a fix, rollback or hotfix. It measures the stability side of delivery; smaller changes, better tests, canaries and fast rollback all bring it down.",
+    "example": "Of 60 production deployments this month, three needed a rollback: a change failure rate of 5%.",
+    "lessons": ["7.8"],
+    "related": ["DORA metrics", "Rollback", "Canary release"]
+  }
+]

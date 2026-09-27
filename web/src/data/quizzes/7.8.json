@@ -1,0 +1,112 @@
+[
+  {
+    "id": "7.8-q1",
+    "topic": "test pyramid",
+    "scenario": "The shop's test suite is mostly browser tests, takes 45 minutes and fails randomly. There are few unit tests.",
+    "stem": "What shape should the suite move towards?",
+    "options": [
+      "More browser tests to cover every path",
+      "Many fast unit tests, integration and contract tests with real dependencies, and a few end-to-end journeys run after deployment",
+      "No automated tests; manual testing before each release",
+      "Only load tests"
+    ],
+    "answer": 1,
+    "explanation": "The test pyramid puts most checks where they are fast, stable and precise, and keeps slow end-to-end tests for a few critical journeys. The current shape - the ice-cream cone - is slow, flaky and tells you little about where a failure is."
+  },
+  {
+    "id": "7.8-q2",
+    "topic": "mocks",
+    "scenario": "Every test mocks the payment provider, and all pass. In production, checkout fails when the provider returns an error response format the code never handled.",
+    "stem": "What would have caught it?",
+    "options": [
+      "More unit tests with the same mock",
+      "Integration tests against the provider's sandbox or realistic recorded responses, including error cases",
+      "Higher code coverage",
+      "A longer canary"
+    ],
+    "answer": 1,
+    "explanation": "Mocks only return what their author imagined. Integration tests against real or realistic dependencies exercise the behaviour production will see, including errors. Coverage measures which lines ran, not whether the assumptions were right."
+  },
+  {
+    "id": "7.8-q3",
+    "topic": "flaky tests",
+    "scenario": "Developers routinely re-run the pipeline until a flaky test passes.",
+    "stem": "Why is this dangerous, and what is the fix?",
+    "options": [
+      "It wastes a few minutes; ignore it",
+      "People learn to ignore red, so real failures get re-run away too; fix or quarantine flaky tests within days",
+      "Disable all tests that ever failed",
+      "Add more retries automatically"
+    ],
+    "answer": 1,
+    "explanation": "A gate that cannot be trusted stops being a gate. Quarantining a flaky test keeps the rest of the suite meaningful while it is fixed. Blanket retries and deletions hide real problems."
+  },
+  {
+    "id": "7.8-q4",
+    "topic": "smoke tests",
+    "stem": "Where do smoke tests add most value in a slot-based release?",
+    "options": [
+      "On developers' laptops only",
+      "Against the staging slot straight after deployment, before any real traffic reaches the new version",
+      "After the swap, once all users are on the new version",
+      "Once a month in production"
+    ],
+    "answer": 1,
+    "explanation": "A quick check of health, sign-in and a critical journey on the staging slot stops a broken deployment before any shopper sees it. After the swap it is already everyone's problem."
+  },
+  {
+    "id": "7.8-q5",
+    "topic": "coverage",
+    "scenario": "A 60% coverage target was met, but many tests execute code without asserting anything.",
+    "stem": "What is a better use of coverage?",
+    "options": [
+      "Raise the target to 90%",
+      "Gate on coverage of changed lines in each pull request, and review test quality rather than chasing a whole-codebase number",
+      "Remove coverage measurement entirely",
+      "Pay bonuses per percentage point"
+    ],
+    "answer": 1,
+    "explanation": "A whole-codebase target becomes a number to game. Requiring new and changed code to be tested keeps quality rising where the risk is, and reviewing tests checks they assert something. Incentives tied to the number make gaming worse."
+  },
+  {
+    "id": "7.8-q6",
+    "topic": "DORA metrics",
+    "stem": "Which set are the four DORA metrics?",
+    "options": [
+      "Story points, velocity, bug count and code coverage",
+      "Deployment frequency, lead time for changes, change failure rate and time to restore service",
+      "CPU, memory, disk and network",
+      "Uptime, cost, latency and throughput"
+    ],
+    "answer": 1,
+    "explanation": "The DORA metrics measure delivery outcomes: two for throughput and two for stability. Effort estimates, resource usage and cost measure other things."
+  },
+  {
+    "id": "7.8-q7",
+    "topic": "speed and stability",
+    "scenario": "A manager proposes releasing less often to reduce production incidents.",
+    "stem": "What does the delivery research suggest?",
+    "options": [
+      "Releasing less often always reduces failures",
+      "Top-performing teams are both faster and more stable; small, frequent, well-tested changes reduce failure rate and recovery time, while big batches increase risk",
+      "Speed and stability cannot be measured",
+      "Stability only depends on infrastructure"
+    ],
+    "answer": 1,
+    "explanation": "Bigger, rarer releases carry more change per deployment, so they fail more and are harder to diagnose and roll back. The research consistently finds that high performers improve speed and stability together."
+  },
+  {
+    "id": "7.8-q8",
+    "topic": "using metrics",
+    "scenario": "Leadership wants to publish a monthly league table of teams ranked by deployment frequency.",
+    "stem": "What is the risk?",
+    "options": [
+      "None; competition improves results",
+      "Metrics turned into targets get gamed - for example, splitting deployments artificially - so use them for each team's trend and improvement, not ranking",
+      "Deployment frequency cannot be measured",
+      "League tables are too expensive"
+    ],
+    "answer": 1,
+    "explanation": "When a measure becomes a target it stops measuring what it did, just as the coverage target was gamed. Teams improve when they use their own trends to find bottlenecks, alongside SLOs that show the user's experience."
+  }
+]
