@@ -1,0 +1,73 @@
+[
+  {
+    "term": "Azure AI Search",
+    "aliases": ["AI Search", "Azure Cognitive Search", "Azure Search", "search service", "agentic retrieval"],
+    "definition": "Azure's managed search engine and the usual retrieval layer for RAG: indexes over your content, indexers that pull and enrich it from Azure data sources, and keyword, vector and hybrid queries with an optional semantic ranker. Billed per search unit per month; replicas add query capacity and availability, partitions add storage.",
+    "example": "A Standard S1 service with two replicas holds the product and help-content indexes behind both the site search and the assistant.",
+    "icon": "ai-search",
+    "lessons": ["8.5", "8.1"],
+    "related": ["Search index", "Indexer", "Hybrid search", "Retrieval-augmented generation"]
+  },
+  {
+    "term": "Retrieval-augmented generation",
+    "aliases": ["RAG", "grounding", "grounded generation", "retrieval"],
+    "definition": "The pattern of retrieving the passages most relevant to a question from your own content, putting them in the prompt, and asking the model to answer only from them and cite them. It keeps answers current and checkable without retraining; its quality depends mostly on whether retrieval finds the right passage.",
+    "example": "Asked about returns, the assistant retrieves the current returns policy chunk and answers \"30 days\" with a link to it.",
+    "icon": "ai-search",
+    "lessons": ["8.5", "8.2"],
+    "related": ["Azure AI Search", "Embedding", "Chunking", "Fine-tuning"]
+  },
+  {
+    "term": "Embedding",
+    "aliases": ["embeddings", "vector", "vector embedding", "embedding model", "text-embedding"],
+    "definition": "A list of numbers produced by an embedding model to represent the meaning of a piece of text or an image, so that similar meanings sit close together. Chunks are embedded when indexed and questions when asked - with the same model - and vector search finds the nearest ones. Cheap to produce; changing the model means re-embedding everything.",
+    "example": "\"Warm waterproof jacket for a six-year-old\" lands near the embedding of \"kids' insulated rain shell\", though they share only one word.",
+    "icon": "azure-openai",
+    "lessons": ["8.5"],
+    "related": ["Vector database", "Chunking", "Hybrid search"]
+  },
+  {
+    "term": "Chunking",
+    "aliases": ["chunk", "chunks", "text splitting", "chunk overlap"],
+    "definition": "Splitting documents into passages small enough to retrieve precisely - typically a few hundred to about a thousand tokens - ideally along headings and sections, with a little overlap, and with metadata such as source, title, date and audience kept on each chunk. Poor chunking is the commonest cause of poor RAG answers.",
+    "example": "The 20-page returns guide becomes 34 chunks, one per section, each tagged with its heading and audience.",
+    "lessons": ["8.5"],
+    "related": ["Embedding", "Retrieval-augmented generation", "Indexer"]
+  },
+  {
+    "term": "Hybrid search",
+    "aliases": ["hybrid query", "BM25", "keyword search", "vector search query", "reciprocal rank fusion", "RRF"],
+    "definition": "Running a keyword (BM25) query and a vector query together and merging the two ranked lists, so results match both exact terms - product codes, names - and meaning. In Azure AI Search it is the recommended starting point for RAG, usually followed by the semantic ranker.",
+    "example": "A search for \"NL-4471 rain shell\" finds the exact SKU through keywords and similar jackets through vectors.",
+    "icon": "search",
+    "lessons": ["8.5"],
+    "related": ["Azure AI Search", "Embedding", "Semantic ranker"]
+  },
+  {
+    "term": "Semantic ranker",
+    "aliases": ["semantic ranking", "semantic search", "reranker", "semantic captions"],
+    "definition": "An Azure AI Search feature that re-orders the top results of a query using a language model that reads each result against the question, and extracts the most relevant captions. It improves which chunks reach the prompt; it has a free monthly allowance and then a charge per thousand queries.",
+    "example": "With the semantic ranker on, the returns-policy chunk moves from sixth to first for \"can I send back a worn jacket?\".",
+    "icon": "ai-search",
+    "lessons": ["8.5"],
+    "related": ["Hybrid search", "Azure AI Search"]
+  },
+  {
+    "term": "Search index",
+    "aliases": ["index", "index schema", "searchable field", "filterable field", "security trimming"],
+    "definition": "The searchable copy of your content in Azure AI Search, defined by a schema of fields - searchable text, filterable and facetable values, and vector fields. Design it for the questions people ask, and include fields such as audience or groups so queries can be filtered to what the user may see.",
+    "example": "The help index has title, content, contentVector, updated and audience; the public assistant always filters audience to public.",
+    "icon": "ai-search",
+    "lessons": ["8.5"],
+    "related": ["Azure AI Search", "Indexer"]
+  },
+  {
+    "term": "Indexer",
+    "aliases": ["indexers", "skillset", "integrated vectorization", "data source"],
+    "definition": "An Azure AI Search crawler that pulls content on a schedule from a data source such as Blob Storage, Azure SQL or Cosmos DB, optionally chunks and embeds it through a skillset, and loads it into an index - so the index follows the data without custom code. Its failures need monitoring, or the index quietly goes stale.",
+    "example": "Every hour an indexer picks up changed products from Azure SQL and re-embeds only those rows.",
+    "icon": "ai-search",
+    "lessons": ["8.5"],
+    "related": ["Search index", "Chunking", "Azure AI Search"]
+  }
+]

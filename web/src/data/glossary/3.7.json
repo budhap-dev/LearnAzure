@@ -93,7 +93,7 @@
     "definition": "A store, or a feature of one, that indexes embeddings - arrays of numbers representing meaning - so you can search by similarity rather than by exact match. On Azure it is usually a capability of something you already run: pgvector on PostgreSQL, vector search in Cosmos DB, or Azure AI Search for retrieval-augmented generation. Reach for a separate product only when scale or relevance forces it.",
     "example": "\"Find products like this one\" answered by a pgvector index on the catalogue's embedding column, rather than by a seventh data store.",
     "icon": "ai-search",
-    "lessons": ["3.7"],
+    "lessons": ["3.7", "8.5"],
     "related": ["pgvector", "Cosmos DB", "NoSQL"]
   },
   {
