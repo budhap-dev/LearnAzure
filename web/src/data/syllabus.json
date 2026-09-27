@@ -1080,12 +1080,20 @@
         {
           "id": "9.4",
           "title": "Certifications and how to keep learning",
-          "summary": "",
+          "summary": "Certifying for the role rather than a quota: how Microsoft certification levels, prerequisites and renewal work, paths by role, studying by building rather than memorising, Applied Skills, and habits that keep a team current.",
           "minutes": 10,
-          "objectives": [],
+          "objectives": [
+            "Explain how Microsoft certification levels, prerequisites and yearly renewal work",
+            "Choose a certification path for each role in a team",
+            "Plan study that builds lasting skill, and recognise why exam dumps backfire",
+            "Keep a team current with retirement notices, updates and a regular team ritual"
+          ],
           "icons": [
-            "learn"
-          ]
+            "learn",
+            "guide",
+            "users"
+          ],
+          "status": "ready"
         },
         {
           "id": "9.5",

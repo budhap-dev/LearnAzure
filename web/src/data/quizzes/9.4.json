@@ -1,0 +1,110 @@
+[
+  {
+    "id": "9.4-q1",
+    "topic": "certification as a goal",
+    "scenario": "The CTO's goal is 'everyone certified by December'. Within a week, one engineer has passed AZ-900 using memorised questions from a dump site.",
+    "stem": "What is the better goal?",
+    "options": [
+      "Everyone takes AZ-900 by next month",
+      "The right certification for each person's role, studied by building in sandboxes, with study time protected and no dumps",
+      "Only architects certify",
+      "Drop certifications entirely"
+    ],
+    "answer": 1,
+    "explanation": "A quota rewards badges, which pushes people towards dumps. Those break the exam agreement and teach nothing. Role-matched certifications, earned by building, reflect real skill."
+  },
+  {
+    "id": "9.4-q2",
+    "topic": "prerequisites",
+    "stem": "Which certification is required before you can earn the Azure Solutions Architect Expert certification (AZ-305)?",
+    "options": [
+      "AZ-900",
+      "AZ-204",
+      "AZ-104, the Azure Administrator Associate",
+      "AI-102"
+    ],
+    "answer": 2,
+    "explanation": "AZ-305 requires AZ-104. AZ-400 accepts AZ-104 or AZ-204. Fundamentals exams such as AZ-900 are optional first steps, not prerequisites."
+  },
+  {
+    "id": "9.4-q3",
+    "topic": "renewal",
+    "stem": "How are associate and expert certifications kept current?",
+    "options": [
+      "A free online renewal assessment on Microsoft Learn each year, available in the six months before expiry",
+      "They never expire",
+      "Retaking the full paid exam every two years",
+      "Attending Microsoft Ignite"
+    ],
+    "answer": 0,
+    "explanation": "Yearly renewal focuses on what changed, which is how a certification stays meaningful on a platform that changes monthly. Fundamentals certifications do not expire."
+  },
+  {
+    "id": "9.4-q4",
+    "topic": "syllabus",
+    "scenario": "An engineer is booking an AI exam using a study guide written eighteen months ago.",
+    "stem": "What should they check first?",
+    "options": [
+      "Nothing; exams do not change",
+      "Whether the guide has good reviews",
+      "The price in their country",
+      "The exam's skills-measured page and any retirement or replacement notice on Microsoft Learn"
+    ],
+    "answer": 3,
+    "explanation": "Exams are revised and retired regularly, and the AI exams change fastest. The skills-measured page is the real syllabus, and an old guide may cover services that have been renamed or removed."
+  },
+  {
+    "id": "9.4-q5",
+    "topic": "path by role",
+    "scenario": "An engineer on the platform team runs the hub network, firewall and landing-zone policies.",
+    "stem": "Which path fits best?",
+    "options": [
+      "AI-102",
+      "AZ-104, then AZ-700 for networking or AZ-500 for security",
+      "AZ-204 only",
+      "AI-900 then AZ-900"
+    ],
+    "answer": 1,
+    "explanation": "AZ-104 covers operating Azure, and AZ-700 and AZ-500 go deep on the networking and security the platform team owns. Certify for the role."
+  },
+  {
+    "id": "9.4-q6",
+    "topic": "studying well",
+    "stem": "Which study approach is most likely to produce skill that lasts beyond the exam?",
+    "options": [
+      "Reading the documentation cover to cover in one weekend",
+      "Watching videos at double speed",
+      "Deploying, breaking and fixing each topic in a budget-capped sandbox subscription, spacing sessions out, taking the free practice assessment, and teaching it to colleagues",
+      "Memorising practice questions until they score 100%"
+    ],
+    "answer": 2,
+    "explanation": "Building, spaced practice and teaching create durable understanding. Memorising questions gives a pass but no ability, and cramming fades quickly."
+  },
+  {
+    "id": "9.4-q7",
+    "topic": "Applied Skills",
+    "stem": "What do Applied Skills credentials add alongside role-based certifications?",
+    "options": [
+      "Evidence of hands-on ability: you pass by completing a real scenario in a live lab environment",
+      "They replace the need for associate exams",
+      "A discount on Azure consumption",
+      "Access to preview features"
+    ],
+    "answer": 0,
+    "explanation": "Applied Skills are narrow, task-based assessments, useful proof that someone can do a specific job. Role-based certifications cover a whole role more broadly."
+  },
+  {
+    "id": "9.4-q8",
+    "topic": "keeping up",
+    "scenario": "A model the team relies on was retired, and they learnt about it from a failing deployment.",
+    "stem": "Which habit prevents that?",
+    "options": [
+      "Renewing certifications earlier",
+      "Reading every Azure blog post",
+      "Waiting for the next Ignite",
+      "Watching retirement notices from Service Health, Advisor and Azure Updates, and a monthly 'what changed that affects us' session with owners for each action"
+    ],
+    "answer": 3,
+    "explanation": "Retirements are announced in advance through these channels. A regular session with named owners turns notices into planned work instead of surprises."
+  }
+]
