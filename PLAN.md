@@ -35,7 +35,7 @@ lesson quizzes, timed, graded). A **final learning test** draws from the whole c
 | 5 | Integration and messaging ✅ | 6 | Service Bus, Event Grid, Event Hubs, API Management, Logic Apps |
 | 6 | Observability and reliability ✅ | 6 | Monitor, Log Analytics, App Insights, alerts, Well-Architected, HA/DR |
 | 7 | DevOps on Azure ✅ | 8 | Azure DevOps vs GitHub, pipelines, GitHub Actions, IaC with Bicep/Terraform, environments, release strategies |
-| 8 | Azure AI | 8 | Azure OpenAI and AI Foundry, AI Services, AI Search, RAG, agents, responsible AI, cost and security of AI |
+| 8 | Azure AI 🚧 | 8 | Azure OpenAI and Microsoft Foundry, AI Services, AI Search, RAG, agents, responsible AI, cost and security of AI |
 | 9 | Architecture and leading a team | 5 | Reference architectures, landing zones, migration, governance, certification map, capstone scenarios |
 
 Around 63 lessons. Modules are built one at a time; each is verified end-to-end before the
@@ -175,6 +175,45 @@ the improvement. 7.2 also fixed `==highlight==` markers that contained inline co
 
 Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
 at random from the lesson quizzes. 46 new glossary terms (435 in total).
+
+### Module 8 — Azure AI — **in progress, one lesson per PR**
+
+| Id | Lesson | Status |
+|----|--------|--------|
+| 8.1 | The Azure AI landscape | shipped |
+| 8.2 | Azure OpenAI and Foundry Models | planned |
+| 8.3 | Microsoft Foundry - projects, hubs and the developer loop | planned |
+| 8.4 | Azure AI Services - vision, speech, language and documents | planned |
+| 8.5 | Azure AI Search and retrieval-augmented generation | planned |
+| 8.6 | Agents, tools and orchestration | planned |
+| 8.7 | Responsible AI, content safety and evaluation | planned |
+| 8.8 | Cost, security and operations for AI workloads | planned |
+
+8.3 was planned as "Azure AI Foundry"; the product is now Microsoft Foundry, so the title uses
+the current name and the lessons mention the old ones.
+
+Glossary term ownership, so each lesson PR defines its own terms and no others:
+
+- **8.1**: Generative AI, Large language model, Inference, Azure Machine Learning, Microsoft
+  Copilot Studio, Microsoft 365 Copilot.
+- **8.2**: Azure OpenAI, Foundry Models, Token, Context window, Model deployment, Provisioned
+  throughput unit, Tokens per minute, System prompt, Fine-tuning.
+- **8.3**: Microsoft Foundry, Foundry project, Foundry hub, AI playground, Foundry connection.
+- **8.4**: Azure AI Services, Document Intelligence, Azure AI Vision, Azure AI Speech, Azure AI
+  Language, Azure AI Translator, Content Understanding.
+- **8.5**: Azure AI Search, Retrieval-augmented generation, Embedding, Chunking, Hybrid search,
+  Semantic ranker, Search index, Indexer.
+- **8.6**: AI agent, Tool calling, Foundry Agent Service, Model Context Protocol, Microsoft Agent
+  Framework, Multi-agent orchestration, Human in the loop.
+- **8.7**: Responsible AI, Azure AI Content Safety, Content filter, Prompt injection,
+  Hallucination, Groundedness, AI evaluation, AI red teaming.
+- **8.8**: AI gateway, Semantic caching, Model retirement, GenAIOps, Abuse monitoring.
+- Existing terms are extended, never redefined: Vector database, pgvector, Cosmos DB, Azure API
+  Management, API Management policy, Rate limiting, Managed identity, Private endpoint, Data
+  residency, Customer-managed key, Application Insights, Distributed tracing, Microsoft Entra ID,
+  Feature flag, Cost Management, Budget.
+
+The module test is written with 8.8.
 
 ## App architecture
 

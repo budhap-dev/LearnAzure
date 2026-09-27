@@ -1,0 +1,54 @@
+[
+  {
+    "term": "Generative AI",
+    "aliases": ["GenAI", "gen AI"],
+    "definition": "AI that produces new content - text, code, images, audio - rather than only classifying or predicting. Built on large models that have learnt patterns from vast data, it can draft, summarise, extract and reason over what you give it. Its outputs are plausible rather than guaranteed correct, so it needs grounding, safety checks and evaluation.",
+    "example": "Descriptions for 40,000 products drafted by a model from supplier spreadsheets, each approved by a merchandiser before going live.",
+    "icon": "azure-openai",
+    "lessons": ["8.1", "8.2"],
+    "related": ["Large language model", "Inference", "Microsoft Copilot Studio"]
+  },
+  {
+    "term": "Large language model",
+    "aliases": ["LLM", "language model", "foundation model", "GPT"],
+    "definition": "A very large neural network trained on huge amounts of text to predict what comes next, which in practice lets it answer questions, write, summarise, translate, classify and follow instructions. To your code it is a stateless function: text in, text out, priced per token, with no memory between calls and no guarantee of being right.",
+    "example": "The shop's API sends a product's specification and the brand's style guide to an LLM and gets back a 120-word description.",
+    "icon": "foundry-models",
+    "lessons": ["8.1", "8.2"],
+    "related": ["Generative AI", "Inference"]
+  },
+  {
+    "term": "Inference",
+    "aliases": ["model inference", "scoring", "prediction"],
+    "definition": "Running an already-trained model to get an output - the call your application makes, as opposed to training, which creates the model. Almost all business use of AI is inference against a model someone else trained; you pay per call, per token or for reserved capacity.",
+    "example": "Each question to the shopping assistant is one or more inference calls to a hosted model; nobody at the shop trains anything.",
+    "lessons": ["8.1"],
+    "related": ["Large language model", "Azure Machine Learning"]
+  },
+  {
+    "term": "Azure Machine Learning",
+    "aliases": ["Azure ML", "AML", "machine learning workspace"],
+    "definition": "Azure's platform for building, training, deploying and monitoring your own machine-learning models: workspaces, compute clusters, experiment tracking, a model registry, pipelines and managed online endpoints. Use it when the answer must be learnt from your own data - forecasts, churn, fraud - rather than called from a prebuilt or generative model.",
+    "example": "A demand forecast per store, retrained weekly on three years of sales and served from a managed endpoint the replenishment job calls.",
+    "icon": "machine-learning",
+    "lessons": ["8.1"],
+    "related": ["Inference", "Generative AI"]
+  },
+  {
+    "term": "Microsoft Copilot Studio",
+    "aliases": ["Copilot Studio", "Power Virtual Agents", "low-code agent"],
+    "definition": "A low-code tool for building conversational agents from documents, websites, Power Platform connectors and flows, published to Teams, websites and Microsoft 365 Copilot. Fast for internal helpdesks and simple customer questions; reach for Microsoft Foundry when you need full control of prompts, retrieval, tools and evaluation.",
+    "example": "Head-office staff ask a Copilot Studio agent about the holiday policy, answered from the HR SharePoint site.",
+    "icon": "bot-services",
+    "lessons": ["8.1"],
+    "related": ["Microsoft 365 Copilot", "Generative AI"]
+  },
+  {
+    "term": "Microsoft 365 Copilot",
+    "aliases": ["M365 Copilot", "Copilot for Microsoft 365"],
+    "definition": "Microsoft's AI assistant inside Word, Excel, Outlook, Teams and the other Microsoft 365 apps, working over the mail, files and chats the user can already access. It is software you buy per user and govern, not something you build - which makes existing SharePoint and Teams permissions matter more, because it will find anything a user can open.",
+    "example": "Head office pilots it with 25 people for three months before deciding whether the $30 per user per month pays for itself.",
+    "lessons": ["8.1"],
+    "related": ["Microsoft Copilot Studio", "SaaS"]
+  }
+]

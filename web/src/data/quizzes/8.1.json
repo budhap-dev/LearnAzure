@@ -1,0 +1,111 @@
+[
+  {
+    "id": "8.1-q1",
+    "topic": "naming the kind",
+    "scenario": "Three people spend their days typing supplier invoices into the finance system.",
+    "stem": "Which kind of AI fits this job best, and why?",
+    "options": [
+      "A custom model trained in Azure Machine Learning, because invoices are specific to the business",
+      "A chatbot built in Microsoft Foundry that staff paste invoices into",
+      "A prebuilt service - Document Intelligence's invoice model - because reading invoices is a well-defined perception task someone has already trained for",
+      "Microsoft 365 Copilot, because the invoices arrive by email"
+    ],
+    "answer": 2,
+    "explanation": "Reading fields from invoices is exactly what prebuilt document models do, priced per page with no training. A custom model would repeat work Microsoft has done, and pasting into a chatbot keeps the typing and adds errors."
+  },
+  {
+    "id": "8.1-q2",
+    "topic": "inference",
+    "stem": "What does inference mean, and why does it matter for sizing an AI project?",
+    "options": [
+      "Training a model on your data; it is the main cost of most projects",
+      "Running an already-trained model to get an answer; most business AI is inference, paid per call or per token, with no training at all",
+      "The model's ability to infer facts it was never given, which removes the need for retrieval",
+      "A pricing tier for models hosted in your own subscription"
+    ],
+    "answer": 1,
+    "explanation": "Almost every business use calls a model someone else trained, so cost and effort go into prompts, data, safety and evaluation rather than training. Models do not reliably 'infer' missing facts; that is how wrong answers happen."
+  },
+  {
+    "id": "8.1-q3",
+    "topic": "custom machine learning",
+    "scenario": "The operations director wants a weekly forecast of how many units of each product every store will sell.",
+    "stem": "Where does this idea belong?",
+    "options": [
+      "An Azure OpenAI model prompted with last year's sales",
+      "Azure AI Search over the sales history",
+      "Copilot Studio, connected to the sales database",
+      "Azure Machine Learning: a model trained and regularly retrained on the shop's own sales history"
+    ],
+    "answer": 3,
+    "explanation": "Predicting a number from your own history is classic machine learning, and it needs clean data and an owner for retraining. A language model is not built for accurate numeric forecasting over thousands of series, however plausible its output looks."
+  },
+  {
+    "id": "8.1-q4",
+    "topic": "LLM behaviour",
+    "stem": "From your application's point of view, how does a large language model call behave?",
+    "options": [
+      "Like a stateless function: text in, text out, priced per token, with no memory between calls and no guarantee of being right",
+      "Like a database: it stores each conversation and returns the same answer to the same question",
+      "Like a search engine over the live internet",
+      "Like a rules engine that follows the prompt exactly every time"
+    ],
+    "answer": 0,
+    "explanation": "Any 'memory' in a chat is your code resending history each call. Outputs vary between calls and can be confidently wrong, which is why retrieval, safety and evaluation matter."
+  },
+  {
+    "id": "8.1-q5",
+    "topic": "buy versus build",
+    "scenario": "Head office wants help drafting emails, summarising Teams meetings and finding documents in SharePoint.",
+    "stem": "What is the sensible first step?",
+    "options": [
+      "Build a custom assistant in Microsoft Foundry with access to every mailbox",
+      "Train a model on the company's email archive",
+      "Pilot Microsoft 365 Copilot with a small group, after checking SharePoint and Teams permissions, and measure use",
+      "Ban AI tools until a strategy is written"
+    ],
+    "answer": 2,
+    "explanation": "This is a finished product's job, so buy and govern it. Its catch is permissions: it finds anything a user can open, so over-shared sites become visible. Building it yourself is months of work; a ban just pushes people to consumer tools."
+  },
+  {
+    "id": "8.1-q6",
+    "topic": "where to start",
+    "scenario": "Dev's weekend chatbot demo impressed the CEO, who wants it live next month. The invoice project has a clear saving but looks dull.",
+    "stem": "What order of work would you recommend?",
+    "options": [
+      "Chatbot first, because the CEO has seen it",
+      "Invoices first, as a measurable low-risk win; build search next, because the assistant depends on retrieval; then the assistant with evaluation and safety in place",
+      "Everything in parallel so nothing waits",
+      "Nothing until the forecast model is trained"
+    ],
+    "answer": 1,
+    "explanation": "The chatbot is the easiest to demo and the hardest to make trustworthy. Most of the work is evaluation, grounding, safety and cost control. A measurable first win builds confidence, and search is a prerequisite for a useful assistant."
+  },
+  {
+    "id": "8.1-q7",
+    "topic": "shadow AI",
+    "scenario": "The support team has been pasting customer emails, including addresses and order details, into a free consumer chatbot to draft replies.",
+    "stem": "What is the most effective response?",
+    "options": [
+      "Send a memo forbidding it",
+      "Block every AI website at the firewall and consider it solved",
+      "Train a model on the support emails",
+      "Provide an approved tool with the right data protections, such as Copilot or an internal assistant, and then block the unapproved ones"
+    ],
+    "answer": 3,
+    "explanation": "People use shadow AI because it helps them. Without an approved alternative, memos and blocks just move the behaviour elsewhere. Give them a governed tool, then enforce the rule."
+  },
+  {
+    "id": "8.1-q8",
+    "topic": "the stack",
+    "stem": "Which statement about the Azure AI stack is accurate?",
+    "options": [
+      "Azure OpenAI is a separate cloud from Azure and needs its own identities",
+      "Microsoft Foundry is where you build with models, prebuilt services, search and safety; Azure OpenAI models are one family within Foundry Models",
+      "Azure AI Services and Azure Machine Learning are two names for the same product",
+      "Content safety is optional and not applied to model deployments by default"
+    ],
+    "answer": 1,
+    "explanation": "Foundry brings models, AI services, connected search and evaluation together under normal Azure resources and Entra ID. Azure Machine Learning is for training your own models, and Azure OpenAI deployments have content filters on by default."
+  }
+]
