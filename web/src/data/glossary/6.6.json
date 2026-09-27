@@ -12,7 +12,7 @@
     "aliases": ["ADR", "decision record"],
     "definition": "A short document kept in the repository that records one architectural decision: its context, the decision, the consequences, and what would make you revisit it. It preserves the reasoning behind trade-offs so they are not re-argued every few months.",
     "example": "ADR-014 records why Service Bus stays on Standard and names the date and triggers for revisiting it.",
-    "lessons": ["6.6"],
+    "lessons": ["6.6", "9.1"],
     "related": ["Well-Architected Review", "Failure mode analysis"]
   },
   {

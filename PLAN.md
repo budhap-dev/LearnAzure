@@ -36,7 +36,7 @@ lesson quizzes, timed, graded). A **final learning test** draws from the whole c
 | 6 | Observability and reliability ✅ | 6 | Monitor, Log Analytics, App Insights, alerts, Well-Architected, HA/DR |
 | 7 | DevOps on Azure ✅ | 8 | Azure DevOps vs GitHub, pipelines, GitHub Actions, IaC with Bicep/Terraform, environments, release strategies |
 | 8 | Azure AI ✅ | 8 | Azure OpenAI and Microsoft Foundry, AI Services, AI Search, RAG, agents, responsible AI, cost and security of AI |
-| 9 | Architecture and leading a team | 5 | Reference architectures, landing zones, migration, governance, certification map, capstone scenarios |
+| 9 | Architecture and leading a team 🚧 | 5 | Reference architectures, landing zones, migration, governance, certification map, capstone scenarios |
 
 Around 63 lessons. Modules are built one at a time; each is verified end-to-end before the
 next starts.
@@ -198,6 +198,35 @@ gateway that meters, limits and caches. 8.3 uses the product's current name, Mic
 
 Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
 at random from the lesson quizzes. 55 new glossary terms (490 in total).
+
+### Module 9 — Architecture and leading a team — **in progress, one lesson per PR**
+
+| Id | Lesson | Status |
+|----|--------|--------|
+| 9.1 | Reference architectures you will meet most | shipped |
+| 9.2 | Landing zones and governance at scale | planned |
+| 9.3 | Migrating an existing estate | planned |
+| 9.4 | Certifications and how to keep learning | planned |
+| 9.5 | Capstone scenarios - design reviews you can run | planned |
+
+Glossary term ownership, so each lesson PR defines its own terms and no others:
+
+- **9.1**: Azure Architecture Center, Reference architecture, Reliable Web App pattern,
+  Microservices, Modular monolith, Cloud design pattern.
+- **9.2**: Cloud Adoption Framework, Azure landing zone, Platform team, Subscription vending,
+  Policy initiative, Policy effect, FinOps, Azure Resource Graph.
+- **9.3**: Azure Migrate, Migration strategy, Dependency analysis, Migration wave, Strangler fig
+  pattern, Azure Arc.
+- **9.4**: Microsoft Learn, Role-based certification, Certification renewal, Applied Skills,
+  AZ-104, AZ-305, AZ-400.
+- **9.5**: Design review, Non-functional requirements, Architecture trade-off, Pre-mortem,
+  Technical debt.
+- Existing terms are extended, never redefined: Well-Architected Framework, Well-Architected
+  Review, Architecture decision record, Three-tier architecture, Hub-and-spoke, Management group,
+  Subscription, Azure Policy, Tag, Chargeback, Cost Management, Budget, Lift and shift, Azure
+  Hybrid Benefit, Azure Database Migration Service, Azure Site Recovery, AZ-900.
+
+The module test is written with 9.5.
 
 ## App architecture
 

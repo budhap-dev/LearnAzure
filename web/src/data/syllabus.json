@@ -1021,17 +1021,25 @@
       "tagline": "Reference architectures, landing zones, migration, governance and the certification map.",
       "description": "Pulling it together: the reference architectures you will meet most, enterprise landing zones, moving an existing estate to Azure, governance with Policy and Cost Management, and capstone scenarios to test your judgement.",
       "icon": "landing-zone",
-      "status": "planned",
+      "status": "in-progress",
       "lessons": [
         {
           "id": "9.1",
           "title": "Reference architectures you will meet most",
-          "summary": "",
+          "summary": "Starting every design from the Azure Architecture Center: the reference architectures you will meet most, deviations as decisions, microservices as an organisational choice, the modular monolith, and the cloud design patterns you already know.",
           "minutes": 15,
-          "objectives": [],
+          "objectives": [
+            "Use the Azure Architecture Center to start designs from a reference architecture",
+            "Recognise the reference architectures you will meet most and when each fits",
+            "Choose between microservices and a modular monolith based on the team, not fashion",
+            "Name the cloud design patterns behind a design in a review"
+          ],
           "icons": [
-            "landing-zone"
-          ]
+            "guide",
+            "app-service",
+            "front-door"
+          ],
+          "status": "ready"
         },
         {
           "id": "9.2",
