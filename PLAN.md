@@ -204,7 +204,7 @@ at random from the lesson quizzes. 55 new glossary terms (490 in total).
 | Id | Lesson | Status |
 |----|--------|--------|
 | 9.1 | Reference architectures you will meet most | shipped |
-| 9.2 | Landing zones and governance at scale | planned |
+| 9.2 | Landing zones and governance at scale | shipped |
 | 9.3 | Migrating an existing estate | planned |
 | 9.4 | Certifications and how to keep learning | planned |
 | 9.5 | Capstone scenarios - design reviews you can run | planned |

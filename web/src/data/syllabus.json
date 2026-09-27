@@ -1044,12 +1044,20 @@
         {
           "id": "9.2",
           "title": "Landing zones and governance at scale",
-          "summary": "",
+          "summary": "Governing Azure as an organisation: the Cloud Adoption Framework, platform and application landing zones, management groups with policy initiatives rolled out audit-first, subscription vending, the platform team as a product, FinOps and Resource Graph.",
           "minutes": 14,
-          "objectives": [],
+          "objectives": [
+            "Explain the Cloud Adoption Framework and the parts of an Azure landing zone",
+            "Design a management-group hierarchy and roll out policy initiatives audit-first",
+            "Replace tickets with subscription vending run by a platform team as a product",
+            "Make cloud cost visible per team with tags, showback, budgets and Resource Graph"
+          ],
           "icons": [
-            "policy"
-          ]
+            "landing-zone",
+            "policy",
+            "management-group"
+          ],
+          "status": "ready"
         },
         {
           "id": "9.3",

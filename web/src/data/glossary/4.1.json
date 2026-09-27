@@ -64,7 +64,7 @@
     "aliases": ["hub and spoke", "hub-spoke topology", "hub VNet"],
     "definition": "A network design where one hub VNet holds shared services - the VPN gateway, a firewall, Bastion - and each workload or environment is a spoke peered only to the hub. User-defined routes send spoke traffic through the hub's firewall. Worth its cost from the second workload, not the first.",
     "example": "The shop's hub holds the office VPN and Azure Firewall; prod and dev are spokes that can only reach each other through the firewall.",
-    "lessons": ["4.1"],
+    "lessons": ["4.1", "9.2"],
     "related": ["VNet peering", "Azure Firewall", "User-defined route"]
   },
   {
