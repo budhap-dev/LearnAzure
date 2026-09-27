@@ -898,12 +898,20 @@
         {
           "id": "8.2",
           "title": "Azure OpenAI and Foundry Models",
-          "summary": "",
+          "summary": "Azure OpenAI under Azure's contract and the wider Foundry Models catalogue, choosing the smallest model that passes, tokens and context, deployment types and data zones, quota, PTUs, and why fine-tuning comes last.",
           "minutes": 15,
-          "objectives": [],
+          "objectives": [
+            "Explain what Azure OpenAI and Foundry Models give you over a public model API",
+            "Choose a model and deployment type for a workload, including where its data is processed",
+            "Estimate token cost and handle quota, 429s and provisioned throughput",
+            "Put prompting, retrieval and fine-tuning in the right order"
+          ],
           "icons": [
-            "azure-openai"
-          ]
+            "azure-openai",
+            "foundry-models",
+            "quotas"
+          ],
+          "status": "ready"
         },
         {
           "id": "8.3",

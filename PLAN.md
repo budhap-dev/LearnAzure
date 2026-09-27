@@ -181,7 +181,7 @@ at random from the lesson quizzes. 46 new glossary terms (435 in total).
 | Id | Lesson | Status |
 |----|--------|--------|
 | 8.1 | The Azure AI landscape | shipped |
-| 8.2 | Azure OpenAI and Foundry Models | planned |
+| 8.2 | Azure OpenAI and Foundry Models | shipped |
 | 8.3 | Microsoft Foundry - projects, hubs and the developer loop | planned |
 | 8.4 | Azure AI Services - vision, speech, language and documents | planned |
 | 8.5 | Azure AI Search and retrieval-augmented generation | planned |

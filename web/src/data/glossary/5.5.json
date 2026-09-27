@@ -45,7 +45,7 @@
     "aliases": ["throttling", "quota", "429 Too Many Requests"],
     "definition": "Capping how many calls a consumer may make in a short window, often with a longer-period quota as well. Calls over the limit get 429 Too Many Requests with a Retry-After header and never reach the backend, so one consumer cannot starve the others.",
     "example": "A partner limited to ten calls a second gets 429s at the eleventh, and checkout is unaffected.",
-    "lessons": ["5.5"],
+    "lessons": ["5.5", "8.2"],
     "related": ["API Management policy", "Subscription key", "API gateway"]
   },
   {
