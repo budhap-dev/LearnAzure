@@ -37,7 +37,7 @@
     "aliases": ["principle of least privilege", "PoLP"],
     "definition": "Every person and every piece of code holds the smallest role, at the smallest scope, for the shortest time that lets it do its job. On Azure: groups not individuals, resource-group scope for pipelines, data roles only on what an app touches, and no standing admin rights.",
     "example": "The pipeline can deploy to rg-shop-prod but cannot touch the backup vault in another resource group.",
-    "lessons": ["4.5", "4.8"],
+    "lessons": ["4.5", "4.8", "8.6"],
     "related": ["Privileged Identity Management", "Role assignment", "Built-in role", "Zero trust"]
   },
   {
