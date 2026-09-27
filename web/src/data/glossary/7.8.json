@@ -12,7 +12,7 @@
     "aliases": ["gate", "required check", "flaky test", "coverage gate"],
     "definition": "A check a change must pass before it moves forward - build and tests on a pull request, smoke tests after deployment, a canary SLO comparison before full release. Gates must be fast enough not to be bypassed and reliable enough to be believed, so flaky tests are fixed or quarantined quickly.",
     "example": "A pull request cannot merge unless unit, integration and contract tests pass and coverage on changed lines does not fall.",
-    "lessons": ["7.8"],
+    "lessons": ["7.8", "8.7"],
     "related": ["Test pyramid", "Branch policy", "Canary release"]
   },
   {

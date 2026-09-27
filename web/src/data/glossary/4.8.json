@@ -28,7 +28,7 @@
     "aliases": ["threat model", "threat modeling", "STRIDE"],
     "definition": "Examining a design for what can go wrong before it ships: draw the data flows, mark the trust boundaries, ask what could happen at each crossing (STRIDE: spoofing, tampering, repudiation, information disclosure, denial of service, elevation of privilege), and record a mitigation and owner for each threat or accept the risk in writing.",
     "example": "At the design review, the flow from the pipeline to Azure is marked as a trust boundary; the mitigation is workload identity federation scoped to one resource group.",
-    "lessons": ["4.8"],
+    "lessons": ["4.8", "8.7"],
     "related": ["Defence in depth", "Zero trust"]
   }
 ]

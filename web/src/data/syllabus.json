@@ -988,12 +988,20 @@
         {
           "id": "8.7",
           "title": "Responsible AI, content safety and evaluation",
-          "summary": "",
+          "summary": "Responsible AI as engineering work: layered content filters and Content Safety, prompt injection direct and hidden, hallucinations and groundedness, and evaluation sets, gates and red teaming that tell you before users do.",
           "minutes": 12,
-          "objectives": [],
+          "objectives": [
+            "Turn the six Responsible AI principles into concrete engineering practice",
+            "Layer content filters, Prompt Shields and output checks around a model",
+            "Defend against direct and indirect prompt injection by limiting what an injection can do",
+            "Build an evaluation set and gate releases on groundedness, quality and safety scores"
+          ],
           "icons": [
-            "content-safety"
-          ]
+            "content-safety",
+            "ai-foundry",
+            "application-insights"
+          ],
+          "status": "ready"
         },
         {
           "id": "8.8",
