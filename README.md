@@ -19,10 +19,11 @@ npm run build      # production build in web/dist
 
 ## Deploy
 
-- **Azure Static Web Apps:** create a Free-plan Static Web App, add its deployment token as
-  the `AZURE_STATIC_WEB_APPS_API_TOKEN` repository secret, and every merge to `main` deploys.
+- **GitHub Pages (live):** every merge to `main` builds and deploys to
+  https://budhap-dev.github.io/LearnAzure/. The repository's Pages source is set to
+  *GitHub Actions*, and CI builds with `BASE_PATH=/LearnAzure/`.
 - **Vercel:** import the repo, set the root directory to `web`, framework Vite. No other
-  configuration is needed (the app uses hash routing).
+  configuration is needed (the app uses hash routing, and the base path defaults to `/`).
 
 ## Icons
 

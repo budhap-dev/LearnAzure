@@ -6,8 +6,8 @@ high-to-mid-level command of Azure — from first principles through DevOps and 
 in order to work with, and guide, a team. Not a coding course: the goal is *judgement*
 (which service, why, what it costs, what can go wrong), backed by real scenarios.
 
-The course is a React + TypeScript web app that works on a phone or a laptop. It will be
-hosted on Vercel or as an Azure Static Web App. Source: https://github.com/budhap-dev/LearnAzure
+The course is a React + TypeScript web app that works on a phone or a laptop. It is
+hosted on GitHub Pages at https://budhap-dev.github.io/LearnAzure/. Source: https://github.com/budhap-dev/LearnAzure
 
 ## Who it is for, and how it teaches
 
@@ -266,9 +266,8 @@ package version is bumped in every pull request; the build number and sha are in
 - Every PR bumps the version, runs `npm run verify` (content checks), `tsc`, lint and the
   production build.
 - Merged branches are deleted automatically.
-- CI deploys `main` to Azure Static Web Apps when the `AZURE_STATIC_WEB_APPS_API_TOKEN`
-  secret exists; until then it builds and verifies only. Vercel can be pointed at `web/`
-  directly.
+- CI deploys `main` to GitHub Pages after the build passes; pull requests build and verify
+  only. Vercel can still be pointed at `web/` directly.
 - A module is "done" when: every lesson renders, every quiz passes verification, the module
   test exists, glossary terms and diagrams are in place, and a full read-through has been
   done for clarity.
