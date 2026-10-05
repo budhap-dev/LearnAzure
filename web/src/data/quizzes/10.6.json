@@ -1,0 +1,112 @@
+[
+  {
+    "id": "10.6-q1",
+    "topic": "shared semantic model",
+    "scenario": "Forty reports each import their own copy of the gold tables and define their own revenue measures. Finance and marketing still quote different year-to-date figures.",
+    "stem": "What is the most effective fix?",
+    "options": [
+      "Ask every report author to copy the finance team's DAX measures into their own model",
+      "A certified shared semantic model, with thin reports connected to it",
+      "Move every report to DirectQuery against the gold warehouse so they all see the same rows",
+      "Schedule all forty refreshes at the same time each night so the numbers line up"
+    ],
+    "answer": 1,
+    "explanation": "The disagreement lives in forty separate measure definitions. A shared model holds each definition once, and thin reports cannot redefine it. Copying measures drifts again within weeks, and DirectQuery changes where the data is read, not how revenue is defined."
+  },
+  {
+    "id": "10.6-q2",
+    "topic": "storage modes",
+    "stem": "Which statement about Direct Lake is correct?",
+    "options": [
+      "It needs a Fabric capacity and loads Delta tables from OneLake on demand",
+      "It works with a Pro licence on shared capacity, like Import mode",
+      "It sends a SQL query to the source for every visual, like DirectQuery, so it is always slower than Import",
+      "It copies the whole table into the model at each scheduled refresh, up to 48 times a day"
+    ],
+    "answer": 0,
+    "explanation": "Direct Lake loads columns from Delta tables only when queries need them and is processed by the same in-memory engine as Import, so it is fast without a full copy. It requires a Fabric capacity. Copying at each refresh describes Import; querying the source per visual describes DirectQuery."
+  },
+  {
+    "id": "10.6-q3",
+    "topic": "Direct Lake fallback",
+    "scenario": "A report built on a Direct Lake model over a warehouse's SQL analytics endpoint has become slow. The model uses a SQL view for one table.",
+    "stem": "What is the likely cause?",
+    "options": [
+      "The Fabric capacity has been paused",
+      "The view is cached in Import mode, so it now needs to be refreshed far more often",
+      "Row-level security in the model blocks the view",
+      "Queries on the view fall back to DirectQuery"
+    ],
+    "answer": 3,
+    "explanation": "Direct Lake on SQL endpoints falls back to DirectQuery for SQL views, SQL-level security or exceeded guardrails; queries still work, just slowly. Use a real Delta table instead, or turn fallback off so the problem is visible. A paused capacity would make the report fail, not slow down."
+  },
+  {
+    "id": "10.6-q4",
+    "topic": "row-level security",
+    "scenario": "Four regional managers must see only their own region in one shared report. Regions change hands when people join and leave.",
+    "stem": "What is the best design?",
+    "options": [
+      "Copy the report four times, each with a fixed region filter on every page",
+      "Give each manager the Contributor role in the workspace so they can filter it themselves",
+      "RLS roles per region, with Entra groups as members and managers as Viewers",
+      "A report-level slicer that defaults to each manager's own region when they open it"
+    ],
+    "answer": 2,
+    "explanation": "RLS filters rows in the model, and Entra groups follow the joiner and leaver process. RLS applies only to Viewers, so Contributors would see every region. Copied reports drift, and a slicer is a convenience the user can simply change."
+  },
+  {
+    "id": "10.6-q5",
+    "topic": "licensing",
+    "scenario": "Northline runs Power BI on an F8 capacity. Thirty more store managers will only view reports, never build them.",
+    "stem": "What licence does each of them need?",
+    "options": [
+      "None, because content on any Fabric capacity can be viewed with a free licence",
+      "A Power BI Pro licence, because free-licence viewing starts at F64",
+      "A Premium Per User licence, because the content is on a capacity",
+      "A Fabric capacity unit each"
+    ],
+    "answer": 1,
+    "explanation": "Below F64, every viewer of Power BI content needs a paid licence such as Pro. From F64, viewers with the free licence can read shared content. Premium Per User is not required to view content on an F SKU, and capacity units are bought per capacity, not per person."
+  },
+  {
+    "id": "10.6-q6",
+    "topic": "embedding",
+    "scenario": "The wholesale portal, a React app, will show each of fifty business customers a dashboard of their own orders. The customers have no Power BI licences or Northline Entra accounts.",
+    "stem": "Which embedding approach fits?",
+    "options": [
+      "Embed for your organisation, buying each customer's users a Pro licence",
+      "Publish to web, with a link per customer",
+      "Embed for your customers, with a service principal and a capacity",
+      "Share the report from the Power BI service with each customer's email address"
+    ],
+    "answer": 2,
+    "explanation": "App-owns-data embedding lets the application authenticate, so end users need no Power BI licence or account, but production needs a capacity such as an F or A SKU. Embed for your organisation requires users who sign in with their own licensed accounts. Publish to web makes the report public to anyone with the link."
+  },
+  {
+    "id": "10.6-q7",
+    "topic": "embed security",
+    "scenario": "Ana proposes putting the service principal's credentials in the React app so it can call Power BI directly.",
+    "stem": "What should happen instead?",
+    "options": [
+      "The API keeps the credential and returns a short-lived, per-buyer embed token",
+      "Keep the credential in the browser, but encrypted in local storage with a key bundled in the app",
+      "Add each buyer to the RLS role in the Power BI service",
+      "Give the service principal the Viewer role so RLS applies to it"
+    ],
+    "answer": 0,
+    "explanation": "The browser should only ever hold a short-lived token for one report, already filtered by the effective identity the API sets. Anything shipped to the browser can be read by the user. Service principals cannot be RLS members and external buyers have no accounts to add, so the effective identity in the token does the filtering."
+  },
+  {
+    "id": "10.6-q8",
+    "topic": "map to SQL Server",
+    "stem": "Tom has built SSAS tabular models for years. What is the closest Power BI equivalent?",
+    "options": [
+      "A Power BI report",
+      "A Power BI dashboard that pins tiles from several different reports",
+      "A Fabric warehouse",
+      "A semantic model"
+    ],
+    "answer": 3,
+    "explanation": "A semantic model is SSAS tabular in the service: tables, relationships, DAX measures and roles. A report is only the visual layer over it, like an SSRS report over a shared data source. A warehouse holds the tables the model reads, not the measures."
+  }
+]

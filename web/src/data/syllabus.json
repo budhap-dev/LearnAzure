@@ -1223,7 +1223,8 @@
             "power-bi",
             "data-lake",
             "entra-id"
-          ]
+          ],
+          "status": "ready"
         },
         {
           "id": "10.7",
