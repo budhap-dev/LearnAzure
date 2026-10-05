@@ -1,0 +1,65 @@
+[
+  {
+    "term": "Azure Databricks",
+    "aliases": ["Databricks", "DBU", "Databricks Unit", "Databricks SQL", "SQL warehouse", "Lakeflow"],
+    "definition": "A Spark-based data and AI platform run jointly by Microsoft and Databricks: notebooks, jobs, Lakeflow pipelines, Databricks SQL warehouses, MLflow and model serving, governed by Unity Catalog. It is billed in Databricks Units (DBUs), plus the virtual machines on classic compute; serverless compute bundles the two. All workspaces have been on the Premium tier since 1 October 2026. Choose it for a named need such as Spark at scale, MLOps, multicloud or an existing Databricks team.",
+    "example": "If Northline ever runs a dozen models in production, a Databricks workspace would train and serve them, and Fabric would mirror its Unity Catalog for reporting.",
+    "icon": "databricks",
+    "lessons": ["10.8", "10.1"],
+    "related": ["Unity Catalog", "Apache Spark", "Microsoft Fabric", "Azure Machine Learning"]
+  },
+  {
+    "term": "Unity Catalog",
+    "aliases": ["UC", "Databricks Unity Catalog", "metastore", "mirrored Azure Databricks catalog"],
+    "definition": "Databricks' governance layer: a catalog.schema.table namespace, permissions, row filters and column masks, lineage and audit for everything a Databricks workspace touches. New workspaces get it by default, and serverless compute requires it. Microsoft Purview can scan it for metadata and lineage, and Fabric can mirror it, which copies the catalog structure and reads the Delta tables in place through shortcuts.",
+    "example": "The ml catalog holds the churn features; Fabric mirrors it, so Power BI reads the same Delta tables in Direct Lake mode without a copy.",
+    "icon": "databricks",
+    "lessons": ["10.8"],
+    "related": ["Azure Databricks", "Microsoft Purview", "OneLake shortcut", "Mirroring"]
+  },
+  {
+    "term": "Azure Synapse Analytics",
+    "aliases": ["Synapse", "Azure Synapse", "Synapse workspace", "Synapse Studio", "Azure SQL Data Warehouse"],
+    "definition": "Microsoft's earlier platform-as-a-service analytics workspace: dedicated and serverless SQL pools, Spark pools and pipelines in one studio. As of October 2026 no retirement date has been announced for it as a whole, and it is still supported. New capabilities such as Direct Lake and mirroring are built in Microsoft Fabric, and Microsoft provides migration assistants to Fabric. Keep an existing estate running and plan a phased move.",
+    "example": "Fellside Outdoor's reporting runs on a Synapse workspace with a dedicated SQL pool and 180 stored procedures.",
+    "icon": "synapse",
+    "lessons": ["10.8", "10.1", "3.7"],
+    "related": ["Dedicated SQL pool", "Serverless SQL pool", "Microsoft Fabric", "Data warehouse"]
+  },
+  {
+    "term": "Dedicated SQL pool",
+    "aliases": ["Synapse dedicated SQL pool", "DWU", "data warehouse unit", "SQL DW", "MPP"],
+    "definition": "Synapse's provisioned, massively parallel data warehouse, sized and billed in data warehouse units (DWUs) per hour. You can pause it to stop compute charges; storage is still billed. Microsoft's Migration Assistant for Fabric Data Warehouse, generally available, moves its schemas and code to a Fabric Warehouse. Some data types, such as money and datetimeoffset, and some T-SQL need rework.",
+    "example": "Fellside's pool runs around the clock; pausing it nights and weekends cuts its compute bill while the migration is planned.",
+    "icon": "synapse",
+    "lessons": ["10.8"],
+    "related": ["Azure Synapse Analytics", "Serverless SQL pool", "Fabric Warehouse"]
+  },
+  {
+    "term": "Serverless SQL pool",
+    "aliases": ["Synapse serverless SQL", "built-in SQL pool", "SQL on-demand"],
+    "definition": "Synapse's always-available T-SQL endpoint that queries files in the data lake (Parquet, CSV, Delta) without loading them, billed per terabyte of data processed. It is cheap for occasional exploration and expensive for wide, repeated scans of unpartitioned files. Fabric's SQL analytics endpoint plays the same role over OneLake.",
+    "example": "An analyst at Fellside queries a month of Parquet sales files from the lake with plain T-SQL, paying only for the data the query reads.",
+    "icon": "synapse",
+    "lessons": ["10.8"],
+    "related": ["Azure Synapse Analytics", "Dedicated SQL pool", "SQL analytics endpoint"]
+  },
+  {
+    "term": "Data mesh",
+    "aliases": ["mesh", "domain ownership", "federated governance", "self-serve data platform"],
+    "definition": "An organisational approach in which each business domain owns its analytical data and publishes it as data products. A self-serve platform supports the domains, and federated governance sets shared rules. Like microservices, it solves an organisational problem, a central data team becoming the bottleneck, and it needs data engineers in each domain and a mature platform. Without those people it is just more workspaces.",
+    "example": "Northline takes the cheap half today: named owners, Fabric domains for sales, marketing and wholesale, and certified gold data products. It revisits the mesh when a domain hires its own engineers.",
+    "icon": "groups",
+    "lessons": ["10.8"],
+    "related": ["Data product", "Microservices", "Data steward", "Unified Catalog"]
+  },
+  {
+    "term": "Data product",
+    "aliases": ["data products", "Purview data product"],
+    "definition": "A dataset published for others to use, with a named owner, a documented schema and definitions, quality promises and a way to request access, treated like a product rather than a by-product. It is a core idea of data mesh, and a first-class item in the Purview Unified Catalog, where linking tables to a data product makes them governed assets.",
+    "example": "\"Sales - daily net revenue\" is a data product: the gold fact and dimension tables, owned by the finance director, stewarded by Tom, refreshed by 07:00.",
+    "icon": "compliance",
+    "lessons": ["10.8", "10.7"],
+    "related": ["Data mesh", "Unified Catalog", "Data steward"]
+  }
+]

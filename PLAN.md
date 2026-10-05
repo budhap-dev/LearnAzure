@@ -37,7 +37,7 @@ lesson quizzes, timed, graded). A **final learning test** draws from the whole c
 | 7 | DevOps on Azure ✅ | 8 | Azure DevOps vs GitHub, pipelines, GitHub Actions, IaC with Bicep/Terraform, environments, release strategies |
 | 8 | Azure AI ✅ | 8 | Azure OpenAI and Microsoft Foundry, AI Services, AI Search, RAG, agents, responsible AI, cost and security of AI |
 | 9 | Architecture and leading a team ✅ | 5 | Reference architectures, landing zones, migration, governance, certification map, capstone scenarios |
-| 10 | Data and analytics | 8 | Fabric and OneLake, Data Factory and mirroring, lakehouse and warehouse, real-time analytics, Power BI, Purview, choosing a platform |
+| 10 | Data and analytics ✅ | 8 | Fabric and OneLake, Data Factory and mirroring, lakehouse and warehouse, real-time analytics, Power BI, Purview, choosing a platform |
 | 11 | Web and mobile clients | 7 | Backend for frontend, edge caching, customer sign-in, push, real-time, files, messaging and maps, shipping mobile apps |
 
 Around 78 lessons. Modules are built one at a time; each is verified end-to-end before the
@@ -224,7 +224,7 @@ With Module 9 the first planned course was complete: 9 modules, 63 lessons, v1.0
 and 11 extend it into the two biggest gaps left: analytics, and what web and mobile clients
 need from Azure.
 
-### Module 10 — Data and analytics — **planned**
+### Module 10 — Data and analytics — **shipped**
 
 | Id | Lesson |
 |----|--------|
@@ -243,6 +243,14 @@ data in OneLake, a medallion lakehouse, a shared semantic model behind every rep
 view of the clickstream, Purview knowing where personal data lives, and a platform choice
 recorded as a decision. Written for a SQL Server professional: Module 3 covered the stores
 an application runs on; this module covers what happens to that data afterwards.
+
+Released one lesson per PR (#57-#64). The stories that run through it: a Monday report slowing
+checkout, a throttled F8, a four-hour nightly copy, two revenue figures at one board meeting,
+twenty unseen minutes of failed payments, forty reports with eleven revenue measures, an
+erasure request nobody could answer, and three platform requests in one week.
+
+Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
+at random from the lesson quizzes. 65 new glossary terms (587 in total).
 
 Glossary term ownership (each term is defined once, in the lesson that owns it):
 

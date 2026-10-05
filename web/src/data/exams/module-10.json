@@ -1,0 +1,203 @@
+{
+  "module": 10,
+  "minutes": 25,
+  "poolFromLessons": 10,
+  "questions": [
+    {
+      "id": "m10-q1",
+      "topic": "replica or platform",
+      "scenario": "A pharmacy chain's operations managers want a dashboard of today's prescriptions, refreshed every five minutes. All the data sits in one Azure SQL database on the Business Critical tier, and nobody needs history or other sources.",
+      "stem": "What is the best way to serve the dashboard without slowing the pharmacies' tills?",
+      "options": [
+        "Mirror the database into Fabric and build bronze, silver and gold layers, so the dashboard reads trusted gold tables",
+        "An Eventstream into an Eventhouse, so the counts are seconds fresh rather than minutes old",
+        "Use read scale-out: point the dashboard's connection at the readable replica with ApplicationIntent=ReadOnly",
+        "Query the primary with DirectQuery, since read committed snapshot stops the dashboard blocking the tills"
+      ],
+      "answer": 2,
+      "explanation": "One source, current data, no history and no shared definitions is exactly what a readable replica answers, and Business Critical includes one at no extra cost. Read committed snapshot only prevents blocking; the dashboard would still compete with the tills for CPU, memory and tempdb, while a lakehouse or a real-time path pays for history and freshness nobody asked for."
+    },
+    {
+      "id": "m10-q2",
+      "topic": "ingestion and deletes",
+      "scenario": "A garden-centre chain keeps its loyalty database on SQL Server 2022 in its own data centre, behind a firewall. Erasure requests must reach the lake within an hour. A contractor proposes an hourly Copy job that uses the LastModified column as a watermark.",
+      "stem": "Which ingestion design meets the requirement?",
+      "options": [
+        "Mirror the database into Fabric through a clustered on-premises data gateway, so deletes replicate continuously",
+        "The contractor's hourly watermark Copy job, which picks up every row changed since the last run",
+        "A nightly full copy, because replacing the whole table each time removes deleted rows from the lake",
+        "A Copy job connected through a self-hosted integration runtime, which reaches through the firewall and carries the deletes across"
+      ],
+      "answer": 0,
+      "explanation": "SQL Server 2016 onwards can be mirrored, and for 2016 to 2022 mirroring uses change data capture under the covers, so deletes reach OneLake within seconds through the gateway. A watermark never sees a deleted row because there is no timestamp left to read, and a nightly full copy misses the one-hour target and grows with the business."
+    },
+    {
+      "id": "m10-q3",
+      "topic": "lakehouse or warehouse",
+      "scenario": "A charity's data team is three Python engineers who have never written T-SQL. Their sources include JSON donation feeds and scanned forms stored as images. A consultant insists gold must be a Fabric Warehouse, because star schemas belong in warehouses.",
+      "stem": "Where should the medallion layers live?",
+      "options": [
+        "Follow the consultant: a Warehouse for gold, with the engineers learning T-SQL stored procedures to load it",
+        "SQL database in Fabric for gold, since it is Azure SQL with automatic mirroring built in for analytics",
+        "A Lakehouse for every layer, with analysts correcting gold rows using UPDATE statements through the SQL analytics endpoint",
+        "A Lakehouse for every layer, built in Spark notebooks, with gold still a star schema read through the SQL endpoint"
+      ],
+      "answer": 3,
+      "explanation": "Lakehouse or Warehouse is mostly a choice of the team's language, and both store the same Delta tables in OneLake, so a Spark team keeps the star schema in a lakehouse and analysts read it through the SQL analytics endpoint. That endpoint is read-only, so UPDATE fails, and forcing a Python team onto T-SQL builds gold in a tool nobody maintaining it uses."
+    },
+    {
+      "id": "m10-q4",
+      "topic": "capacity isolation",
+      "scenario": "A ticketing company's Eventhouse ingests box-office events every second and shares an F32 capacity with finance's month-end reports. On the last big on-sale day, finance's reports were rejected for most of the afternoon.",
+      "stem": "Which change most reliably stops this happening again?",
+      "options": [
+        "Pause and resume the shared capacity whenever throttling starts, because pausing clears the debt at once",
+        "Move the real-time workspace to its own capacity, sized from a week of real traffic, so only it can throttle",
+        "Rely on the Eventhouse suspending when idle, so it draws capacity only while an on-sale is running",
+        "Buy a one-year reservation for a larger shared capacity so that the on-sale peak fits within it"
+      ],
+      "answer": 1,
+      "explanation": "Throttling is per capacity, so giving the hot path its own capacity is the reliable way to protect finance's reports. Pausing does clear the debt, but it bills the outstanding usage and takes every report offline, and an Eventhouse fed every second is never idle, so it never suspends."
+    },
+    {
+      "id": "m10-q5",
+      "topic": "Direct Lake fallback",
+      "scenario": "A distributor's shared Sales model uses Direct Lake on SQL endpoints over its gold warehouse. A developer added a SQL view, vw_ActiveCustomers, as one of the model's tables. Reports using it have become slow, but nothing has errored.",
+      "stem": "What is the best fix?",
+      "options": [
+        "Materialise the view's logic as a gold table and move the model to Direct Lake on OneLake, which never falls back",
+        "Keep the view and turn off the model property for fallback, so that the view's queries are forced to run in Direct Lake mode",
+        "Scale the capacity up, so the view fits within the guardrails and loads into memory like the other tables",
+        "Switch the whole model to DirectQuery against the source orders database, so every visual is always live"
+      ],
+      "answer": 0,
+      "explanation": "On SQL endpoints a SQL view always falls back to DirectQuery, which is quietly slow; gold should be real tables, and Direct Lake on OneLake reads them directly and fails loudly rather than falling back. Turning fallback off does not make the view load in Direct Lake, it makes those queries fail, and a bigger capacity does not change how views behave."
+    },
+    {
+      "id": "m10-q6",
+      "topic": "embedding and RLS",
+      "scenario": "A veterinary supplier embeds a Power BI report in its clinic portal. Clinics have no Power BI licences or accounts in the supplier's tenant. The API uses a service principal, a workspace Member, to request embed tokens. In testing, a user from one clinic sees every clinic's orders.",
+      "stem": "What should the team change?",
+      "options": [
+        "Add the service principal to the clinic RLS role, so that the role's filter applies to its tokens",
+        "Give each clinic user a Pro licence and switch to embedding for your organisation instead",
+        "Request each embed token with an effective identity, the clinic's account ID, and the RLS role",
+        "Change the service principal from Member to Viewer in the workspace, because RLS only filters Viewers"
+      ],
+      "answer": 2,
+      "explanation": "In app-owns-data embedding the effective identity on the token is what filters the rows, and a token requested without one shows a customer everyone's data, so the API must set it and the pipeline should test it. Service principals cannot be RLS role members, and demoting it to Viewer still gives the token no clinic for the role's filter to apply."
+    },
+    {
+      "id": "m10-q7",
+      "topic": "F64 licensing arithmetic",
+      "scenario": "A building society runs Power BI on a reserved F16. Twenty-five analysts author reports with Pro licences. It now wants 900 branch staff to view reports, never build them. Pro lists at about $14 per user per month, and a reserved F64 at about $5,800 a month.",
+      "stem": "Which option is cheapest while staying properly licensed?",
+      "options": [
+        "Stay on the F16 and buy Pro for the 900 viewers, because the smaller capacity costs far less each month",
+        "Move to a reserved F64, keep Pro for the 25 authors, and give viewers the free licence and a Viewer role",
+        "Move to a reserved F64 and cancel all 925 Pro licences, because from F64 nobody needs a paid licence",
+        "Stay on the F16 and give the viewers Premium Per User, which adds larger models and more refreshes"
+      ],
+      "answer": 1,
+      "explanation": "Pro for 900 viewers alone is about $12,600 a month, more than double a reserved F64, and from F64 free-licence viewers with a Viewer role can read reports. Authors still need Pro at any size, so cancelling every licence breaks report building, and Premium Per User costs more per head than Pro."
+    },
+    {
+      "id": "m10-q8",
+      "topic": "erasure across layers",
+      "scenario": "A gym chain must erase a former member within a month. Her check-ins sit in two years of raw JSON in bronze, her rows in silver Delta tables, and her old membership tiers as type 2 history rows in the gold member dimension.",
+      "stem": "Which plan actually erases her and keeps the next request manageable?",
+      "options": [
+        "Delete her from gold only, because every report reads gold and bronze is append-only by design",
+        "Run a DELETE on her silver and gold rows; once the tables stop returning her, she is gone from storage",
+        "Delete her at the source, then rebuild silver and gold from bronze, which is exactly what bronze is there for",
+        "Delete at source and in silver and gold, history rows included, run VACUUM, and tokenise IDs before bronze"
+      ],
+      "answer": 3,
+      "explanation": "Erasure in a lake means deleting from silver and gold including type 2 history, vacuuming the old Delta files, and pseudonymising at ingestion so deleting one token-map entry unlinks the raw bronze rows. A Delta DELETE alone keeps the old files for time travel, and rebuilding from bronze simply restores her from the raw copy that still holds her ID."
+    },
+    {
+      "id": "m10-q9",
+      "topic": "Fabric or Databricks",
+      "scenario": "A logistics firm runs workloads on Azure and AWS. Its twelve data engineers are fluent in Databricks and run dozens of production ML models with MLOps. Finance now wants Power BI reports on the curated Delta tables in Unity Catalog.",
+      "stem": "Which platform decision fits best?",
+      "options": [
+        "Keep Databricks, mirror its Unity Catalog into Fabric for Direct Lake reports, and catalogue both in Purview",
+        "Move all of the engineering and ML into Fabric, because Fabric is the default analytics platform for Microsoft-centred teams",
+        "Copy the curated tables nightly into a Fabric Warehouse, so that finance has its own trusted version",
+        "Load the curated tables into a Synapse dedicated SQL pool and point finance's Power BI reports at it"
+      ],
+      "answer": 0,
+      "explanation": "Multicloud, MLOps at scale and a team fluent in Databricks are each named needs, and mirroring the Unity Catalog copies only the catalog structure so Power BI reads the Delta tables in place. Fabric is the default only when no such need exists, and a nightly copy adds a second set of data, another pipeline and another place for numbers to drift."
+    },
+    {
+      "id": "m10-q10",
+      "topic": "Synapse migration",
+      "scenario": "A county council's reporting runs on a Synapse dedicated SQL pool. A supplier points out that the Migration Assistant for Fabric Data Warehouse is generally available and offers to move everything to Fabric over one weekend.",
+      "stem": "What is the soundest plan?",
+      "options": [
+        "Accept the offer: the assistant moves schemas and code, so a weekend lift and shift to Fabric carries very little risk",
+        "Stay on Synapse indefinitely, since no retirement date has been announced and it is still supported",
+        "Use the assistant, rework what it flags such as money columns and T-SQL, and run in parallel before cutover",
+        "Rebuild the warehouse in Azure Databricks instead, so the council is not tied to one vendor's platform"
+      ],
+      "answer": 2,
+      "explanation": "The assistant moves schemas and code but only flags items such as money and datetimeoffset columns and incompatible T-SQL, so a parallel run comparing numbers is what makes the switch safe. Staying put is supported, but new capabilities such as Direct Lake and mirroring are built in Fabric, and a migration without a cutover plan tends to become a permanent second platform."
+    },
+    {
+      "id": "m10-q11",
+      "topic": "data mesh readiness",
+      "scenario": "A university has six faculties, each employing two data engineers of its own. The central data team of three has a nine-month queue of requests, and each faculty already uses its own Fabric workspaces.",
+      "stem": "Is a data mesh appropriate here, and what must come with it?",
+      "options": [
+        "No: a data mesh needs Azure Databricks, so stay central and hire more engineers into the central team",
+        "Yes: faculties publish data products with owners and quality promises, under shared governance rules",
+        "Yes: each faculty sets its own definitions and rules, because central governance is what a mesh removes",
+        "No: a mesh is a technology choice, and the faculties' Fabric workspaces already deliver its benefits"
+      ],
+      "answer": 1,
+      "explanation": "Domains with their own data engineers and a central team that is the bottleneck are exactly the conditions a mesh needs; each faculty owns data products, and federated governance, such as owners and stewards in governance domains, keeps the shared rules. A mesh without shared governance is just more workspaces defining revenue forty ways, and it is an organisational choice on whichever platform you run."
+    },
+    {
+      "id": "m10-q12",
+      "topic": "shortcut or copy",
+      "scenario": "A fashion retailer's marketing agency drops daily campaign results as Parquet files into an Amazon S3 bucket the agency owns. A developer proposes a nightly Copy job to bring the files into the retailer's OneLake.",
+      "stem": "Which design is better, and what must the team watch?",
+      "options": [
+        "Mirroring, because it keeps a near-real-time replica of any external source as Delta tables in OneLake",
+        "Dataflow Gen2, because Power Query suits small external sources and avoids the other cloud's egress charges",
+        "The nightly Copy job, because files held in another cloud must be copied into OneLake before Fabric can read them",
+        "A OneLake shortcut to the bucket, with shortcut caching to cut S3 egress, knowing a renamed folder breaks it"
+      ],
+      "answer": 3,
+      "explanation": "A shortcut makes the S3 files appear in OneLake with no copy and no pipeline to schedule or fix, while the agency keeps control of them; caching reduces the egress S3 charges on reads. Mirroring is for supported databases, not a bucket of files, and a nightly copy is another pipeline, another bill and another hiding place for data."
+    },
+    {
+      "id": "m10-q13",
+      "topic": "hot path and cold path",
+      "scenario": "During a three-day sale, a homeware retailer's chief executive notices that the real-time dashboard shows higher revenue than the gold-based board report. She asks for the board pack to use the dashboard figure, because it is fresher.",
+      "stem": "What is the best response?",
+      "options": [
+        "Keep board revenue on the cold path, defined once in gold; the hot path is for watching and alerting",
+        "Switch the board pack to query the Eventhouse, since it stores every event and is only seconds old",
+        "Rebuild the gold load as a streaming job, so that gold becomes as fresh as the live dashboard",
+        "Report the average of the two figures in the board pack until the gap between them is explained"
+      ],
+      "answer": 0,
+      "explanation": "The hot path treats bots and late events differently from gold, so trusted revenue comes from the cold path, where it is one column under one owner. A board pack read after the sale gains nothing from seconds-old data, and making gold streaming pays for freshness nobody will act on."
+    },
+    {
+      "id": "m10-q14",
+      "topic": "Stream Analytics or Real-Time Intelligence",
+      "scenario": "A parcel carrier's Stream Analytics job writes per-depot parcel counts to Azure SQL every minute for its routing app. It also pushes streaming tiles to Power BI for the operations room, which wants to ask new questions during peak weeks.",
+      "stem": "What should the team plan?",
+      "options": [
+        "Move everything, including the routing app's feed, to Real-Time Intelligence now, as Stream Analytics is being retired",
+        "Leave both outputs exactly as they are, because Stream Analytics is still supported and the job works today",
+        "Keep Stream Analytics for the app, and move the operations room to an Eventhouse before the Power BI output stops",
+        "Add an Eventstream on the Stream Analytics job's consumer group, so both read the same events at no extra cost"
+      ],
+      "answer": 2,
+      "explanation": "Stream Analytics suits an app that needs fixed results in Azure SQL, while people who want to ask new questions need stored events in an Eventhouse; its Power BI output stops on 31 October 2027, so only that part must move. Sharing a consumer group splits the stream so each reader sees about half the events, and only the Power BI output is ending, not the service."
+    }
+  ]
+}

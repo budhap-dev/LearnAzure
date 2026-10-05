@@ -1116,7 +1116,7 @@
       "tagline": "Fabric, OneLake, Data Factory, Power BI, Purview and choosing an analytics platform.",
       "description": "Turning the shop's operational data into answers without slowing the shop down: why reports do not run against production, Microsoft Fabric and OneLake, getting data in with Data Factory and mirroring, lakehouses, warehouses and star schemas, real-time analytics, Power BI semantic models, governance with Microsoft Purview, and when Databricks or Synapse is the better fit.",
       "icon": "data-lake",
-      "status": "in-progress",
+      "status": "ready",
       "lessons": [
         {
           "id": "10.1",
@@ -1133,8 +1133,7 @@
             "data-lake",
             "synapse",
             "power-bi"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "10.2",
@@ -1151,8 +1150,7 @@
             "data-lake",
             "power-bi",
             "cost-management"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "10.3",
@@ -1169,8 +1167,7 @@
             "data-factory",
             "azure-sql",
             "sql-server"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "10.4",
@@ -1187,8 +1184,7 @@
             "data-lake",
             "synapse",
             "databricks"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "10.5",
@@ -1205,8 +1201,7 @@
             "event-hubs",
             "stream-analytics",
             "data-explorer"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "10.6",
@@ -1223,8 +1218,7 @@
             "power-bi",
             "data-lake",
             "entra-id"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "10.7",
@@ -1241,8 +1235,7 @@
             "compliance",
             "policy",
             "data-lake"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "10.8",
