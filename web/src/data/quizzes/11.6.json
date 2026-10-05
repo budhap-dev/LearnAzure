@@ -1,0 +1,112 @@
+[
+  {
+    "id": "11.6-q1",
+    "topic": "valet key pattern",
+    "scenario": "Customers upload review photos of up to 6 MB from the mobile app to the Node API, which buffers each one and writes it to Blob storage. On a sale weekend the API instances run out of memory and restart.",
+    "stem": "What is the best fix?",
+    "options": [
+      "Scale the App Service plan up to a tier with more memory on every instance",
+      "Put a write SAS for the uploads container into the next app build so uploads skip the API",
+      "Have the API sign a short-lived SAS for one blob and let the app upload directly",
+      "Stream each upload through the API to storage instead of buffering it in memory"
+    ],
+    "answer": 2,
+    "explanation": "The valet key pattern takes the bytes out of the API entirely: it signs a narrow permission and storage takes the load. A bigger plan or streaming still pushes every byte through the API, and a SAS baked into the build is the long-lived key from lesson 3.1 that expires in production."
+  },
+  {
+    "id": "11.6-q2",
+    "topic": "user delegation SAS",
+    "stem": "What is the longest a user delegation SAS can be valid for?",
+    "options": [
+      "Seven days, the same as the delegation key that signs it",
+      "24 hours, after which the managed identity must sign a new one",
+      "One year, the same as a SAS signed with the storage account key",
+      "There is no limit while the managed identity that signed it still exists"
+    ],
+    "answer": 0,
+    "explanation": "Both the user delegation key and the SAS it signs are capped at seven days. That ceiling is not a target: issue upload SAS tokens for minutes. 24 hours is the limit for an Azure Maps SAS token, not a storage one."
+  },
+  {
+    "id": "11.6-q3",
+    "topic": "scanning before processing",
+    "scenario": "The resize function is subscribed to BlobCreated on review-uploads. Defender for Storage malware scanning is also on, and the security review asks how an infected file is kept off the product page.",
+    "stem": "Which change guarantees the resizer never publishes an unscanned file?",
+    "options": [
+      "Add a 30-second delay to the function so that the scan usually finishes first",
+      "Have the React app check the blob index tag before it displays each photo",
+      "Run ClamAV inside the resize function as a second scanner before resizing",
+      "Trigger the function from Defender's scan results, acting only on clean ones"
+    ],
+    "answer": 3,
+    "explanation": "Starting the pipeline from the scan verdict means nothing reaches the resizer until it has been scanned and found clean. A delay is a race that a large file or a busy scanner loses, and a client-side tag check happens after the file is already public."
+  },
+  {
+    "id": "11.6-q4",
+    "topic": "what a SAS cannot enforce",
+    "stem": "Which check has to happen after the upload, because a SAS cannot enforce it?",
+    "options": [
+      "Which blob name the client is allowed to write",
+      "That the file is a reasonable size and really an image",
+      "How long the client's permission lasts",
+      "Whether the client can read other blobs in the container"
+    ],
+    "answer": 1,
+    "explanation": "A SAS scopes the resource, the permissions and the time window, but it cannot cap file size or check content. That is why uploads land in a private container and are validated and scanned before use. Blob name, read access and expiry are exactly what the SAS does control."
+  },
+  {
+    "id": "11.6-q5",
+    "topic": "Communication Services retirement",
+    "scenario": "In October 2026 Northline, which has never used Azure Communication Services, plans to start sending order emails and delivery texts.",
+    "stem": "What should Ana recommend?",
+    "options": [
+      "Build on Communication Services, since it is Azure-native and billed with everything else",
+      "Third-party providers behind one notifier, as ACS email and SMS are retiring",
+      "Send customer email through Microsoft 365 High Volume Email and texts through ACS",
+      "Use Communication Services for email now, and move only SMS elsewhere before 2028"
+    ],
+    "answer": 1,
+    "explanation": "ACS email and SMS retire on 30 September 2028 and stop taking new customers on 23 October 2026, and Microsoft advises against new work on them. High Volume Email only sends inside your own tenant, so it cannot reach customers. A notifier seam keeps the next provider change small."
+  },
+  {
+    "id": "11.6-q6",
+    "topic": "email authentication",
+    "scenario": "Order confirmations from orders.northline.com are landing in Gmail and Outlook.com junk folders.",
+    "stem": "Which DNS records prove the mail is genuinely from Northline?",
+    "options": [
+      "MX records that point at the email provider's servers",
+      "A TXT record holding the email provider's API key",
+      "A CAA record naming the certificate authority for the domain",
+      "SPF and DKIM records, plus a DMARC policy"
+    ],
+    "answer": 3,
+    "explanation": "SPF lists who may send, DKIM signs each message, and DMARC tells receivers what to do when checks fail; Gmail and Outlook.com require all three from bulk senders. MX records control where mail to the domain is received, not whether outgoing mail is trusted."
+  },
+  {
+    "id": "11.6-q7",
+    "topic": "alphanumeric sender ID",
+    "scenario": "UK customers receive delivery texts from NORTHLINE. Several reply STOP, but they keep getting messages.",
+    "stem": "What is the cause?",
+    "options": [
+      "Nobody can reply to a name; opt-out needs a link or another channel",
+      "The sender ID is not registered, so the mobile network drops every reply",
+      "The provider collects replies and applies them in a batch once a day",
+      "STOP is handled only by the phone's operating system, never by the sender"
+    ],
+    "answer": 0,
+    "explanation": "Alphanumeric sender IDs are one-way: there is no number for the reply to reach. Offer an opt-out link or another channel, or use a UK mobile number or short code for two-way texts. An unregistered ID would block the outgoing messages to UK numbers, not just the replies."
+  },
+  {
+    "id": "11.6-q8",
+    "topic": "geofencing",
+    "scenario": "The click-and-collect team wants store staff alerted when a customer arrives. A developer proposes storing store polygons in Azure Maps Data Registry and calling the Azure Maps geofence API with the phone's position.",
+    "stem": "What is the better design?",
+    "options": [
+      "Model each car park with Azure Maps Creator and track customers on the indoor map",
+      "Send the phone's location to the API every 30 seconds and compare it with each store",
+      "An 'I'm here' button, plus an opt-in OS geofence for active collections",
+      "Keep the plan, but cache the geofence API's responses for five minutes to save cost"
+    ],
+    "answer": 2,
+    "explanation": "The Azure Maps geofencing API, Data Registry and Creator all retired on 30 September 2025, so the geofence belongs on the device, where the OS watches it cheaply. Polling location from the API drains batteries and needs always-on permission for every customer, not just those collecting today."
+  }
+]

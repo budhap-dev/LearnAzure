@@ -45,7 +45,7 @@
   },
   {
     "term": "Cloud design pattern",
-    "aliases": ["design pattern", "cloud patterns", "architecture pattern", "valet key", "queue-based load leveling", "gateway offloading"],
+    "aliases": ["design pattern", "cloud patterns", "architecture pattern", "queue-based load leveling", "gateway offloading"],
     "definition": "A named, reusable solution to a recurring problem in distributed cloud systems - such as cache-aside, valet key, competing consumers, transactional outbox, gateway offloading, retry, circuit breaker and strangler fig - catalogued with trade-offs in the Azure Architecture Center. Naming them makes design reviews faster.",
     "example": "\"Where's the outbox?\" replaces ten minutes of explaining why saving an order and publishing its event can disagree.",
     "lessons": ["9.1"],

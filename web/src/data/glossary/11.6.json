@@ -1,0 +1,72 @@
+[
+  {
+    "term": "Valet key pattern",
+    "aliases": ["valet key", "direct upload", "upload SAS", "direct-to-storage upload"],
+    "definition": "A cloud design pattern where the API hands the client a narrow, short-lived key and the client reads or writes storage directly, so large files never pass through the API. In Azure the key is usually a user delegation SAS for one blob, create-only, lasting minutes. The key cannot check size or content, so uploads still need validating afterwards.",
+    "example": "The Node API signs a 15-minute SAS for review-uploads/r-88213/3f9c.jpg, and the app PUTs the photo straight to Blob storage.",
+    "icon": "blob",
+    "lessons": ["11.6", "3.1", "9.1"],
+    "related": ["Shared access signature", "Cloud design pattern", "Managed identity", "Blob storage"]
+  },
+  {
+    "term": "Azure Communication Services",
+    "aliases": ["ACS", "Communication Services", "ACS Email", "ACS SMS"],
+    "definition": "Azure's communications APIs for email, SMS, chat, voice and video, billed per use. In September 2026 Microsoft announced its retirement as a standalone service: no new customers from 23 October 2026, and email, SMS, chat, Rooms and directly bought phone numbers retire on 30 September 2028, with calling kept only alongside Teams. Don't start new work on it; use a third-party provider.",
+    "example": "Northline sends order email and delivery texts through third-party providers rather than ACS, behind one notifier function.",
+    "icon": "communication-services",
+    "lessons": ["11.6"],
+    "related": ["Email authentication", "Alphanumeric sender ID", "Azure Notification Hubs"]
+  },
+  {
+    "term": "Email authentication",
+    "aliases": ["SPF", "DKIM", "DMARC", "Sender Policy Framework", "DomainKeys Identified Mail"],
+    "definition": "DNS records that prove email from your domain is genuine. SPF lists the servers allowed to send, DKIM signs each message, and DMARC tells receivers what to do when checks fail and where to report. Gmail and Outlook.com require all three from senders of more than 5,000 messages a day; without them mail goes to junk or is rejected.",
+    "example": "orders.northline.com publishes SPF and DKIM records for the email provider, and northline.com has a DMARC policy.",
+    "lessons": ["11.6"],
+    "related": ["Azure Communication Services"]
+  },
+  {
+    "term": "Alphanumeric sender ID",
+    "aliases": ["sender ID", "alpha sender ID", "SMS sender ID"],
+    "definition": "A brand name of up to 11 characters shown as the sender of an SMS instead of a phone number. It is one-way: customers cannot reply, so STOP cannot work and the message needs another way to opt out. Many countries require registration; texts to UK numbers from unregistered IDs have been blocked since June 2024, and India requires sender IDs and templates on its DLT platform.",
+    "example": "Delivery texts to UK customers arrive from NORTHLINE, with an opt-out link in the message.",
+    "lessons": ["11.6"],
+    "related": ["Azure Communication Services"]
+  },
+  {
+    "term": "Azure Maps",
+    "aliases": ["Maps account", "Azure Maps Web SDK", "Azure Maps Creator"],
+    "definition": "Azure's location platform: map tiles, search and geocoding, routing, traffic, time zones and weather, as REST APIs and a Web SDK. It has one pricing tier, Gen2, with free monthly transactions and then roughly $4.50 per 1,000. It replaces Bing Maps for Enterprise, which ends in June 2028. The native mobile SDKs, Creator indoor maps and the geofencing API have all retired.",
+    "example": "The store finder geocodes a customer's postcode through the API, which calls Azure Maps with its managed identity.",
+    "icon": "location",
+    "lessons": ["11.6"],
+    "related": ["Geocoding", "Geofence", "Managed identity"]
+  },
+  {
+    "term": "Geocoding",
+    "aliases": ["geocode", "reverse geocoding", "address search"],
+    "definition": "Turning an address or postcode into coordinates, or coordinates back into an address (reverse geocoding). Each lookup is a billable map transaction, so geocode fixed places such as stores once and store the result, and only geocode what users type.",
+    "example": "The 14 store addresses were geocoded once into Azure SQL; only a customer's postcode is sent to Azure Maps.",
+    "icon": "location",
+    "lessons": ["11.6"],
+    "related": ["Azure Maps"]
+  },
+  {
+    "term": "Geofence",
+    "aliases": ["geofencing", "region monitoring"],
+    "definition": "A virtual boundary around a place that triggers an action when a device enters or leaves it. On phones the operating system watches geofences cheaply, with limits of 20 per app on iOS and 100 on Android, but background use needs 'always' location permission. The Azure Maps geofencing API retired in September 2025.",
+    "example": "When a click-and-collect order is ready, the app registers a 200-metre geofence around the store and tells the API when the customer arrives.",
+    "icon": "location",
+    "lessons": ["11.6"],
+    "related": ["Azure Maps", "Idempotency key"]
+  },
+  {
+    "term": "Malware scanning",
+    "aliases": ["on-upload malware scanning", "Defender for Storage malware scanning", "antivirus scanning"],
+    "definition": "A Defender for Storage feature that scans blobs with Microsoft Defender Antivirus as they are uploaded, up to 50 GB each, and reports the verdict as a blob index tag, a Defender alert and optionally an Event Grid event. It costs about $0.15 per GB scanned on top of the Defender for Storage plan. Past the monthly cap files go unscanned, so treat 'Not scanned' as not clean.",
+    "example": "Only a 'No threats found' verdict on review-uploads triggers the resize function; malicious photos are soft-deleted.",
+    "icon": "defender",
+    "lessons": ["11.6"],
+    "related": ["Microsoft Defender for Cloud", "Azure Event Grid", "Blob storage", "Valet key pattern"]
+  }
+]
