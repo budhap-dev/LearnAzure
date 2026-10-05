@@ -1,7 +1,7 @@
 # Learn Azure
 
 A self-paced, scenario-driven course on Microsoft Azure — from cloud basics through
-compute, data, networking, security, DevOps, Azure AI and analytics — for an experienced engineer who
+compute, data, networking, security, DevOps, Azure AI, analytics and web and mobile clients — for an experienced engineer who
 wants high-to-mid-level command of the platform to work with and guide a team.
 
 - **Read the plan and curriculum:** [PLAN.md](PLAN.md)

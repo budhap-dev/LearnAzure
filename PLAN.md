@@ -38,9 +38,9 @@ lesson quizzes, timed, graded). A **final learning test** draws from the whole c
 | 8 | Azure AI ✅ | 8 | Azure OpenAI and Microsoft Foundry, AI Services, AI Search, RAG, agents, responsible AI, cost and security of AI |
 | 9 | Architecture and leading a team ✅ | 5 | Reference architectures, landing zones, migration, governance, certification map, capstone scenarios |
 | 10 | Data and analytics ✅ | 8 | Fabric and OneLake, Data Factory and mirroring, lakehouse and warehouse, real-time analytics, Power BI, Purview, choosing a platform |
-| 11 | Web and mobile clients | 7 | Backend for frontend, edge caching, customer sign-in, push, real-time, files, messaging and maps, shipping mobile apps |
+| 11 | Web and mobile clients ✅ | 7 | Backend for frontend, edge caching, customer sign-in, push, real-time, files, messaging and maps, shipping mobile apps |
 
-Around 78 lessons. Modules are built one at a time; each is verified end-to-end before the
+78 lessons. Modules are built one at a time; each is verified end-to-end before the
 next starts.
 
 ### Module 1 — Cloud and Azure foundations — **shipped**
@@ -269,7 +269,7 @@ Existing terms this module links to rather than redefines: OLTP, OLAP, Data ware
 (3.7), Hierarchical namespace (3.1), Azure Event Hubs, Apache Kafka (5.4), KQL (6.2), Data
 residency (1.3), Reservation (shared), Microsoft Entra ID (shared).
 
-### Module 11 — Web and mobile clients — **in progress**
+### Module 11 — Web and mobile clients — **shipped**
 
 | Id | Lesson |
 |----|--------|
@@ -284,7 +284,21 @@ residency (1.3), Reservation (shared), Microsoft Entra ID (shared).
 What the shop's React web app and React Native app need from Azure beyond an API. Written for
 a React and React Native lead who knows the client side well: each lesson is about the Azure side
 and the judgement calls, mapped to tools they already use (Firebase, Auth0, Pusher, Expo,
-CodePush, SendGrid, Twilio, Google Maps). Released one lesson per PR.
+CodePush, SendGrid, Twilio, Google Maps).
+
+Released one lesson per PR (#68-#74). The stories that run through it: seven calls on a home
+screen and a renamed field that broke an app nobody could recall, a blank page and a stranger's
+name served from the edge, a refresh token in AsyncStorage and Fellside's 140,000 B2C customers,
+a 3 a.m. push to every Android phone, 20,000 tabs polling for order status, review photos that
+ran the API out of memory, and mobile builds living on one contractor's laptop.
+
+Two facts changed the plan while it was written: Azure Communication Services email and SMS take
+no new customers from 23 October 2026 and retire on 30 September 2028, so 11.6 teaches choosing a
+provider instead; and Visual Studio App Center and CodePush are gone, so 11.7 is about what
+replaced them.
+
+Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn at
+random from the lesson quizzes. 56 new glossary terms (643 in total).
 
 Glossary term ownership (each term is defined once, in the lesson that owns it):
 

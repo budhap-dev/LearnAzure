@@ -1262,7 +1262,7 @@
       "tagline": "Front-end delivery, customer sign-in, push, real-time, files, maps and mobile release.",
       "description": "What the shop's React web app and React Native mobile app need from Azure beyond an API: a backend shaped for each client, a fast and correctly cached front end, customer sign-in, push notifications, real-time updates, direct uploads, messaging and maps, and shipping and watching mobile apps after App Center.",
       "icon": "mobile",
-      "status": "in-progress",
+      "status": "ready",
       "lessons": [
         {
           "id": "11.1",
@@ -1278,8 +1278,7 @@
             "mobile",
             "api-management",
             "app-service"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "11.2",
@@ -1295,8 +1294,7 @@
             "front-door",
             "cdn",
             "static-web-apps"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "11.3",
@@ -1312,13 +1310,12 @@
             "external-identities",
             "entra-id",
             "mobile"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "11.4",
           "title": "Push notifications with Notification Hubs",
-          "summary": "Reaching phones through APNs and FCM, installations, tags and templates, targeting segments, and when a hosted push service or Expo is the simpler answer.",
+          "summary": "Reaching phones through APNs and FCM, installations, tags and templates, targeting segments, and when Expo push or FCM direct is the simpler answer.",
           "minutes": 13,
           "objectives": [
             "Explain how push travels from your backend to a phone",
@@ -1329,8 +1326,7 @@
             "notification-hubs",
             "mobile",
             "function-apps"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "11.5",
@@ -1346,8 +1342,7 @@
             "signalr",
             "web-pubsub",
             "function-apps"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "11.6",
@@ -1363,13 +1358,12 @@
             "blob",
             "defender",
             "location"
-          ],
-          "status": "ready"
+          ]
         },
         {
           "id": "11.7",
           "title": "Shipping and watching mobile apps",
-          "summary": "Building, signing and releasing React Native apps after Visual Studio App Center: pipelines, over-the-air updates, crash reporting and app telemetry, and rolling out features safely to installed apps.",
+          "summary": "Building, signing and releasing React Native apps after Visual Studio App Center: pipelines and signing keys, over-the-air updates and their store-policy limits, crash reporting and symbolication, and rolling out safely to installed apps.",
           "minutes": 14,
           "objectives": [
             "Build and sign mobile apps in a pipeline",
