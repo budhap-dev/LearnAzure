@@ -845,3 +845,29 @@ kbd { display: inline-block; font: 600 0.72rem var(--mono); line-height: 1.5; pa
   .review-grade kbd, .review-prompt kbd { display: none; }
   .review-stats .big { font-size: 1.5rem; }
 }
+
+/* Tables on phones: compact cells that wrap; wide tables (4+ columns) become one card per row,
+   each value labelled with its column header (data-label, set by rehypeTableLabels). */
+@media (max-width: 720px) {
+  table { font-size: 0.9rem; }
+  th, td { padding: 0.5rem 0.6rem; }
+  th { white-space: normal; }
+  td .az-chip, th .az-chip { white-space: normal; }
+  td code, td a { overflow-wrap: anywhere; }
+}
+@media (max-width: 640px) {
+  .table-stack { overflow-x: visible; border: 0; background: none; border-radius: 0; }
+  .table-stack table, .table-stack tbody, .table-stack tr, .table-stack td { display: block; width: 100%; }
+  .table-stack thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .table-stack tr { margin-bottom: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); overflow: hidden; }
+  .table-stack tr td { padding: 0.5rem 0.8rem; border-bottom: 1px solid var(--border); }
+  .table-stack tr td:last-child { border-bottom: 0; }
+  .table-stack tr td:first-child { background: var(--surface-2); font-weight: 700; }
+  .table-stack td[data-label]:not(:first-child)::before { content: attr(data-label); display: block; margin-bottom: 0.1rem; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+  .table-stack tbody tr:hover td { background: none; }
+  .table-stack tbody tr:hover td:first-child { background: var(--surface-2); }
+}
+@media (max-width: 400px) {
+  table { font-size: 0.86rem; }
+  th, td { padding: 0.45rem 0.45rem; }
+}
