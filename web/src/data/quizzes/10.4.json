@@ -1,0 +1,112 @@
+[
+  {
+    "id": "10.4-q1",
+    "topic": "one definition",
+    "scenario": "Finance and marketing present different revenue figures for the same month. Each wrote its own SQL against the mirrored order tables.",
+    "stem": "What is the lasting fix?",
+    "options": [
+      "Ask both teams to copy each other's SQL so the two numbers agree from next month onwards",
+      "Define revenue once in a gold fact table, with a named owner, and point every report at it",
+      "Give marketing read access to finance's report so they can see and quote the right number",
+      "Move both reports onto a larger capacity so they refresh at the same time"
+    ],
+    "answer": 1,
+    "explanation": "Two numbers for one fact is a modelling gap: the business rule lives in each report. Building it once in gold, with an owner, removes the argument. Copying SQL between teams only works until the next report author writes their own."
+  },
+  {
+    "id": "10.4-q2",
+    "topic": "SQL analytics endpoint",
+    "scenario": "A SQL developer connects SSMS to a lakehouse's SQL analytics endpoint and runs an UPDATE to fix a product's category.",
+    "stem": "What happens when the UPDATE runs?",
+    "options": [
+      "The update succeeds, and Spark notebooks reading the Delta table see the new value at once",
+      "The update succeeds, but only for the session that ran it",
+      "The update is queued until the next pipeline run applies it",
+      "It fails: the endpoint is read-only, so the fix belongs in Spark or a warehouse"
+    ],
+    "answer": 3,
+    "explanation": "The SQL analytics endpoint lets you query, and create views, functions and security, but not insert, update or delete. A team that wants to write with T-SQL should use a Fabric Warehouse, which supports full DML and multi-table transactions."
+  },
+  {
+    "id": "10.4-q3",
+    "topic": "lakehouse vs warehouse",
+    "scenario": "The team that will maintain gold is three SQL Server developers. Each nightly load must update a fact table and three dimensions together, or not at all.",
+    "stem": "Where should gold live?",
+    "options": [
+      "A Fabric Warehouse, loaded with T-SQL inside one transaction",
+      "A Fabric Lakehouse, loaded with Python notebooks the team will learn",
+      "A Fabric Lakehouse, loaded through its SQL analytics endpoint",
+      "Azure SQL Database, because it is what the team already knows"
+    ],
+    "answer": 0,
+    "explanation": "The team's language is T-SQL and the load needs multi-table transactions, which is exactly what the Warehouse offers. A lakehouse would mean learning Spark and commits per table, and its SQL analytics endpoint cannot write at all."
+  },
+  {
+    "id": "10.4-q4",
+    "topic": "grain",
+    "scenario": "FactSales has one row per order line. Someone adds the order's delivery charge as a column, copied onto every line of the order.",
+    "stem": "What goes wrong?",
+    "options": [
+      "Nothing, as long as the column is a decimal",
+      "Queries get slower but totals stay correct",
+      "Each order's charge is counted once per line, so delivery totals are inflated",
+      "The warehouse rejects the new column because repeating a value breaks the table's primary key"
+    ],
+    "answer": 2,
+    "explanation": "An order-level number on a line-level fact breaks the grain, so a three-line order counts its delivery charge three times. Keep it in an order-grain fact, or allocate it across lines. The warehouse would not stop you, because its keys are not enforced."
+  },
+  {
+    "id": "10.4-q5",
+    "topic": "SCD type 2",
+    "stem": "A customer moves from the Gold to the Platinum loyalty tier in June. Which approach keeps her January orders counted as Gold?",
+    "options": [
+      "Type 1: overwrite the tier on her existing dimension row",
+      "Store the tier directly on the fact table and update all of her past fact rows to match",
+      "Type 2: end-date her old dimension row and add a new row with a new key",
+      "Delete her dimension row and reinsert it with the new tier"
+    ],
+    "answer": 2,
+    "explanation": "Type 2 keeps every version, and each fact keeps the key that was current when the sale happened. Type 1 is simpler but rewrites history: her January orders would silently count as Platinum."
+  },
+  {
+    "id": "10.4-q6",
+    "topic": "Spark vs T-SQL",
+    "scenario": "A new data engineer wants Spark notebooks for everything. The long-standing team writes T-SQL only. Bronze includes clickstream files and fuzzy customer matching.",
+    "stem": "What is a sensible split?",
+    "options": [
+      "Spark in a lakehouse for bronze to silver; T-SQL in a warehouse for gold",
+      "Everything in Spark, so there is only one language to support",
+      "Everything in T-SQL through the lakehouse SQL analytics endpoint",
+      "Keep two separate gold layers, one per language, and let each report choose the one it prefers"
+    ],
+    "answer": 0,
+    "explanation": "Spark suits files and messy, large-scale cleaning; T-SQL suits the team that will own gold. Both use Delta tables in OneLake, so the warehouse reads silver without a copy. Spark everywhere leaves gold with owners who cannot maintain it, and two gold layers bring back two revenues."
+  },
+  {
+    "id": "10.4-q7",
+    "topic": "unenforced keys",
+    "scenario": "After a reload, one customer's lifetime revenue in the gold model is exactly double what the orders system says.",
+    "stem": "What is the most likely cause?",
+    "options": [
+      "The SQL analytics endpoint is still caching the results from before the reload ran",
+      "Delta Parquet compresses repeated values",
+      "Mirroring replicated the orders twice",
+      "A duplicate DimCustomer row, because warehouse keys are not enforced"
+    ],
+    "answer": 3,
+    "explanation": "Fabric Warehouse keys are declared NOT ENFORCED, so a duplicate dimension row joins to every fact twice. Test for duplicate keys in each load. Mirroring applies changes by key, so it is not the usual source of a clean doubling."
+  },
+  {
+    "id": "10.4-q8",
+    "topic": "views vs tables",
+    "stem": "Why should the gold layer be materialised tables rather than views over silver?",
+    "options": [
+      "Views are not supported on the SQL analytics endpoint",
+      "Reports read gold all day, so computing it once per load is cheaper and consistent",
+      "Tables are encrypted at rest in OneLake, while views are not covered by encryption",
+      "Views cannot join more than two tables in Fabric"
+    ],
+    "answer": 1,
+    "explanation": "A view recomputes its logic on every query, which costs capacity each time reports run. A table computes it once per load. Views are supported on the endpoint and are fine for silver experiments; the issue is cost and consistency at report scale."
+  }
+]
