@@ -6,6 +6,7 @@ import { LESSONS, MODULES, OPEN_MODULES } from '../lib/syllabus';
 import { useProgress } from '../lib/useProgress';
 import { exportJson, importJson, reset, streak } from '../lib/progress';
 import { deckStats, termsInScope } from '../lib/review';
+import { StudyGoals } from '../components/StudyGoals';
 
 export function ProgressPage() {
   const progress = useProgress();
@@ -44,6 +45,8 @@ export function ProgressPage() {
     <div className="progress-page">
       <h1>Your progress</h1>
       <p className="lede">Everything here stays on this device. Export it to carry it to another one.</p>
+
+      <StudyGoals progress={progress} />
 
       <div className="stat-grid">
         <div className="card stat"><ProgressRing value={LESSONS.length ? done.length / LESSONS.length : 0} size={72} stroke={8} /><span>{done.length} of {LESSONS.length} lessons learned</span></div>

@@ -4,6 +4,7 @@ import { AzureIcon } from '../components/AzureIcon';
 import { LESSONS, MODULES, READY_MODULES, lessonById } from '../lib/syllabus';
 import { useProgress } from '../lib/useProgress';
 import { streak } from '../lib/progress';
+import { StudyGoals } from '../components/StudyGoals';
 
 const HERO_ICONS = ['app-service', 'azure-sql', 'function-apps', 'aks', 'key-vault', 'azure-openai', 'azure-devops', 'monitor', 'cosmos-db', 'virtual-network', 'static-web-apps', 'service-bus'];
 
@@ -51,6 +52,8 @@ export function Home() {
           ))}
         </div>
       </section>
+
+      <StudyGoals progress={progress} />
 
       <section className="how">
         <h2>How every lesson works</h2>
