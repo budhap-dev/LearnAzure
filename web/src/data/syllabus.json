@@ -1109,6 +1109,274 @@
           ]
         }
       ]
+    },
+    {
+      "number": 10,
+      "title": "Data and analytics",
+      "tagline": "Fabric, OneLake, Data Factory, Power BI, Purview and choosing an analytics platform.",
+      "description": "Turning the shop's operational data into answers without slowing the shop down: why reports do not run against production, Microsoft Fabric and OneLake, getting data in with Data Factory and mirroring, lakehouses, warehouses and star schemas, real-time analytics, Power BI semantic models, governance with Microsoft Purview, and when Databricks or Synapse is the better fit.",
+      "icon": "data-lake",
+      "status": "planned",
+      "lessons": [
+        {
+          "id": "10.1",
+          "title": "The analytics landscape - from transactions to insight",
+          "summary": "Why reporting against the production database hurts, operational versus analytical data, the lake, the warehouse and the lakehouse, the medallion layers, and the map of Microsoft's analytics services.",
+          "minutes": 13,
+          "objectives": [
+            "Explain why analytical queries belong outside the operational database",
+            "Tell a data lake, a data warehouse and a lakehouse apart",
+            "Describe the bronze, silver and gold layers of a medallion architecture",
+            "Place Fabric, Databricks, Synapse, Data Factory, Power BI and Purview on one map"
+          ],
+          "icons": [
+            "data-lake",
+            "synapse",
+            "power-bi"
+          ]
+        },
+        {
+          "id": "10.2",
+          "title": "Microsoft Fabric and OneLake",
+          "summary": "Fabric as software-as-a-service analytics: workspaces, capacities and capacity units, OneLake as one lake per tenant, shortcuts instead of copies, Delta Parquet as the shared format, and what a capacity really costs.",
+          "minutes": 15,
+          "objectives": [
+            "Explain what Microsoft Fabric is and what it replaces",
+            "Size and govern a Fabric capacity, including smoothing, throttling and pausing",
+            "Use OneLake shortcuts to avoid copying data",
+            "Organise Fabric workspaces for a team"
+          ],
+          "icons": [
+            "data-lake",
+            "power-bi",
+            "cost-management"
+          ]
+        },
+        {
+          "id": "10.3",
+          "title": "Getting data in - Data Factory, mirroring and change data capture",
+          "summary": "Moving data from Azure SQL, on-premises SQL Server and SaaS into the lake: pipelines and copy activities, Dataflow Gen2, mirroring for near-real-time replicas, incremental loads with change data capture, and gateways for data behind a firewall.",
+          "minutes": 15,
+          "objectives": [
+            "Choose between mirroring, a pipeline copy and a dataflow for a source",
+            "Design incremental loads instead of nightly full copies",
+            "Reach on-premises sources with a gateway or self-hosted integration runtime",
+            "Explain where Azure Data Factory and Fabric Data Factory differ"
+          ],
+          "icons": [
+            "data-factory",
+            "azure-sql",
+            "sql-server"
+          ]
+        },
+        {
+          "id": "10.4",
+          "title": "Lakehouse, warehouse and modelling for analytics",
+          "summary": "Fabric Lakehouse and Warehouse side by side, the SQL analytics endpoint, Spark notebooks or T-SQL for transformation, and the star schema with fact and dimension tables that every report depends on.",
+          "minutes": 15,
+          "objectives": [
+            "Choose between a Fabric Lakehouse and a Fabric Warehouse for a team",
+            "Decide when to transform with Spark notebooks and when with T-SQL",
+            "Design a star schema with fact and dimension tables",
+            "Handle changing dimension values without rewriting history"
+          ],
+          "icons": [
+            "data-lake",
+            "synapse",
+            "databricks"
+          ]
+        },
+        {
+          "id": "10.5",
+          "title": "Real-time analytics - Eventstreams, Eventhouse and Stream Analytics",
+          "summary": "When minutes-old data is not good enough: Fabric Real-Time Intelligence with Eventstreams, Eventhouse and Activator, Azure Stream Analytics and windowing, Azure Data Explorer, and the hot and cold paths.",
+          "minutes": 14,
+          "objectives": [
+            "Decide whether a scenario really needs real-time analytics",
+            "Route an event stream into Eventhouse and query it with KQL",
+            "Use windowing to aggregate a stream",
+            "Trigger an action from data with Activator"
+          ],
+          "icons": [
+            "event-hubs",
+            "stream-analytics",
+            "data-explorer"
+          ]
+        },
+        {
+          "id": "10.6",
+          "title": "Power BI - semantic models, Direct Lake and embedding",
+          "summary": "Power BI as the front end of analytics: semantic models and DAX, Import, DirectQuery and Direct Lake, row-level security, licences and capacities, and embedding reports in the shop's own React app.",
+          "minutes": 15,
+          "objectives": [
+            "Explain what a semantic model is and why a team should share them",
+            "Choose between Import, DirectQuery and Direct Lake",
+            "Secure reports with row-level security",
+            "Choose a licensing and embedding approach for internal and customer-facing reports"
+          ],
+          "icons": [
+            "power-bi",
+            "data-lake",
+            "entra-id"
+          ]
+        },
+        {
+          "id": "10.7",
+          "title": "Data governance with Microsoft Purview",
+          "summary": "Knowing what data you hold and who may use it: the Purview Data Map and Unified Catalog, scanning and classification, lineage, sensitivity labels, data loss prevention, stewards, and answering a GDPR erasure request across the lake.",
+          "minutes": 14,
+          "objectives": [
+            "Explain what Microsoft Purview gives a data platform",
+            "Use classification and sensitivity labels to find and protect personal data",
+            "Read lineage to answer where a number came from",
+            "Assign data owners and stewards and plan for erasure requests"
+          ],
+          "icons": [
+            "compliance",
+            "policy",
+            "data-lake"
+          ]
+        },
+        {
+          "id": "10.8",
+          "title": "Choosing an analytics platform - Fabric, Databricks or Synapse",
+          "summary": "A decision guide for design reviews: Fabric for most Microsoft-centred teams, Azure Databricks for Spark-heavy, multicloud and machine-learning work, Synapse for existing estates, and when a data mesh or a single platform fits the organisation.",
+          "minutes": 14,
+          "objectives": [
+            "Choose between Fabric, Azure Databricks and Synapse for a scenario",
+            "Plan a path for an existing Synapse estate",
+            "Explain Unity Catalog and where it sits beside Purview",
+            "Decide whether a data mesh fits the organisation"
+          ],
+          "icons": [
+            "databricks",
+            "synapse",
+            "guide"
+          ]
+        }
+      ]
+    },
+    {
+      "number": 11,
+      "title": "Web and mobile clients",
+      "tagline": "Front-end delivery, customer sign-in, push, real-time, files, maps and mobile release.",
+      "description": "What the shop's React web app and React Native mobile app need from Azure beyond an API: a backend shaped for each client, a fast and correctly cached front end, customer sign-in, push notifications, real-time updates, direct uploads, messaging and maps, and shipping and watching mobile apps after App Center.",
+      "icon": "mobile",
+      "status": "planned",
+      "lessons": [
+        {
+          "id": "11.1",
+          "title": "The client-facing toolkit and the backend for frontend",
+          "summary": "What web and mobile clients need beyond a REST API, the backend-for-frontend pattern, API versioning for app versions you cannot force-update, and offline-first thinking.",
+          "minutes": 13,
+          "objectives": [
+            "Map client needs to Azure services",
+            "Decide when a backend for frontend is worth it",
+            "Version APIs for mobile app versions you cannot recall"
+          ],
+          "icons": [
+            "mobile",
+            "api-management",
+            "app-service"
+          ]
+        },
+        {
+          "id": "11.2",
+          "title": "Delivering the front end fast - Front Door, caching and assets",
+          "summary": "Caching a single-page app correctly at the edge: cache headers, content-hashed assets, purging, compression and images, and the mistakes that serve stale or private content.",
+          "minutes": 13,
+          "objectives": [
+            "Set cache rules for an SPA's HTML and assets",
+            "Purge and version assets safely",
+            "Avoid caching personalised responses"
+          ],
+          "icons": [
+            "front-door",
+            "cdn",
+            "static-web-apps"
+          ]
+        },
+        {
+          "id": "11.3",
+          "title": "Customer sign-in with Entra External ID",
+          "summary": "Consumer identity for web and mobile: External ID tenants, user flows, social and native sign-in, MSAL with PKCE, token storage on devices, and moving off Azure AD B2C.",
+          "minutes": 14,
+          "objectives": [
+            "Choose a sign-in experience for web and mobile customers",
+            "Explain PKCE and safe token storage on devices",
+            "Plan a move from Azure AD B2C"
+          ],
+          "icons": [
+            "external-identities",
+            "entra-id",
+            "mobile"
+          ]
+        },
+        {
+          "id": "11.4",
+          "title": "Push notifications with Notification Hubs",
+          "summary": "Reaching phones through APNs and FCM, installations, tags and templates, targeting segments, and when a hosted push service or Expo is the simpler answer.",
+          "minutes": 13,
+          "objectives": [
+            "Explain how push travels from your backend to a phone",
+            "Target users with tags and templates",
+            "Choose between Notification Hubs and alternatives"
+          ],
+          "icons": [
+            "notification-hubs",
+            "mobile",
+            "function-apps"
+          ]
+        },
+        {
+          "id": "11.5",
+          "title": "Real-time updates - SignalR Service and Web PubSub",
+          "summary": "Live order status and stock without polling: WebSockets and server-sent events, Azure SignalR Service, Azure Web PubSub, serverless mode with Functions, and the cost of connections.",
+          "minutes": 14,
+          "objectives": [
+            "Choose between polling, server-sent events and WebSockets",
+            "Choose between SignalR Service and Web PubSub",
+            "Scale and secure real-time connections"
+          ],
+          "icons": [
+            "signalr",
+            "web-pubsub",
+            "function-apps"
+          ]
+        },
+        {
+          "id": "11.6",
+          "title": "Files, messaging and maps",
+          "summary": "Direct uploads to Blob with the valet key pattern, processing images on upload, email and SMS with Azure Communication Services, and store finders and geofencing with Azure Maps.",
+          "minutes": 14,
+          "objectives": [
+            "Upload files directly from clients without proxying through the API",
+            "Send email and SMS with Azure Communication Services",
+            "Choose where Azure Maps fits a product"
+          ],
+          "icons": [
+            "blob",
+            "communication-services",
+            "event-grid"
+          ]
+        },
+        {
+          "id": "11.7",
+          "title": "Shipping and watching mobile apps",
+          "summary": "Building, signing and releasing React Native apps after Visual Studio App Center: pipelines, over-the-air updates, crash reporting and app telemetry, and rolling out features safely to installed apps.",
+          "minutes": 14,
+          "objectives": [
+            "Build and sign mobile apps in a pipeline",
+            "Choose crash reporting and telemetry for mobile apps",
+            "Roll out mobile changes safely, including over-the-air updates"
+          ],
+          "icons": [
+            "mobile",
+            "application-insights",
+            "builds"
+          ]
+        }
+      ]
     }
   ]
 }

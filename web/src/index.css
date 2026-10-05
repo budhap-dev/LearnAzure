@@ -44,7 +44,7 @@
   --teal: #0d9488;
   --teal-bg: #e0f5f2;
   --m1: #0f6cbd; --m2: #7c3aed; --m3: #0d9488; --m4: #dc2626; --m5: #d97706;
-  --m6: #2563eb; --m7: #059669; --m8: #db2777; --m9: #4f46e5;
+  --m6: #2563eb; --m7: #059669; --m8: #db2777; --m9: #4f46e5; --m10: #4d7c0f; --m11: #c2410c;
   --dg-line: #4b5a6b;
   --dg-node: #ffffff;
   --dg-node-border: #c9d3de;
@@ -426,8 +426,9 @@ main { flex: 1; width: 100%; max-width: var(--max); margin: 0 auto; padding: 1.4
 .module-num.m1 { background: var(--m1); } .module-num.m2 { background: var(--m2); } .module-num.m3 { background: var(--m3); }
 .module-num.m4 { background: var(--m4); } .module-num.m5 { background: var(--m5); } .module-num.m6 { background: var(--m6); }
 .module-num.m7 { background: var(--m7); } .module-num.m8 { background: var(--m8); } .module-num.m9 { background: var(--m9); }
+.module-num.m10 { background: var(--m10); } .module-num.m11 { background: var(--m11); }
 .m1 { --mc: var(--m1); } .m2 { --mc: var(--m2); } .m3 { --mc: var(--m3); } .m4 { --mc: var(--m4); } .m5 { --mc: var(--m5); }
-.m6 { --mc: var(--m6); } .m7 { --mc: var(--m7); } .m8 { --mc: var(--m8); } .m9 { --mc: var(--m9); }
+.m6 { --mc: var(--m6); } .m7 { --mc: var(--m7); } .m8 { --mc: var(--m8); } .m9 { --mc: var(--m9); } .m10 { --mc: var(--m10); } .m11 { --mc: var(--m11); }
 
 /* ---------- Home ---------- */
 .hero { display: grid; grid-template-columns: 1.3fr 1fr; gap: 2rem; align-items: center; padding: 2.4rem 2rem; border-radius: 22px; color: #fff; background: linear-gradient(120deg, var(--hero-a), var(--hero-b), var(--hero-c)); background-size: 200% 200%; animation: hero-shift 14s ease infinite; box-shadow: var(--shadow-lift); position: relative; overflow: hidden; }
@@ -690,6 +691,7 @@ p.callout { padding: 0.8rem 1rem; }
 .status-track .m1, .status-cells.m1 { --mc: var(--m1); } .status-track .m2, .status-cells.m2 { --mc: var(--m2); } .status-track .m3, .status-cells.m3 { --mc: var(--m3); }
 .status-track .m4, .status-cells.m4 { --mc: var(--m4); } .status-track .m5, .status-cells.m5 { --mc: var(--m5); } .status-track .m6, .status-cells.m6 { --mc: var(--m6); }
 .status-track .m7, .status-cells.m7 { --mc: var(--m7); } .status-track .m8, .status-cells.m8 { --mc: var(--m8); } .status-track .m9, .status-cells.m9 { --mc: var(--m9); }
+.status-track .m10, .status-cells.m10 { --mc: var(--m10); } .status-track .m11, .status-cells.m11 { --mc: var(--m11); }
 .status-table td { vertical-align: middle; }
 .status-table .num { font-family: var(--mono); font-size: 0.88rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .status-table .module-num { width: 1.8rem; height: 1.8rem; border-radius: 8px; font-size: 0.9rem; }
