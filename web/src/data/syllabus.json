@@ -1352,18 +1352,19 @@
         {
           "id": "11.6",
           "title": "Files, messaging and maps",
-          "summary": "Direct uploads to Blob with the valet key pattern, processing images on upload, email and SMS with Azure Communication Services, and store finders and geofencing with Azure Maps.",
+          "summary": "Direct uploads to Blob with the valet key pattern, scanning and resizing images after upload, email and SMS now that Azure Communication Services is retiring, and store finders and on-device geofences with Azure Maps.",
           "minutes": 14,
           "objectives": [
             "Upload files directly from clients without proxying through the API",
-            "Send email and SMS with Azure Communication Services",
+            "Choose email and SMS providers, and meet sender-authentication and sender-ID rules",
             "Choose where Azure Maps fits a product"
           ],
           "icons": [
             "blob",
-            "communication-services",
-            "event-grid"
-          ]
+            "defender",
+            "location"
+          ],
+          "status": "ready"
         },
         {
           "id": "11.7",
