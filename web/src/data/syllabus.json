@@ -1193,7 +1193,7 @@
         {
           "id": "10.5",
           "title": "Real-time analytics - Eventstreams, Eventhouse and Stream Analytics",
-          "summary": "When minutes-old data is not good enough: Fabric Real-Time Intelligence with Eventstreams, Eventhouse and Activator, Azure Stream Analytics and windowing, Azure Data Explorer, and the hot and cold paths.",
+          "summary": "When minutes-old data is not good enough: Fabric Real-Time Intelligence with Eventstreams, Eventhouse and Activator, Azure Stream Analytics and windowing, Azure Data Explorer, the hot and cold paths, and why the Stream Analytics streaming output to Power BI ends in October 2027.",
           "minutes": 14,
           "objectives": [
             "Decide whether a scenario really needs real-time analytics",
@@ -1205,7 +1205,8 @@
             "event-hubs",
             "stream-analytics",
             "data-explorer"
-          ]
+          ],
+          "status": "ready"
         },
         {
           "id": "10.6",
