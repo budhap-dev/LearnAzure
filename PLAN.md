@@ -269,7 +269,7 @@ Existing terms this module links to rather than redefines: OLTP, OLAP, Data ware
 (3.7), Hierarchical namespace (3.1), Azure Event Hubs, Apache Kafka (5.4), KQL (6.2), Data
 residency (1.3), Reservation (shared), Microsoft Entra ID (shared).
 
-### Module 11 — Web and mobile clients — **planned**
+### Module 11 — Web and mobile clients — **in progress**
 
 | Id | Lesson |
 |----|--------|
@@ -281,8 +281,30 @@ residency (1.3), Reservation (shared), Microsoft Entra ID (shared).
 | 11.6 | Files, messaging and maps |
 | 11.7 | Shipping and watching mobile apps |
 
-What the shop's React web app and React Native app need from Azure beyond an API. Built after
-Module 10 has been reviewed; its glossary ownership table is settled when the module starts.
+What the shop's React web app and React Native app need from Azure beyond an API. Written for
+a React and React Native lead who knows the client side well: each lesson is about the Azure side
+and the judgement calls, mapped to tools they already use (Firebase, Auth0, Pusher, Expo,
+CodePush, SendGrid, Twilio, Google Maps). Released one lesson per PR.
+
+Glossary term ownership (each term is defined once, in the lesson that owns it):
+
+| Lesson | Terms |
+|--------|-------|
+| 11.1 | Backend for frontend, API versioning, Minimum supported app version, Offline-first, Optimistic UI, GraphQL, Cross-origin resource sharing, Idempotency key |
+| 11.2 | Cache-Control header, Content hashing, Cache purge, Cache key, Origin server, Compression, Core Web Vitals, Front Door rule set |
+| 11.3 | External tenant, User flow, PKCE, MSAL, Social sign-in, Native authentication, Refresh token, Secure device storage |
+| 11.4 | Azure Notification Hubs, Apple Push Notification service, Firebase Cloud Messaging, Device token, Device installation, Tag expression, Notification template, Silent notification |
+| 11.5 | WebSocket, Server-sent events, Polling, Azure SignalR Service, Azure Web PubSub, SignalR hub, SignalR serverless mode, SignalR unit |
+| 11.6 | Valet key pattern, Azure Communication Services, Email authentication, Alphanumeric sender ID, Azure Maps, Geocoding, Geofence, Malware scanning |
+| 11.7 | Visual Studio App Center, Code signing, Over-the-air update, Expo Application Services, Fastlane, Crash reporting, Symbolication, Beta testing track |
+
+Existing terms this module links to rather than redefines: Static Web Apps, Client-side routing,
+Edge cache (2.3), Point of presence (1.3), Azure Front Door, Web application firewall (4.2),
+Microsoft Entra External ID, OAuth 2.0 and OpenID Connect, Identity provider (4.4), Shared access
+signature, Blob storage (3.1), Azure Event Grid (5.3), Azure API Management, Rate limiting (5.5),
+Application Insights (1.8), OpenTelemetry, Sampling (6.3), Feature flag, Azure App Configuration
+(4.6), Canary release, Ring-based deployment, Dark launch (7.7), Semantic versioning (7.2),
+Idempotent (1.5), Azure Functions, Serverless (1.2), Microsoft Defender for Cloud (4.7).
 
 ## App architecture
 

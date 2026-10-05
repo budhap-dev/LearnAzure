@@ -1,0 +1,111 @@
+[
+  {
+    "id": "11.1-q1",
+    "topic": "backend for frontend",
+    "scenario": "The React Native home screen makes seven API calls over 4G and takes three seconds to settle. The web shop makes the same calls over fibre without complaint.",
+    "stem": "What is the most effective change?",
+    "options": [
+      "Move the API to a Premium App Service plan so each of the seven calls returns faster",
+      "One mobile BFF call that fans out to the seven APIs inside Azure",
+      "Cache all seven responses at the Front Door edge for every customer",
+      "Ask the web and mobile teams to agree on one general-purpose home endpoint"
+    ],
+    "answer": 1,
+    "explanation": "The cost is seven round trips over a slow mobile network, and a BFF turns them into one, with the fan-out done inside Azure where each hop takes milliseconds. A bigger plan barely helps, because server time was never the problem. Caching personalised responses like the basket at the edge would show one customer's data to another."
+  },
+  {
+    "id": "11.1-q2",
+    "topic": "BFF responsibilities",
+    "stem": "In Northline's design, which responsibility belongs in the mobile BFF?",
+    "options": [
+      "Validating External ID tokens and applying rate limits per consumer",
+      "Calculating loyalty discounts so the app can show them quickly",
+      "Mapping v1 fields for app versions still on phones",
+      "Storing the orders data in its own database for faster reads"
+    ],
+    "answer": 2,
+    "explanation": "The BFF holds client-specific work: aggregation, trimming and the old contracts installed apps still expect. Token validation and rate limits stay in API Management, where every consumer gets them. Discount rules belong in the domain APIs; computing them in the BFF is how web and app end up showing different prices."
+  },
+  {
+    "id": "11.1-q3",
+    "topic": "API versioning",
+    "scenario": "Ana renamed deliveryDate to estimatedDelivery and shipped it as an API Management revision. App version 2.4, used by 18% of customers, now crashes on order history.",
+    "stem": "What should the fix and the rule be?",
+    "options": [
+      "Roll the revision forward and send a push notification asking every customer to update today",
+      "Rename the field back for good and ban renames in the API",
+      "Make estimatedDelivery a revision of the field, so both apps read it",
+      "Serve the old field from /mobile/v1; breaking changes become new versions"
+    ],
+    "answer": 3,
+    "explanation": "A rename is a breaking change, so it needs a new version, with the old contract kept for installs that cannot be recalled. Revisions are for changes that break nobody. Asking customers to update does not fix the crash for the many who will not, and banning renames forever is a rule nobody will keep."
+  },
+  {
+    "id": "11.1-q4",
+    "topic": "minimum supported version",
+    "stem": "Why should a minimum-supported-version check ship in an app's first release?",
+    "options": [
+      "Only app versions that contain the check will ever obey it",
+      "The App Store requires it before an app can be approved",
+      "It lets the backend delete old API versions as soon as a new app ships",
+      "Google Play and the App Store both enforce it automatically once it exists"
+    ],
+    "answer": 0,
+    "explanation": "The check is code in the app: a version without it never asks the backend and never blocks itself, which is exactly Northline's problem with 2.4. Neither store requires it. Google Play offers an immediate in-app update flow, but iOS has no equivalent, so the app draws its own update screen."
+  },
+  {
+    "id": "11.1-q5",
+    "topic": "idempotency key",
+    "scenario": "A shopper taps Place order in a tunnel. The request reaches the API, but the response is lost, and the app's queue retries when the signal returns.",
+    "stem": "What stops a second order being created?",
+    "options": [
+      "Exponential backoff on the retry, so the second request arrives later",
+      "Making the endpoint a PUT instead of a POST, leaving the handler code exactly as it is",
+      "An idempotency key on both requests, answered with the stored result",
+      "An optimistic UI that shows the order as placed straight away"
+    ],
+    "answer": 2,
+    "explanation": "The key identifies the user's single action, so the API recognises the retry and returns the original order instead of creating another. Backoff only changes when the duplicate arrives. Optimistic UI changes what the screen shows, not what the server does, and renaming the verb does not make the handler idempotent by itself."
+  },
+  {
+    "id": "11.1-q6",
+    "topic": "offline-first",
+    "stem": "Which part of the shop app is the worst fit for an offline-first, optimistic design?",
+    "options": [
+      "Viewing past order history and delivery dates",
+      "Adding items to the basket while browsing on a train",
+      "Browsing recently viewed products",
+      "Confirming payment and reserving stock at checkout"
+    ],
+    "answer": 3,
+    "explanation": "Payment and stock must be confirmed by the server before the customer is told the order is placed, so checkout stays online-only. History and recently viewed items read well from a local store, and basket changes can be queued and reconciled, rolling back with a message if an item has sold out."
+  },
+  {
+    "id": "11.1-q7",
+    "topic": "CORS",
+    "scenario": "A developer proposes setting the API's CORS policy to allow any origin, \"so the mobile app can call it\".",
+    "stem": "What is the best response?",
+    "options": [
+      "Agree, because without CORS the native app's requests will be blocked",
+      "Decline: native apps ignore CORS; list exact origins for browser clients only",
+      "Agree, but add the subscription key to the app so the API stays protected",
+      "Move the API onto the same host name as the app, which is the only way a phone can reach it"
+    ],
+    "answer": 1,
+    "explanation": "CORS is enforced by browsers, so a React Native app is unaffected and the wildcard only opens the API to any website running in customers' browsers. List exact origins for the browser clients that need them. A subscription key shipped in the app is public, so it protects nothing."
+  },
+  {
+    "id": "11.1-q8",
+    "topic": "GraphQL versus BFF",
+    "scenario": "A new team lead suggests replacing the planned mobile BFF with GraphQL in API Management.",
+    "stem": "Which statement about that option is accurate?",
+    "options": [
+      "API Management supports GraphQL only in the Premium tier",
+      "GraphQL removes the need to think about breaking changes, because clients pick their fields",
+      "GraphQL queries cache at the Front Door edge just as well as REST GET requests",
+      "APIM can build GraphQL over REST APIs, but caching gets harder and queries need limits"
+    ],
+    "answer": 3,
+    "explanation": "Synthetic GraphQL with resolvers over REST, Cosmos DB or Azure SQL is available in every APIM tier. Queries usually go as POST to one URL, which defeats HTTP and edge caching, and the validation policy should cap query depth and size. Removing or renaming a field still breaks old apps, so a deprecation plan is still needed."
+  }
+]
