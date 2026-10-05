@@ -1295,7 +1295,8 @@
             "front-door",
             "cdn",
             "static-web-apps"
-          ]
+          ],
+          "status": "ready"
         },
         {
           "id": "11.3",
