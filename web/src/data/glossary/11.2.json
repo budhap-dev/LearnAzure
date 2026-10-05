@@ -1,0 +1,71 @@
+[
+  {
+    "term": "Cache-Control header",
+    "aliases": ["Cache-Control", "max-age", "s-maxage", "no-cache", "no-store", "immutable"],
+    "definition": "The HTTP response header that tells browsers and shared caches such as Front Door whether, and for how long, they may keep a response. max-age applies to every cache, s-maxage only to shared caches, no-cache means revalidate before each use, and private or no-store keeps it out of shared caches. Front Door never caches private, no-cache or no-store, and caches responses with no header for one to three days.",
+    "example": "Hashed bundles send public, max-age=31536000, immutable; index.html sends no-cache; /api/home sends private, no-store.",
+    "lessons": ["11.2"],
+    "related": ["Edge cache", "Content hashing", "Cache key", "Time to live"]
+  },
+  {
+    "term": "Content hashing",
+    "aliases": ["hashed filenames", "fingerprinting", "cache busting", "asset versioning"],
+    "definition": "Naming each built file after a hash of its contents, so the name changes whenever the content does. Vite and webpack do this by default. Hashed files can be cached for a year because a URL never points at changed content; the file that references them, index.html, must not be cached for long.",
+    "example": "Friday's build turned index-4f9a2c.js into index-b81e07.js, so no cache could serve the old code under the new name.",
+    "lessons": ["11.2"],
+    "related": ["Cache-Control header", "Cache purge", "Static site"]
+  },
+  {
+    "term": "Cache purge",
+    "aliases": ["purge", "cache invalidation", "invalidate cache"],
+    "definition": "Removing cached copies of a path, or of everything on a domain, from every point of presence so the next request goes to the origin. In Front Door it can take up to ten minutes to propagate, and it ignores query strings and case. Treat it as an emergency tool; versioned URLs are the real invalidation strategy.",
+    "example": "When a product page went out with the wrong price image, Dev purged /img/products/4821/main.webp rather than waiting for the TTL.",
+    "icon": "front-door",
+    "lessons": ["11.2"],
+    "related": ["Edge cache", "Content hashing", "Azure Front Door"]
+  },
+  {
+    "term": "Cache key",
+    "aliases": ["cache key query string", "query string caching behaviour"],
+    "definition": "The value a cache uses to decide whether two requests are the same thing. In Front Door it is the URL path plus all, some or none of the query string, as the route or a rule set decides. It never includes cookies or the Authorization header, so a personalised response cached under its path is served to everyone who asks for that path.",
+    "example": "Every shopper requesting /api/home produced the same cache key, which is how one customer's name reached others.",
+    "lessons": ["11.2"],
+    "related": ["Cache-Control header", "Front Door rule set", "Output caching"]
+  },
+  {
+    "term": "Origin server",
+    "aliases": ["origin", "origin host"],
+    "definition": "The service that holds the real content behind a CDN or Front Door, such as Static Web Apps, App Service, API Management or a storage account. The edge fetches from it on a cache miss. Lock it down so it accepts traffic only from your Front Door profile, or attackers and crawlers simply go round the edge.",
+    "example": "The shop's Static Web Apps origin allows only the AzureFrontDoor.Backend service tag and requires Northline's X-Azure-FDID header.",
+    "icon": "static-web-apps",
+    "lessons": ["11.2", "4.2"],
+    "related": ["Azure Front Door", "Edge cache", "Service tag", "Health probe"]
+  },
+  {
+    "term": "Compression",
+    "aliases": ["Brotli", "gzip", "HTTP compression", "Content-Encoding"],
+    "definition": "Shrinking text responses before sending them, using Brotli or gzip. Front Door compresses at the edge only when caching is enabled on the route, for files of 1 KB to 8 MB whose MIME type is on an editable list, and passes through responses the origin has already compressed. JavaScript, CSS and JSON shrink a lot; JPEG, WebP and video barely change.",
+    "example": "The React bundle and catalogue JSON leave Front Door Brotli-compressed; product photos are left alone.",
+    "icon": "front-door",
+    "lessons": ["11.2"],
+    "related": ["Azure Front Door", "Edge cache", "Core Web Vitals"]
+  },
+  {
+    "term": "Core Web Vitals",
+    "aliases": ["CWV", "LCP", "INP", "CLS", "Largest Contentful Paint", "Interaction to Next Paint", "Cumulative Layout Shift"],
+    "definition": "Google's three user-experience metrics, judged at the 75th percentile of real page loads: Largest Contentful Paint (good is 2.5 seconds or less), Interaction to Next Paint (200 ms or less; it replaced First Input Delay in March 2024) and Cumulative Layout Shift (0.1 or less). Lab tools such as Lighthouse estimate them, but field data from real devices is what counts.",
+    "example": "Bengaluru's 75th-percentile LCP fell from 4.1 to 2.3 seconds once images were resized and the HTML stopped being stale.",
+    "icon": "application-insights",
+    "lessons": ["11.2"],
+    "related": ["Application Insights", "Compression", "Latency"]
+  },
+  {
+    "term": "Front Door rule set",
+    "aliases": ["rule set", "rules engine", "route configuration override"],
+    "definition": "A group of rules attached to Front Door routes. Each rule has up to 10 match conditions (path, extension, header, device and so on) and up to 5 actions: override caching, change the cache key, rewrite or redirect the URL, or modify headers. Rules run at the edge after the WAF, and they are invisible to anyone reading the app's code, so give them an owner.",
+    "example": "A rule on /api/catalogue/* enables caching for the public catalogue, while caching stays disabled for the rest of /api/*.",
+    "icon": "front-door",
+    "lessons": ["11.2"],
+    "related": ["Azure Front Door", "Cache key", "Cache-Control header", "Web application firewall"]
+  }
+]

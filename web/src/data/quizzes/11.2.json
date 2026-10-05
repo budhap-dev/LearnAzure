@@ -1,0 +1,112 @@
+[
+  {
+    "id": "11.2-q1",
+    "topic": "HTML vs hashed assets",
+    "scenario": "After a Friday release, customers get a blank page. Front Door has been holding index.html for 24 hours, and it points at hashed bundles the deploy removed.",
+    "stem": "Which change fixes this for future releases?",
+    "options": [
+      "Keep the 24-hour rule and purge every path at the end of each deployment pipeline run",
+      "Turn off Front Door caching for the whole site so that nothing can ever be served stale",
+      "no-cache for index.html; a year and immutable for hashed assets",
+      "Add a ?v= query string to index.html and keep caching it at the edge for a day"
+    ],
+    "answer": 2,
+    "explanation": "The HTML is the one file that must always be checked, and hashed files can be kept for a year because their names change with their content. Purging on every deploy hides the wrong policy, takes up to ten minutes and still fails tabs already open, while turning caching off throws away the edge for files that are safe to cache."
+  },
+  {
+    "id": "11.2-q2",
+    "topic": "default caching",
+    "stem": "Front Door's route has caching enabled with 'honour origin', and a Node endpoint returns a response with no Cache-Control or Expires header. What does Front Door do?",
+    "options": [
+      "Caches it for a random duration between one and three days",
+      "Doesn't cache it, because the origin gave no instruction",
+      "Caches it for exactly 24 hours, the documented default",
+      "Caches it until someone purges the path"
+    ],
+    "answer": 0,
+    "explanation": "Microsoft documents that without a Cache-Control header Front Door picks a duration between one and three days. That is why a forgotten header is dangerous: 'no instruction' doesn't mean 'don't cache'. Always send an explicit header from every endpoint."
+  },
+  {
+    "id": "11.2-q3",
+    "topic": "personalised responses",
+    "scenario": "To survive a flash sale, someone adds Cache-Control: public, max-age=60 to /api/home, which greets the signed-in shopper by name. The app sends a bearer token in the Authorization header.",
+    "stem": "Why did other shoppers see one customer's name?",
+    "options": [
+      "Front Door always ignores the Authorization header and caches every GET request it sees",
+      "The WAF stored the response while inspecting it and then replayed it to other shoppers",
+      "Front Door includes the session cookie in the cache key, and that cookie had expired",
+      "public allowed caching, and the cache key is the path, not the user"
+    ],
+    "answer": 3,
+    "explanation": "Front Door doesn't normally cache requests that carry an Authorization header, but a response marked public, s-maxage or must-revalidate overrides that. Because the cache key is built from the path and query string, never the token or cookie, every shopper asking for /api/home got the same copy. Personal responses must send private, no-store."
+  },
+  {
+    "id": "11.2-q4",
+    "topic": "Static Web Apps headers",
+    "scenario": "Ana adds a route rule for /index.html with Cache-Control: no-cache, but a deep link like /orders/4821 still comes back without that header.",
+    "stem": "Where should the HTML cache policy go instead?",
+    "options": [
+      "In a second route rule for /orders/*",
+      "In globalHeaders, because route rules are not applied to requests answered by the navigation fallback",
+      "In a meta http-equiv tag inside index.html",
+      "Only in a Front Door rule set, because Static Web Apps can't set Cache-Control"
+    ],
+    "answer": 1,
+    "explanation": "Requests that trigger navigationFallback skip route rules, so deep links only get globalHeaders. Setting no-cache globally and overriding it for /assets/* covers every HTML response. A meta tag is ignored by Front Door and other shared caches, and Static Web Apps can set headers itself."
+  },
+  {
+    "id": "11.2-q5",
+    "topic": "enterprise-grade edge vs Front Door",
+    "scenario": "A team's React app runs on Static Web Apps Standard. They need managed WAF rules, a rate limit on /login, and one entry point that also routes /api to API Management.",
+    "stem": "What should they use?",
+    "options": [
+      "Enterprise-grade edge, because it is Azure Front Door run and configured for you",
+      "Static Web Apps on its own, because it already serves files from a global edge",
+      "Azure CDN Standard from Microsoft (classic) in front of the Static Web Apps origin",
+      "Their own Front Door Premium profile, with Static Web Apps as an origin"
+    ],
+    "answer": 3,
+    "explanation": "Enterprise-grade edge needs no configuration, but it doesn't let you add a WAF or your own routing rules. A manual Front Door profile does, and Premium adds the managed WAF rule sets. Azure CDN classic accepts no new profiles and retires in September 2027."
+  },
+  {
+    "id": "11.2-q6",
+    "topic": "cache purge",
+    "stem": "Which statement about cache purge in Front Door Standard and Premium is correct?",
+    "options": [
+      "It takes up to ten minutes to propagate, so keep it for emergencies",
+      "It is instant and free, so the recommended practice is to purge every path on each deployment",
+      "It purges only the exact URL, so every query-string variation must be listed separately",
+      "It is available only on the Premium tier"
+    ],
+    "answer": 0,
+    "explanation": "Purges propagate over minutes, and Microsoft recommends versioning assets at new URLs rather than relying on purge. Purge is case-insensitive and ignores the query string, so one path clears all its variations, and it is available on both Standard and Premium."
+  },
+  {
+    "id": "11.2-q7",
+    "topic": "compression",
+    "scenario": "Dev ticks 'Enable compression' on the /api/catalogue route, but the JSON still arrives uncompressed. Caching is disabled on that route.",
+    "stem": "What is the most likely reason?",
+    "options": [
+      "Front Door compresses only images and fonts, not JSON",
+      "Brotli is a Premium-only feature",
+      "Front Door compresses only when caching is enabled on the route",
+      "The catalogue JSON is larger than 1 KB"
+    ],
+    "answer": 2,
+    "explanation": "In Front Door, compression is part of the route's caching settings, so it doesn't apply when caching is off. Either let the origin compress the response, which Front Door passes through, or enable caching on a public route. JSON is on the default MIME list, and files from 1 KB to 8 MB qualify on both tiers."
+  },
+  {
+    "id": "11.2-q8",
+    "topic": "Core Web Vitals",
+    "scenario": "Lighthouse in CI scores the home page 98. Search Console says mobile Largest Contentful Paint is poor, and most complaints come from Bengaluru.",
+    "stem": "What should the team do first?",
+    "options": [
+      "Ignore Search Console, because Lighthouse measures exactly the same metrics more precisely",
+      "Collect field data in Application Insights, split by country",
+      "Track First Input Delay instead of Interaction to Next Paint, because it is easier to pass",
+      "Raise the Front Door cache duration for index.html to a week so it loads faster"
+    ],
+    "answer": 1,
+    "explanation": "Core Web Vitals are judged on real page loads at the 75th percentile, so send the web-vitals library's numbers to Application Insights and compare countries. Lighthouse is a lab test on a fast machine and can't show what a 4G phone in Bengaluru sees. INP replaced FID in March 2024, and caching index.html for a week brings back the blank-page problem."
+  }
+]
