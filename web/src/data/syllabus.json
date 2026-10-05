@@ -1116,7 +1116,7 @@
       "tagline": "Fabric, OneLake, Data Factory, Power BI, Purview and choosing an analytics platform.",
       "description": "Turning the shop's operational data into answers without slowing the shop down: why reports do not run against production, Microsoft Fabric and OneLake, getting data in with Data Factory and mirroring, lakehouses, warehouses and star schemas, real-time analytics, Power BI semantic models, governance with Microsoft Purview, and when Databricks or Synapse is the better fit.",
       "icon": "data-lake",
-      "status": "planned",
+      "status": "in-progress",
       "lessons": [
         {
           "id": "10.1",
@@ -1133,7 +1133,8 @@
             "data-lake",
             "synapse",
             "power-bi"
-          ]
+          ],
+          "status": "ready"
         },
         {
           "id": "10.2",
