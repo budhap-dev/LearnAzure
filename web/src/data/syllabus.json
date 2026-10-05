@@ -1187,7 +1187,8 @@
             "data-lake",
             "synapse",
             "databricks"
-          ]
+          ],
+          "status": "ready"
         },
         {
           "id": "10.5",

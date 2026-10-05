@@ -1,0 +1,80 @@
+[
+  {
+    "term": "Fabric Lakehouse",
+    "aliases": ["lakehouse item", "Fabric lakehouse"],
+    "definition": "A Fabric item that stores both files and Delta tables in OneLake, written mainly with Apache Spark in notebooks, pipelines and dataflows. Each lakehouse gets a read-only SQL analytics endpoint for T-SQL queries. It suits data engineers, files and semi-structured data, and the bronze and silver layers.",
+    "example": "Northline's lakehouse holds raw clickstream files and the cleaned silver order lines that Spark notebooks produce.",
+    "icon": "data-lake",
+    "lessons": ["10.4", "10.1", "10.2"],
+    "related": ["Lakehouse", "Fabric Warehouse", "SQL analytics endpoint", "Apache Spark"]
+  },
+  {
+    "term": "Fabric Warehouse",
+    "aliases": ["Fabric Data Warehouse", "warehouse item", "Synapse Data Warehouse"],
+    "definition": "A Fabric item for relational warehousing in T-SQL: full INSERT, UPDATE, MERGE and DDL, stored procedures, and multi-table transactions, with data stored as Delta tables in OneLake. It suits SQL developers and gold layers that must load several tables atomically. Primary and foreign keys are declared NOT ENFORCED, so loads must check for duplicates themselves.",
+    "example": "wh_gold holds Northline's star schema, loaded nightly by stored procedures in a single transaction.",
+    "icon": "synapse",
+    "lessons": ["10.4", "10.1"],
+    "related": ["Fabric Lakehouse", "Data warehouse", "Star schema", "SQL analytics endpoint"]
+  },
+  {
+    "term": "SQL analytics endpoint",
+    "aliases": ["SQL endpoint", "lakehouse SQL endpoint", "SQL analytics"],
+    "definition": "The read-only T-SQL surface that Fabric creates automatically for every lakehouse and mirrored database. You can query tables and create views, functions, procedures and security rules, but not insert, update or delete data. To write with T-SQL, use a Fabric Warehouse; to write lakehouse tables, use Spark.",
+    "example": "Analysts connect SSMS to the lakehouse's SQL analytics endpoint to explore silver tables without learning Python.",
+    "icon": "synapse",
+    "lessons": ["10.4", "10.3"],
+    "related": ["Fabric Lakehouse", "Fabric Warehouse", "Mirroring"]
+  },
+  {
+    "term": "Apache Spark",
+    "aliases": ["Spark", "PySpark", "Spark SQL", "Spark pool"],
+    "definition": "An open-source engine for processing large datasets in parallel across many machines, programmed in Python, SQL, Scala or R. In Fabric it writes lakehouse tables and files and suits large, messy or semi-structured data. Sessions draw on the capacity while they run, so idle sessions cost money.",
+    "example": "A Spark job matches 2 million customer records from the shop and the ERP into one silver customer table.",
+    "icon": "databricks",
+    "lessons": ["10.4", "10.8"],
+    "related": ["Notebook", "Fabric Lakehouse", "Delta Lake"]
+  },
+  {
+    "term": "Notebook",
+    "aliases": ["notebooks", "Fabric notebook", "Jupyter notebook", "Spark notebook"],
+    "definition": "An interactive document of code cells, text and results, used to explore data and to write Spark transformations. In Fabric, notebooks can run on a schedule or as a pipeline step. They are easy to start and easy to leave as untested, unreviewed production code, so put scheduled notebooks under source control.",
+    "example": "Kofi's silver notebook runs every night as the first step of the gold-load pipeline.",
+    "icon": "code",
+    "lessons": ["10.4", "10.2"],
+    "related": ["Apache Spark", "Fabric Lakehouse", "Data pipeline"]
+  },
+  {
+    "term": "Star schema",
+    "aliases": ["dimensional model", "Kimball model", "star"],
+    "definition": "A model for analytics with one fact table of business events in the middle and dimension tables around it, joined by keys. It keeps queries simple and fast, and it is the shape Power BI works best with. Its first design decision is the grain: what one fact row means.",
+    "example": "FactSales at order-line grain, joined to DimDate, DimCustomer, DimProduct and DimRegion.",
+    "icon": "synapse",
+    "lessons": ["10.4", "10.6"],
+    "related": ["Fact table", "Dimension table", "Slowly changing dimension", "Data warehouse"]
+  },
+  {
+    "term": "Fact table",
+    "aliases": ["fact", "facts", "fact table grain", "grain"],
+    "definition": "The table at the centre of a star schema, with one row per business event at a stated grain, holding numeric measures and keys to dimensions. It is usually long and narrow. Mixing grains, such as repeating an order-level charge on every line, is the commonest cause of wrong totals.",
+    "example": "FactSales has one row per order line, with quantity, net revenue, VAT and discount.",
+    "lessons": ["10.4"],
+    "related": ["Star schema", "Dimension table"]
+  },
+  {
+    "term": "Dimension table",
+    "aliases": ["dimension", "dim", "dimensions"],
+    "definition": "A table of descriptive attributes that you filter and group facts by, such as date, customer, product or region, usually with a surrogate key. It is short and wide. Duplicate keys in a dimension silently multiply the facts that join to it.",
+    "example": "DimCustomer holds each customer's region and loyalty tier, keyed by CustomerKey.",
+    "lessons": ["10.4"],
+    "related": ["Star schema", "Fact table", "Slowly changing dimension"]
+  },
+  {
+    "term": "Slowly changing dimension",
+    "aliases": ["SCD", "SCD type 1", "SCD type 2", "type 2 dimension"],
+    "definition": "How a dimension handles attributes that change over time. Type 1 overwrites the value and loses history. Type 2 end-dates the old row and adds a new one with its own surrogate key, so past facts keep the value that was true at the time. Type 2 costs more rows and more load logic, so use it only for the attributes whose history matters.",
+    "example": "When a customer moves from Gold to Platinum, a new DimCustomer row starts in June, and her January orders still count as Gold.",
+    "lessons": ["10.4"],
+    "related": ["Dimension table", "Star schema"]
+  }
+]
