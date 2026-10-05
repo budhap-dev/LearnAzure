@@ -5,6 +5,7 @@ import { SearchBox } from './SearchBox';
 import { VERSION_LABEL } from '../lib/version';
 import { useProgress } from '../lib/useProgress';
 import { streak } from '../lib/progress';
+import { useStudyTimer } from '../lib/studyTimer';
 
 const NAV = [
   { to: '/', label: 'Home', end: true },
@@ -20,6 +21,7 @@ export function Layout() {
   const location = useLocation();
   const progress = useProgress();
   const days = streak();
+  useStudyTimer();
   const done = Object.values(progress.lessons).filter((s) => s === 'done').length;
 
   // Close the drawer and scroll to top on every navigation.

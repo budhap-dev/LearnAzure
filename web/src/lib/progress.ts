@@ -37,6 +37,20 @@ export interface ReviewCard {
   lapses: number;
 }
 
+/** What happened on one day - powers the daily plan and the weekly goal (see lib/goals.ts). */
+export interface DayLog {
+  /** Active time on learning pages, counted by lib/studyTimer.ts. */
+  seconds: number;
+  /** Lessons that became learned that day. */
+  lessons: string[];
+  quizzes: number;
+  tests: number;
+  reviews: number;
+}
+
+export const GOAL_CHOICES = [60, 90, 120, 180, 240] as const;
+export const DEFAULT_WEEKLY_GOAL = 120;
+
 export interface Progress {
   version: 1;
   lessons: Record<string, LessonState>;
@@ -47,9 +61,13 @@ export interface Progress {
   days: string[];
   /** Glossary review schedule, keyed by term slug. */
   reviews: Record<string, ReviewCard>;
+  /** Activity per day (yyyy-mm-dd), kept for the last 120 days. */
+  log: Record<string, DayLog>;
+  /** Minutes of study the learner aims for each week. */
+  weeklyGoal: number;
 }
 
-const empty = (): Progress => ({ version: 1, lessons: {}, quizzes: {}, tests: [], days: [], reviews: {} });
+const empty = (): Progress => ({ version: 1, lessons: {}, quizzes: {}, tests: [], days: [], reviews: {}, log: {}, weeklyGoal: DEFAULT_WEEKLY_GOAL });
 
 export function read(): Progress {
   try {
@@ -81,14 +99,47 @@ function touchDay(progress: Progress): void {
   if (!progress.days.includes(d)) progress.days = [...progress.days, d].slice(-400);
 }
 
+/** Today's activity record, created if needed; old days beyond 120 are dropped. */
+function todayLog(progress: Progress): DayLog {
+  const d = today();
+  if (!progress.log[d]) {
+    const keep = Object.keys(progress.log).sort().slice(-119);
+    progress.log = { ...Object.fromEntries(keep.map((k) => [k, progress.log[k]])), [d]: { seconds: 0, lessons: [], quizzes: 0, tests: 0, reviews: 0 } };
+  }
+  return progress.log[d];
+}
+
+function markLearnedToday(progress: Progress, id: string): void {
+  const log = todayLog(progress);
+  if (!log.lessons.includes(id)) log.lessons = [...log.lessons, id];
+}
+
+/** Adds active study time to today (called by the study timer about once a minute). */
+export function addStudySeconds(seconds: number): void {
+  if (seconds <= 0) return;
+  const progress = read();
+  todayLog(progress).seconds += seconds;
+  write(progress);
+}
+
+export function setWeeklyGoal(minutes: number): void {
+  const progress = read();
+  progress.weeklyGoal = minutes;
+  write(progress);
+}
+
 export function lessonState(id: string): LessonState {
   return read().lessons[id] ?? 'not-started';
 }
 
 export function setLessonState(id: string, state: LessonState): void {
   const progress = read();
+  const wasDone = progress.lessons[id] === 'done';
   progress.lessons[id] = state;
-  if (state === 'done') touchDay(progress);
+  if (state === 'done') {
+    touchDay(progress);
+    if (!wasDone) markLearnedToday(progress, id);
+  }
   write(progress);
 }
 
@@ -107,9 +158,12 @@ export function recordQuiz(id: string, score: number, outOf: number): void {
   const attempts = progress.quizzes[id] ?? [];
   attempts.push({ score, outOf, at: new Date().toISOString() });
   progress.quizzes[id] = attempts;
+  const wasDone = progress.lessons[id] === 'done';
   // 80% or better counts as learned; below that it is flagged for another look.
   progress.lessons[id] = score / outOf >= PASS_MARK ? 'done' : 'needs-review';
   touchDay(progress);
+  todayLog(progress).quizzes += 1;
+  if (!wasDone && progress.lessons[id] === 'done') markLearnedToday(progress, id);
   write(progress);
 }
 
@@ -123,6 +177,7 @@ export function recordTest(attempt: TestAttempt): void {
   const progress = read();
   progress.tests = [...progress.tests, attempt];
   touchDay(progress);
+  todayLog(progress).tests += 1;
   write(progress);
 }
 
@@ -154,6 +209,7 @@ export function saveReview(slug: string, card: ReviewCard): void {
   const progress = read();
   progress.reviews = { ...progress.reviews, [slug]: card };
   touchDay(progress);
+  todayLog(progress).reviews += 1;
   write(progress);
 }
 

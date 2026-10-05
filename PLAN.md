@@ -310,6 +310,18 @@ Sessions hold up to 20 cards and introduce at most 10 new terms a day, taken in 
 the lessons the learner has opened, one module, or the whole glossary. The schedule is stored in
 the progress record, so it counts towards the streak and travels with export and import.
 
+### Study goals
+
+The home and progress pages show **Today** and **This week** (`src/lib/goals.ts`,
+`src/components/StudyGoals.tsx`). The learner picks a weekly goal of 60, 90, 120 (default), 180 or
+240 minutes; the daily target is that over five study days, rounded up to 5. Today's checklist
+ticks itself from what actually happened: minutes studied, a lesson learned (quiz passed or marked
+learned), and a glossary review session. The week shows minutes against the goal, Monday-to-Sunday
+dots, lessons learned, and a status (new week, on track, behind, goal met) with a catch-up pace.
+Minutes come from `src/lib/studyTimer.ts`: time counts only while the tab is visible, the learner
+is on a lesson, quiz, test or glossary page, and has scrolled, tapped or typed in the last three
+minutes. The per-day log and the goal live in the progress record, so they export and import with it.
+
 ### Markdown conventions used in lessons
 
 | Syntax | Renders as |
