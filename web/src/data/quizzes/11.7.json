@@ -1,0 +1,111 @@
+[
+  {
+    "id": "11.7-q1",
+    "topic": "replacing CodePush",
+    "scenario": "Northline's React Native app is on 0.82 and needs a way to ship JavaScript fixes without waiting for store review, now that App Center's CodePush is gone.",
+    "stem": "Which option fits best?",
+    "options": [
+      "Keep the App Center CodePush SDK in the app, since Analytics and Diagnostics were extended to 2027",
+      "Self-host Microsoft's archived CodePush server with the original react-native-code-push client",
+      "EAS Update through the expo-updates library, with runtime versions and percentage rollouts",
+      "Download a fresh JavaScript bundle from Blob storage at every launch with a home-made loader"
+    ],
+    "answer": 2,
+    "explanation": "EAS Update is maintained, works in bare React Native and matches updates to compatible native builds. The archived server is tempting, but the original client never supported the New Architecture, which is the only option from 0.82. The App Center extension covers only Analytics and Diagnostics, not CodePush."
+  },
+  {
+    "id": "11.7-q2",
+    "topic": "store policy",
+    "stem": "Which change is safest to ship as an over-the-air update to the iOS and Android apps?",
+    "options": [
+      "A fix to a JavaScript rounding bug in the basket total",
+      "A new loyalty section that customers have not seen before",
+      "Adding a native barcode-scanning module for in-store prices",
+      "Asking for location permission to power a new store finder"
+    ],
+    "answer": 0,
+    "explanation": "Over-the-air updates may fix code that already passed review. A new loyalty section is the tempting wrong answer: it is JavaScript, but it adds a feature past review, which Apple's guideline 2.5.2 forbids. Native modules and new permissions need a new binary anyway."
+  },
+  {
+    "id": "11.7-q3",
+    "topic": "symbolication",
+    "scenario": "A Sentry crash report for Android version 3.2 shows only index.android.bundle:1:482113 instead of a TypeScript file and line.",
+    "stem": "What is the most likely cause?",
+    "options": [
+      "The R8 mapping file was not uploaded, so Java class names are obfuscated",
+      "Hermes cannot produce readable stack traces in release builds",
+      "Sampling dropped the frames that held file and line information",
+      "The Hermes source map for that exact build was not uploaded"
+    ],
+    "answer": 3,
+    "explanation": "A bundle offset is decoded with the JavaScript source map from the same build, so it must be uploaded for every build and every over-the-air update. The R8 mapping file decodes obfuscated Java and Kotlin frames, not JavaScript bundle offsets. Hermes stacks are readable once the right source map is there."
+  },
+  {
+    "id": "11.7-q4",
+    "topic": "Application Insights for mobile",
+    "stem": "What does the Application Insights React Native plugin give Northline's app?",
+    "options": [
+      "Native crash capture with automatic dSYM and R8 mapping symbolication, like App Center Diagnostics",
+      "Uncaught JavaScript exceptions, device information and events, joined to the API's traces, but not native crash reports",
+      "Nothing useful, because Application Insights cannot receive telemetry from mobile devices",
+      "Crash-free session rates per release, which can gate store rollouts automatically"
+    ],
+    "answer": 1,
+    "explanation": "The plugin records uncaught JavaScript exceptions and device details, and its telemetry joins the API's distributed traces. It does not catch native crashes, group crashes or read dSYMs and mapping files, which is why teams pair it with Sentry, Crashlytics or BugSnag. Crash-free sessions per release come from those crash reporters."
+  },
+  {
+    "id": "11.7-q5",
+    "topic": "code signing",
+    "scenario": "The contractor's laptop holding the Android upload keystore is lost. The app uses Play App Signing.",
+    "stem": "What is the impact?",
+    "options": [
+      "The app can never be updated again and must be published under a new package name",
+      "Google can reset the upload key; the app signing key Google holds is unaffected",
+      "Every installed copy of the app stops working until users reinstall it",
+      "Nothing, because Android apps do not need to be signed for Google Play"
+    ],
+    "answer": 1,
+    "explanation": "With Play App Signing, Google keeps the real app signing key and the developer signs uploads with a separate upload key, which Google can reset. Losing a self-managed app signing key is the disaster scenario, where the app can no longer be updated. Installed copies keep working either way."
+  },
+  {
+    "id": "11.7-q6",
+    "topic": "staged rollouts",
+    "scenario": "Version 3.3 is at 20% of a Google Play staged rollout when crash-free sessions drop sharply. The new feature is behind a flag.",
+    "stem": "What is the right response?",
+    "options": [
+      "Halt the rollout; that rolls the 20% back to version 3.2 automatically",
+      "Increase the rollout to 100% so the crash data is more representative",
+      "Delete the 3.3 release from Play Console so the affected users are downgraded",
+      "Halt the rollout, turn the feature flag off and ship a fixed build with a higher version"
+    ],
+    "answer": 3,
+    "explanation": "Halting stops new users getting 3.3, but those who have it keep it; no store can recall a build. The flag is the lever that reaches phones already on 3.3, and the real fix is a new build with a higher version. Treating a halt as a rollback is the common mistake."
+  },
+  {
+    "id": "11.7-q7",
+    "topic": "App Store phased release",
+    "stem": "Which statement about App Store phased release is correct?",
+    "options": [
+      "It reaches automatic-update users over seven days; anyone can still update by hand",
+      "It lets you choose any percentage for each step and hold it there for as long as you need",
+      "It sends the update only to TestFlight testers before going to the App Store",
+      "It can withdraw the update from phones that already installed it"
+    ],
+    "answer": 0,
+    "explanation": "Phased release runs 1% to 100% over seven days, only for automatic updates; manual downloads are open to everyone, and pauses total at most 30 days. Choosing your own percentages describes Google Play's staged rollout. Neither store can withdraw an installed build."
+  },
+  {
+    "id": "11.7-q8",
+    "topic": "signing secrets",
+    "scenario": "Leo is moving iOS and Android builds off a contractor's laptop and onto GitHub Actions.",
+    "stem": "Where should the signing certificate, keystore and store API keys live?",
+    "options": [
+      "On a dedicated Mac mini in the office that runs every release build and never leaves the building",
+      "Base64-encoded in the workflow file, because the repository is private",
+      "In Key Vault, fetched per build through workload identity federation into a temporary keychain",
+      "In repository secrets that every workflow in the repository, including pull request builds, can read"
+    ],
+    "answer": 2,
+    "explanation": "Key Vault keeps the keys owned, audited and rotatable, and federation means no Azure secret is stored in GitHub; the runner discards them after the job. A dedicated Mac mini just moves the single point of failure from a laptop to another machine. Secrets in workflow files or broadly readable repository secrets leak to anyone who can change a workflow."
+  }
+]

@@ -1,0 +1,203 @@
+{
+  "module": 11,
+  "minutes": 25,
+  "poolFromLessons": 10,
+  "questions": [
+    {
+      "id": "m11-q1",
+      "topic": "caching and versioning",
+      "scenario": "The catalogue's /api/catalogue/banners response is the same for every shopper, so Front Door caches it with public, s-maxage=60. Ana wants to change each banner's link from a string to an object. Installed app versions read the old string, and nobody can force them to update. Her plan is an API Management revision, then a purge of the route.",
+      "stem": "What should Ana do instead?",
+      "options": [
+        "Ship it as a revision as planned, then purge /api/catalogue/* straight away so that no shopper is ever served the old shape",
+        "Put the version in a request header, so the URL stays the same and the edge keeps its cache hit ratio",
+        "Publish a new version at a new path such as /v2/, keep v1 on the old shape, and let each path have its own cache key",
+        "Turn caching off on the catalogue route for a week, then ship the change as a revision once the edge is empty"
+      ],
+      "answer": 2,
+      "explanation": "A type change is breaking, so it needs a new version, and a new path is also a new cache key, so the two shapes never mix at the edge. A purge clears stale copies but does nothing for installed apps that still expect a string; a header version is worse, because Front Door keys on the path and query string, so both versions would share one cached answer."
+    },
+    {
+      "id": "m11-q2",
+      "topic": "review images at the edge",
+      "scenario": "Review photos arrive at up to 6 MB straight off the camera, and the product pages show them. Bengaluru's mobile Largest Contentful Paint is poor. Dev suggests ticking compression on the /img/* route and letting Front Door size the photos for each phone.",
+      "stem": "What is the better plan for review photos?",
+      "options": [
+        "Have the resize function write smaller variants at versioned URLs, cached for a long time, with a width and height on each",
+        "Tick compression on /img/*, since caching is already on for that route and Brotli will shrink the photos",
+        "Add a Front Door rule set that turns on image optimisation for /img/*, so each phone is sent a photo sized for its own screen",
+        "Serve the originals from review-uploads with a short max-age, so new photos appear without a purge"
+      ],
+      "answer": 0,
+      "explanation": "Front Door has no image service, so the variants must be made on upload, and versioned URLs can then be cached for a long time. Compression is the tempting answer, but it suits text: JPEG and WebP barely change. Serving review-uploads would also expose files that are private and not yet scanned."
+    },
+    {
+      "id": "m11-q3",
+      "topic": "tokens and the offline queue",
+      "scenario": "Leo's app queues 'Add to basket' and 'Redeem points' while offline and replays them when the signal returns. In his draft, the queue lives in AsyncStorage, each entry keeps a copy of the refresh token so it can sign in after a restart, and every retry gets a new Idempotency-Key header.",
+      "stem": "Which design should Leo use instead?",
+      "options": [
+        "Keep the queue as it is, but encrypt the AsyncStorage file, and keep a new key per retry so the API can tell the attempts apart",
+        "Move the refresh token to secure storage and drop the idempotency keys entirely, because PKCE already stops any request from being replayed",
+        "Move the queue and the tokens into the Keychain, and have the API reject any request body it has seen in the last minute",
+        "Keep the refresh token only in the Keychain or Keystore, give each action one idempotency key when queued, and reuse it on every retry"
+      ],
+      "answer": 3,
+      "explanation": "A refresh token is a 90-day password for one customer, so it belongs in secure device storage, not copied into a queue; each use also returns a new one, so old copies should be deleted. The idempotency key names the user's action, not the attempt: a new key per retry lets a lost response become a second redemption. PKCE protects the code during sign-in, not later API calls."
+    },
+    {
+      "id": "m11-q4",
+      "topic": "B2C migration route",
+      "scenario": "Fellside Outdoor's 140,000 customers sign in through its Azure AD B2C tenant, and its app is on their phones. Marketing wants joint loyalty working within a month. Dev proposes moving everyone at once in High Scale Compatibility mode, because \"B2C is being switched off\".",
+      "stem": "Which plan should Priya approve?",
+      "options": [
+        "Bulk import everyone through Microsoft Graph, then email each customer a password-reset link on launch day",
+        "Federate B2C as an identity provider now, migrate passwords just in time, and raise the minimum app version before cutover",
+        "Use High Scale Compatibility mode, so both customer bases share one tenant from day one and nobody has to reset a password",
+        "Wait: B2C is supported until at least May 2030, so joint loyalty can wait for a single migration later"
+      ],
+      "answer": 1,
+      "explanation": "Federation gets joint loyalty working within weeks, just-in-time migration moves passwords without resets, and installed apps that still point at B2C need a raised minimum version before cutover. High Scale Compatibility mode is only for about 5 million objects or more and has no social sign-in. B2C is not being switched off, but waiting misses marketing's month."
+    },
+    {
+      "id": "m11-q5",
+      "topic": "push, real-time or SMS",
+      "scenario": "Order 1042 has just left the depot. The customer may have the order screen open, may have the app closed, or may never have allowed notifications. Ana proposes sending \"out for delivery\" through SignalR Service, since the order screen already holds a connection. Marketing wants a text to every customer as well.",
+      "stem": "How should Northline send this one update?",
+      "options": [
+        "Through SignalR Service to the customer's user ID only, because the order screen already holds a live connection",
+        "As a text to every customer, because SMS reaches a phone with the app closed and needs no permission",
+        "As a push to the user tag, with SignalR updating any open screen, and SMS only for customers without push",
+        "As a silent notification that wakes the app, which then fetches the status and shows its own alert"
+      ],
+      "answer": 2,
+      "explanation": "On a phone the socket closes when the app goes to the background, so 'out for delivery' belongs to a push notification, and SignalR only keeps an open screen live. Push comes first because it costs almost nothing, while every SMS segment is charged. A silent notification is throttled by Apple and dropped after a force-quit, so it is a hint, never delivery."
+    },
+    {
+      "id": "m11-q6",
+      "topic": "who sets the tags",
+      "scenario": "Leo's app sends its device token to the Node API with the customer's External ID access token. To save work, his draft also sends the tags it wants, such as user:8812 and optin:marketing, and the API writes them to the hub after checking the token. Stores use shared demo iPads that several customers sign in to.",
+      "stem": "What should change in how installations get their tags?",
+      "options": [
+        "The API should take the user tag from the validated token, add opt-in tags only from consent it has recorded, and remove the user tag at sign-out",
+        "Nothing, because the API checks the access token before it writes, so the tags the app asks for can be trusted",
+        "Let the app register directly with a Listen key, so the API is out of the path, and check the tags in the Notify function",
+        "Rely on the hub's clean-up of dead installations to clear the previous customer's tag from each shared iPad"
+      ],
+      "answer": 0,
+      "explanation": "A valid token proves who is calling, not that the tags they ask for are theirs: a tampered app could ask for user:9000 or claim a marketing opt-in. Tags are permissions, so the backend decides them. Sign-out must remove the tag, because the iPad's device token is still alive and the hub only deletes records whose tokens APNs or FCM report as dead."
+    },
+    {
+      "id": "m11-q7",
+      "topic": "WebSockets through Front Door",
+      "scenario": "For Black Friday, Northline expects 20,000 order-tracking tabs and 6,000 app screens open at once. Dev suggests self-hosting WebSockets on the Node API's App Service and carrying them on the existing Front Door /api/* route, so the WAF inspects all real-time traffic.",
+      "stem": "What is the better design for live order status?",
+      "options": [
+        "Keep Dev's route but use server-sent events instead, which are one-way and lighter through Front Door",
+        "Keep Dev's plan, and put the WebSocket path on a cached route so that the edge absorbs some of the load",
+        "Keep Dev's plan with ARR affinity and a Redis adapter, since Front Door's WAF checks every WebSocket message",
+        "Send negotiate through Front Door and API Management, then let clients connect to SignalR Service directly"
+      ],
+      "answer": 3,
+      "explanation": "Front Door carries WebSockets only on uncached routes, its WAF checks just the handshake, and for now a profile holds up to 3,000 concurrent WebSocket connections, so 26,000 do not fit. Server-sent events look lighter, but Front Door does not support them at all. A cached route makes the upgrade fail quietly."
+    },
+    {
+      "id": "m11-q8",
+      "topic": "real-time groups and identity",
+      "scenario": "In Ana's order-tracking prototype, negotiate checks the customer's External ID token and sets the user ID on the server. The page then joins the group order-1042 by sending the order number over the connection. The notify function sends each status change to that group.",
+      "stem": "What is the main flaw, and what fixes it?",
+      "options": [
+        "There is no flaw, because negotiate already validated the customer's token before the connection opened",
+        "Anyone signed in can join any order's group by name; send to the user ID, or add to groups on the server",
+        "Groups cost extra units, so send every change to all connections and let each page filter by order number",
+        "The token check belongs in the notify function, which should validate the customer's token on each send"
+      ],
+      "answer": 1,
+      "explanation": "A valid token proves who the customer is, not which groups they may join, so a group anyone can join by name leaks orders. Sending to the user ID set at negotiate, or adding connections to groups on the server, closes it. Sending to everyone leaks the same data and bills one outbound message per connection."
+    },
+    {
+      "id": "m11-q9",
+      "topic": "SAS lifetime for uploads",
+      "scenario": "Review photos upload straight to Blob storage with a 15-minute user delegation SAS for one blob name. On slow trains, some uploads fail when the SAS expires midway. Leo proposes that the API issue one SAS for the whole review-uploads container, valid for seven days, which the app fetches at sign-in and keeps in the Keychain.",
+      "stem": "How should Ana handle the failed uploads?",
+      "options": [
+        "Keep the narrow 15-minute SAS, and have the app fetch a fresh one from the API when a key expires mid-upload",
+        "Accept Leo's plan: seven days is the documented ceiling, and the Keychain keeps the key safe on the phone",
+        "Accept Leo's plan but cut it to 24 hours, the same limit that Azure Maps uses for its own SAS tokens",
+        "Route slow uploads back through the API, which holds each one in memory until the write to Blob storage finishes"
+      ],
+      "answer": 0,
+      "explanation": "When a SAS expires mid-upload, fetch a fresh one rather than lengthen it: the client should get the key to one locker for minutes. Seven days is the ceiling to stay far below, and the Keychain protects where the key is stored, not what it can do: anyone holding it could write anywhere in the container for a week. Routing bytes through the API brings back the memory crashes."
+    },
+    {
+      "id": "m11-q10",
+      "topic": "email and SMS provider",
+      "scenario": "It is early October 2026. Dev reads that Azure Communication Services email and SMS take no new customers from 23 October 2026. He proposes creating an ACS resource this week, so Northline counts as an existing customer and can send order emails and delivery texts in the UK and Bengaluru.",
+      "stem": "What should Priya decide about email and SMS?",
+      "options": [
+        "Agree: signing up before the cut-off gives Northline two years of ACS, time enough to plan a later move",
+        "Agree, but call ACS straight from the Orders API, because it will be replaced anyway and a seam adds work",
+        "Send every order update by SMS instead, because texts reach every customer and the provider handles registration",
+        "Use third-party providers behind one notifier, send push first, and start sender-ID and DLT registration now"
+      ],
+      "answer": 3,
+      "explanation": "ACS email and SMS retire on 30 September 2028, and the rule is not to start new work on a service with a published retirement date; a notifier seam makes the next vendor change configuration. Signing up early only buys a migration. The slow work is Northline's with any provider: UK sender IDs, DLT templates in India and an email warm-up, while push costs almost nothing."
+    },
+    {
+      "id": "m11-q11",
+      "topic": "native fix and minimum version",
+      "scenario": "Version 3.1 crashes at checkout on some Android phones, and the fix needs a change to native code. Since 2.8 the app reads GET /mobile/config on launch. The team used to rely on App Center's CodePush, which has gone. Leo wants every 3.1 user off the broken build.",
+      "stem": "Which plan moves users off 3.1?",
+      "options": [
+        "Publish an EAS Update with the fix to 3.1's runtime version, at 10% of users first and then to everyone",
+        "Halt 3.1's staged rollout in Google Play, which removes the build from phones that installed it",
+        "Ship 3.1.1 through the beta tracks and a staged rollout, then raise minSupported in App Configuration",
+        "Host Microsoft's standalone CodePush server, which replaced App Center's, and push the fix through it"
+      ],
+      "answer": 2,
+      "explanation": "Over-the-air updates replace only JavaScript and assets, so a native fix needs a new binary; once 3.1.1 is out, raising minSupported makes 3.1, which contains the check, show 'please update'. Halting a staged rollout only stops new users, because no store can recall a build. The standalone CodePush server was archived in May 2025 and could not ship native code either."
+    },
+    {
+      "id": "m11-q12",
+      "topic": "over-the-air update limits",
+      "scenario": "Marketing wants a new 'refer a friend' screen with vouchers live before Christmas. It is all JavaScript, and Leo already ships fixes with EAS Update. The product owner suggests sending the screen as an update next week to skip App Review.",
+      "stem": "What should Leo recommend for the new screen?",
+      "options": [
+        "Send it as an EAS Update, since Google Play exempts interpreted code and the new screen needs no native module of its own",
+        "Ship it in a store build behind a feature flag in App Configuration, served by the BFF, and switch it on later",
+        "Send it as an update to 10% of users first, so the change stays small enough not to need App Review",
+        "Ship it in a store build, and let the app read its flag from App Configuration with a key in the bundle"
+      ],
+      "answer": 1,
+      "explanation": "Apple's review guideline 2.5.2 bars downloaded code that adds or changes features, so over-the-air updates are for fixes to code that already passed review. Google's exemption for interpreted code does not change Apple's rule. Flags are served through the BFF, never via a key in the app, because anything in the bundle is public."
+    },
+    {
+      "id": "m11-q13",
+      "topic": "BFF scope",
+      "scenario": "The React shop's team likes the mobile BFF's one-call /mobile/v2/home and wants to call it too. Meanwhile a developer adds the new loyalty discount rule to the BFF, because the app needs it first. Leo's team owns the BFF.",
+      "stem": "What should Priya tell both teams?",
+      "options": [
+        "Let the web shop share the BFF and keep the rule there, so both clients get the discount from one place",
+        "Split the BFF into one for iOS and one for Android, so each platform team can move at its own pace",
+        "Keep the rule in the BFF, and let the web shop call it through Front Door so its response can be cached",
+        "Keep the BFF mobile-only, and move the discount rule into the Loyalty API so web and app agree"
+      ],
+      "answer": 3,
+      "explanation": "The BFF holds only client shaping and old contracts; business rules in it are how discounts end up differing between web and app, and domain APIs keep those rules. Sharing it with the web team turns it into a general API with two masters. A BFF is built per experience, not per platform, and a personal home response must be private, no-store, never cached at the edge."
+    },
+    {
+      "id": "m11-q14",
+      "topic": "retiring an old version",
+      "scenario": "Version 1 of the mobile API exists only for app 2.4, which predates the minimum-version check that shipped in 2.8. Eight months after v2, Application Insights shows 2.4 on 3% of active devices. Ana proposes raising minSupported to 2.8 in App Configuration and deleting v1 the same day.",
+      "stem": "What should happen to v1 and to app 2.4?",
+      "options": [
+        "Keep v1, since 2.4 never reads the check and would just break; retire it after twelve months and under 2%",
+        "Raise minSupported to 2.8 first; once 2.4 users have seen the update screen, deleting v1 is safe",
+        "Delete v1 but leave minSupported alone, since 3% of devices is too few to justify an old contract",
+        "Move v1's field mapping into an API Management revision of v2, so 2.4 keeps working without a separate version"
+      ],
+      "answer": 0,
+      "explanation": "Only app versions that contain the check obey it, so raising minSupported does nothing for 2.4, and deleting v1 would break 3% of devices. Northline's rule keeps v1 for at least twelve months and until under 2% of active devices use it. Revisions are only for changes that break nobody."
+    }
+  ]
+}
