@@ -1,0 +1,71 @@
+[
+  {
+    "term": "Real-Time Intelligence",
+    "aliases": ["RTI", "Fabric Real-Time Intelligence", "Real-Time hub", "Real-Time Analytics"],
+    "definition": "Microsoft Fabric's workload for data in motion: Eventstreams to ingest and route events, Eventhouses to store and query them with KQL, Real-Time Dashboards to watch them and Activator to act on them. It runs on Fabric capacity, and the Real-Time hub catalogues the streams in a tenant.",
+    "example": "Northline's clickstream flows through an Eventstream into an Eventhouse, where marketing's live dashboard and the conversion alert both read it.",
+    "icon": "data-explorer",
+    "lessons": ["10.5"],
+    "related": ["Eventstream", "Eventhouse", "Fabric Activator", "Microsoft Fabric"]
+  },
+  {
+    "term": "Eventstream",
+    "aliases": ["eventstreams", "Fabric eventstream"],
+    "definition": "A Fabric item that reads events from sources such as Event Hubs, Kafka or database change feeds, filters, aggregates and routes them without code, and sends them to destinations such as an Eventhouse, a lakehouse or Activator. It reads Event Hubs through a consumer group, which must be its own.",
+    "example": "The clickstream Eventstream reads the rti consumer group, drops bot traffic and loads the rest into the Eventhouse.",
+    "lessons": ["10.5"],
+    "related": ["Real-Time Intelligence", "Eventhouse", "Azure Event Hubs", "Consumer group"]
+  },
+  {
+    "term": "Eventhouse",
+    "aliases": ["KQL database", "KQL queryset", "Real-Time Dashboard"],
+    "definition": "A Fabric item that holds one or more KQL databases tuned for time-based events: data is indexed by arrival time and queried with KQL over billions of rows in seconds. It suspends when idle, but one receiving a constant stream draws capacity around the clock. Data can be made available in OneLake as Delta tables.",
+    "example": "The clicks KQL database keeps 30 days of events for marketing's live dashboard; the lake keeps the full history.",
+    "icon": "data-explorer",
+    "lessons": ["10.5"],
+    "related": ["KQL", "Azure Data Explorer", "Eventstream", "Real-Time Intelligence"]
+  },
+  {
+    "term": "Fabric Activator",
+    "aliases": ["Activator", "Data Activator", "Reflex"],
+    "definition": "A Fabric item that watches data, such as an Eventstream, a KQL query, a Real-Time Dashboard or a Power BI visual, and acts when a condition holds: a Teams message, an email, a pipeline, a notebook or a Power Automate flow. Formerly called Data Activator. It is for business conditions; Azure Monitor alerts cover infrastructure.",
+    "example": "When five-minute checkout conversion stays below 40% for ten minutes, Activator posts to the on-call Teams channel and emails Dev.",
+    "icon": "alerts",
+    "lessons": ["10.5"],
+    "related": ["Real-Time Intelligence", "Alert rule", "Eventhouse"]
+  },
+  {
+    "term": "Azure Stream Analytics",
+    "aliases": ["ASA", "Stream Analytics", "Stream Analytics job", "streaming unit"],
+    "definition": "An Azure platform service that runs a SQL-like query continuously over a stream, usually with time windows, and sends the results to outputs such as Azure SQL, Cosmos DB, Service Bus, Functions or Power BI. It keeps no history and is billed by streaming units per hour. Its Power BI output stops working on 31 October 2027.",
+    "example": "Lesson 5.4's job counts views per product per minute from the dashboard consumer group and pushes them to a Power BI streaming dashboard.",
+    "icon": "stream-analytics",
+    "lessons": ["10.5", "5.4"],
+    "related": ["Windowing", "Azure Event Hubs", "Real-Time Intelligence"]
+  },
+  {
+    "term": "Windowing",
+    "aliases": ["window function", "tumbling window", "hopping window", "sliding window", "session window", "snapshot window"],
+    "definition": "Grouping an endless stream into finite time periods so it can be aggregated. Tumbling windows are fixed and never overlap; hopping windows are fixed but overlap on a regular step; sliding windows produce a result when an event enters or leaves; session windows group bursts separated by a gap. Window on event time, not arrival time.",
+    "example": "Conversion over the last 10 minutes, recalculated every minute, is a hopping window of 10 minutes with a 1-minute hop.",
+    "lessons": ["10.5"],
+    "related": ["Azure Stream Analytics", "Eventstream", "Hot path and cold path"]
+  },
+  {
+    "term": "Hot path and cold path",
+    "aliases": ["hot path", "cold path", "lambda architecture", "warm path"],
+    "definition": "Two routes for the same events. The hot path processes them within seconds to watch and alert; the cold path lands every event in storage for batch processing, history and trusted numbers. The hot path answers what is happening now, the cold path what happened; official figures come from the cold path.",
+    "example": "Black Friday conversion is watched on the hot path in an Eventhouse; the clickstream also lands in bronze through Event Hubs Capture for the cold path.",
+    "lessons": ["10.5"],
+    "related": ["Batch processing", "Event Hubs Capture", "Medallion architecture", "Real-Time Intelligence"]
+  },
+  {
+    "term": "Azure Data Explorer",
+    "aliases": ["ADX", "Kusto", "Data Explorer cluster"],
+    "definition": "A standalone Azure service for fast analytics over logs, telemetry and time series, queried with KQL. It is the same engine that powers the Fabric Eventhouse, but you size and pay for a cluster by the hour. It suits Azure-native teams without Fabric; teams on Fabric usually use an Eventhouse instead.",
+    "example": "A team without Fabric streams IoT telemetry from Event Hubs into an Azure Data Explorer cluster and charts it in Grafana.",
+    "icon": "data-explorer",
+    "lessons": ["10.5"],
+    "related": ["Eventhouse", "KQL", "Real-Time Intelligence"]
+  }
+]

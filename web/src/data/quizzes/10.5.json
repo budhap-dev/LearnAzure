@@ -1,0 +1,111 @@
+[
+  {
+    "id": "10.5-q1",
+    "topic": "do you need real time",
+    "scenario": "The sales director asks for the weekly regional sales report to be made \"real-time\", so it is always up to date. It is read on Monday mornings.",
+    "stem": "What is the best response?",
+    "options": [
+      "Build an Eventstream from the orders database into an Eventhouse, so the report updates within seconds",
+      "Keep it on a nightly or hourly batch refresh",
+      "Point the report at the production orders database with DirectQuery",
+      "Add a Stream Analytics job with a tumbling window over orders"
+    ],
+    "answer": 1,
+    "explanation": "Real time pays off only when someone acts within minutes of seeing the number. A report read on Monday mornings gains nothing from second-level freshness, so a nightly or hourly refresh is far cheaper. Pointing it at production would bring back the problem from lesson 10.1."
+  },
+  {
+    "id": "10.5-q2",
+    "topic": "hot and cold paths",
+    "stem": "Which statement best describes the hot path and the cold path?",
+    "options": [
+      "The hot path holds frequently queried data in memory; the cold path holds old data on cheap disks",
+      "The hot path is for production data; the cold path is for test data",
+      "Hot: seconds, to watch and alert. Cold: every event, in batch, for history",
+      "The hot path uses Event Hubs; the cold path uses Service Bus"
+    ],
+    "answer": 2,
+    "explanation": "The two paths are two routes through the same stream: one fast and approximate for what is happening now, one complete and modelled for what happened. The storage-tier reading sounds plausible but describes caching and access tiers, not stream processing."
+  },
+  {
+    "id": "10.5-q3",
+    "topic": "ASA or Real-Time Intelligence",
+    "scenario": "On Black Friday morning marketing wants to split conversion by device and by campaign, a question nobody planned for.",
+    "stem": "Why does Real-Time Intelligence suit this better than the existing Stream Analytics job?",
+    "options": [
+      "The events are stored, so an analyst can query them with new KQL",
+      "Stream Analytics cannot read from Event Hubs",
+      "Stream Analytics only supports tumbling windows",
+      "Real-Time Intelligence needs no capacity of its own, so it costs nothing extra on sale days"
+    ],
+    "answer": 0,
+    "explanation": "Stream Analytics computes fixed results and keeps nothing, so a new question means editing the query and restarting the job. An Eventhouse keeps every event for its retention period. Stream Analytics does read Event Hubs and supports several window types, and Real-Time Intelligence draws Fabric capacity."
+  },
+  {
+    "id": "10.5-q4",
+    "topic": "windowing",
+    "stem": "Marketing wants conversion over the last 10 minutes, recalculated every minute. Which window fits?",
+    "options": [
+      "A tumbling window of 1 minute",
+      "A session window that closes after 10 minutes without any events",
+      "A snapshot window",
+      "A hopping window of 10 minutes that hops every minute"
+    ],
+    "answer": 3,
+    "explanation": "A hopping window has a fixed length and a smaller step, so windows overlap and each event counts in several results. A 1-minute tumbling window gives non-overlapping minutes, not a rolling 10-minute view. A session window groups bursts of activity separated by a gap."
+  },
+  {
+    "id": "10.5-q5",
+    "topic": "consumer groups",
+    "scenario": "Ana points the new Eventstream at the `dashboard` consumer group, which the Stream Analytics job already uses. Both dashboards now show about half the expected traffic.",
+    "stem": "What is the fix?",
+    "options": [
+      "Add more partitions to the event hub",
+      "Give the Eventstream its own consumer group, such as `rti`",
+      "Increase the Eventhouse retention period",
+      "Switch the Eventstream to read the Capture files in the data lake instead"
+    ],
+    "answer": 1,
+    "explanation": "Readers in the same consumer group compete for partitions, so each sees part of the stream. One consumer group per application gives each a full, independent view. Partition count cannot be changed on Standard and would not help anyway, and Capture files are minutes behind."
+  },
+  {
+    "id": "10.5-q6",
+    "topic": "Activator",
+    "scenario": "Dev already has Azure Monitor alerts on App Service errors and database CPU. Marketing wants to know when checkout conversion falls below 40%.",
+    "stem": "Where does the conversion alert belong?",
+    "options": [
+      "An Activator rule on the conversion query",
+      "Another Azure Monitor metric alert on App Service CPU",
+      "A daily email of the trading pack",
+      "A Power BI streaming tile that turns red when conversion falls below 40%"
+    ],
+    "answer": 0,
+    "explanation": "Activator watches business data in Fabric, such as a KQL query or a dashboard, and acts when a condition holds. Azure Monitor watches infrastructure; a payment provider declining cards leaves CPU and errors normal while conversion collapses. A colour on a tile only helps if someone is looking."
+  },
+  {
+    "id": "10.5-q7",
+    "topic": "Azure Data Explorer",
+    "stem": "How does Azure Data Explorer relate to the Fabric Eventhouse?",
+    "options": [
+      "Azure Data Explorer is the retired predecessor of the Eventhouse and can no longer be created",
+      "They are unrelated products that both happen to use SQL",
+      "Same engine and KQL; ADX is a standalone cluster, Eventhouse runs on Fabric capacity",
+      "Azure Data Explorer is the dashboard layer that sits on top of an Eventhouse"
+    ],
+    "answer": 2,
+    "explanation": "Azure Data Explorer is the same time-series engine, bought as an Azure resource you size and run. It is still a current service; the retired product was the preview Synapse Data Explorer. Teams on Fabric get the engine through the Eventhouse instead."
+  },
+  {
+    "id": "10.5-q8",
+    "topic": "costs and isolation",
+    "scenario": "The Eventhouse that receives the clickstream sits in a workspace on the same F8 capacity as finance's reports. Black Friday is next week.",
+    "stem": "What is the main risk, and the usual fix?",
+    "options": [
+      "The Eventhouse will suspend when idle and miss events in quiet minutes; disable idle suspension",
+      "Event Hubs will throttle the Eventhouse; add throughput units",
+      "KQL cannot handle Black Friday volumes; move the dashboard to Import mode",
+      "Throttling of finance's reports; give the real-time workspace its own capacity"
+    ],
+    "answer": 3,
+    "explanation": "An Eventhouse fed every second never goes idle, so it draws capacity continuously, and more on a sale day. Throttling is per capacity, so a busy hot path on the shared F8 can slow finance's reports; isolating it protects them. Idle suspension does not apply to a continuously fed Eventhouse, and it never drops events anyway."
+  }
+]
