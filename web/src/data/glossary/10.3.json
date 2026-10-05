@@ -1,0 +1,186 @@
+[
+  {
+    "term": "Azure Data Factory",
+    "aliases": [
+      "ADF",
+      "Data Factory",
+      "Fabric Data Factory",
+      "Data Factory in Fabric",
+      "Copy job"
+    ],
+    "definition": "Microsoft's data integration service for building pipelines that move and transform data. It comes in two forms: the standalone Azure service (ADF), billed per activity run and data movement, and Data Factory in Microsoft Fabric, billed through a Fabric capacity. Microsoft calls the Fabric version the next generation and adds new features such as Copy job there, while ADF stays supported and still runs SSIS packages.",
+    "example": "Northline's old SSIS packages keep running in ADF while new loads, such as the hourly stock Copy job, are built in Fabric.",
+    "icon": "data-factory",
+    "lessons": [
+      "10.3",
+      "10.1",
+      "10.8"
+    ],
+    "related": [
+      "Data pipeline",
+      "Copy activity",
+      "Integration runtime",
+      "ETL"
+    ]
+  },
+  {
+    "term": "Data pipeline",
+    "aliases": [
+      "pipeline",
+      "Fabric pipeline",
+      "ADF pipeline",
+      "orchestration"
+    ],
+    "definition": "A sequence of activities in Data Factory, such as copies, stored procedures, notebooks and dataflows, with parameters, branches, retries and a schedule or trigger. It orchestrates the work rather than moving data itself. It is the cloud equivalent of an SSIS package's control flow run by a SQL Server Agent job.",
+    "example": "A nightly pipeline copies new returns, runs a stored procedure to rebuild the gold tables, then refreshes the finance report.",
+    "icon": "data-factory",
+    "lessons": [
+      "10.3",
+      "10.4"
+    ],
+    "related": [
+      "Azure Data Factory",
+      "Copy activity",
+      "Dataflow Gen2"
+    ]
+  },
+  {
+    "term": "Copy activity",
+    "aliases": [
+      "copy data activity",
+      "Copy data"
+    ],
+    "definition": "The pipeline activity that moves data from a source to a destination, converting types on the way, through well over a hundred connectors. It moves data rather than transforming it. For simple scheduled copies without a pipeline, Fabric's Copy job does the same work with incremental copy built in.",
+    "example": "A copy activity loads yesterday's courier invoices from an SFTP folder into the bronze lakehouse.",
+    "icon": "data-factory",
+    "lessons": [
+      "10.3"
+    ],
+    "related": [
+      "Data pipeline",
+      "Incremental load",
+      "Azure Data Factory"
+    ]
+  },
+  {
+    "term": "Dataflow Gen2",
+    "aliases": [
+      "dataflow",
+      "Power Query dataflow",
+      "Gen2 dataflow"
+    ],
+    "definition": "A Fabric item that uses Power Query, the same engine as in Excel and Power BI, to connect to a source, clean and reshape the data with a visual editor, and load it into a lakehouse or warehouse. It suits small, messy and SaaS sources and people who prefer low-code. It costs more capacity per row than a copy, so keep it away from the biggest tables.",
+    "example": "A daily dataflow flattens marketing's paged campaign API into one tidy table.",
+    "icon": "data-factory",
+    "lessons": [
+      "10.3"
+    ],
+    "related": [
+      "Data pipeline",
+      "Copy activity",
+      "Low-code"
+    ]
+  },
+  {
+    "term": "Mirroring",
+    "aliases": [
+      "Fabric mirroring",
+      "mirrored database",
+      "database mirroring",
+      "open mirroring"
+    ],
+    "definition": "A Fabric feature that keeps a near-real-time replica of an operational database in OneLake as Delta tables: one snapshot, then continuous changes, with no pipeline to build. Sources include Azure SQL Database and Managed Instance, SQL Server, Cosmos DB, PostgreSQL, Snowflake and others. Replication compute is free and storage is free within an allowance per capacity unit, but it needs a running capacity and copies tables without transforming them.",
+    "example": "The orders database is mirrored, so finance's dashboard shows orders a minute old without a nightly copy.",
+    "icon": "data-lake",
+    "lessons": [
+      "10.3",
+      "10.2",
+      "10.4"
+    ],
+    "related": [
+      "Change data capture",
+      "OneLake",
+      "Incremental load",
+      "Azure SQL Database"
+    ]
+  },
+  {
+    "term": "Change data capture",
+    "aliases": [
+      "CDC",
+      "change tracking"
+    ],
+    "definition": "A SQL Server and Azure SQL feature that reads the transaction log and records every insert, update and delete in change tables, so a downstream load can copy only the changes, including deletes. It costs some extra log and storage on the source and needs admin rights to enable. Fabric mirroring uses it for SQL Server 2016 to 2022, but Azure SQL Database cannot be mirrored while CDC is enabled.",
+    "example": "A Copy job reads CDC on the returns database and merges inserts, updates and deletes into the lake each hour.",
+    "icon": "sql-server",
+    "lessons": [
+      "10.3"
+    ],
+    "related": [
+      "Incremental load",
+      "Mirroring",
+      "Change feed"
+    ]
+  },
+  {
+    "term": "Incremental load",
+    "aliases": [
+      "incremental copy",
+      "delta load",
+      "watermark",
+      "high-water mark",
+      "watermark load"
+    ],
+    "definition": "Loading only the rows that changed since the last successful run, after one initial full copy. Changes are found with a watermark, a column such as LastModified or rowversion that only goes up, or with change data capture. Watermarks are simple but miss deletes and trust every update to set the column.",
+    "example": "The stock Copy job copies rows whose LastModified is later than the last run's high value, instead of the whole table.",
+    "lessons": [
+      "10.3"
+    ],
+    "related": [
+      "Change data capture",
+      "Copy activity",
+      "Idempotent"
+    ]
+  },
+  {
+    "term": "Integration runtime",
+    "aliases": [
+      "IR",
+      "self-hosted integration runtime",
+      "SHIR",
+      "Azure-SSIS integration runtime",
+      "Azure integration runtime"
+    ],
+    "definition": "The compute that runs Azure Data Factory and Synapse pipeline activities. The Azure integration runtime is managed by Microsoft; the self-hosted one is software you install inside your network to reach private sources; the Azure-SSIS one runs SSIS packages. Fabric does not use integration runtimes: it uses the on-premises data gateway instead.",
+    "example": "A two-node self-hosted integration runtime in the old data centre lets ADF read the legacy finance database.",
+    "icon": "data-factory",
+    "lessons": [
+      "10.3"
+    ],
+    "related": [
+      "Azure Data Factory",
+      "On-premises data gateway"
+    ]
+  },
+  {
+    "term": "On-premises data gateway",
+    "aliases": [
+      "data gateway",
+      "gateway",
+      "OPDG",
+      "virtual network data gateway",
+      "VNet data gateway"
+    ],
+    "definition": "A Windows service installed inside a private network that connects outbound to Azure and fetches data on behalf of Power BI and Fabric pipelines, Copy jobs, dataflows and mirroring, so no inbound firewall rule is needed. Cluster two or more machines, because every on-premises source depends on it. A virtual network data gateway does the same for sources inside an Azure virtual network.",
+    "example": "A two-node gateway at the Daventry distribution centre lets the hourly Copy job read the ERP's stock table.",
+    "lessons": [
+      "10.3",
+      "10.6"
+    ],
+    "related": [
+      "Integration runtime",
+      "Mirroring",
+      "Hybrid cloud"
+    ]
+  }
+]
