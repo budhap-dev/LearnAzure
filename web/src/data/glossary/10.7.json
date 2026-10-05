@@ -1,0 +1,74 @@
+[
+  {
+    "term": "Microsoft Purview",
+    "aliases": ["Purview", "Azure Purview", "Microsoft Purview portal", "Purview governance"],
+    "definition": "Microsoft's family of data governance, data security and compliance tools, managed from one Microsoft Purview portal. For a data platform the important parts are the Data Map and Unified Catalog (what data you hold, what it means, who owns it) and Information Protection and data loss prevention (how it must be handled). It stores metadata about your data, never the data itself.",
+    "example": "Northline's Purview scans Azure SQL, the Daventry SQL Server and the Fabric tenant, and lists 23 tables with columns classified as customer identifiers.",
+    "icon": "compliance",
+    "lessons": ["10.7", "10.8"],
+    "related": ["Data map", "Unified Catalog", "Sensitivity label", "Data loss prevention"]
+  },
+  {
+    "term": "Data map",
+    "aliases": ["Data Map", "Purview Data Map", "scan", "scanning", "scan rule set"],
+    "definition": "The part of Microsoft Purview that scans sources on a schedule (Azure SQL, data lakes, Fabric, on-premises SQL Server through a self-hosted integration runtime, other clouds) and records their schemas, columns, classifications and lineage as metadata. It tells you which tables hold personal data, not which rows belong to one person. Scanning has no separate charge for customers on Unified Catalog billing.",
+    "example": "A weekly scan of the bronze and silver lakehouses picks up a new table with an email column and classifies it automatically.",
+    "icon": "compliance",
+    "lessons": ["10.7"],
+    "related": ["Microsoft Purview", "Data classification", "Data lineage", "Integration runtime"]
+  },
+  {
+    "term": "Unified Catalog",
+    "aliases": ["Purview Unified Catalog", "data catalog", "governance domain", "governed asset", "critical data element"],
+    "definition": "Microsoft Purview's business catalog, built on the Data Map: governance domains, data products, glossary terms, data quality rules and access requests. It is billed pay-as-you-go per governed asset per day, where a governed asset is a table or view linked to a data product, glossary term or other governance concept. Assets you scan but never curate are not charged. Data-quality runs add processing units.",
+    "example": "The glossary term \"Net revenue\" sits in the Sales domain, linked to the gold measure that calculates it, with the finance director as owner.",
+    "icon": "compliance",
+    "lessons": ["10.7", "10.8"],
+    "related": ["Data map", "Data steward", "Microsoft Purview"]
+  },
+  {
+    "term": "Data lineage",
+    "aliases": ["lineage", "lineage view", "impact analysis"],
+    "definition": "A map of how data flows from its sources, through transformations, to the reports that use it. It answers \"where did this number come from?\" and \"what breaks if I change this?\". Fabric shows lineage between items. Purview joins up lineage across Data Factory, Synapse, Databricks and Fabric. Coverage varies: some sources give column-level lineage, most Fabric items only item-level.",
+    "example": "Lineage for the board pack's net revenue runs from the mirrored orders database through bronze, Kofi's cleaning notebook and silver to the gold warehouse, the semantic model and the report.",
+    "icon": "compliance",
+    "lessons": ["10.7", "10.8"],
+    "related": ["Data map", "Medallion architecture", "Unified Catalog"]
+  },
+  {
+    "term": "Data classification",
+    "aliases": ["classification", "classifications", "custom classification", "sensitive information type", "SQL data discovery and classification"],
+    "definition": "Tagging columns and files with the kind of data they contain, such as a person's name, a credit card number or a passport number. The Purview Data Map does this during scans by sampling values against built-in and custom rules (a regular expression or a dictionary). Classification describes the content; it does not protect it.",
+    "example": "A custom classification matches Northline's loyalty numbers, so every copy of that column is found wherever it lands.",
+    "icon": "compliance",
+    "lessons": ["10.7"],
+    "related": ["Data map", "Sensitivity label", "Data loss prevention"]
+  },
+  {
+    "term": "Sensitivity label",
+    "aliases": ["sensitivity labels", "Information Protection", "Microsoft Purview Information Protection", "MIP label", "label inheritance"],
+    "definition": "A label from Microsoft Purview Information Protection, such as \"Confidential - Customer data\", that says how an item must be handled and can apply protection. These are the same labels used on Office files and email. In Fabric a label flows downstream from a lakehouse to the models and reports built from it, and stays with exports to Excel, PowerPoint and PDF, but not to CSV. Manual labelling needs a Microsoft 365 E3-level licence; automatic labelling needs E5-level.",
+    "example": "The silver customers lakehouse is labelled Confidential, so the semantic model and the loyalty report built from it are labelled too.",
+    "icon": "compliance",
+    "lessons": ["10.7"],
+    "related": ["Data classification", "Data loss prevention", "Microsoft Purview"]
+  },
+  {
+    "term": "Data steward",
+    "aliases": ["data stewards", "steward", "data owner", "data ownership"],
+    "definition": "The person who looks after a set of data day to day: definitions, glossary terms, classifications, quality rules and access requests. Not to be confused with the data owner, a business leader who is accountable for the data and makes the decisions about it. Every dataset in the catalog should name both.",
+    "example": "Tom stewards Northline's sales and customer data; the finance director owns it.",
+    "icon": "users",
+    "lessons": ["10.7", "10.8"],
+    "related": ["Unified Catalog", "Data lineage"]
+  },
+  {
+    "term": "Data loss prevention",
+    "aliases": ["DLP", "DLP policy", "Purview DLP", "data loss prevention policy"],
+    "definition": "Microsoft Purview policies that detect sensitive content where it is stored or shared, then notify the user, alert administrators or restrict access. They cover Microsoft 365 locations such as email and OneDrive, and in Fabric they check lakehouses, warehouses and semantic models. Restricting access in Fabric is still in preview for some item types. DLP for Fabric needs an E5-level Microsoft 365 or Purview licence.",
+    "example": "A DLP policy flags a CSV of 1,000 loyalty members' email addresses saved to an analyst's OneDrive.",
+    "icon": "policy",
+    "lessons": ["10.7"],
+    "related": ["Sensitivity label", "Data classification", "Microsoft Purview"]
+  }
+]

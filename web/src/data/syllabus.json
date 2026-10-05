@@ -1241,7 +1241,8 @@
             "compliance",
             "policy",
             "data-lake"
-          ]
+          ],
+          "status": "ready"
         },
         {
           "id": "10.8",

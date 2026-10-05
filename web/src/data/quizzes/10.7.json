@@ -1,0 +1,112 @@
+[
+  {
+    "id": "10.7-q1",
+    "topic": "what Purview holds",
+    "scenario": "A customer asks Northline to erase her data. The Purview Data Map has scanned every source.",
+    "stem": "What can the Data Map tell Tom straight away?",
+    "options": [
+      "Every row that belongs to her in every source it has scanned, listed by table and ready to delete from the Purview portal in one step",
+      "Nothing useful until a data steward has curated each asset",
+      "Which tables and files have columns classified as holding customer identifiers, so he knows where to query",
+      "Which reports she has viewed"
+    ],
+    "answer": 2,
+    "explanation": "Purview stores metadata, never the data: it knows which columns hold names, emails or customer IDs, not whose rows are in them. That narrows the search to the right tables, and then Northline's own queries find her rows. Classification needs no curation first; it happens during the scan."
+  },
+  {
+    "id": "10.7-q2",
+    "topic": "classification versus labels",
+    "stem": "What is the difference between a data classification and a sensitivity label?",
+    "options": [
+      "A classification describes what a column contains; a sensitivity label says how an item must be handled and can carry protection with it",
+      "They are two names for the same thing in different portals",
+      "A classification encrypts the column it is applied to, while a sensitivity label is only a description shown to people browsing the catalog",
+      "Classifications apply to Microsoft 365 files; labels apply only to databases"
+    ],
+    "answer": 0,
+    "explanation": "Classification (such as \"credit card number\") is descriptive metadata found by scanning. A sensitivity label (such as \"Confidential - Customer data\") is a handling instruction from Information Protection that flows to downstream items. The reversed option is tempting but wrong: classification on its own protects nothing."
+  },
+  {
+    "id": "10.7-q3",
+    "topic": "labels and exports",
+    "scenario": "The silver customers lakehouse is labelled Confidential. An analyst exports a report built on it, and the file turns up unlabelled.",
+    "stem": "What is the most likely explanation?",
+    "options": [
+      "Labels in Fabric never flow to reports",
+      "The analyst's Power BI licence strips labels on export",
+      "Labels only apply to Microsoft 365 files, not Fabric items",
+      "The export was to CSV, and labels only travel with supported exports such as Excel, PowerPoint and PDF"
+    ],
+    "answer": 3,
+    "explanation": "In Fabric a label flows downstream from the lakehouse to its models and reports, and stays with Excel, PowerPoint and PDF exports. CSV and text exports leave without it. That is why exports of personal data need an approved route. Saying labels never reach reports gets downstream inheritance wrong."
+  },
+  {
+    "id": "10.7-q4",
+    "topic": "Delta deletes",
+    "scenario": "Tom runs a DELETE for one customer on the silver and gold Delta tables.",
+    "stem": "Why is her data not yet gone from storage?",
+    "options": [
+      "Delta tables cannot delete individual rows, so the whole table must be rebuilt from bronze before any change is visible to queries",
+      "A Delta delete writes new files but keeps the old ones for time travel until VACUUM removes them after the retention period",
+      "The mirrored database will copy her rows back overnight",
+      "Purview keeps a copy of every row it scans"
+    ],
+    "answer": 1,
+    "explanation": "Delta records the delete in new files and keeps the old ones so earlier versions can still be read. VACUUM removes files older than the retention window, seven days by default. Purview never holds row data, and a mirror follows deletes made at the source."
+  },
+  {
+    "id": "10.7-q5",
+    "topic": "pseudonymise at ingestion",
+    "scenario": "Two years of clickstream Parquet files in bronze carry customer IDs. Erasure requests arrive every week.",
+    "stem": "What is the best long-term design?",
+    "options": [
+      "Rewrite the whole bronze layer for each request",
+      "Stop capturing the clickstream",
+      "Replace the customer ID with a token at ingestion, keep the token-to-customer map in one table, and delete the map entry on erasure",
+      "Move bronze to the archive tier so it no longer counts"
+    ],
+    "answer": 2,
+    "explanation": "Bronze is append-only, so rewriting it for every request is slow and risky. With pseudonymisation, one row in one table is the only link between a person and the raw events, and deleting it cuts that link. Data in a cheaper storage tier is still personal data."
+  },
+  {
+    "id": "10.7-q6",
+    "topic": "owners and stewards",
+    "stem": "In a governance domain, what is the difference between the data owner and the data steward?",
+    "options": [
+      "The owner is accountable for the data and makes the decisions; the steward does the daily work on definitions, classifications, quality and access requests",
+      "The owner is whoever first created the table in the workspace, and the steward is the Fabric administrator who manages the capacity, its settings and its bill",
+      "The steward approves budgets; the owner writes the pipelines",
+      "They are the same role under two names"
+    ],
+    "answer": 0,
+    "explanation": "Ownership is accountability, usually a business leader such as the finance director for sales. Stewardship is the hands-on care, such as Tom maintaining definitions and quality rules. Equating ownership with whoever created a table is how datasets end up with nobody answering for them."
+  },
+  {
+    "id": "10.7-q7",
+    "topic": "lineage",
+    "scenario": "Finance asks where the net revenue figure in the board pack comes from.",
+    "stem": "What does Fabric's lineage view give Tom, and what is its limit?",
+    "options": [
+      "The exact SQL behind every column, guaranteed complete",
+      "Nothing, because lineage only works for Azure Data Factory",
+      "A list of who has viewed the report",
+      "The chain of items from the mirrored orders database through the lakehouses and notebook to the semantic model and report, but mostly at item level rather than column level"
+    ],
+    "answer": 3,
+    "explanation": "Fabric lineage shows which items feed which, which answers \"where did this come from?\" and \"what breaks if I change it?\". For most Fabric items it is item-level, so it shows that a notebook touches a table, not which columns it changes. Treat it as a map, not a guarantee."
+  },
+  {
+    "id": "10.7-q8",
+    "topic": "cost",
+    "scenario": "Northline has scanned 2,000 tables into the Data Map and linked 40 gold tables to data products and glossary terms.",
+    "stem": "How does Unified Catalog billing treat this?",
+    "options": [
+      "Every scanned table is billed every day, so all 2,000 count, whether or not anyone links them to a data product or glossary term",
+      "The 40 linked tables are governed assets billed per day; the other scanned tables carry no governed-asset charge",
+      "It is free, because Fabric includes Purview",
+      "It is billed per user who opens the catalog"
+    ],
+    "answer": 1,
+    "explanation": "A governed asset is one linked to a governance concept such as a data product or glossary term, and only those are counted each day. Data-quality runs add processing units. Fabric includes its own OneLake catalog, but Purview's Unified Catalog is billed separately."
+  }
+]
