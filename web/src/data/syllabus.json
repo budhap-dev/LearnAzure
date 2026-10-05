@@ -1312,7 +1312,8 @@
             "external-identities",
             "entra-id",
             "mobile"
-          ]
+          ],
+          "status": "ready"
         },
         {
           "id": "11.4",

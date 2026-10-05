@@ -1,0 +1,111 @@
+[
+  {
+    "id": "11.3-q1",
+    "topic": "secure device storage",
+    "scenario": "A security review finds the loyalty app's refresh token stored as plain text in AsyncStorage.",
+    "stem": "What is the right fix?",
+    "options": [
+      "Base64-encode the token before writing it to AsyncStorage",
+      "Keep the token only in memory and make customers sign in again every time they open the app",
+      "Move it to the Keychain and Keystore via expo-secure-store",
+      "Shorten the access token lifetime to five minutes"
+    ],
+    "answer": 2,
+    "explanation": "The Keychain and the Keystore system are the operating system's protected stores, and React Native's own guidance says AsyncStorage is unencrypted and not for tokens. Base64 is encoding, not encryption. A shorter access token lifetime doesn't help, because the exposed secret is the 90-day refresh token."
+  },
+  {
+    "id": "11.3-q2",
+    "topic": "PKCE",
+    "stem": "What does PKCE protect against in the authorisation code flow?",
+    "options": [
+      "A stolen authorisation code being redeemed by someone else",
+      "A customer's password being phished on a fake sign-in page",
+      "An access token being replayed against a different API",
+      "The app's client secret being extracted from the installed app bundle and reused by an attacker"
+    ],
+    "answer": 0,
+    "explanation": "The app sends a hash of a random secret at the start and must present the original to redeem the code, so a stolen code is useless. It is tempting to think PKCE protects a client secret, but public clients such as mobile apps and SPAs have no client secret at all; PKCE is what replaces it."
+  },
+  {
+    "id": "11.3-q3",
+    "topic": "MSAL and React Native",
+    "scenario": "Leo is choosing a library to sign customers in from the React Native app against External ID's standard browser-based flow.",
+    "stem": "Which choice is sound?",
+    "options": [
+      "Microsoft's official MSAL for React Native package",
+      "The react-native-msal community wrapper, because it is the best known",
+      "Load the hosted sign-in page in a react-native-webview so it looks like part of the app",
+      "react-native-app-auth or expo-auth-session, with the system browser"
+    ],
+    "answer": 3,
+    "explanation": "External ID speaks standard OpenID Connect, so a maintained standards library with PKCE and the system browser works well. There is no official MSAL for React Native, and the well-known community wrapper was archived in 2022. An embedded web view is blocked by Google for sign-in and loses browser single sign-on."
+  },
+  {
+    "id": "11.3-q4",
+    "topic": "native authentication",
+    "stem": "Which statement about External ID native authentication is correct?",
+    "options": [
+      "It is Microsoft's recommended default for every app, because it is more secure than a Microsoft-hosted page",
+      "It uses your own screens, but social sign-in still opens a browser",
+      "It ships as an official React Native SDK alongside the iOS and Android ones",
+      "It works with any identity provider without a browser, including Google"
+    ],
+    "answer": 1,
+    "explanation": "Native authentication gives you your own screens through MSAL for iOS, Android and the web, but the social step opens a browser and the API has no CORS support. Microsoft describes browser-delegated sign-in as the more secure option, because Microsoft owns the sign-in surface. React Native must bridge the native SDKs or call the API directly."
+  },
+  {
+    "id": "11.3-q5",
+    "topic": "B2C status",
+    "scenario": "Fellside Outdoor's customers sign in through an existing Azure AD B2C tenant. The finance director asks whether it will stop working next month.",
+    "stem": "What is the accurate answer?",
+    "options": [
+      "No: it is supported until at least May 2030, though no longer sold",
+      "Yes: B2C itself was retired in March 2026, and the remaining tenants are being switched off one by one",
+      "No: B2C is fully supported indefinitely and is still sold, so there is nothing to plan",
+      "Yes: B2C tenants were automatically converted to External ID tenants in 2025"
+    ],
+    "answer": 0,
+    "explanation": "B2C has had no new sales since 1 May 2025, but existing customers keep using it, with support until at least May 2030. March 2026 is when the P2 tier was retired, not B2C itself, which is the likely source of confusion. There was no automatic conversion, so the move is the customer's own project."
+  },
+  {
+    "id": "11.3-q6",
+    "topic": "password migration",
+    "scenario": "Northline wants Fellside's 140,000 customers in its External ID tenant without forcing everyone to reset their password. B2C stores only password hashes.",
+    "stem": "Which approach fits?",
+    "options": [
+      "Export the password hashes from B2C and import them into External ID through Microsoft Graph",
+      "Enable High Scale Compatibility mode on Fellside's tenant",
+      "Bulk import, then just-in-time password migration at first sign-in",
+      "Invite every Fellside customer as a guest user in the workforce tenant"
+    ],
+    "answer": 2,
+    "explanation": "Just-in-time migration has External ID call your Function on the first sign-in, verify the password against B2C and store it, so active customers never notice. B2C doesn't let you export usable password hashes. High Scale Compatibility mode is only for tenants of about 5 million objects or more, and it has no social sign-in."
+  },
+  {
+    "id": "11.3-q7",
+    "topic": "user flows",
+    "stem": "Which statement about user flows in an external tenant is true?",
+    "options": [
+      "Each app can be linked to several user flows, one for each sign-in method it offers",
+      "User flows are written in XML, like Azure AD B2C custom policies",
+      "A user flow can only offer one sign-in method",
+      "One flow can serve many apps, but each app has exactly one flow"
+    ],
+    "answer": 3,
+    "explanation": "A user flow sets the methods and sign-up attributes, and many apps can share it, but each app has exactly one. One flow can offer several methods at once, such as email with password, Google and Apple. B2C's XML custom policies have no direct equivalent: custom logic moves to custom authentication extensions."
+  },
+  {
+    "id": "11.3-q8",
+    "topic": "cost",
+    "scenario": "After merging Fellside, Northline expects 150,000 monthly active customers across its linked tenants.",
+    "stem": "Roughly what will External ID cost each month at approximate list prices, before any SMS charges?",
+    "options": [
+      "Nothing, because consumer sign-in is always free",
+      "About $3,000: 50,000 free, then about $0.03 each",
+      "About $4,500, because every monthly active user costs about $0.03, including the first 50,000",
+      "About $300, the same rate as Azure AD B2C P1"
+    ],
+    "answer": 1,
+    "explanation": "100,000 billable users at about $0.03 each is roughly $3,000 a month, because the free 50,000 is shared across every tenant linked to the subscription. Charging all 150,000 ignores the free allowance. B2C's P1 per-user rate is roughly a ninth of External ID's, so the merge costs more, not the same."
+  }
+]

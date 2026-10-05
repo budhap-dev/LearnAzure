@@ -1,0 +1,70 @@
+[
+  {
+    "term": "External tenant",
+    "aliases": ["external tenants", "customer tenant", "CIAM tenant", "ciamlogin.com"],
+    "definition": "A Microsoft Entra tenant created for External ID that holds only customer accounts, with its own app registrations, user flows, branding and sign-in endpoints. It is separate from the workforce tenant where staff and guests live. Monthly active users are counted across every tenant linked to the same subscription, so the free allowance is shared.",
+    "example": "northlinecustomers holds shoppers for the React shop and the loyalty app; staff never appear in it.",
+    "icon": "external-identities",
+    "lessons": ["11.3", "4.4"],
+    "related": ["Microsoft Entra External ID", "Tenant", "User flow"]
+  },
+  {
+    "term": "User flow",
+    "aliases": ["user flows", "sign-up and sign-in user flow", "sign-up flow"],
+    "definition": "The configured sign-up and sign-in journey in an external tenant: which methods customers can use, such as email with password, an email one-time passcode or social accounts, and which attributes are collected at sign-up. A user flow can serve many apps, but each app is linked to exactly one. Custom logic is added through custom authentication extensions, which replace Azure AD B2C's custom policies.",
+    "example": "One user flow offers email with password, Google and Apple to both the shop and the loyalty app.",
+    "icon": "external-identities",
+    "lessons": ["11.3"],
+    "related": ["External tenant", "Social sign-in", "Microsoft Entra External ID"]
+  },
+  {
+    "term": "PKCE",
+    "aliases": ["Proof Key for Code Exchange", "authorization code flow with PKCE", "auth code flow with PKCE", "code verifier", "code challenge"],
+    "definition": "An addition to the OAuth 2.0 authorisation code flow for public clients such as SPAs and mobile apps, which cannot keep a secret. The app creates a random secret for each sign-in, sends only its hash, and must present the original to swap the code for tokens, so an intercepted code is useless. Entra requires it for SPAs, and MSAL and standard OIDC libraries do it for you.",
+    "example": "react-native-app-auth sends a code challenge with each sign-in and the code verifier when it redeems the code.",
+    "lessons": ["11.3"],
+    "related": ["OAuth 2.0 and OpenID Connect", "MSAL", "Refresh token"]
+  },
+  {
+    "term": "MSAL",
+    "aliases": ["Microsoft Authentication Library", "MSAL.js", "msal-browser", "msal-react", "MSAL React"],
+    "definition": "Microsoft's sign-in libraries for Entra ID and External ID. They handle PKCE, token caching and silent renewal. Official versions exist for the browser (including React), iOS, Android, Node, .NET, Python and Java, but not for React Native, where community wrappers are unofficial and the best known is archived. In the browser, MSAL caches tokens in sessionStorage by default.",
+    "example": "The React shop signs customers in with @azure/msal-react; the loyalty app uses react-native-app-auth instead.",
+    "icon": "app-registrations",
+    "lessons": ["11.3", "4.4"],
+    "related": ["PKCE", "OAuth 2.0 and OpenID Connect", "Native authentication"]
+  },
+  {
+    "term": "Social sign-in",
+    "aliases": ["social login", "social identity provider", "Sign in with Apple", "Google sign-in", "Facebook login"],
+    "definition": "Letting customers sign up and sign in with an existing Google, Apple or Facebook account, which the external tenant federates with. Apple requires apps that offer such options for the main account to also offer a privacy-preserving one, usually Sign in with Apple. Google refuses sign-in inside embedded web views, and Apple can hide the user's email behind a relay address.",
+    "example": "Loyalty members choose Continue with Google or Sign in with Apple in the system browser sheet.",
+    "lessons": ["11.3"],
+    "related": ["Identity provider", "User flow", "External tenant"]
+  },
+  {
+    "term": "Native authentication",
+    "aliases": ["native auth", "native authentication API", "native authentication SDK"],
+    "definition": "An External ID option where the app draws its own sign-in screens and calls the native authentication API instead of opening a Microsoft-hosted page in a browser. MSAL supports it on iOS, Android and the web; other platforms, including React Native, call the API directly or bridge the native SDKs. Social sign-in still opens a browser, SPAs need a CORS proxy, and your team shares the security work.",
+    "example": "The team rejects native authentication for the loyalty app because the browser step is not costing sign-ups.",
+    "icon": "external-identities",
+    "lessons": ["11.3"],
+    "related": ["MSAL", "User flow", "Cross-origin resource sharing"]
+  },
+  {
+    "term": "Refresh token",
+    "aliases": ["refresh tokens", "token rotation", "silent token renewal"],
+    "definition": "A long-lived token that a client uses to get new access tokens without asking the user to sign in again. In Entra it lasts 90 days by default for mobile apps and 24 hours for SPAs, and each use returns a new one while the old one stays valid, so delete it. Treat it like a password: anyone who holds it can act as the user.",
+    "example": "The security review found the loyalty app's refresh token in AsyncStorage; it now lives in the Keychain and Keystore.",
+    "lessons": ["11.3"],
+    "related": ["OAuth 2.0 and OpenID Connect", "Secure device storage", "PKCE"]
+  },
+  {
+    "term": "Secure device storage",
+    "aliases": ["iOS Keychain", "Keychain Services", "Android Keystore system", "expo-secure-store", "react-native-keychain", "EncryptedSharedPreferences"],
+    "definition": "The operating system's protected stores for secrets on a phone: the iOS Keychain and the Android Keystore system, reached from React Native through expo-secure-store or react-native-keychain. Tokens belong here, never in AsyncStorage, which is unencrypted. iOS Keychain items can survive an uninstall, and some iOS releases reject values over about 2 KB.",
+    "example": "The loyalty app stores only the refresh token with expo-secure-store and clears it on the first launch after a reinstall.",
+    "lessons": ["11.3"],
+    "related": ["Refresh token", "MSAL"]
+  }
+]
