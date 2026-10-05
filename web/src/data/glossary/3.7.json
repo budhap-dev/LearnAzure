@@ -71,7 +71,7 @@
   },
   {
     "term": "Data warehouse",
-    "aliases": ["analytics platform", "lakehouse"],
+    "aliases": ["analytics platform"],
     "definition": "A store built for analytical queries over large volumes of history, typically columnar and read-mostly, loaded from copies of the transactional systems. On Azure the current front door is Microsoft Fabric, with Azure Synapse Analytics behind many existing estates and Azure Data Explorer for telemetry and logs. It is a discipline of its own with its own team, so this course only points at the door.",
     "example": "A Fabric lakehouse holding every order since launch, refreshed nightly, that Power BI queries without touching production.",
     "icon": "synapse",
@@ -80,7 +80,7 @@
   },
   {
     "term": "ETL",
-    "aliases": ["extract, transform, load", "ELT", "data pipeline"],
+    "aliases": ["extract, transform, load", "data pipeline"],
     "definition": "Extract, transform, load: the pipeline that copies data out of a transactional store, reshapes it and loads it into a warehouse or another system. On Azure it is usually Azure Data Factory or a Fabric pipeline, or a change feed for near-real-time copies. The point is that analytics runs on the copy, so the copy's freshness is a requirement to write down.",
     "example": "A nightly Data Factory pipeline copies the day's orders from Azure SQL into the Fabric lakehouse for the finance reports.",
     "icon": "data-factory",

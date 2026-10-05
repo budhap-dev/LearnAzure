@@ -1,0 +1,55 @@
+[
+  {
+    "term": "Data lake",
+    "aliases": ["lake", "ADLS", "raw zone"],
+    "definition": "Files of any shape - CSV, JSON, Parquet, images, logs - kept in cheap object storage and interpreted when they are read, not when they are written. On Azure it is a storage account with hierarchical namespace (Azure Data Lake Storage Gen2), or OneLake in Fabric. It keeps everything raw and lets any engine read it, but on its own it has no transactions or updates, and without layers and owners it becomes a swamp nobody trusts.",
+    "example": "Event Hubs Capture writes the clickstream into stshopanalytics as Parquet every five minutes; nothing checks the files until a job reads them.",
+    "icon": "data-lake",
+    "lessons": ["10.1", "10.2", "5.4"],
+    "related": ["Hierarchical namespace", "Lakehouse", "Data warehouse", "Event Hubs Capture"]
+  },
+  {
+    "term": "Lakehouse",
+    "aliases": ["lakehouse architecture", "data lakehouse"],
+    "definition": "A data lake with an open table format over its files, so folders of Parquet behave like database tables: transactions, updates, deletes and a schema, with SQL and Spark reading the same single copy. It combines the cheap, open storage of a lake with the trusted tables of a warehouse. Microsoft Fabric and Azure Databricks are both built around it; it still needs layers and owners to stay trustworthy.",
+    "example": "Northline's orders, stock and clickstream land in one lakehouse; Tom queries the gold tables in T-SQL while a data engineer reads the same files in Spark.",
+    "icon": "data-lake",
+    "lessons": ["10.1", "10.2", "10.4"],
+    "related": ["Data lake", "Data warehouse", "Medallion architecture"]
+  },
+  {
+    "term": "Medallion architecture",
+    "aliases": ["medallion layers", "bronze silver gold", "bronze layer", "silver layer", "gold layer", "multi-hop architecture"],
+    "definition": "The usual way to layer a lakehouse. Bronze holds data raw, as landed and append-only; silver holds it cleaned, deduplicated and conformed; gold holds business-ready star schemas and agreed measures. Each layer is built from the one before, reports read gold only, and silver and gold can always be rebuilt from bronze - which is what makes a transformation bug fixable.",
+    "example": "Orders land in bronze exactly as copied, silver removes test orders and converts times to UTC, and gold defines net revenue once for every report.",
+    "icon": "data-lake",
+    "lessons": ["10.1", "10.4"],
+    "related": ["Lakehouse", "ELT", "Single source of truth"]
+  },
+  {
+    "term": "ELT",
+    "aliases": ["extract, load, transform", "load then transform"],
+    "definition": "Extract, load, transform: land the source data raw in the analytics platform first, then transform it there with SQL or Spark. It replaced transforming in flight (ETL, the SSIS habit) once storage became cheap and compute elastic. Because the raw copy is kept, a corrected transformation can be rerun over all of history.",
+    "example": "Orders are copied unchanged into bronze each night; a SQL job then builds silver and gold inside the lakehouse.",
+    "icon": "data-factory",
+    "lessons": ["10.1", "10.3", "10.4"],
+    "related": ["ETL", "Medallion architecture", "Batch processing"]
+  },
+  {
+    "term": "Batch processing",
+    "aliases": ["batch", "batch job", "batch load", "scheduled load"],
+    "definition": "Processing a bounded chunk of data on a schedule - last night's orders, the last hour's clicks - rather than each event as it arrives. Most analytics is batch because most questions can wait minutes or hours, and batch is far cheaper and simpler than streaming. Ask how fresh a report really needs to be before paying for anything faster.",
+    "example": "The finance trading pack reads gold tables rebuilt by a batch job at 06:00 every day.",
+    "lessons": ["10.1", "10.3"],
+    "related": ["ELT", "OLAP", "Event Hubs Capture"]
+  },
+  {
+    "term": "Business intelligence",
+    "aliases": ["BI", "reporting", "dashboards"],
+    "definition": "The reports, dashboards and shared measures that people use to run the business - the last mile of any analytics platform. On Microsoft's stack it means Power BI. It works only when every report draws on the same definitions, so the hard part is agreeing what \"revenue\" means, not drawing the chart.",
+    "example": "The finance director's Monday trading pack and marketing's campaign dashboard both read the same gold \"net revenue\" measure.",
+    "icon": "power-bi",
+    "lessons": ["10.1", "10.6"],
+    "related": ["OLAP", "Data warehouse", "Single source of truth"]
+  }
+]

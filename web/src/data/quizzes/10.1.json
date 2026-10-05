@@ -1,0 +1,110 @@
+[
+  {
+    "id": "10.1-q1",
+    "topic": "first step off production",
+    "scenario": "Finance's Monday report slows checkout. The orders database is General Purpose and already sits in a failover group with a readable secondary in UK West.",
+    "stem": "What is the quickest safe fix?",
+    "options": [
+      "Scale the primary up to twice the vCores for Monday mornings",
+      "Build a lakehouse and move the report to it this week",
+      "Point the report at the failover group's read-only listener",
+      "Turn on read scale-out on the General Purpose database"
+    ],
+    "answer": 2,
+    "explanation": "The geo-secondary already exists and is readable, so repointing the report moves the load off the primary today at no new cost. Read scale-out is not available on General Purpose, and scaling up pays to keep reports and checkout fighting on the same server."
+  },
+  {
+    "id": "10.1-q2",
+    "topic": "why reports hurt",
+    "stem": "Azure SQL Database uses read committed snapshot by default. Why can a large report still slow checkout on the same database?",
+    "options": [
+      "It competes for CPU, memory and tempdb, and pushes the pages checkout needs out of memory",
+      "Snapshot isolation is turned off whenever a query runs longer than a minute",
+      "Every SELECT takes shared table locks that block checkout's inserts until the whole report finishes",
+      "Reports always run at a higher priority than application queries"
+    ],
+    "answer": 0,
+    "explanation": "With row versioning, readers rarely block writers, so locks are not the main problem. The report consumes the same CPU, memory and tempdb that checkout needs. The locking answer is the tempting one, but it describes SQL Server's older default behaviour."
+  },
+  {
+    "id": "10.1-q3",
+    "topic": "when a replica is not enough",
+    "scenario": "The report now runs on a readable replica and checkout is fine.",
+    "stem": "Which new request most clearly needs an analytics platform rather than the replica?",
+    "options": [
+      "Run the same report at 07:00 every Monday instead of 08:30, before the email goes out",
+      "Add a filter for orders over £100",
+      "Show the report to two more people in finance",
+      "Three years of margin by channel, joining ERP stock and the clickstream"
+    ],
+    "answer": 3,
+    "explanation": "A replica is a copy of one database with its current data only. History beyond what the shop keeps, and joins across several sources, need a separate analytical store. Running at a different time, adding a filter or adding viewers are all things the replica can already do."
+  },
+  {
+    "id": "10.1-q4",
+    "topic": "lakehouse",
+    "stem": "What does a lakehouse add to a plain data lake?",
+    "options": [
+      "Faster object storage on premium SSDs",
+      "A table format with a transaction log, so lake files act as tables that SQL and Spark both read",
+      "A separate copy of every table loaded into a relational database, so that SQL users have something to query",
+      "Automatic deletion of raw files once they are cleaned"
+    ],
+    "answer": 1,
+    "explanation": "The transaction log over Parquet files is what turns a folder into a table with transactions, updates and a schema, while keeping one open copy. Copying data into a relational database is the old lake-plus-warehouse pattern the lakehouse avoids."
+  },
+  {
+    "id": "10.1-q5",
+    "topic": "medallion layers",
+    "stem": "In a medallion architecture, where do deduplicated orders with UTC times and one customer key across the shop and loyalty programme belong?",
+    "options": [
+      "Bronze",
+      "Silver",
+      "Gold",
+      "The source database"
+    ],
+    "answer": 1,
+    "explanation": "Silver holds cleaned, conformed data. Bronze keeps data exactly as it landed, and gold holds business-ready star schemas and agreed measures built from silver. Conformed data is not yet a report-ready model, so it is not gold."
+  },
+  {
+    "id": "10.1-q6",
+    "topic": "bronze as the replay button",
+    "scenario": "A transformation has calculated VAT wrongly for three months, and every gold revenue figure since July is off.",
+    "stem": "What makes this fixable without asking the source systems for the data again?",
+    "options": [
+      "The gold tables keep every previous version, so the figures from before July can be restored",
+      "Power BI caches the old figures",
+      "Bronze kept the raw data as it landed, so the corrected job can rebuild silver and gold",
+      "The read-only replica holds three months of history"
+    ],
+    "answer": 2,
+    "explanation": "Keeping raw data in bronze and transforming afterwards, ELT, means a fixed transformation can be rerun over history. Old versions of gold only contain the wrong numbers, and a replica holds today's state of the shop, not the data as it was."
+  },
+  {
+    "id": "10.1-q7",
+    "topic": "ETL versus ELT",
+    "stem": "Why has ELT largely replaced ETL for new analytics platforms?",
+    "options": [
+      "Cheap storage and elastic compute let you land raw data first and transform it in the platform",
+      "ELT tools come free with the platform, while ETL tools such as SSIS need separate licences",
+      "ELT does not need any scheduling",
+      "ETL cannot read from SQL Server"
+    ],
+    "answer": 0,
+    "explanation": "Landing raw first keeps the original data, so transformations can change and rerun, and the platform's own compute does the work. ELT jobs still run on schedules, usually as batch processing, so that option is wrong."
+  },
+  {
+    "id": "10.1-q8",
+    "topic": "the map",
+    "scenario": "The CFO asks which reports use the net revenue column and where customers' email addresses are stored across all the data stores.",
+    "stem": "Which service on the map answers that?",
+    "options": [
+      "Azure Data Factory",
+      "Power BI",
+      "Azure Synapse Analytics",
+      "Microsoft Purview"
+    ],
+    "answer": 3,
+    "explanation": "Purview is the governance layer: it scans stores, classifies data such as email addresses and tracks lineage from sources to reports. Power BI shows the data but does not catalogue where personal data lives elsewhere, and Data Factory only moves data."
+  }
+]
