@@ -1,0 +1,72 @@
+[
+  {
+    "term": "Backend for frontend",
+    "aliases": ["BFF", "Backends for Frontends", "BFF pattern"],
+    "definition": "A thin API built for one client experience, such as the mobile app, and owned by that client's team. It aggregates calls to domain APIs, trims responses and keeps old contracts that installed apps still need. Business rules stay in the domain APIs and cross-cutting rules in the gateway; one BFF per experience, not per platform.",
+    "example": "GET /mobile/v2/home replaces seven calls from the phone with one, made by the mobile BFF inside Azure.",
+    "icon": "app-service",
+    "lessons": ["11.1"],
+    "related": ["API gateway", "Azure API Management", "GraphQL", "API versioning"]
+  },
+  {
+    "term": "API versioning",
+    "aliases": ["API version", "versioned API", "breaking change"],
+    "definition": "Publishing a changed API contract alongside the old one, so existing clients keep working while new ones opt in. Needed for any breaking change: renaming or removing a field, changing a type, or making a field required. In API Management the version goes in the path, a header or the query string; revisions are only for non-breaking changes.",
+    "example": "/mobile/v1/orders still returns deliveryDate for app 2.4, while /mobile/v2/orders returns estimatedDelivery.",
+    "icon": "api-management",
+    "lessons": ["11.1", "11.7"],
+    "related": ["Azure API Management", "Minimum supported app version", "Semantic versioning", "OpenAPI", "Revision"]
+  },
+  {
+    "term": "Minimum supported app version",
+    "aliases": ["minimum app version", "forced update", "force update"],
+    "definition": "The oldest app version the backend still serves, published by the backend and checked by the app at launch. Apps below it show a blocking update screen. The check only works in versions that already contain it, so ship it in the first release; Google Play offers an immediate in-app update flow, while iOS apps draw their own screen.",
+    "example": "The BFF's /mobile/config returns minSupported 2.6, read from App Configuration, so ops can raise it without a deploy.",
+    "icon": "mobile",
+    "lessons": ["11.1", "11.7"],
+    "related": ["API versioning", "Semantic versioning", "Azure App Configuration", "Feature flag"]
+  },
+  {
+    "term": "Offline-first",
+    "aliases": ["offline first", "offline sync", "local-first"],
+    "definition": "Designing an app to read from and write to a store on the device, syncing with the server in the background, so it works without a connection. Suits browsing, baskets and history; not payments or stock checks, which must be confirmed online. Azure has no offline-sync SDK for React Native, so the local store and sync queue are yours to build or choose.",
+    "example": "Basket and order history open in a tunnel from the phone's SQLite store; checkout waits for a connection.",
+    "icon": "mobile",
+    "lessons": ["11.1"],
+    "related": ["Optimistic UI", "Idempotency key", "Retry with exponential backoff"]
+  },
+  {
+    "term": "Optimistic UI",
+    "aliases": ["optimistic update", "optimistic updates"],
+    "definition": "Updating the screen as if a request has already succeeded, then reconciling when the server answers. It makes apps feel instant on slow networks, but every optimistic change needs a rollback path and a clear message when the server says no.",
+    "example": "Add to basket shows the item at once; if the server reports it sold out, the app removes it and says why.",
+    "lessons": ["11.1"],
+    "related": ["Offline-first", "Idempotency key"]
+  },
+  {
+    "term": "GraphQL",
+    "aliases": ["GraphQL API", "synthetic GraphQL", "GraphQL resolver"],
+    "definition": "A query language for APIs in which the client asks for exactly the fields it needs in one request. API Management supports pass-through GraphQL and synthetic GraphQL with resolvers over REST, Cosmos DB or Azure SQL in every tier. Queries usually go as POST to one URL, which defeats HTTP caching, and unbounded queries need depth and size limits.",
+    "example": "A synthetic GraphQL API in APIM resolves product, stock and reviews from three REST APIs in one query.",
+    "icon": "api-management",
+    "lessons": ["11.1"],
+    "related": ["Backend for frontend", "Azure API Management", "API Management policy"]
+  },
+  {
+    "term": "Cross-origin resource sharing",
+    "aliases": ["CORS", "preflight request", "CORS policy"],
+    "definition": "The browser rule that decides whether a page on one origin may call an API on another, using response headers and, for many requests, an OPTIONS preflight. Native mobile apps ignore it, so it is not a security control. Prefer same-origin routing, and list exact origins rather than a wildcard when cookies or credentials are involved.",
+    "example": "The shop calls /api through Front Door on the same host, so it needs no CORS; APIM's cors policy allows the wholesale portal's exact origin.",
+    "icon": "api-management",
+    "lessons": ["11.1", "6.3"],
+    "related": ["Azure API Management", "API Management policy", "Azure Front Door", "Static Web Apps"]
+  },
+  {
+    "term": "Idempotency key",
+    "aliases": ["Idempotency-Key", "idempotency token", "request ID"],
+    "definition": "A unique ID the client generates for one user action and sends with the request, often in an Idempotency-Key header. The server stores each key with its result for a period and answers a repeat with the stored result, so a retried POST does not create a second order or charge.",
+    "example": "A queued checkout retried after a tunnel carries the same key, and the API returns the original order number.",
+    "lessons": ["11.1"],
+    "related": ["Idempotent", "Retry with exponential backoff", "Transient fault", "Offline-first"]
+  }
+]

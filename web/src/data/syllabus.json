@@ -1262,7 +1262,7 @@
       "tagline": "Front-end delivery, customer sign-in, push, real-time, files, maps and mobile release.",
       "description": "What the shop's React web app and React Native mobile app need from Azure beyond an API: a backend shaped for each client, a fast and correctly cached front end, customer sign-in, push notifications, real-time updates, direct uploads, messaging and maps, and shipping and watching mobile apps after App Center.",
       "icon": "mobile",
-      "status": "planned",
+      "status": "in-progress",
       "lessons": [
         {
           "id": "11.1",
@@ -1278,7 +1278,8 @@
             "mobile",
             "api-management",
             "app-service"
-          ]
+          ],
+          "status": "ready"
         },
         {
           "id": "11.2",
