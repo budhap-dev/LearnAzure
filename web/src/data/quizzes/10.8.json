@@ -1,0 +1,111 @@
+[
+  {
+    "id": "10.8-q1",
+    "topic": "the default",
+    "scenario": "A Microsoft 365 company with SQL Server skills and Power BI reports is choosing its first analytics platform.",
+    "stem": "Where should the design review start?",
+    "options": [
+      "Azure Databricks, because it is the most capable Spark platform available on Azure today",
+      "Microsoft Fabric, moving off it only if a named need such as Spark at scale, MLOps or multicloud rules it out",
+      "Azure Synapse Analytics, because it has the longest track record of the three and the most mature dedicated SQL warehouse engine",
+      "Run all three in parallel for a year and see which the team prefers"
+    ],
+    "answer": 1,
+    "explanation": "For a Microsoft-centred team, Fabric gives one capacity, one lake, one catalog and Power BI on Direct Lake. Databricks is excellent, but adding it needs a reason the default cannot meet. Capability alone means a second bill, catalog and skill set for no named gain."
+  },
+  {
+    "id": "10.8-q2",
+    "topic": "Databricks request",
+    "scenario": "A new data scientist wants Azure Databricks to build one churn model on the gold tables, because she used it at her last job.",
+    "stem": "What is the best response?",
+    "options": [
+      "Approve Databricks, because data scientists should choose their own tools",
+      "Refuse, because Fabric cannot run machine learning",
+      "Move all of Northline's data into Databricks, so the churn model, the semantic models and every finance report share one platform from now on, with Fabric retired",
+      "Build the model with Fabric notebooks and experiments, and record the triggers that would justify Databricks, such as several production models needing MLOps"
+    ],
+    "answer": 3,
+    "explanation": "Fabric has Spark notebooks and MLflow experiments, enough for one model on data that already lives in OneLake. Personal preference is not a named need. Databricks becomes the right answer when MLOps at scale, heavy Spark or multicloud work appears, and the record says so in advance. Fabric can run ML, so refusing on that ground is wrong."
+  },
+  {
+    "id": "10.8-q3",
+    "topic": "Synapse status",
+    "stem": "Which statement about Azure Synapse Analytics is accurate as of October 2026?",
+    "options": [
+      "No retirement date has been announced for Synapse as a whole and it is supported, but new capabilities such as Direct Lake and mirroring are built in Fabric",
+      "Synapse retired in 2025 and all workspaces have been deleted",
+      "Synapse and Fabric are the same product sold under two names, so an existing Synapse estate needs no planning, assessment or migration work at all",
+      "Microsoft recommends Synapse dedicated SQL pools for all new warehouse projects"
+    ],
+    "answer": 0,
+    "explanation": "Microsoft still supports Synapse and has announced no retirement for the service as a whole. Only the Synapse Data Explorer preview retired, in October 2025. The investment goes into Fabric, which is why an existing estate should plan a phased move rather than an emergency one."
+  },
+  {
+    "id": "10.8-q4",
+    "topic": "acquired Synapse estate",
+    "scenario": "Northline buys a company whose reporting runs on a Synapse dedicated SQL pool with 180 stored procedures.",
+    "stem": "What should the first year look like?",
+    "options": [
+      "Rewrite every stored procedure as a Spark notebook in the first month, so the acquired team works on the same engine as the new data scientist from day one",
+      "Switch the pool off on day one and rebuild the reports from scratch",
+      "Keep it running, pause it out of hours, bring its gold tables into OneLake for group reporting, then migrate in phases with a parallel run before cutover",
+      "Leave it alone permanently, because migrations are always risky"
+    ],
+    "answer": 2,
+    "explanation": "A working warehouse is not an emergency. Pausing cuts compute cost, and copying its gold tables gives group reporting now. The Migration Assistant then moves schemas and code, with types such as money and datetimeoffset and some T-SQL needing rework. Leaving it alone forever ignores where new capabilities are built."
+  },
+  {
+    "id": "10.8-q5",
+    "topic": "Unity Catalog and Purview",
+    "stem": "How do Unity Catalog and Microsoft Purview relate when a company runs both Databricks and Fabric?",
+    "options": [
+      "Purview replaces Unity Catalog, so Unity Catalog should be switched off to avoid duplicate permissions on the same tables",
+      "Unity Catalog governs access, lineage and audit inside Databricks; Purview scans it and catalogues it alongside Fabric and other sources",
+      "Unity Catalog governs Fabric and Purview governs Databricks",
+      "They cannot be used together"
+    ],
+    "answer": 1,
+    "explanation": "Access is enforced where data is queried, which in Databricks is Unity Catalog. Serverless compute requires it, so switching it off is not an option. Purview gives one estate-wide catalog by scanning Unity Catalog's metadata and lineage next to Fabric, Azure SQL and Synapse."
+  },
+  {
+    "id": "10.8-q6",
+    "topic": "Databricks and Fabric together",
+    "scenario": "A Databricks team curates Delta tables in Unity Catalog. Finance wants Power BI reports on them.",
+    "stem": "What avoids a second copy of the data?",
+    "options": [
+      "A nightly pipeline that copies every Unity Catalog table into a Fabric Warehouse, with an incremental watermark so that only changed rows are moved each night",
+      "Exporting the tables to CSV for finance",
+      "Giving finance accounts in the Databricks workspace",
+      "Mirroring the Unity Catalog into Fabric, which copies only the catalog structure and reads the Delta tables in place through shortcuts"
+    ],
+    "answer": 3,
+    "explanation": "A mirrored Azure Databricks catalog is generally available. It syncs the catalog structure only, and the data is read through OneLake shortcuts, so Power BI can use Direct Lake with no duplicate. A nightly copy works, but it doubles storage and adds a pipeline that will one day fail."
+  },
+  {
+    "id": "10.8-q7",
+    "topic": "data mesh",
+    "scenario": "The CTO asks whether Northline, with one central data team of four, should adopt a data mesh.",
+    "stem": "What is the honest answer?",
+    "options": [
+      "Not yet: a mesh needs domains with their own data engineers. Adopt the cheap parts now, such as named owners, Fabric domains and certified data products",
+      "Yes, because a mesh is the modern replacement for a data warehouse",
+      "Yes, by creating one Fabric workspace per department straight away and letting each department load whatever data it wants, with the central team stepping back from ownership",
+      "No, because data mesh only works on Databricks"
+    ],
+    "answer": 0,
+    "explanation": "A data mesh solves an organisational problem, a central team becoming the bottleneck, and it needs people in each domain who can own data products. Without them, extra workspaces are just more places for data to go stale. The ideas work on Fabric or Databricks."
+  },
+  {
+    "id": "10.8-q8",
+    "topic": "cost shapes",
+    "stem": "Which pairing of platform and main cost driver is correct?",
+    "options": [
+      "Fabric: per query run against OneLake; Databricks: a fixed monthly licence per workspace; Synapse serverless SQL: per hour, whether used or not",
+      "Fabric: per user; Databricks: per notebook; Synapse dedicated SQL pool: per terabyte scanned",
+      "Fabric: a capacity per hour; Databricks: DBUs, plus VMs on classic compute; Synapse dedicated SQL pool: DWUs per hour, pausable",
+      "All three bill only for the storage they hold"
+    ],
+    "answer": 2,
+    "explanation": "Fabric bills its capacity by the hour, and you can pause it. Databricks bills DBUs, plus the VMs on classic compute, while serverless bundles both. A Synapse dedicated pool bills DWUs per hour and can be paused, and serverless SQL bills per terabyte processed. All of them bill compute while nobody is looking, which is why idle cost belongs in every review."
+  }
+]
