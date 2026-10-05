@@ -1,0 +1,160 @@
+[
+  {
+    "term": "Azure Notification Hubs",
+    "aliases": [
+      "Notification Hubs",
+      "notification hub",
+      "ANH"
+    ],
+    "definition": "Azure's push notification broker. It stores device installations with their tags and templates, holds your APNs and FCM credentials, and turns one send into deliveries to many phones through each platform's push service. Tiers cap active devices: 500 on Free, 200,000 on Basic and 10 million on Standard, which also adds scheduled sends and per-message telemetry.",
+    "example": "ntf-shop-prod, on Standard, sends Northline's out-for-delivery and back-in-stock alerts to 400,000 installs.",
+    "icon": "notification-hubs",
+    "lessons": [
+      "11.4",
+      "1.2"
+    ],
+    "related": [
+      "Device installation",
+      "Tag expression",
+      "Apple Push Notification service",
+      "Firebase Cloud Messaging"
+    ]
+  },
+  {
+    "term": "Apple Push Notification service",
+    "aliases": [
+      "APNs",
+      "APNS",
+      "Apple push",
+      ".p8 key",
+      "APNs token authentication"
+    ],
+    "definition": "Apple's service that delivers push notifications to iPhones and other Apple devices; nothing else can reach them. Backends authenticate with a .p8 signing key (Key ID, Team ID and bundle ID), which does not expire like the older yearly certificates. Sandbox and production are separate endpoints, and the one you send to must match how the app was signed.",
+    "example": "Northline's hub holds the App Store .p8 key and the production endpoint; the original key lives in Key Vault.",
+    "lessons": [
+      "11.4"
+    ],
+    "related": [
+      "Azure Notification Hubs",
+      "Device token",
+      "Firebase Cloud Messaging"
+    ]
+  },
+  {
+    "term": "Firebase Cloud Messaging",
+    "aliases": [
+      "FCM",
+      "FCM v1",
+      "FCM HTTP v1",
+      "Google push",
+      "GCM"
+    ],
+    "definition": "Google's free push service, the only route to Android phones with Google Play services, and able to reach iPhones too through your APNs key. The legacy FCM API was shut down from July 2024; only FCM v1 works, authenticated with a Google service account. Notification Hubs treats FCM v1 as a separate platform with its own installations and payload shape.",
+    "example": "Ana pasted the FCM v1 service account's project ID, client email and private key into the hub's Google (FCM v1) settings.",
+    "lessons": [
+      "11.4"
+    ],
+    "related": [
+      "Azure Notification Hubs",
+      "Apple Push Notification service",
+      "Device token"
+    ]
+  },
+  {
+    "term": "Device token",
+    "aliases": [
+      "push token",
+      "PNS handle",
+      "registration token",
+      "push channel",
+      "Expo push token"
+    ],
+    "definition": "The address APNs or FCM gives one app on one device, which a backend needs before it can push to it. It changes on reinstall, restore and sometimes without warning, so the app should send the current token to the backend on every launch. A token is not a credential; tie it to the signed-in user on the server rather than trusting a user ID the app supplies.",
+    "example": "On each launch Leo's app sends its FCM v1 or APNs token to the Node API, which updates the installation.",
+    "icon": "mobile",
+    "lessons": [
+      "11.4"
+    ],
+    "related": [
+      "Device installation",
+      "Apple Push Notification service",
+      "Firebase Cloud Messaging"
+    ]
+  },
+  {
+    "term": "Device installation",
+    "aliases": [
+      "Notification Hubs installation",
+      "installation ID",
+      "push installation"
+    ],
+    "definition": "Notification Hubs' record of one app on one device: an installation ID the app keeps, the platform, the device token, up to 60 tags and any templates. Creating or replacing it is idempotent, tags can be patched, and the hub removes installations whose tokens the platform reports as dead. Let the backend write installations so it controls the tags.",
+    "example": "Installation 7f3c... is platform fcmv1, tagged user:8812, region:uk and stock:SKU-4471.",
+    "icon": "notification-hubs",
+    "lessons": [
+      "11.4"
+    ],
+    "related": [
+      "Device token",
+      "Tag expression",
+      "Notification template",
+      "Idempotent"
+    ]
+  },
+  {
+    "term": "Tag expression",
+    "aliases": [
+      "push tag",
+      "notification tag",
+      "Notification Hubs tag",
+      "audience filter"
+    ],
+    "definition": "The Boolean filter that chooses which installations receive a Notification Hubs send, built from tags with && (and), || (or), ! (not) and brackets. Only-OR expressions can use 20 tags, only-AND 10, and mixed ones 6. A send with no tag expression is a broadcast to every device, so guard against it.",
+    "example": "optin:marketing && region:uk reaches UK customers who opted in to marketing, and nobody else.",
+    "lessons": [
+      "11.4"
+    ],
+    "related": [
+      "Device installation",
+      "Azure Notification Hubs",
+      "Notification template"
+    ]
+  },
+  {
+    "term": "Notification template",
+    "aliases": [
+      "Notification Hubs template",
+      "template registration",
+      "push template"
+    ],
+    "definition": "A payload shape stored with an installation, with placeholders such as $(title) that Notification Hubs fills from properties the backend sends. One send then produces the right APNs or FCM v1 payload, and the right language, for every device. Old app versions keep the template they registered, which protects them from payload changes.",
+    "example": "A phone set to Hindi registers a template that reads $(body_hi), so the same send arrives in Hindi.",
+    "lessons": [
+      "11.4"
+    ],
+    "related": [
+      "Device installation",
+      "Tag expression",
+      "API versioning"
+    ]
+  },
+  {
+    "term": "Silent notification",
+    "aliases": [
+      "background notification",
+      "data-only message",
+      "content-available",
+      "background push"
+    ],
+    "definition": "A push that carries data and shows nothing, used to wake the app so it can refresh in the background. iOS sends them at low priority, throttles them (Apple suggests no more than two or three an hour) and drops them if the user force-quit the app. Treat them as a hint, never as guaranteed delivery.",
+    "example": "When an order's status changes, a silent notification nudges the app to refresh its cached order history.",
+    "lessons": [
+      "11.4"
+    ],
+    "related": [
+      "Azure Notification Hubs",
+      "Offline-first",
+      "Apple Push Notification service"
+    ]
+  }
+]
