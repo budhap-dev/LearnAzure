@@ -487,6 +487,18 @@ main { flex: 1; width: 100%; max-width: var(--max); margin: 0 auto; padding: 1.4
 .state-dot.needs-review { background: var(--warn); box-shadow: 0 0 0 3px var(--warn-bg); }
 .state-dot.done { background: var(--good); box-shadow: 0 0 0 3px var(--good-bg); }
 .module-test-link { margin-top: 0.8rem; }
+.course-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; margin: 1rem 0 0.4rem; }
+.course-toggles { display: flex; gap: 0.4rem; margin-left: auto; }
+details.module-section { margin-top: 0.8rem; padding-top: 0; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); }
+details.module-section > summary { list-style: none; cursor: pointer; margin: 0; padding: 0.8rem 1rem; border-radius: var(--radius); }
+details.module-section > summary::-webkit-details-marker { display: none; }
+details.module-section > summary:hover { background: color-mix(in srgb, var(--mc, var(--accent)) 7%, transparent); }
+details.module-section > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+details.module-section[open] > summary { border-bottom: 1px solid var(--border); border-radius: var(--radius) var(--radius) 0 0; }
+details.module-section > .lesson-list { padding: 0.8rem; }
+details.module-section > .module-test-link { margin: 0; padding: 0 0.8rem 0.9rem; }
+.module-head .chevron { flex: none; width: 0.6rem; height: 0.6rem; margin: 0 0.35rem 0.25rem 0.2rem; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform 0.2s ease; }
+details[open] > .module-head .chevron { margin-bottom: -0.25rem; transform: rotate(-135deg); }
 .term-cloud { display: flex; flex-wrap: wrap; gap: 0.4rem; align-items: center; }
 .term-chip { display: inline-block; padding: 0.15rem 0.6rem; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-2); color: var(--text); font-size: 0.85rem; cursor: pointer; text-decoration: none; }
 .term-chip:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
@@ -762,6 +774,12 @@ p.callout { padding: 0.8rem 1rem; }
   .lesson-status { align-items: flex-start; flex-direction: row; }
   .pager { grid-template-columns: 1fr; }
   .module-head.big { flex-wrap: wrap; }
+  details.module-section > summary { padding: 0.7rem 0.75rem; gap: 0.6rem; }
+  details.module-section > summary .az-icon { display: none; }
+  details.module-section > summary .module-head-text > p.muted:not(.small) { display: none; }
+  details.module-section > summary h2 { font-size: 1.15rem; }
+  details.module-section > summary .ring { width: 40px; height: 40px; }
+  details.module-section > .lesson-list { padding: 0.6rem; }
   .exam-result { flex-direction: column; align-items: flex-start; }
   .glossary-controls { flex-direction: column; }
   .diagram svg { max-width: none; }
