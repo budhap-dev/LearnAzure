@@ -9,6 +9,15 @@ import { useProgress } from '../lib/useProgress';
 
 const LETTERS = ['#', ...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'];
 
+/** Scrolls an element to just below the sticky site header and A-Z bar, which would otherwise cover it. */
+function scrollBelowBars(el: HTMLElement | null): void {
+  if (!el) return;
+  const header = document.querySelector('.site-header')?.getBoundingClientRect().height ?? 0;
+  const letters = document.querySelector('.letter-bar')?.getBoundingClientRect().height ?? 0;
+  // 'instant' overrides the page's smooth scroll-behavior: animating across the whole glossary is slow and lands late.
+  window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - header - letters - 12, behavior: 'instant' });
+}
+
 /**
  * A searchable A-Z of every term the course uses. Each entry links to the lesson that
  * teaches it and to related terms. `?q=` searches; `?term=slug` deep-links to one entry.
@@ -38,12 +47,16 @@ export function Glossary() {
   useEffect(() => {
     if (!focusSlug || query) return;
     const el = document.getElementById(`term-${focusSlug}`);
-    if (el) {
-      el.scrollIntoView({ block: 'center', behavior: 'smooth' });
-      el.classList.add('flash');
-      const t = setTimeout(() => el.classList.remove('flash'), 1800);
-      return () => clearTimeout(t);
-    }
+    if (!el) return;
+    // Wait a frame: Layout's scroll-to-top on navigation runs after this effect and would undo it.
+    // Jump rather than animate - the full glossary is far too tall for a smooth scroll.
+    const frame = requestAnimationFrame(() => scrollBelowBars(el));
+    el.classList.add('flash');
+    const t = setTimeout(() => el.classList.remove('flash'), 1800);
+    return () => {
+      cancelAnimationFrame(frame);
+      clearTimeout(t);
+    };
   }, [focusSlug, query]);
 
   const filtered = useMemo(() => (module ? GLOSSARY.filter((e) => moduleOf(e) === module) : GLOSSARY), [module]);
@@ -92,7 +105,7 @@ export function Glossary() {
       {!searching && (
         <nav className="letter-bar" aria-label="Jump to letter">
           {LETTERS.map((l) => (
-            <button key={l} type="button" disabled={!present.has(l)} onClick={() => document.getElementById(`letter-${l}`)?.scrollIntoView({ block: 'start', behavior: 'smooth' })}>
+            <button key={l} type="button" disabled={!present.has(l)} onClick={() => scrollBelowBars(document.getElementById(`letter-${l}`))}>
               {l}
             </button>
           ))}
