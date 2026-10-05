@@ -37,8 +37,10 @@ lesson quizzes, timed, graded). A **final learning test** draws from the whole c
 | 7 | DevOps on Azure ✅ | 8 | Azure DevOps vs GitHub, pipelines, GitHub Actions, IaC with Bicep/Terraform, environments, release strategies |
 | 8 | Azure AI ✅ | 8 | Azure OpenAI and Microsoft Foundry, AI Services, AI Search, RAG, agents, responsible AI, cost and security of AI |
 | 9 | Architecture and leading a team ✅ | 5 | Reference architectures, landing zones, migration, governance, certification map, capstone scenarios |
+| 10 | Data and analytics | 8 | Fabric and OneLake, Data Factory and mirroring, lakehouse and warehouse, real-time analytics, Power BI, Purview, choosing a platform |
+| 11 | Web and mobile clients | 7 | Backend for frontend, edge caching, customer sign-in, push, real-time, files, messaging and maps, shipping mobile apps |
 
-Around 63 lessons. Modules are built one at a time; each is verified end-to-end before the
+Around 78 lessons. Modules are built one at a time; each is verified end-to-end before the
 next starts.
 
 ### Module 1 — Cloud and Azure foundations — **shipped**
@@ -218,7 +220,61 @@ reviews that record their decisions.
 Every lesson has an 8-question quiz; the module test is 14 scenario questions plus 10 drawn
 at random from the lesson quizzes. 32 new glossary terms (522 in total).
 
-With Module 9 the planned course is complete: 9 modules, 63 lessons, v1.0.0.
+With Module 9 the first planned course was complete: 9 modules, 63 lessons, v1.0.0. Modules 10
+and 11 extend it into the two biggest gaps left: analytics, and what web and mobile clients
+need from Azure.
+
+### Module 10 — Data and analytics — **planned**
+
+| Id | Lesson |
+|----|--------|
+| 10.1 | The analytics landscape - from transactions to insight |
+| 10.2 | Microsoft Fabric and OneLake |
+| 10.3 | Getting data in - Data Factory, mirroring and change data capture |
+| 10.4 | Lakehouse, warehouse and modelling for analytics |
+| 10.5 | Real-time analytics - Eventstreams, Eventhouse and Stream Analytics |
+| 10.6 | Power BI - semantic models, Direct Lake and embedding |
+| 10.7 | Data governance with Microsoft Purview |
+| 10.8 | Choosing an analytics platform - Fabric, Databricks or Synapse |
+
+Turning the shop's data into answers without slowing the shop down. It starts from finance's
+Monday-morning report locking the orders database during checkout and ends with mirrored
+data in OneLake, a medallion lakehouse, a shared semantic model behind every report, a live
+view of the clickstream, Purview knowing where personal data lives, and a platform choice
+recorded as a decision. Written for a SQL Server professional: Module 3 covered the stores
+an application runs on; this module covers what happens to that data afterwards.
+
+Glossary term ownership (each term is defined once, in the lesson that owns it):
+
+| Lesson | Terms |
+|--------|-------|
+| 10.1 | Data lake, Lakehouse, Medallion architecture, ELT, Batch processing, Business intelligence |
+| 10.2 | Microsoft Fabric, OneLake, Fabric capacity, Capacity unit, Fabric workspace, OneLake shortcut, Delta Lake, Parquet, Smoothing and throttling |
+| 10.3 | Azure Data Factory, Data pipeline, Copy activity, Dataflow Gen2, Mirroring, Change data capture, Incremental load, Integration runtime, On-premises data gateway |
+| 10.4 | Fabric Lakehouse, Fabric Warehouse, SQL analytics endpoint, Apache Spark, Notebook, Star schema, Fact table, Dimension table, Slowly changing dimension |
+| 10.5 | Real-Time Intelligence, Eventstream, Eventhouse, Fabric Activator, Azure Stream Analytics, Windowing, Hot path and cold path, Azure Data Explorer |
+| 10.6 | Power BI, Semantic model, DAX, Import mode, DirectQuery, Direct Lake, Row-level security, Power BI Embedded, Power BI Pro |
+| 10.7 | Microsoft Purview, Data map, Unified Catalog, Data lineage, Data classification, Sensitivity label, Data steward, Data loss prevention |
+| 10.8 | Azure Databricks, Unity Catalog, Azure Synapse Analytics, Dedicated SQL pool, Serverless SQL pool, Data mesh, Data product |
+
+Existing terms this module links to rather than redefines: OLTP, OLAP, Data warehouse, ETL
+(3.7), Hierarchical namespace (3.1), Azure Event Hubs, Apache Kafka (5.4), KQL (6.2), Data
+residency (1.3), Reservation (shared), Microsoft Entra ID (shared).
+
+### Module 11 — Web and mobile clients — **planned**
+
+| Id | Lesson |
+|----|--------|
+| 11.1 | The client-facing toolkit and the backend for frontend |
+| 11.2 | Delivering the front end fast - Front Door, caching and assets |
+| 11.3 | Customer sign-in with Entra External ID |
+| 11.4 | Push notifications with Notification Hubs |
+| 11.5 | Real-time updates - SignalR Service and Web PubSub |
+| 11.6 | Files, messaging and maps |
+| 11.7 | Shipping and watching mobile apps |
+
+What the shop's React web app and React Native app need from Azure beyond an API. Built after
+Module 10 has been reviewed; its glossary ownership table is settled when the module starts.
 
 ## App architecture
 

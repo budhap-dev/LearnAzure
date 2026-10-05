@@ -23,7 +23,7 @@ const GRADES: { grade: Grade; label: string; key: string }[] = [
   { grade: 'easy', label: 'Easy', key: '3' },
 ];
 
-const isScope = (s: string | null): s is Scope => s === 'studied' || s === 'all' || /^m[1-9]$/.test(s ?? '');
+const isScope = (s: string | null): s is Scope => s === 'studied' || s === 'all' || /^m[1-9]\d*$/.test(s ?? '');
 
 /**
  * Glossary review: flashcards over the glossary with spaced repetition (lib/review.ts). Pick a
@@ -171,7 +171,7 @@ export function Review() {
       <div className="glossary-controls">
         <select value={scope} onChange={(e) => setParams({ scope: e.target.value }, { replace: true })} aria-label="Which terms to review">
           <option value="studied">Terms from lessons you have opened ({studied.length})</option>
-          {MODULES.map((m) => (
+          {MODULES.filter((m) => m.status !== 'planned').map((m) => (
             <option key={m.number} value={`m${m.number}`}>Module {m.number} · {m.title}</option>
           ))}
           <option value="all">All terms</option>

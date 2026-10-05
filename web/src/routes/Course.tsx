@@ -12,7 +12,7 @@ export function Course() {
     <div className="course">
       <h1>The course</h1>
       <p className="lede">
-        Nine modules, {MODULES.reduce((n, m) => n + m.lessons.length, 0)} lessons. Work through them in
+        {MODULES.length} modules, {MODULES.reduce((n, m) => n + m.lessons.length, 0)} lessons. Work through them in
         order, or jump to what you need today. Each ready module ends with a timed test.
       </p>
       {READY_MODULES.length > 0 && (
