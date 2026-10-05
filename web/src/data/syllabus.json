@@ -1346,7 +1346,8 @@
             "signalr",
             "web-pubsub",
             "function-apps"
-          ]
+          ],
+          "status": "ready"
         },
         {
           "id": "11.6",
