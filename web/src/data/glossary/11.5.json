@@ -1,0 +1,70 @@
+[
+  {
+    "term": "WebSocket",
+    "aliases": ["WebSockets", "wss", "web sockets"],
+    "definition": "A protocol that upgrades an HTTP request into a long-lived, two-way connection, so server and client can send each other messages at any time. Efficient, but stateful: something must hold every open connection, route messages to the right one and cope when connections drop.",
+    "example": "The order-tracking page holds one WebSocket to SignalR Service and hears about a status change the moment it happens.",
+    "lessons": ["11.5"],
+    "related": ["Server-sent events", "Polling", "Azure Web PubSub", "Azure SignalR Service"]
+  },
+  {
+    "term": "Server-sent events",
+    "aliases": ["SSE", "EventSource", "server sent events"],
+    "definition": "A browser standard where the server keeps one HTTP response open and streams text events down it. One-way only, server to client, and the browser reconnects automatically. Azure Front Door does not support it, so it cannot sit behind a Front Door route.",
+    "example": "Ana ruled out SSE for order tracking because the shop's API traffic all passes through Front Door.",
+    "lessons": ["11.5"],
+    "related": ["WebSocket", "Polling", "Azure Front Door"]
+  },
+  {
+    "term": "Polling",
+    "aliases": ["short polling", "long polling", "poll"],
+    "definition": "The client asking the server for fresh data on a timer. Simple and works everywhere, but its cost grows with the number of watchers times the frequency, not with how often anything changes. Long polling holds each request open until there is news, which helps a little.",
+    "example": "20,000 tabs polling every five seconds sent 4,000 requests a second to the API, almost all answered \"no change\".",
+    "lessons": ["11.5"],
+    "related": ["WebSocket", "Server-sent events", "Rate limiting"]
+  },
+  {
+    "term": "Azure SignalR Service",
+    "aliases": ["SignalR Service", "Azure SignalR", "SignalR"],
+    "definition": "A managed service that holds clients' real-time connections and speaks the SignalR protocol. Its client libraries reconnect automatically and fall back from WebSocket to server-sent events or long polling. It runs in Default mode with an ASP.NET Core hub server, or in serverless mode with Azure Functions or the REST API.",
+    "example": "sig-shop-prod, on Premium in serverless mode, pushes order status changes to each signed-in customer.",
+    "icon": "signalr",
+    "lessons": ["11.5"],
+    "related": ["SignalR hub", "SignalR serverless mode", "SignalR unit", "Azure Web PubSub"]
+  },
+  {
+    "term": "Azure Web PubSub",
+    "aliases": ["Web PubSub", "Web PubSub for Socket.IO", "Socket.IO on Azure"],
+    "definition": "A managed service for plain WebSocket connections and publish-subscribe groups. Any WebSocket client can connect, it has server SDKs including JavaScript, and Web PubSub for Socket.IO (generally available since November 2023) hosts Socket.IO apps without a Redis adapter. It complements SignalR Service rather than replacing it.",
+    "example": "The customer service chat moved from a self-hosted Socket.IO server to Web PubSub for Socket.IO with a few lines of change.",
+    "icon": "web-pubsub",
+    "lessons": ["11.5"],
+    "related": ["Azure SignalR Service", "WebSocket", "Publish-subscribe", "SignalR unit"]
+  },
+  {
+    "term": "SignalR hub",
+    "aliases": ["SignalR hubs", "hub server"],
+    "definition": "The named endpoint that SignalR clients connect to and call methods on, and that the server uses to send to users, groups or everyone. In Default mode an ASP.NET Core app hosts the hub; in serverless mode the hub is just a name that Functions and the REST API send through.",
+    "example": "The React page and the mobile app both connect to the orders hub on sig-shop-prod.",
+    "icon": "signalr",
+    "lessons": ["11.5"],
+    "related": ["Azure SignalR Service", "SignalR serverless mode"]
+  },
+  {
+    "term": "SignalR serverless mode",
+    "aliases": ["SignalR serverless", "negotiate function"],
+    "definition": "A SignalR Service mode with no hub server. A negotiate Azure Function checks who the caller is and returns the service URL and a short-lived token; Functions bindings or the REST API then send messages, and upstream webhooks deliver client messages back. The way to use SignalR from a Node or other non-.NET back end.",
+    "example": "A notify Function triggered by the order-events topic sends each status change to the customer's user ID.",
+    "icon": "function-apps",
+    "lessons": ["11.5"],
+    "related": ["Azure SignalR Service", "Azure Functions", "Serverless", "SignalR hub"]
+  },
+  {
+    "term": "SignalR unit",
+    "aliases": ["Web PubSub unit", "unit count", "SignalR units"],
+    "definition": "The capacity and billing block for SignalR Service and Web PubSub. On Standard and Premium one unit holds 1,000 concurrent connections and includes 1 million outbound messages a day, counted in 2 KB chunks; extra messages are billed per million. Standard scales by hand to 100 units; Premium can autoscale.",
+    "example": "Black Friday needs about 26,000 connections, so autoscale lets sig-shop-prod grow from 3 to 30 units.",
+    "lessons": ["11.5"],
+    "related": ["Azure SignalR Service", "Azure Web PubSub", "Autoscale"]
+  }
+]
