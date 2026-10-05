@@ -6,6 +6,7 @@ import { AzureIcon } from './AzureIcon';
 import { CodeBlock } from './CodeBlock';
 import { Diagram, parseDiagram } from './Diagram';
 import { remarkLessonSyntax } from '../lib/remarkLessonSyntax';
+import { rehypeTableLabels } from '../lib/rehypeTableLabels';
 import { slugify } from '../lib/lessons';
 import { lessonById, moduleByNumber } from '../lib/syllabus';
 
@@ -91,9 +92,10 @@ const components: Components = {
     if (codeNode) return <CodeBlock code={code} language={lang} />;
     return <pre>{children}</pre>;
   },
-  table({ children }) {
+  table({ node, children }) {
+    const stacked = node?.properties?.dataStack === 'true';
     return (
-      <div className="table-wrap">
+      <div className={stacked ? 'table-wrap table-stack' : 'table-wrap'}>
         <table>{children}</table>
       </div>
     );
@@ -113,6 +115,7 @@ const components: Components = {
 };
 
 const plugins = [remarkGfm, remarkLessonSyntax];
+const rehypePlugins = [rehypeTableLabels];
 
 /** The default transform strips unknown schemes; ours (az:, gl:, lesson:, module:, hl:) are handled by the renderers above. */
 const keepUrl = (url: string) => url;
@@ -120,7 +123,7 @@ const keepUrl = (url: string) => url;
 export function Markdown({ source }: { source: string }) {
   const rendered = useMemo(
     () => (
-      <ReactMarkdown remarkPlugins={plugins} components={components} urlTransform={keepUrl}>
+      <ReactMarkdown remarkPlugins={plugins} rehypePlugins={rehypePlugins} components={components} urlTransform={keepUrl}>
         {source}
       </ReactMarkdown>
     ),
