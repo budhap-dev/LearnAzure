@@ -1,0 +1,111 @@
+[
+  {
+    "id": "11.4-q1",
+    "topic": "how push travels",
+    "stem": "How does a push notification from Northline's backend actually reach an iPhone?",
+    "options": [
+      "The Node API opens a connection to the phone using the device token as its address",
+      "Notification Hubs keeps its own connection to every phone that has the app installed",
+      "Notification Hubs hands it to APNs, which delivers it to the device",
+      "The app polls Notification Hubs in the background for new messages"
+    ],
+    "answer": 2,
+    "explanation": "Only Apple's push service can deliver to an iPhone; Notification Hubs stores devices and credentials and calls APNs for you. It does not hold connections to phones itself, and the device token is an address for APNs to use, not one your backend can connect to."
+  },
+  {
+    "id": "11.4-q2",
+    "topic": "tag security",
+    "scenario": "Leo suggests the app registers itself directly with the hub using a Listen connection string, adding its own user and interest tags.",
+    "stem": "What is the main problem with this design?",
+    "options": [
+      "Listen keys cannot create installations, only read them",
+      "A tampered app could add another customer's user tag and receive their notifications",
+      "Installations created from a device expire after 90 days",
+      "Tags set from the device are ignored by tag expressions"
+    ],
+    "answer": 1,
+    "explanation": "Tags decide who receives what, so they act as permissions. If the app sets them, a modified app can tag itself as someone else. The API should authenticate the user and set the tags itself. Listen rights do allow a device to register, which is exactly why this is risky."
+  },
+  {
+    "id": "11.4-q3",
+    "topic": "tag expressions",
+    "scenario": "Marketing wants the spring promotion to reach UK customers who opted in to marketing, and nobody else.",
+    "stem": "Which send is right?",
+    "options": [
+      "optin:marketing && region:uk",
+      "A broadcast with no tag expression, with the app hiding the message for non-UK users",
+      "optin:marketing || region:uk",
+      "region:uk, since the app shows its own consent screen before displaying a promotion"
+    ],
+    "answer": 0,
+    "explanation": "Both conditions must hold, so the expression uses AND. Using OR would also reach every UK customer who never opted in. A broadcast sends to every device, and the app cannot reliably suppress a notification the operating system has already shown."
+  },
+  {
+    "id": "11.4-q4",
+    "topic": "FCM v1",
+    "scenario": "After an old hub is reused for a new Android build, iPhones receive pushes but Android phones receive nothing. The hub has only an FCM legacy server key configured.",
+    "stem": "What is the fix?",
+    "options": [
+      "Rotate the legacy server key in the Firebase console and paste the new one into the hub",
+      "Move the hub to the Standard tier, which still supports legacy FCM",
+      "Send Android notifications through APNs using the .p8 key instead",
+      "Add FCM v1 service account credentials and register devices as FCM v1 with v1 payloads"
+    ],
+    "answer": 3,
+    "explanation": "Google shut down the legacy FCM API from July 2024, so only FCM v1 delivers. Notification Hubs treats FCM v1 as a separate platform, needing service account credentials, FCM v1 installations and the new payload shape. A fresh legacy key does not help, because the legacy API itself is gone."
+  },
+  {
+    "id": "11.4-q5",
+    "topic": "tiers",
+    "stem": "Northline's app has about 400,000 active installs. Which Notification Hubs tier fits production?",
+    "options": [
+      "Free, because the first million pushes a month cost nothing",
+      "Basic, because it includes 10 million pushes a month",
+      "Standard, because Basic is limited to 200,000 active devices",
+      "Any tier, because tiers differ only in how many pushes are included"
+    ],
+    "answer": 2,
+    "explanation": "Tiers cap active devices: 500 on Free, 200,000 on Basic and 10 million on Standard, which also adds scheduled sends and per-message telemetry. Basic does include 10 million pushes, but the device limit rules it out before the push count matters."
+  },
+  {
+    "id": "11.4-q6",
+    "topic": "templates",
+    "stem": "What does a notification template let Northline's backend do?",
+    "options": [
+      "Send one set of properties that each installation turns into its own platform and language payload",
+      "Store reusable promotional campaigns that marketing can schedule from the Azure portal",
+      "Define the audience of a send, in place of a tag expression",
+      "Validate payloads against Apple's and Google's size limits before sending"
+    ],
+    "answer": 0,
+    "explanation": "Each installation registers templates such as an APNs or FCM v1 body with placeholders like $(title), and the hub fills them from the properties the backend sends. That keeps the backend platform-neutral and allows per-language bodies. Audiences are chosen by tags and tag expressions, not templates."
+  },
+  {
+    "id": "11.4-q7",
+    "topic": "silent notifications",
+    "scenario": "Ana wants to use silent notifications every five minutes to keep each phone's cached order history fresh.",
+    "stem": "What should you tell her?",
+    "options": [
+      "That works, as long as the payload stays under 4 KB",
+      "Silent notifications always arrive, so they suit any background refresh",
+      "Only Android supports silent notifications, so iPhones need polling instead",
+      "iOS throttles them, so treat them as a hint and fetch fresh data when the app opens"
+    ],
+    "answer": 3,
+    "explanation": "Apple treats background notifications as low priority, suggests no more than two or three an hour, and drops them if the user force-quit the app. They are useful hints, not a delivery guarantee. iOS does support them, which is why they are tempting, but not at this rate."
+  },
+  {
+    "id": "11.4-q8",
+    "topic": "choosing a push service",
+    "scenario": "A small Expo team with 20,000 installs sends only order updates to individual customers, and has no Azure backend.",
+    "stem": "Which is the most sensible choice?",
+    "options": [
+      "Notification Hubs Standard, because it has an SLA and scales to millions of devices",
+      "The Expo push service, sending to tokens stored with each order",
+      "A custom WebSocket connection held open from every phone",
+      "Notification Hubs Free, because it is free too"
+    ],
+    "answer": 1,
+    "explanation": "Expo's push service is free, simple, and its limit of 600 notifications a second per project is no constraint for one-to-one order updates. Notification Hubs earns its cost with segments, server-side tags and scale on an Azure backend. Its Free tier allows only 500 active devices and has no SLA."
+  }
+]

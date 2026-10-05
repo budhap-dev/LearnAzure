@@ -1329,7 +1329,8 @@
             "notification-hubs",
             "mobile",
             "function-apps"
-          ]
+          ],
+          "status": "ready"
         },
         {
           "id": "11.5",
