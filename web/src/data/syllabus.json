@@ -1157,7 +1157,7 @@
         {
           "id": "10.3",
           "title": "Getting data in - Data Factory, mirroring and change data capture",
-          "summary": "Moving data from Azure SQL, on-premises SQL Server and SaaS into the lake: pipelines and copy activities, Dataflow Gen2, mirroring for near-real-time replicas, incremental loads with change data capture, and gateways for data behind a firewall.",
+          "summary": "Moving data from Azure SQL, on-premises SQL Server and SaaS into the lake: mirroring for near-real-time replicas, Copy jobs and pipelines, Dataflow Gen2, incremental loads with watermarks or change data capture, and gateways for data behind a firewall.",
           "minutes": 15,
           "objectives": [
             "Choose between mirroring, a pipeline copy and a dataflow for a source",
@@ -1169,7 +1169,8 @@
             "data-factory",
             "azure-sql",
             "sql-server"
-          ]
+          ],
+          "status": "ready"
         },
         {
           "id": "10.4",

@@ -1,0 +1,111 @@
+[
+  {
+    "id": "10.3-q1",
+    "topic": "mirroring first",
+    "scenario": "A nightly job copies the whole Azure SQL orders database into the lakehouse. It takes four hours and sometimes overruns into trading hours.",
+    "stem": "What is the best first replacement to try?",
+    "options": [
+      "Run the same full copy twice as often, so each run is fresher and the gap between runs is shorter",
+      "Move the job to a bigger integration runtime so the four-hour full copy finishes before trading starts",
+      "Mirror the orders database into Fabric so changes replicate continuously",
+      "Point the finance reports at a read replica instead of the lakehouse"
+    ],
+    "answer": 2,
+    "explanation": "Azure SQL Database is a supported mirroring source: Fabric snapshots it once, then applies changes in near real time, with free replication compute. A bigger runtime only makes a full copy finish sooner; it still re-reads every row every night, and the cost grows with the business."
+  },
+  {
+    "id": "10.3-q2",
+    "topic": "watermark deletes",
+    "scenario": "An hourly Copy job loads the ERP stock table using its LastModified column as a watermark. Months later, the lake still shows items the ERP deleted in the spring.",
+    "stem": "Why does the lake still show the deleted items?",
+    "options": [
+      "A watermark finds rows whose value went up; a deleted row leaves nothing to find",
+      "The Copy job appends instead of merging, so changed rows are duplicated and old versions never disappear",
+      "The on-premises data gateway caches earlier query results between runs and serves the stale rows again",
+      "LastModified is stored in UTC and the ERP uses local time"
+    ],
+    "answer": 0,
+    "explanation": "Watermark loads see inserts and updates only. Deletes need change data capture, or a periodic reconciliation against the source's keys. Append-versus-merge affects duplicates of changed rows, not rows that vanished from the source."
+  },
+  {
+    "id": "10.3-q3",
+    "topic": "gateway vs integration runtime",
+    "stem": "Which component lets Fabric pipelines, Copy jobs, dataflows and mirroring reach a SQL Server behind a corporate firewall?",
+    "options": [
+      "The Azure integration runtime",
+      "The self-hosted integration runtime",
+      "A private endpoint on the Fabric workspace",
+      "The on-premises data gateway"
+    ],
+    "answer": 3,
+    "explanation": "Fabric and Power BI use the on-premises data gateway, a Windows service inside the network that connects outbound to Azure. The self-hosted integration runtime does the same job for Azure Data Factory and Synapse, but Fabric cannot use it."
+  },
+  {
+    "id": "10.3-q4",
+    "topic": "dataflow fit",
+    "scenario": "Marketing's campaign tool is a SaaS product with a paged REST API. It returns a few thousand awkwardly nested rows a day.",
+    "stem": "Which ingestion tool fits best?",
+    "options": [
+      "Mirroring, because it keeps the data fresh in near real time without building any pipeline",
+      "Dataflow Gen2, using Power Query to connect, flatten and load it",
+      "A Copy job with change data capture enabled on the source, so only changed rows are moved each day",
+      "Event Hubs Capture into the data lake"
+    ],
+    "answer": 1,
+    "explanation": "Dataflow Gen2 is built for small, messy sources that need reshaping, and the volume is tiny. Mirroring only covers supported databases, and you cannot enable CDC on someone else's SaaS API."
+  },
+  {
+    "id": "10.3-q5",
+    "topic": "CDC vs mirroring on Azure SQL",
+    "scenario": "A team enabled change data capture on an Azure SQL database for an old SSIS feed. Now they want to mirror the same database into Fabric.",
+    "stem": "What will they find?",
+    "options": [
+      "Mirroring reuses the CDC change tables, so it starts faster",
+      "Azure SQL Database cannot be mirrored while CDC is enabled",
+      "Mirroring works, but only for tables without primary keys",
+      "They must install an on-premises data gateway first"
+    ],
+    "answer": 1,
+    "explanation": "Mirroring for Azure SQL Database reads changes itself and refuses databases with CDC enabled. They need to retire the old feed, or keep CDC and use a Copy job instead. Reusing CDC is how mirroring works for SQL Server 2016 to 2022, which is what makes the first option tempting."
+  },
+  {
+    "id": "10.3-q6",
+    "topic": "ADF vs Fabric Data Factory",
+    "stem": "Which statement about Azure Data Factory and Data Factory in Fabric is accurate today?",
+    "options": [
+      "Azure Data Factory has been retired, and its existing pipelines stop running at the end of this year",
+      "They are the same service, billed the same way, with different names",
+      "Fabric Data Factory runs SSIS packages natively on its own runtime, so ADF is no longer needed for them",
+      "New features land in Fabric's version; ADF stays supported and is billed per use"
+    ],
+    "answer": 3,
+    "explanation": "Microsoft calls Fabric's Data Factory the next generation of ADF and puts new features there, billed through a Fabric capacity. ADF remains supported, is billed per activity run and data movement, and is still the home for SSIS on the Azure-SSIS integration runtime; Fabric's SSIS support is in preview."
+  },
+  {
+    "id": "10.3-q7",
+    "topic": "paused capacity",
+    "scenario": "To save money, someone pauses the Fabric capacity every weekend. On Monday the mirrored orders data stops at Friday evening.",
+    "stem": "What explains it?",
+    "options": [
+      "Mirroring needs a running capacity; while it is paused, nothing replicates",
+      "Mirroring only replicates on weekdays unless the capacity is upgraded to a higher F SKU",
+      "The source database throttled the mirror because weekend shopping traffic took priority over replication",
+      "The gateway stopped because its Windows machine restarted"
+    ],
+    "answer": 0,
+    "explanation": "Replication compute is free, but it still needs a running capacity; pause it and replication stops. Orders come from Azure SQL Database, which needs no gateway, so the gateway is a red herring here."
+  },
+  {
+    "id": "10.3-q8",
+    "topic": "schema drift",
+    "stem": "An ERP upgrade renames a column that a scheduled Copy job loads. What is the most likely result if nobody planned for it?",
+    "options": [
+      "The Copy job detects the change and renames the destination column to match the source automatically",
+      "Fabric rolls back the ERP upgrade",
+      "The job fails overnight or loads nulls, and nobody notices until a report looks wrong",
+      "The SQL analytics endpoint hides the column automatically"
+    ],
+    "answer": 2,
+    "explanation": "Schema drift breaks loads quietly: a failed run at 02:00 or a column of nulls. Alert on failures and test source upgrades against the load. Nothing renames destination columns for you on a mapped copy."
+  }
+]

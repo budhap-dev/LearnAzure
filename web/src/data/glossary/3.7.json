@@ -80,7 +80,7 @@
   },
   {
     "term": "ETL",
-    "aliases": ["extract, transform, load", "data pipeline"],
+    "aliases": ["extract, transform, load"],
     "definition": "Extract, transform, load: the pipeline that copies data out of a transactional store, reshapes it and loads it into a warehouse or another system. On Azure it is usually Azure Data Factory or a Fabric pipeline, or a change feed for near-real-time copies. The point is that analytics runs on the copy, so the copy's freshness is a requirement to write down.",
     "example": "A nightly Data Factory pipeline copies the day's orders from Azure SQL into the Fabric lakehouse for the finance reports.",
     "icon": "data-factory",
