@@ -1151,7 +1151,8 @@
             "data-lake",
             "power-bi",
             "cost-management"
-          ]
+          ],
+          "status": "ready"
         },
         {
           "id": "10.3",

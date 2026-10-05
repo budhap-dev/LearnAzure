@@ -1,0 +1,81 @@
+[
+  {
+    "term": "Microsoft Fabric",
+    "aliases": ["Fabric", "MS Fabric"],
+    "definition": "Microsoft's analytics platform delivered as software as a service: pipelines, lakehouses, warehouses, notebooks, real-time analytics and Power BI sharing one lake (OneLake), one security model and one capacity-based bill. It replaces assembling a storage account, Data Factory, Synapse and Power BI Premium yourself, and is the default analytics platform for a new Microsoft-shaped estate. You buy compute as capacities; storage is billed separately.",
+    "example": "Northline runs its lakehouse, pipelines and finance reports in Fabric on an F8 capacity in UK South.",
+    "icon": "data-lake",
+    "lessons": ["10.2", "10.1", "10.8"],
+    "related": ["OneLake", "Fabric capacity", "Fabric workspace", "Lakehouse"]
+  },
+  {
+    "term": "OneLake",
+    "aliases": ["One Lake", "OneDrive for data"],
+    "definition": "The single data lake that every Fabric tenant gets automatically, organised by workspace and built on Azure Data Lake Storage, so ADLS Gen2 tools and APIs can read it. Every Fabric engine stores its tables there as Delta tables, and shortcuts let it show data held elsewhere without copying. Data sits in the region of the workspace's capacity; storage is billed per GB-month, separately from compute, even while a capacity is paused.",
+    "example": "The Sales [Prod] lakehouse and the analysts' scratch tables are both folders in Northline's one OneLake.",
+    "icon": "data-lake",
+    "lessons": ["10.2", "10.3", "10.4"],
+    "related": ["Microsoft Fabric", "OneLake shortcut", "Delta Lake", "Data lake", "Hierarchical namespace"]
+  },
+  {
+    "term": "Fabric capacity",
+    "aliases": ["capacity", "F SKU", "F64", "F2", "Fabric SKU", "capacity overage", "surge protection"],
+    "definition": "A pool of Fabric compute bought in Azure and sized in capacity units, from F2 upwards, each size double the last. Workspaces are assigned to a capacity and every operation in them draws on it; throttling happens per capacity, so separate capacities isolate workloads. Billed per second pay-as-you-go, or reserved for a year at about 40% less; pay-as-you-go capacities can be paused. From F64 up, Power BI viewers with only a free licence can read reports.",
+    "example": "Production runs on a reserved F8; the analysts' sandbox is a pay-as-you-go F2 paused every night.",
+    "icon": "cost-management",
+    "lessons": ["10.2", "10.6"],
+    "related": ["Capacity unit", "Smoothing and throttling", "Reservation", "Pay-as-you-go"]
+  },
+  {
+    "term": "Capacity unit",
+    "aliases": ["CU", "CUs", "CU-seconds", "CU hours"],
+    "definition": "Fabric's unit of compute. A capacity's number is its CU count - an F8 has 8 CUs - and every report query, refresh, pipeline and Spark job consumes CU-seconds from it. Pricing is per CU-hour and varies by region; the Capacity Metrics app shows which items and users spent them.",
+    "example": "An F8 provides 8 CUs, or 192 CU-hours a day; one oversized notebook consumed more than a whole day's worth.",
+    "icon": "cost-management",
+    "lessons": ["10.2"],
+    "related": ["Fabric capacity", "Smoothing and throttling"]
+  },
+  {
+    "term": "Fabric workspace",
+    "aliases": ["workspace", "Fabric workspaces", "Power BI workspace"],
+    "definition": "A container for Fabric items - lakehouses, warehouses, notebooks, pipelines, reports - with its own access roles (Admin, Member, Contributor and Viewer) and assigned to exactly one capacity. Teams usually create one per domain and environment, such as Sales [Dev] and Sales [Prod], and promote changes between them with deployment pipelines or Git integration.",
+    "example": "Sales [Prod] holds the gold lakehouse and the trading pack; only the release pipeline writes to it, and finance has the Viewer role.",
+    "lessons": ["10.2", "10.4", "10.6"],
+    "related": ["Fabric capacity", "OneLake", "Microsoft Fabric"]
+  },
+  {
+    "term": "OneLake shortcut",
+    "aliases": ["shortcut", "shortcuts", "Fabric shortcut"],
+    "definition": "A pointer that makes data stored elsewhere appear as a folder or table in a Fabric lakehouse or KQL database, with no copy. Targets include other OneLake locations, ADLS Gen2, Blob Storage, Amazon S3 and S3-compatible stores, Google Cloud Storage, Dataverse, SharePoint and OneDrive, and on-premises stores through a gateway. Moving the target breaks it, deleting through it deletes at the source, and reads from other clouds incur their egress charges.",
+    "example": "The clickstream Parquet that Event Hubs Capture writes to stshopanalytics appears in bronze through a shortcut instead of a nightly copy.",
+    "icon": "data-lake",
+    "lessons": ["10.2", "10.3"],
+    "related": ["OneLake", "Hierarchical namespace", "Egress", "Event Hubs Capture"]
+  },
+  {
+    "term": "Delta Lake",
+    "aliases": ["Delta", "Delta table", "Delta Parquet", "Delta format"],
+    "definition": "An open table format: Parquet data files plus a transaction log that records every change, which gives a folder of files transactions, updates, deletes, schema enforcement and time travel. It is the format every Fabric engine writes, and Azure Databricks uses it too, so T-SQL, Spark and Power BI all read the same tables without exports.",
+    "example": "The gold orders table is a folder of Parquet files with a _delta_log folder beside them; a late correction is a new log entry, not a rewritten file share.",
+    "icon": "data-lake",
+    "lessons": ["10.2", "10.4"],
+    "related": ["Parquet", "Lakehouse", "OneLake"]
+  },
+  {
+    "term": "Parquet",
+    "aliases": ["Apache Parquet", "Parquet file", ".parquet"],
+    "definition": "An open, columnar file format: values are stored column by column and compressed, so analytical queries read only the columns they need. It is to a data lake what a columnstore index is to SQL Server. On its own it is just files, with no transactions or updates; Delta Lake adds those.",
+    "example": "Event Hubs Capture writes the clickstream as Parquet, so a query for page views by hour reads two columns, not the whole event.",
+    "lessons": ["10.2", "5.4"],
+    "related": ["Delta Lake", "Data lake", "Event Hubs Capture"]
+  },
+  {
+    "term": "Smoothing and throttling",
+    "aliases": ["smoothing", "throttling", "bursting", "capacity throttling", "overage protection", "Fabric throttling"],
+    "definition": "How a Fabric capacity handles spikes. It lets work burst above its size, then smooths the cost into the future: interactive operations over 5 to 64 minutes, background operations over 24 hours. When the next 10 minutes are already spent, new interactive requests are delayed by 20 seconds; past an hour they are rejected; past 24 hours everything new is rejected until the debt burns down. Pausing, scaling up or capacity overage end it sooner, each at a cost.",
+    "example": "An overnight Spark job's cost was smoothed across the next day, so by 09:15 the F8 was rejecting the finance reports.",
+    "icon": "cost-management",
+    "lessons": ["10.2"],
+    "related": ["Fabric capacity", "Capacity unit"]
+  }
+]
