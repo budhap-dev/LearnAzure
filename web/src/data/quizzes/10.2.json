@@ -1,0 +1,110 @@
+[
+  {
+    "id": "10.2-q1",
+    "topic": "smoothing",
+    "scenario": "An analyst's Spark notebook runs from 22:00 to 02:00. At 09:15 the next morning, finance's reports on the same F8 are rejected.",
+    "stem": "Why are the reports failing seven hours after the notebook finished?",
+    "options": [
+      "The notebook still holds locks on the lakehouse tables, which block report queries until they are released",
+      "Background work is smoothed over 24 hours, so the capacity is still paying off the notebook",
+      "Power BI caches failed queries for twelve hours",
+      "The capacity paused itself overnight and has not resumed"
+    ],
+    "answer": 1,
+    "explanation": "Smoothing spreads a background job's cost over the following 24 hours. Added to the normal load, it used up the next hour of capacity, so interactive report queries were rejected. Lakehouse reads are not blocked by locks, and capacities never pause themselves."
+  },
+  {
+    "id": "10.2-q2",
+    "topic": "throttling stages",
+    "stem": "A capacity has used between 10 and 60 minutes of its future capacity. What do users experience?",
+    "options": [
+      "Nothing yet: overage protection covers it",
+      "All new requests, interactive and background alike, are rejected until the debt is fully paid",
+      "Background jobs are cancelled while they are running",
+      "New interactive requests, such as report queries, are delayed by 20 seconds"
+    ],
+    "answer": 3,
+    "explanation": "Up to 10 minutes is overage protection, 10 to 60 minutes delays new interactive requests, over an hour rejects them, and only past 24 hours is everything rejected. Running jobs are never cancelled by throttling; it only affects new requests."
+  },
+  {
+    "id": "10.2-q3",
+    "topic": "isolation",
+    "scenario": "Priya wants to make sure analysts' experiments can never again stop the board's reports.",
+    "stem": "What is the most reliable fix?",
+    "options": [
+      "Move the analysts' workspace to its own small capacity",
+      "Scale the shared capacity from F8 to F64, so there is headroom for any notebook",
+      "Ask analysts to run notebooks only at weekends",
+      "Give the analysts the Viewer role so they cannot run notebooks"
+    ],
+    "answer": 0,
+    "explanation": "Throttling is applied per capacity, so a separate capacity contains the damage: an overspending notebook throttles only the sandbox. A bigger shared capacity only raises the bar the next oversized job has to clear, at about eight times the cost, and rules about timing or roles stop the work rather than containing it."
+  },
+  {
+    "id": "10.2-q4",
+    "topic": "F64 licensing",
+    "stem": "What changes for Power BI when a workspace's capacity is F64 or larger?",
+    "options": [
+      "Report authors no longer need Power BI Pro",
+      "Reports refresh in real time",
+      "Viewers with only the free Fabric licence and a Viewer role can read the reports",
+      "Every user in the tenant automatically gets a Power BI Pro licence included with the capacity"
+    ],
+    "answer": 2,
+    "explanation": "From F64, viewers do not need a paid licence. Below it, every viewer needs Pro or Premium Per User. Authors who create and share Power BI content still need Pro at any capacity size, which is the trap in the first option."
+  },
+  {
+    "id": "10.2-q5",
+    "topic": "shortcuts",
+    "scenario": "Event Hubs Capture already writes the clickstream as Parquet into an ADLS Gen2 account. The data team wants it in the bronze layer.",
+    "stem": "What is the simplest approach that avoids a second copy?",
+    "options": [
+      "A nightly pipeline that copies the newly captured files from the storage account into OneLake",
+      "Export the files to CSV and upload them to the lakehouse",
+      "Create a OneLake shortcut in the lakehouse that points at the Capture folder",
+      "Mirror the storage account into Fabric"
+    ],
+    "answer": 2,
+    "explanation": "A shortcut makes the existing files appear in the lakehouse with no copy and no pipeline to run. A nightly copy works, but it doubles storage, adds a job to maintain and lags behind the source."
+  },
+  {
+    "id": "10.2-q6",
+    "topic": "Delta Lake",
+    "stem": "What does Delta Lake add to a folder of Parquet files?",
+    "options": [
+      "A transaction log, so the files act as a table that can be updated and read consistently",
+      "Compression, which Parquet does not have",
+      "A conversion of the columnar data into rows, so that the T-SQL engine is able to query it at all",
+      "Encryption at rest"
+    ],
+    "answer": 0,
+    "explanation": "Parquet already stores compressed, columnar data. Delta Lake's transaction log is what turns the files into a table that can be updated safely and read consistently by T-SQL, Spark and Power BI. Converting to rows would undo the point of a columnar format."
+  },
+  {
+    "id": "10.2-q7",
+    "topic": "reservation or pause",
+    "scenario": "A development capacity is only used from 08:00 to 18:00 on weekdays, about 50 hours a week.",
+    "stem": "Which way of buying it is usually cheapest?",
+    "options": [
+      "A one-year reservation, because it is about 40% cheaper",
+      "A three-year reservation, paused at night",
+      "Keep it running all the time, so the smoothed cost is spread out",
+      "Pay-as-you-go, paused outside working hours"
+    ],
+    "answer": 3,
+    "explanation": "50 of 168 hours is about 30% of the month, so pay-as-you-go plus pausing costs well under a reservation's 60% of the full price. A reservation is charged for every hour, used or not, so pausing a reserved capacity saves nothing."
+  },
+  {
+    "id": "10.2-q8",
+    "topic": "trial",
+    "stem": "Which statement about the Fabric trial is correct?",
+    "options": [
+      "It can carry production indefinitely, as long as an admin renews it before each 60-day period ends",
+      "It lasts 60 days, for evaluation; afterwards its Fabric items stop working",
+      "It includes Copilot and Private Link",
+      "It gives every user a permanent Power BI Pro licence"
+    ],
+    "answer": 1,
+    "explanation": "The trial is a time-limited evaluation capacity without Copilot or Private Link, and a second trial is not guaranteed. When it ends, Fabric items stop working and can be deleted after seven days unless the workspace moves to a paid capacity, so production belongs on a paid F capacity from the start."
+  }
+]
