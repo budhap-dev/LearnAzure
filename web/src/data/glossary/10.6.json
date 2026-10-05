@@ -1,0 +1,80 @@
+[
+  {
+    "term": "Power BI",
+    "aliases": ["Power BI service", "Power BI Desktop", "Power BI report", "thin report"],
+    "definition": "Microsoft's business intelligence service, now part of Microsoft Fabric. Authors build semantic models and reports in Power BI Desktop or the browser and publish them to workspaces, where people view them in the browser, Teams, mobile apps or embedded in other applications. A report is only visuals; the data and definitions live in a semantic model.",
+    "example": "Finance's trading pack is a thin Power BI report connected live to the shared Sales model.",
+    "icon": "power-bi",
+    "lessons": ["10.6", "10.1"],
+    "related": ["Semantic model", "Business intelligence", "Microsoft Fabric", "Power BI Pro"]
+  },
+  {
+    "term": "Semantic model",
+    "aliases": ["dataset", "Power BI dataset", "shared semantic model", "data model", "golden dataset"],
+    "definition": "The layer under Power BI reports that holds tables, relationships, DAX measures, hierarchies and security. Called a dataset until 2023. One shared, certified model with many thin reports avoids model sprawl, where each report copies the data and defines its own measures.",
+    "example": "The Sales model over wh_gold defines Net Revenue YTD once, and fourteen reports use it.",
+    "icon": "power-bi",
+    "lessons": ["10.6"],
+    "related": ["DAX", "Direct Lake", "Star schema", "Row-level security"]
+  },
+  {
+    "term": "DAX",
+    "aliases": ["Data Analysis Expressions", "measure", "DAX measure"],
+    "definition": "The formula language of Power BI semantic models, SSAS tabular and Power Pivot. Measures written in DAX calculate results in the context of whatever the user filters by, and RLS roles use DAX filter expressions. Define each business measure once, in the shared model.",
+    "example": "Net Revenue YTD = TOTALYTD(SUM(FactSales[NetRevenue]), DimDate[Date])",
+    "lessons": ["10.6"],
+    "related": ["Semantic model", "Row-level security"]
+  },
+  {
+    "term": "Import mode",
+    "aliases": ["Import", "import storage mode", "scheduled refresh"],
+    "definition": "A semantic model storage mode that copies data into the model's compressed in-memory store, giving the fastest queries. Data is only as fresh as the last refresh: up to 8 scheduled refreshes a day on Pro and 48 on a capacity, and Pro models are limited to 1 GB. Works with any source and any licence.",
+    "example": "Finance's budget spreadsheet is a small Import table inside the otherwise Direct Lake Sales model.",
+    "icon": "power-bi",
+    "lessons": ["10.6"],
+    "related": ["DirectQuery", "Direct Lake", "Semantic model"]
+  },
+  {
+    "term": "DirectQuery",
+    "aliases": ["DirectQuery mode", "DQ", "DirectQuery fallback"],
+    "definition": "A semantic model storage mode that keeps data in the source and sends it a query for every visual. Data is always current, but reports are only as fast as the source and add load to it. Never point it at a production transactional database.",
+    "example": "A stock-on-hand table in DirectQuery would query the ERP every time a buyer opened the page, so Northline mirrors it instead.",
+    "lessons": ["10.6"],
+    "related": ["Import mode", "Direct Lake", "OLTP"]
+  },
+  {
+    "term": "Direct Lake",
+    "aliases": ["Direct Lake mode", "Direct Lake on OneLake", "Direct Lake on SQL endpoints", "framing"],
+    "definition": "A Fabric semantic model storage mode that reads Delta tables in OneLake into memory on demand, giving near-Import speed without copying the data; a refresh only re-reads metadata. Direct Lake on OneLake never falls back to DirectQuery; Direct Lake on SQL endpoints falls back for SQL views, SQL security or exceeded guardrails. Requires a Fabric capacity.",
+    "example": "The Sales model reads wh_gold in Direct Lake on OneLake, so new gold rows appear in reports within seconds of the nightly load.",
+    "icon": "power-bi",
+    "lessons": ["10.6", "10.8"],
+    "related": ["Semantic model", "OneLake", "Delta Lake", "DirectQuery", "Fabric capacity"]
+  },
+  {
+    "term": "Row-level security",
+    "aliases": ["RLS", "dynamic RLS", "RLS role", "effective identity"],
+    "definition": "Roles in a semantic model whose DAX filters limit which rows each member sees. Members should be Entra security groups, or a single dynamic role can filter by USERPRINCIPALNAME(). RLS applies only to Viewers, not workspace Admins, Members or Contributors; embedded apps pass an effective identity in the embed token.",
+    "example": "Members of sg-pbi-region-north see only North rows in the one regional report.",
+    "lessons": ["10.6"],
+    "related": ["Semantic model", "DAX", "Microsoft Entra ID", "Power BI Embedded"]
+  },
+  {
+    "term": "Power BI Embedded",
+    "aliases": ["A SKU", "embed for your customers", "app owns data", "embed for your organisation", "user owns data", "embed token"],
+    "definition": "Showing Power BI reports inside your own application. Embed for your organisation uses each user's Entra sign-in and licence. Embed for your customers lets the app authenticate as a service principal and issue short-lived embed tokens, so viewers need no licence, but it needs a capacity: an F SKU or an Azure A SKU, which is billed hourly and can be paused.",
+    "example": "The wholesale portal's Node API requests an embed token for one report, filtered to one customer, and the React app renders it.",
+    "icon": "power-bi",
+    "lessons": ["10.6"],
+    "related": ["Power BI", "Service principal", "Row-level security", "Fabric capacity"]
+  },
+  {
+    "term": "Power BI Pro",
+    "aliases": ["Pro licence", "Pro license", "Premium Per User", "PPU", "Power BI Free"],
+    "definition": "The per-user Power BI licence needed to publish and share content, and to view it on capacities below F64. Premium Per User adds larger models and more refreshes, but only PPU users can open PPU content. From F64, viewers with a free licence can read shared content; authors always need Pro or PPU.",
+    "example": "On an F8, each of Northline's report viewers, including the four regional managers, has a Pro licence.",
+    "icon": "power-bi",
+    "lessons": ["10.6", "10.2"],
+    "related": ["Power BI", "Fabric capacity", "Power BI Embedded"]
+  }
+]
