@@ -344,7 +344,7 @@ web/                          Vite + React 19 + TypeScript (hash routing: works 
 1, 3, 7, 16, 35 or 90 days; "Again" drops it to box 0 and repeats it later in the same session.
 Sessions hold up to 20 cards and introduce at most 10 new terms a day, taken in course order from
 the lessons the learner has opened, one module, or the whole glossary. The schedule is stored in
-the progress record, so it counts towards the streak and travels with export and import.
+the progress record, so it counts towards the streak and travels between devices with sync.
 
 ### Study goals
 
@@ -356,7 +356,23 @@ learned), and a glossary review session. The week shows minutes against the goal
 dots, lessons learned, and a status (new week, on track, behind, goal met) with a catch-up pace.
 Minutes come from `src/lib/studyTimer.ts`: time counts only while the tab is visible, the learner
 is on a lesson, quiz, test or glossary page, and has scrolled, tapped or typed in the last three
-minutes. The per-day log and the goal live in the progress record, so they export and import with it.
+minutes. The per-day log and the goal live in the progress record, so they sync with it.
+
+### Syncing between devices
+
+There is no account or backend, so progress moves between devices by hand (`src/lib/sync.ts`,
+`src/components/SyncPanel.tsx`, on the Progress page). One device sends: a **sync link** (the
+record deflated and base64url-encoded after `#/progress/sync/`, which browsers never send to a
+server; about 11 KB with every lesson and term done), shared through the phone's share sheet or
+copied, or a downloaded JSON file. The other device opens the link, imports the file or pastes
+either, and sees a preview of what would change before anything is written.
+
+Importing **merges** by default: a lesson takes the further state, quiz attempts and tests are
+joined, a glossary card keeps the side with more reviews, and each day's activity takes the larger
+figure rather than the sum. Merging the same data twice changes nothing, so syncing both ways is
+safe and leaves both devices the same. Replace is still offered behind a confirmation. Incoming data
+is rebuilt field by field, so a damaged or hand-made file cannot break the record, and a link that
+would inflate past 5 MB is refused.
 
 ### Markdown conventions used in lessons
 

@@ -1,15 +1,19 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { ProgressRing } from '../components/ProgressRing';
 import { LessonRow } from '../components/Cards';
 import { LESSONS, MODULES, OPEN_MODULES } from '../lib/syllabus';
 import { useProgress } from '../lib/useProgress';
-import { exportJson, importJson, reset, streak } from '../lib/progress';
+import { reset, streak } from '../lib/progress';
 import { deckStats, termsInScope } from '../lib/review';
 import { StudyGoals } from '../components/StudyGoals';
+import { SyncPanel } from '../components/SyncPanel';
 
 export function ProgressPage() {
   const progress = useProgress();
+  // A sync link opens #/progress/sync/<code>; the panel previews it before anything changes.
+  const splat = useParams()['*'] ?? '';
+  const syncCode = splat.startsWith('sync/') ? splat.slice('sync/'.length) : undefined;
   const [message, setMessage] = useState('');
   const done = LESSONS.filter((l) => progress.lessons[l.id] === 'done');
   const review = LESSONS.filter((l) => progress.lessons[l.id] === 'needs-review');
@@ -18,21 +22,6 @@ export function ProgressPage() {
   const days = streak();
   const terms = deckStats(termsInScope('all', progress), progress);
   const termsSeen = Object.keys(progress.reviews).length;
-
-  async function copyExport() {
-    try {
-      await navigator.clipboard.writeText(exportJson());
-      setMessage('Progress copied to the clipboard as JSON. Paste it on another device to import.');
-    } catch {
-      setMessage('Could not access the clipboard.');
-    }
-  }
-
-  function doImport() {
-    const json = window.prompt('Paste the progress JSON you exported:');
-    if (!json) return;
-    setMessage(importJson(json) ? 'Progress imported.' : 'That did not look like exported progress.');
-  }
 
   function doReset() {
     if (window.confirm('Clear all progress on this device? This cannot be undone.')) {
@@ -44,7 +33,7 @@ export function ProgressPage() {
   return (
     <div className="progress-page">
       <h1>Your progress</h1>
-      <p className="lede">Everything here stays on this device. Export it to carry it to another one.</p>
+      <p className="lede">Everything here stays on this device. Sync it to carry it to another one.</p>
 
       <StudyGoals progress={progress} />
 
@@ -116,10 +105,11 @@ export function ProgressPage() {
         </>
       )}
 
-      <h2>Manage</h2>
+      <h2 id="sync">Sync with another device</h2>
+      <SyncPanel progress={progress} code={syncCode} />
+
+      <h2>Start again</h2>
       <div className="row wrap">
-        <button type="button" className="btn" onClick={copyExport}>Export (copy JSON)</button>
-        <button type="button" className="btn" onClick={doImport}>Import</button>
         <button type="button" className="btn danger" onClick={doReset}>Reset all progress</button>
       </div>
       {message && <p className="callout callout-note">{message}</p>}

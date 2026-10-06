@@ -41,7 +41,7 @@ const router = createHashRouter([
       { path: 'glossary', element: <Glossary /> },
       { path: 'glossary/review', element: lazyRoute(<Review />, 'review') },
       { path: 'search', element: <Search /> },
-      { path: 'progress', element: <ProgressPage /> },
+      { path: 'progress/*', element: <ProgressPage /> },
       { path: 'status', element: <BuildStatus /> },
       { path: 'about', element: <About /> },
       { path: '*', element: <NotFound /> },
