@@ -5,7 +5,7 @@ import { ProgressRing } from '../components/ProgressRing';
 import { isLessonReady, moduleByNumber, readyLessons, totalMinutes } from '../lib/syllabus';
 import { useProgress } from '../lib/useProgress';
 import { testHistory } from '../lib/progress';
-import { GLOSSARY, moduleOf } from '../lib/glossary';
+import { TERMS, moduleOf } from '../lib/terms';
 import { NotFound } from './NotFound';
 
 export function ModulePage() {
@@ -18,7 +18,7 @@ export function ModulePage() {
   const released = readyLessons(module);
   const done = module.lessons.filter((l) => progress.lessons[l.id] === 'done').length;
   const history = testHistory(module.number);
-  const terms = GLOSSARY.filter((e) => moduleOf(e) === module.number);
+  const terms = TERMS.filter((e) => moduleOf(e) === module.number);
   const firstUnfinished = released.find((l) => progress.lessons[l.id] !== 'done') ?? released[0];
 
   return (
