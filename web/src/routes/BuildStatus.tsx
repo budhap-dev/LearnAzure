@@ -83,35 +83,39 @@ export function BuildStatus() {
 
       <h2>By module</h2>
       <div className="table-wrap">
-        <table className="status-table">
+        <table className="status-table status-modules">
           <thead>
-            <tr><th>#</th><th>Module</th><th>Lessons</th><th>Minutes</th><th>Glossary terms</th><th>Quiz questions</th><th>Module test</th><th>Status</th></tr>
+            <tr><th>Module</th><th>Lessons</th><th>Minutes</th><th>Glossary terms</th><th>Quiz questions</th><th>Module test</th><th>Status</th></tr>
           </thead>
           <tbody>
             {ROWS.map((r) => {
               const m = r.module;
               return (
                 <tr key={m.number} className={m.status === 'ready' ? undefined : 'pending'}>
-                  <td><span className={`module-num m${m.number}`}>{m.number}</span></td>
-                  <td className="status-module">{m.status === 'planned' ? m.title : <Link to={`/module/${m.number}`}>{m.title}</Link>}</td>
-                  <td className="num nowrap"><span className={`status-cells m${m.number}`} aria-hidden="true"><LessonCells row={r} /></span>{r.shipped.size} / {m.lessons.length}</td>
-                  <td className="num">{r.minutesShipped} / {totalMinutes(m)}</td>
-                  <td className="num">{r.terms || <span className="muted">–</span>}</td>
-                  <td className="num">{r.quizQuestions || <span className="muted">–</span>}</td>
-                  <td className="num">{r.testQuestions ? `${r.testQuestions} questions` : <span className="muted">to build</span>}</td>
-                  <td>{STATE[m.status]}</td>
+                  <td className="status-module">
+                    <span className="status-name">
+                      <span className={`module-num m${m.number}`}>{m.number}</span>
+                      {m.status === 'planned' ? m.title : <Link to={`/module/${m.number}`}>{m.title}</Link>}
+                    </span>
+                  </td>
+                  <td className="num nowrap" data-label="Lessons"><span className={`status-cells m${m.number}`} aria-hidden="true"><LessonCells row={r} /></span>{r.shipped.size} / {m.lessons.length}</td>
+                  <td className="num" data-label="Minutes">{r.minutesShipped} / {totalMinutes(m)}</td>
+                  <td className="num" data-label="Glossary terms">{r.terms || <span className="muted">–</span>}</td>
+                  <td className="num" data-label="Quiz questions">{r.quizQuestions || <span className="muted">–</span>}</td>
+                  <td className="num" data-label="Module test">{r.testQuestions ? `${r.testQuestions} questions` : <span className="muted">to build</span>}</td>
+                  <td data-label="Status">{STATE[m.status]}</td>
                 </tr>
               );
             })}
           </tbody>
           <tfoot>
             <tr>
-              <td /><td>Total</td>
-              <td className="num">{shipped} / {lessons}</td>
-              <td className="num">{minutesShipped} / {minutes}</td>
-              <td className="num">{terms}</td>
-              <td className="num">{ROWS.reduce((n, r) => n + r.quizQuestions, 0)}</td>
-              <td className="num">{complete.length} of {MODULES.length}</td>
+              <td className="status-module">Total</td>
+              <td className="num" data-label="Lessons">{shipped} / {lessons}</td>
+              <td className="num" data-label="Minutes">{minutesShipped} / {minutes}</td>
+              <td className="num" data-label="Glossary terms">{terms}</td>
+              <td className="num" data-label="Quiz questions">{ROWS.reduce((n, r) => n + r.quizQuestions, 0)}</td>
+              <td className="num" data-label="Module tests">{complete.length} of {MODULES.length}</td>
               <td />
             </tr>
           </tfoot>
