@@ -689,6 +689,13 @@ p.callout { padding: 0.8rem 1rem; }
 .goal-meta select { font: inherit; padding: 0.1rem 0.3rem; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); color: var(--text); }
 .module-progress { display: grid; gap: 0.5rem; }
 .module-progress-row { display: flex; align-items: center; gap: 0.9rem; color: var(--text); }
+.sync-card > p:first-child { margin-top: 0; }
+.file-btn:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.sync-paste { display: grid; gap: 0.5rem; margin-top: 0.9rem; justify-items: start; }
+.sync-paste textarea { width: 100%; box-sizing: border-box; font: 0.86rem/1.4 var(--mono); padding: 0.6rem 0.8rem; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface-2); color: var(--text); resize: vertical; }
+.sync-preview { margin-top: 0.8rem; border-left: 5px solid var(--accent); }
+.sync-preview h3 { margin-top: 0; }
+.sync-preview ul { margin: 0.3em 0 0.9em; }
 
 /* ---------- Glossary ---------- */
 .glossary-controls { display: flex; gap: 0.6rem; margin-bottom: 0.8rem; }

@@ -67,7 +67,7 @@ export interface Progress {
   weeklyGoal: number;
 }
 
-const empty = (): Progress => ({ version: 1, lessons: {}, quizzes: {}, tests: [], days: [], reviews: {}, log: {}, weeklyGoal: DEFAULT_WEEKLY_GOAL });
+export const empty = (): Progress => ({ version: 1, lessons: {}, quizzes: {}, tests: [], days: [], reviews: {}, log: {}, weeklyGoal: DEFAULT_WEEKLY_GOAL });
 
 export function read(): Progress {
   try {
@@ -222,17 +222,7 @@ export function reset(): void {
   window.dispatchEvent(new Event('progress-changed'));
 }
 
-export function exportJson(): string {
-  return JSON.stringify(read(), null, 2);
-}
-
-export function importJson(json: string): boolean {
-  try {
-    const parsed = JSON.parse(json) as Progress;
-    if (parsed.version !== 1 || typeof parsed.lessons !== 'object') return false;
-    write({ ...empty(), ...parsed });
-    return true;
-  } catch {
-    return false;
-  }
+/** Replaces the whole record - used by import and sync (see lib/sync.ts). */
+export function replace(progress: Progress): void {
+  write(progress);
 }
