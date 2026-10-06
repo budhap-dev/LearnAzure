@@ -9,11 +9,16 @@ export function QuizPage() {
   const { id = '' } = useParams();
   const meta = lessonById(id);
   const module = moduleOfLesson(id);
-  const [questions, setQuestions] = useState<Question[] | null>(null);
+  // Each result remembers which quiz it is for, so a stale one never shows while the next loads.
+  const [loaded, setLoaded] = useState<{ id: string; questions: Question[] } | null>(null);
+  const questions = loaded?.id === id ? loaded.questions : null;
 
   useEffect(() => {
-    setQuestions(null);
-    loadQuiz(id).then(setQuestions);
+    let live = true;
+    loadQuiz(id).then((q) => live && setLoaded({ id, questions: q }));
+    return () => {
+      live = false;
+    };
   }, [id]);
 
   if (!meta || !module) return <NotFound />;

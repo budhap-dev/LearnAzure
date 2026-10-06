@@ -24,9 +24,15 @@ export function Layout() {
   useStudyTimer();
   const done = Object.values(progress.lessons).filter((s) => s === 'done').length;
 
-  // Close the drawer and scroll to top on every navigation.
-  useEffect(() => {
+  // Close the drawer on every navigation (adjusted during render, React's pattern for state
+  // that follows a changing value), and scroll to top.
+  const navKey = `${location.pathname}${location.search}${location.hash}`;
+  const [seenNav, setSeenNav] = useState(navKey);
+  if (seenNav !== navKey) {
+    setSeenNav(navKey);
     setMenuOpen(false);
+  }
+  useEffect(() => {
     if (!location.hash || location.hash === '#') window.scrollTo({ top: 0 });
   }, [location.pathname, location.search, location.hash]);
 
