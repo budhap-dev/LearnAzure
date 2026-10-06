@@ -35,6 +35,11 @@ export function About() {
           <li>Use the glossary and search whenever a term comes up at work. Everything links back to the lesson that teaches it.</li>
           <li>Review the glossary as flashcards a few minutes a day. Terms you know come back less often; the ones you miss come back sooner.</li>
           <li>Pick a theme you like from the header. Progress and theme are stored on the device only.</li>
+          <li>
+            Install it on your phone: in Chrome on Android, open the menu and tap Install app (on an iPhone, Share then Add to
+            Home Screen). It then works offline - every lesson, quiz and the glossary is saved on the device after the first
+            visit, and a banner offers to reload when a new version arrives.
+          </li>
         </ol>
       </section>
 
