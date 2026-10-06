@@ -1,7 +1,9 @@
 import { execSync } from 'node:child_process';
-import { readFileSync, readdirSync } from 'node:fs';
+import { createHash } from 'node:crypto';
+import { readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import react from '@vitejs/plugin-react';
-import { defineConfig } from 'vite';
+import { defineConfig, type Plugin } from 'vite';
 import { slugOf } from './src/lib/slug.ts';
 
 /**
@@ -52,13 +54,42 @@ function glossaryIndex() {
     .sort((a, b) => a.term.localeCompare(b.term, 'en', { sensitivity: 'base' }));
 }
 
+/**
+ * Offline support: after the build, writes dist/sw.js from sw.js with every file in dist to
+ * cache and a version hash of their contents, so a deploy that changes anything ships a new
+ * worker. Dev helpers (_theme.html), dotfiles and the icon set's licence files are left out.
+ */
+function offlineServiceWorker(): Plugin {
+  let outDir = '';
+  return {
+    name: 'offline-service-worker',
+    apply: 'build',
+    configResolved(config) {
+      outDir = resolve(config.root, config.build.outDir);
+    },
+    closeBundle() {
+      const files = readdirSync(outDir, { recursive: true, encoding: 'utf8' })
+        .map((f) => f.split('\\').join('/'))
+        .filter((f) => statSync(join(outDir, f)).isFile())
+        .filter((f) => f !== 'sw.js' && f !== '_theme.html' && !/(^|\/)\./.test(f) && !/\.(pdf|txt)$/.test(f))
+        .sort();
+      const hash = createHash('sha256');
+      for (const f of files) hash.update(f).update(readFileSync(join(outDir, f)));
+      const sw = readFileSync(new URL('./sw.js', import.meta.url), 'utf8')
+        .replace('= __VERSION__;', `= ${JSON.stringify(hash.digest('hex').slice(0, 12))};`)
+        .replace('= __PRECACHE__;', `= ${JSON.stringify(files)};`);
+      writeFileSync(join(outDir, 'sw.js'), sw);
+    },
+  };
+}
+
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as { version: string };
 const buildNumber = process.env.VITE_BUILD_NUMBER || process.env.GITHUB_RUN_NUMBER || 'dev';
 
 export default defineConfig({
   // GitHub Pages serves the site under /LearnAzure/; CI sets BASE_PATH. Locally it is /.
   base: process.env.BASE_PATH || '/',
-  plugins: [react()],
+  plugins: [react(), offlineServiceWorker()],
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
     __BUILD_NUMBER__: JSON.stringify(buildNumber),

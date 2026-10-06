@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 import { ThemePicker } from './ThemePicker';
 import { SearchBox } from './SearchBox';
+import { UpdateBanner } from './UpdateBanner';
 import { VERSION_LABEL } from '../lib/version';
 import { useProgress } from '../lib/useProgress';
 import { streak } from '../lib/progress';
@@ -108,6 +109,7 @@ export function Layout() {
           <Link to="/about">{VERSION_LABEL}</Link>
         </p>
       </footer>
+      <UpdateBanner />
     </div>
   );
 }
