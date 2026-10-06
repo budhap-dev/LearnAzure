@@ -11,6 +11,9 @@ declare const __CONTENT_STATS__: {
   glossary: Record<string, number>;
 };
 
+/** Name, slug and lessons of every glossary term, sorted by name (see lib/terms.ts). */
+declare const __GLOSSARY_INDEX__: { term: string; slug: string; lessons: string[] }[];
+
 declare module '*.md?raw' {
   const content: string;
   export default content;

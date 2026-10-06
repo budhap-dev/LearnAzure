@@ -6,7 +6,7 @@
  * The schedule lives in progress.reviews (lib/progress.ts), so it is exported, imported and
  * reset with the rest of the learner's progress.
  */
-import { GLOSSARY, moduleOf, type GlossaryEntry } from './glossary';
+import { TERMS, moduleOf, type TermRef } from './terms';
 import { read, saveReview, today, type Progress, type ReviewCard } from './progress';
 
 export type Grade = 'again' | 'good' | 'easy';
@@ -27,17 +27,18 @@ function addDays(day: string, n: number): string {
   return d.toISOString().slice(0, 10);
 }
 
-const byCourseOrder = (a: GlossaryEntry, b: GlossaryEntry) =>
+const byCourseOrder = (a: TermRef, b: TermRef) =>
   (a.lessons[0] ?? '').localeCompare(b.lessons[0] ?? '', undefined, { numeric: true }) || a.term.localeCompare(b.term);
 
-export function termsInScope(scope: Scope, progress: Progress): GlossaryEntry[] {
-  if (scope === 'all') return [...GLOSSARY].sort(byCourseOrder);
+/** The terms in a scope, in course order. Map them to full entries where definitions are needed. */
+export function termsInScope(scope: Scope, progress: Progress): TermRef[] {
+  if (scope === 'all') return [...TERMS].sort(byCourseOrder);
   if (scope === 'studied') {
     const opened = new Set(Object.entries(progress.lessons).filter(([, s]) => s !== 'not-started').map(([id]) => id));
-    return GLOSSARY.filter((e) => e.lessons.some((id) => opened.has(id))).sort(byCourseOrder);
+    return TERMS.filter((e) => e.lessons.some((id) => opened.has(id))).sort(byCourseOrder);
   }
   const module = Number(scope.slice(1));
-  return GLOSSARY.filter((e) => moduleOf(e) === module).sort(byCourseOrder);
+  return TERMS.filter((e) => moduleOf(e) === module).sort(byCourseOrder);
 }
 
 export interface DeckStats {
@@ -54,7 +55,7 @@ function newAllowance(progress: Progress): number {
   return Math.max(0, NEW_PER_DAY - introduced);
 }
 
-export function deckStats(entries: GlossaryEntry[], progress: Progress): DeckStats {
+export function deckStats(entries: TermRef[], progress: Progress): DeckStats {
   const d = today();
   let due = 0;
   let unseen = 0;
@@ -71,7 +72,7 @@ export function deckStats(entries: GlossaryEntry[], progress: Progress): DeckSta
 }
 
 /** Due terms first (most overdue, then weakest), topped up with new terms in course order. */
-export function buildSession(entries: GlossaryEntry[], progress: Progress): GlossaryEntry[] {
+export function buildSession<T extends TermRef>(entries: T[], progress: Progress): T[] {
   const d = today();
   const due = entries
     .filter((e) => progress.reviews[e.slug] && progress.reviews[e.slug].due <= d)

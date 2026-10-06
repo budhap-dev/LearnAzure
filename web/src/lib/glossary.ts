@@ -1,10 +1,15 @@
 /**
  * The glossary: hand-written Azure and cloud terms in src/data/glossary/<lesson>.json, one
  * file per lesson that introduces terms. Each entry links to the lesson(s) that teach it and
- * to related terms. It ships in the main bundle (small text) so the page and the header
- * search can use it without a fetch.
+ * to related terms. It is about 390 KB, so it loads only with the pages that show definitions
+ * (glossary, search, lessons, review) and on first use of the header search; everything else
+ * uses the light index in lib/terms.ts.
  */
 import type { AzureIconId } from '../data/icons';
+import { slugOf } from './slug';
+import { moduleOf } from './terms';
+
+export { slugOf, moduleOf };
 
 const fragments = import.meta.glob('../data/glossary/*.json', { eager: true, import: 'default' }) as Record<string, RawEntry[]>;
 const raw: RawEntry[] = Object.keys(fragments)
@@ -32,13 +37,6 @@ interface RawEntry {
   related?: string[];
 }
 
-export function slugOf(term: string): string {
-  return term
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-}
-
 export const GLOSSARY: GlossaryEntry[] = (raw as RawEntry[])
   .map((e) => ({
     term: e.term,
@@ -61,10 +59,6 @@ export function entryBySlug(slug: string): GlossaryEntry | undefined {
 export function letterOf(entry: GlossaryEntry): string {
   const first = entry.term[0].toUpperCase();
   return /[A-Z]/.test(first) ? first : '#';
-}
-
-export function moduleOf(entry: GlossaryEntry): number {
-  return Number(entry.lessons[0]?.split('.')[0] ?? 0);
 }
 
 export interface GlossaryHit {

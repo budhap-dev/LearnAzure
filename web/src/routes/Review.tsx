@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { AzureIcon } from '../components/AzureIcon';
-import { moduleOf, type GlossaryEntry } from '../lib/glossary';
+import { entryBySlug, moduleOf, type GlossaryEntry } from '../lib/glossary';
 import { today } from '../lib/progress';
 import {
   LEARNED_BOX,
@@ -35,7 +35,10 @@ export function Review() {
   const studied = useMemo(() => termsInScope('studied', progress), [progress]);
   const param = params.get('scope');
   const scope: Scope = isScope(param) ? param : studied.length > 0 ? 'studied' : 'm1';
-  const entries = useMemo(() => termsInScope(scope, progress), [scope, progress]);
+  const entries = useMemo(
+    () => termsInScope(scope, progress).flatMap((t) => entryBySlug(t.slug) ?? []),
+    [scope, progress],
+  );
   const stats = deckStats(entries, progress);
 
   const [queue, setQueue] = useState<GlossaryEntry[] | null>(null);

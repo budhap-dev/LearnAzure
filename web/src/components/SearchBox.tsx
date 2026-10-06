@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loadIndex, search, type SearchRecord } from '../lib/search';
-import { searchGlossary } from '../lib/glossary';
+import type { searchGlossary } from '../lib/glossary';
 import { highlight } from './Highlight';
 
 interface Suggestion {
@@ -13,12 +13,13 @@ interface Suggestion {
 
 /**
  * Header search with an autocomplete dropdown over lessons and glossary terms. Loads the
- * lesson index on first focus; fully keyboard-driven (up/down/enter/escape).
+ * lesson index and the glossary on first focus; fully keyboard-driven (up/down/enter/escape).
  */
 export function SearchBox({ onNavigate, shortcut = false }: { onNavigate?: () => void; shortcut?: boolean }) {
   const navigate = useNavigate();
   const [query, setQuery] = useState('');
   const [records, setRecords] = useState<SearchRecord[] | null>(null);
+  const [findTerms, setFindTerms] = useState<typeof searchGlossary | null>(null);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(-1);
   const boxRef = useRef<HTMLDivElement>(null);
@@ -26,6 +27,7 @@ export function SearchBox({ onNavigate, shortcut = false }: { onNavigate?: () =>
 
   function ensureIndex() {
     if (records === null) loadIndex().then(setRecords);
+    if (findTerms === null) import('../lib/glossary').then((m) => setFindTerms(() => m.searchGlossary));
   }
 
   useEffect(() => {
@@ -55,7 +57,7 @@ export function SearchBox({ onNavigate, shortcut = false }: { onNavigate?: () =>
   const q = query.trim();
   const suggestions: Suggestion[] = [];
   if (q.length > 1) {
-    for (const hit of searchGlossary(q).slice(0, 3)) {
+    for (const hit of findTerms?.(q).slice(0, 3) ?? []) {
       suggestions.push({ kind: 'term', id: hit.entry.slug, title: hit.entry.term, hint: 'glossary' });
     }
     if (records) {

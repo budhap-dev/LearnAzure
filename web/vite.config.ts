@@ -2,6 +2,7 @@ import { execSync } from 'node:child_process';
 import { readFileSync, readdirSync } from 'node:fs';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
+import { slugOf } from './src/lib/slug.ts';
 
 /**
  * The version shown in the footer is assembled at build time:
@@ -38,6 +39,19 @@ function contentStats() {
   };
 }
 
+/**
+ * The light glossary index (lib/terms.ts): name, slug and lessons per term, sorted like the
+ * glossary page. Pages that only count or schedule terms use it instead of the full glossary.
+ */
+function glossaryIndex() {
+  const dir = new URL('./src/data/glossary/', import.meta.url);
+  return readdirSync(dir)
+    .filter((f) => f.endsWith('.json'))
+    .flatMap((f) => JSON.parse(readFileSync(new URL(f, dir), 'utf8')) as { term: string; lessons: string[] }[])
+    .map((e) => ({ term: e.term, slug: slugOf(e.term), lessons: e.lessons }))
+    .sort((a, b) => a.term.localeCompare(b.term, 'en', { sensitivity: 'base' }));
+}
+
 const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as { version: string };
 const buildNumber = process.env.VITE_BUILD_NUMBER || process.env.GITHUB_RUN_NUMBER || 'dev';
 
@@ -51,5 +65,6 @@ export default defineConfig({
     __BUILD_SHA__: JSON.stringify(gitSha()),
     __BUILD_DATE__: JSON.stringify(new Date().toISOString().slice(0, 10)),
     __CONTENT_STATS__: JSON.stringify(contentStats()),
+    __GLOSSARY_INDEX__: JSON.stringify(glossaryIndex()),
   },
 });
