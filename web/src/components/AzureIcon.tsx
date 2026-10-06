@@ -1,6 +1,5 @@
-import { AZURE_ICONS, type AzureIconId } from '../data/icons';
-
-const base = import.meta.env.BASE_URL;
+import type { AzureIconId } from '../data/icons';
+import { iconLabel, iconUrl } from '../lib/icons';
 
 interface Props {
   id: AzureIconId | string;
@@ -8,14 +7,6 @@ interface Props {
   /** Show the service name next to the icon as a chip. */
   label?: string | boolean;
   className?: string;
-}
-
-export function iconLabel(id: string): string {
-  return (AZURE_ICONS as Record<string, string>)[id] ?? id;
-}
-
-export function iconUrl(id: string): string {
-  return `${base}azure-icons/${id}.svg`;
 }
 
 /** One of Microsoft's official Azure icons, by slug (see src/data/icons.ts). */

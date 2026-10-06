@@ -2,10 +2,9 @@ import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { Markdown } from '../components/Markdown';
 import { AzureIcon } from '../components/AzureIcon';
-import { STATE_LABEL } from '../components/Cards';
 import { headingsOf, loadLesson, type LessonDoc } from '../lib/lessons';
 import { lessonById, moduleOfLesson, neighbours } from '../lib/syllabus';
-import { bestScore, setLessonState, visitLesson } from '../lib/progress';
+import { STATE_LABEL, bestScore, setLessonState, visitLesson } from '../lib/progress';
 import { useProgress } from '../lib/useProgress';
 import { hasQuiz } from '../lib/quiz';
 import { termsForLesson } from '../lib/glossary';
@@ -15,16 +14,19 @@ export function Lesson() {
   const { id = '' } = useParams();
   const meta = lessonById(id);
   const module = moduleOfLesson(id);
-  const [doc, setDoc] = useState<LessonDoc | null | undefined>(undefined);
+  // undefined while loading; each result remembers its lesson so a stale one never shows.
+  const [loaded, setLoaded] = useState<{ id: string; doc: LessonDoc | null } | null>(null);
+  const doc = loaded?.id === id ? loaded.doc : undefined;
   const progress = useProgress();
 
   useEffect(() => {
     if (!meta) return;
-    setDoc(undefined);
+    let live = true;
     visitLesson(id);
-    loadLesson(id).then(setDoc);
+    loadLesson(id).then((d) => live && setLoaded({ id, doc: d }));
     document.title = `${id} ${meta.title} · Learn Azure`;
     return () => {
+      live = false;
       document.title = 'Learn Azure';
     };
   }, [id, meta]);

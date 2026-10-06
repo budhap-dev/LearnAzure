@@ -9,15 +9,17 @@ export function Search() {
   const [params, setParams] = useSearchParams();
   const initial = params.get('q') ?? '';
   const [query, setQuery] = useState(initial);
+  // A new ?q= (from the header search) replaces what is typed; adjusted during render, not in an effect.
+  const [seenInitial, setSeenInitial] = useState(initial);
+  if (seenInitial !== initial) {
+    setSeenInitial(initial);
+    setQuery(initial);
+  }
   const [records, setRecords] = useState<SearchRecord[] | null>(null);
 
   useEffect(() => {
     loadIndex().then(setRecords);
   }, []);
-
-  useEffect(() => {
-    setQuery(initial);
-  }, [initial]);
 
   const q = query.trim();
   const hits: SearchHit[] = records && q.length > 1 ? search(records, q) : [];

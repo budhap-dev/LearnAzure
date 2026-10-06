@@ -2,14 +2,7 @@ import { Link } from 'react-router-dom';
 import { AzureIcon } from './AzureIcon';
 import { ProgressRing } from './ProgressRing';
 import { readyLessons, type LessonMeta, type ModuleMeta } from '../lib/syllabus';
-import type { LessonState } from '../lib/progress';
-
-export const STATE_LABEL: Record<LessonState, string> = {
-  'not-started': 'Not started',
-  'in-progress': 'In progress',
-  'needs-review': 'Needs review',
-  done: 'Learned',
-};
+import { STATE_LABEL, type LessonState } from '../lib/progress';
 
 export function ModuleCard({ module, lessonStates }: { module: ModuleMeta; lessonStates: Record<string, LessonState> }) {
   const open = module.status !== 'planned';

@@ -7,6 +7,13 @@ const KEY = 'learnazure.progress.v1';
 
 export type LessonState = 'not-started' | 'in-progress' | 'needs-review' | 'done';
 
+export const STATE_LABEL: Record<LessonState, string> = {
+  'not-started': 'Not started',
+  'in-progress': 'In progress',
+  'needs-review': 'Needs review',
+  done: 'Learned',
+};
+
 export interface QuizAttempt {
   score: number;
   outOf: number;

@@ -1,5 +1,5 @@
 import { AZURE_ICONS } from '../data/icons';
-import { iconUrl } from './AzureIcon';
+import { iconUrl } from '../lib/icons';
 
 /**
  * An architecture diagram described as JSON inside a ```diagram fence. Nodes sit on a grid
@@ -43,16 +43,6 @@ const CELL_H = 152;
 const BOX_W = 124;
 const BOX_H = 104;
 const PAD = 24;
-
-export function parseDiagram(source: string): DiagramSpec | { error: string } {
-  try {
-    const spec = JSON.parse(source) as DiagramSpec;
-    if (!Array.isArray(spec.nodes) || spec.nodes.length === 0) return { error: 'A diagram needs at least one node.' };
-    return spec;
-  } catch (e) {
-    return { error: `Diagram JSON is invalid: ${(e as Error).message}` };
-  }
-}
 
 function center(n: DiagramNode) {
   return { cx: PAD + n.x * CELL_W + CELL_W / 2, cy: PAD + n.y * CELL_H + CELL_H / 2 };

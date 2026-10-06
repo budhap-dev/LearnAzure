@@ -6,11 +6,18 @@ import { MODULES, READY_MODULES } from '../lib/syllabus';
 
 export function FinalTest() {
   const [round, setRound] = useState(0);
-  const [questions, setQuestions] = useState<Question[] | null>(null);
+  // Each draw remembers its round, so "Take another" shows the loading state until the new one is ready.
+  const [drawn, setDrawn] = useState<{ round: number; questions: Question[] } | null>(null);
+  const questions = drawn?.round === round ? drawn.questions : null;
 
   useEffect(() => {
-    setQuestions(null);
-    buildFinalTest(READY_MODULES.map((m) => ({ number: m.number, lessonIds: m.lessons.map((l) => l.id) }))).then(setQuestions);
+    let live = true;
+    buildFinalTest(READY_MODULES.map((m) => ({ number: m.number, lessonIds: m.lessons.map((l) => l.id) }))).then(
+      (q) => live && setDrawn({ round, questions: q }),
+    );
+    return () => {
+      live = false;
+    };
   }, [round]);
 
   return (

@@ -9,13 +9,20 @@ export function ModuleTest() {
   const { n } = useParams();
   const module = moduleByNumber(Number(n));
   const [round, setRound] = useState(0);
-  const [test, setTest] = useState<{ exam: ModuleExam; questions: Question[] } | null | undefined>(undefined);
+  // undefined while preparing, null when the module has no test yet. Each draw remembers its
+  // module and round, so a new round shows the preparing state until it is ready.
+  const key = `${module?.number}:${round}`;
+  const [drawn, setDrawn] = useState<{ key: string; test: { exam: ModuleExam; questions: Question[] } | null } | null>(null);
+  const test = drawn?.key === key ? drawn.test : undefined;
 
   useEffect(() => {
     if (!module) return;
-    setTest(undefined);
-    buildModuleTest(module.number, module.lessons.map((l) => l.id)).then(setTest);
-  }, [module, round]);
+    let live = true;
+    buildModuleTest(module.number, module.lessons.map((l) => l.id)).then((t) => live && setDrawn({ key, test: t }));
+    return () => {
+      live = false;
+    };
+  }, [module, key]);
 
   if (!module || module.status !== 'ready') return <NotFound />;
 
