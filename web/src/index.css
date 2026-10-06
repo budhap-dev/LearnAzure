@@ -740,6 +740,8 @@ p.callout { padding: 0.8rem 1rem; }
 .status-table .num { font-family: var(--mono); font-size: 0.88rem; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .status-table .module-num { width: 1.8rem; height: 1.8rem; border-radius: 8px; font-size: 0.9rem; }
 .status-module { font-weight: 600; min-width: 12rem; }
+.status-name { display: flex; align-items: center; gap: 0.6rem; }
+.status-name .module-num { flex: none; }
 .status-table tr.pending td { background: var(--surface-2); }
 .status-table .pill { white-space: nowrap; }
 .status-table tfoot td { font-weight: 700; border-top: 2px solid var(--text); border-bottom: 0; }
@@ -873,6 +875,21 @@ kbd { display: inline-block; font: 600 0.72rem var(--mono); line-height: 1.5; pa
   .table-stack td[data-label]:not(:first-child)::before { content: attr(data-label); display: block; margin-bottom: 0.1rem; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
   .table-stack tbody tr:hover td { background: none; }
   .table-stack tbody tr:hover td:first-child { background: var(--surface-2); }
+}
+/* The Status page's module table becomes one card per module on phones: title on top, then the
+   figures in two labelled columns (labels come from data-label). */
+@media (max-width: 640px) {
+  .table-wrap:has(.status-modules) { overflow-x: visible; border: 0; background: none; border-radius: 0; }
+  .status-modules, .status-modules tbody, .status-modules tfoot { display: block; }
+  .status-modules thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .status-modules tr { display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 0.75rem; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface); overflow: hidden; }
+  .status-modules tr td, .status-modules tfoot td { padding: 0.5rem 0.8rem; border: 0; border-top: 1px solid var(--border); }
+  .status-modules td.status-module { grid-column: 1 / -1; min-width: 0; border-top: 0; background: var(--surface-2); }
+  .status-modules td:empty { display: none; }
+  .status-modules td[data-label]::before { content: attr(data-label); display: block; margin-bottom: 0.1rem; font-family: var(--font); font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+  .status-modules tfoot tr { border: 2px solid var(--text); }
+  .status-modules tbody tr:hover td { background: none; }
+  .status-modules tbody tr:hover td.status-module, .status-modules tr.pending td.status-module { background: var(--surface-2); }
 }
 @media (max-width: 400px) {
   table { font-size: 0.86rem; }
